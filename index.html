@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ==========================================
+           1. 迪士尼官方風格變數 (DCL Theme Variables)
+           ========================================== */
+        :root {
+            --dcl-navy: #00234B;
+            --dcl-navy-light: #0A3A70;
+            --dcl-red: #E11837;
+            --dcl-gold: #F3B500;
+            --bg-body: #F7F9FC;
+            --text-dark: #1A2B4C;
+            --text-gray: #546681;
+            --white: #FFFFFF;
+            --shadow-sm: 0 4px 15px rgba(0, 35, 75, 0.05);
+            --shadow-md: 0 10px 30px rgba(0, 35, 75, 0.1);
+            --shadow-hover: 0 20px 40px rgba(0, 35, 75, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-family: 'Noto Sans TC', sans-serif;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Playfair Display', 'Noto Sans TC', serif;
+            color: var(--dcl-navy);
+            font-weight: 700;
+        }
+
+        /* ==========================================
+           2. 進度條
+           ========================================== */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dcl-red), var(--dcl-gold));
+            width: 0%;
+            z-index: 2000;
+            transition: width 0.1s ease-out;
+        }
+
+        /* ==========================================
+           3. 英雄區 (多重背景防呆)
+           ========================================== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            background-color: var(--dcl-navy);
+            background-image:
+                linear-gradient(to bottom, rgba(0, 35, 75, 0.4), rgba(0, 35, 75, 0.85)),
+                url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Disney_Dream_in_Nassau.jpg/1920px-Disney_Dream_in_Nassau.jpg'),
+                linear-gradient(to bottom, var(--dcl-navy), var(--dcl-navy-light));
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 0 20px;
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            color: var(--dcl-gold);
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.6);
+            animation: fadeInDown 1.2s ease forwards;
+        }
+
+        .hero p {
+            font-size: 1.6rem;
+            color: #E2E8F0;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            animation: fadeInUp 1.2s ease forwards;
+            opacity: 0;
+            animation-delay: 0.3s;
+            text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.8);
+        }
+
+        .date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 35px;
+            border: 2px solid var(--dcl-gold);
+            border-radius: 50px;
+            font-size: 1.2rem;
+            color: var(--white);
+            font-weight: 500;
+            background: rgba(0, 35, 75, 0.6);
+            backdrop-filter: blur(8px);
+            animation: fadeInUp 1.2s ease forwards;
+            opacity: 0;
+            animation-delay: 0.6s;
+            box-shadow: 0 0 20px rgba(243, 181, 0, 0.2);
+        }
+
+        .date-badge i {
+            color: var(--dcl-gold);
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            animation: fadeInUp 1.2s ease forwards;
+            opacity: 0;
+            animation-delay: 0.8s;
+        }
+
+        .countdown-item {
+            background: rgba(0, 35, 75, 0.7);
+            border: 1px solid rgba(243, 181, 0, 0.5);
+            border-radius: 12px;
+            padding: 12px 15px;
+            min-width: 80px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-item span.cd-num {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dcl-gold);
+            line-height: 1.1;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .cd-label {
+            font-size: 0.9rem;
+            color: var(--white);
+            letter-spacing: 2px;
+        }
+
+        /* --- 動態海浪動畫特效 --- */
+        .wave-divider {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 2;
+        }
+
+        .wave-divider svg {
+            display: block;
+            width: calc(200% + 1.3px);
+            height: 70px;
+            animation: wave-animation 15s linear infinite;
+            transform-origin: bottom center;
+        }
+
+        .wave-divider .shape-fill {
+            fill: var(--bg-body);
+        }
+
+        @keyframes wave-animation {
+            0% {
+                transform: translateX(0) scaleY(1);
+            }
+
+            50% {
+                transform: translateX(-25%) scaleY(0.8);
+            }
+
+            100% {
+                transform: translateX(-50%) scaleY(1);
+            }
+        }
+
+        .mickey-shape {
+            position: relative;
+            width: 1em;
+            height: 1em;
+            background-color: currentColor;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .mickey-shape::before,
+        .mickey-shape::after {
+            content: '';
+            position: absolute;
+            width: 0.6em;
+            height: 0.6em;
+            background-color: currentColor;
+            border-radius: 50%;
+            top: -0.25em;
+        }
+
+        .mickey-shape::before {
+            left: -0.25em;
+        }
+
+        .mickey-shape::after {
+            right: -0.25em;
+        }
+
+        #easter-egg-trigger {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 40px auto 20px;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--dcl-red), #900C22);
+            border: 3px solid var(--dcl-gold);
+            border-radius: 50px;
+            cursor: pointer;
+            color: var(--white);
+            font-size: 28px;
+            box-shadow: 0 0 20px rgba(243, 181, 0, 0.6), 0 0 40px rgba(225, 24, 55, 0.4);
+            animation: magic-pulse 1.5s infinite;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        #easter-egg-trigger:hover {
+            background: linear-gradient(135deg, var(--dcl-navy), var(--dcl-red));
+        }
+
+        .egg-hint {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            font-family: 'Noto Sans TC', sans-serif;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes magic-pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(243, 181, 0, 0.6);
+            }
+
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(243, 181, 0, 1), 0 0 20px rgba(225, 24, 55, 0.8);
+            }
+
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 20px rgba(243, 181, 0, 0.6);
+            }
+        }
+
+        .magic-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 35, 75, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .magic-modal-content {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            width: 380px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--dcl-gold);
+            transform: scale(0.8);
+            animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popUp {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .confetti-particle {
+            position: absolute;
+            top: -10vh;
+            z-index: 10001;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        .cursor-sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            color: var(--dcl-gold);
+            animation: sparkle-fade 0.8s forwards;
+            filter: drop-shadow(0 0 4px rgba(243, 181, 0, 0.8));
+        }
+
+        @keyframes sparkle-fade {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, 50px) scale(1.5) rotate(180deg);
+                opacity: 0;
+            }
+        }
+
+        .mickey-bubble {
+            position: fixed;
+            bottom: -50px;
+            cursor: pointer;
+            z-index: 50;
+            color: rgba(255, 255, 255, 0.6);
+            filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.2));
+            animation: float-up 12s linear forwards;
+            transition: all 0.2s;
+        }
+
+        .mickey-bubble:hover {
+            color: var(--dcl-gold);
+            transform: scale(1.2) !important;
+            opacity: 1;
+        }
+
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .bubble-pop {
+            animation: pop-burst 0.3s ease-out forwards !important;
+            color: var(--dcl-gold) !important;
+        }
+
+        @keyframes pop-burst {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.8);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+
+        /* ==========================================
+           4. 共用區塊與卡片 (優化留白與流暢度)
+           ========================================== */
+        section {
+            padding: 70px 20px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.6rem;
+            margin-bottom: 40px;
+            position: relative;
+            color: var(--dcl-navy);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--dcl-red), var(--dcl-gold));
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 35, 75, 0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-image {
+            height: 200px;
+            position: relative;
+            background: linear-gradient(135deg, var(--dcl-navy) 0%, var(--dcl-navy-light) 100%);
+            overflow: hidden;
+        }
+
+        .card-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 2;
+            transition: opacity 0.3s ease, transform 0.6s ease;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.05);
+        }
+
+        .fallback-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 6rem;
+            color: rgba(255, 255, 255, 0.06);
+            z-index: 1;
+        }
+
+        .card-icon {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--dcl-gold);
+            background: var(--dcl-navy);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            z-index: 3;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+            border: 2px solid var(--dcl-gold);
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .card-content {
+            padding: 25px 25px;
+            flex-grow: 1;
+            background: var(--white);
+            position: relative;
+            z-index: 4;
+        }
+
+        .card-content h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--dcl-navy);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card.alert {
+            border: 2px solid rgba(225, 24, 55, 0.4);
+        }
+
+        .card.alert .card-image {
+            background: linear-gradient(135deg, #8A1525 0%, #D31245 100%);
+        }
+
+        .card.alert .card-icon {
+            background: var(--dcl-red);
+            border-color: var(--white);
+            color: var(--white);
+        }
+
+        .card.alert .card-content h3 {
+            color: var(--dcl-red);
+        }
+
+        /* ==========================================
+           5. 數據圖標化專用樣式 (Infographic Styles)
+           ========================================== */
+        .ship-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 35, 75, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--dcl-navy);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--dcl-red);
+            display: block;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            font-weight: 500;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .stat-progress-container {
+            width: 100%;
+            height: 8px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            margin-top: 20px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .stat-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--dcl-navy), var(--dcl-navy-light));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 2s cubic-bezier(0.1, 0.5, 0.2, 1);
+            position: relative;
+        }
+
+        .stat-boat-icon {
+            position: absolute;
+            right: -10px;
+            top: -22px;
+            font-size: 1.2rem;
+            color: var(--dcl-gold);
+            transform: rotate(-10deg);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .reveal.active .stat-boat-icon {
+            opacity: 1;
+        }
+
+        /* ==========================================
+           6. 每日行程專用樣式 (Schedule Styles)
+           ========================================== */
+        .day-container {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 35, 75, 0.08);
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed rgba(243, 181, 0, 0.4);
+            padding-bottom: 15px;
+        }
+
+        .day-header h3 {
+            font-size: 2.2rem;
+            color: var(--dcl-navy);
+            margin: 0;
+        }
+
+        .day-goal {
+            background: rgba(243, 181, 0, 0.1);
+            padding: 15px 20px;
+            border-left: 4px solid var(--dcl-gold);
+            border-radius: 4px 12px 12px 4px;
+            margin-bottom: 30px;
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .day-goal strong {
+            color: var(--dcl-navy);
+        }
+
+        .schedule-list {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .schedule-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .schedule-time {
+            flex: 0 0 110px;
+            font-weight: 700;
+            color: var(--dcl-navy);
+            font-size: 0.95rem;
+            text-align: right;
+            padding-top: 3px;
+        }
+
+        .schedule-marker {
+            flex: 0 0 24px;
+            height: 24px;
+            background: var(--white);
+            border: 3px solid var(--dcl-gold);
+            border-radius: 50%;
+            margin-top: 4px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .schedule-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: 121px;
+            top: 28px;
+            bottom: -25px;
+            width: 2px;
+            background: rgba(243, 181, 0, 0.2);
+            z-index: 1;
+        }
+
+        .schedule-content {
+            flex: 1;
+        }
+
+        .schedule-title {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--dcl-navy);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .schedule-desc {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            line-height: 1.5;
+        }
+
+        .schedule-tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .tag-concierge {
+            background: var(--dcl-navy);
+            color: var(--dcl-gold);
+        }
+
+        .tag-food {
+            background: rgba(225, 24, 55, 0.1);
+            color: var(--dcl-red);
+        }
+
+        .tag-kids {
+            background: rgba(10, 58, 112, 0.1);
+            color: var(--dcl-navy-light);
+        }
+
+        .tag-highlight {
+            background: var(--dcl-gold);
+            color: var(--dcl-navy);
+        }
+
+        /* ==========================================
+           7. 其他結構
+           ========================================== */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 10px 0;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: rgba(243, 181, 0, 0.4);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            z-index: 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 15px 30px;
+            z-index: 1;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: var(--dcl-red);
+            border: 4px solid var(--bg-body);
+            border-radius: 50%;
+            top: 35px;
+            z-index: 2;
+            box-shadow: 0 0 0 2px rgba(243, 181, 0, 0.5);
+        }
+
+        .left {
+            left: 0;
+            text-align: right;
+        }
+
+        .right {
+            left: 50%;
+            text-align: left;
+        }
+
+        .left::after {
+            right: -13px;
+        }
+
+        .right::after {
+            left: -13px;
+        }
+
+        .timeline-content {
+            padding: 25px;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 2;
+            border: 1px solid rgba(0, 35, 75, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .timeline-content h3 {
+            color: var(--dcl-navy);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .timeline-item.highlight .timeline-content {
+            border: 2px solid var(--dcl-gold);
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFDF5 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-item.highlight .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8), transparent);
+            transform: rotate(45deg) translateY(-100%);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: rotate(45deg) translateY(-100%) translateX(-100%);
+            }
+
+            20% {
+                transform: rotate(45deg) translateY(100%) translateX(100%);
+            }
+
+            100% {
+                transform: rotate(45deg) translateY(100%) translateX(100%);
+            }
+        }
+
+        .timeline-item.highlight .timeline-content h3 {
+            color: #D48800;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--dcl-navy);
+            color: var(--dcl-gold);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid var(--dcl-gold);
+        }
+
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #back-to-top:hover {
+            transform: translateY(-5px);
+            background: var(--dcl-gold);
+            color: var(--dcl-navy);
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px 30px;
+            background-color: var(--dcl-navy);
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            color: var(--white);
+            position: relative;
+        }
+
+        footer h2 {
+            color: var(--dcl-gold);
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .day-container {
+                padding: 20px;
+            }
+
+            .schedule-item {
+                gap: 10px;
+            }
+
+            .schedule-time {
+                flex: 0 0 85px;
+                font-size: 0.85rem;
+            }
+
+            .schedule-marker {
+                flex: 0 0 16px;
+                height: 16px;
+                border-width: 2px;
+            }
+
+            .schedule-item:not(:last-child)::before {
+                left: 92px;
+                top: 22px;
+            }
+
+            .schedule-title {
+                font-size: 1rem;
+            }
+
+            .timeline::after {
+                left: 30px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px;
+                padding-right: 15px;
+                text-align: left;
+            }
+
+            .right {
+                left: 0;
+            }
+
+            .left::after,
+            .right::after {
+                left: 17px;
+                right: auto;
+            }
+
+            .countdown-container {
+                gap: 8px;
+            }
+
+            .countdown-item {
+                min-width: 65px;
+                padding: 10px;
+            }
+
+            .countdown-item span.cd-num {
+                font-size: 1.6rem;
+            }
+
+            .cursor-sparkle {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="scroll-progress"></div>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Disney Adventure</h1>
+            <p>星海實戰攻略｜專為 4大3小 禮賓艙房設計</p>
+            <div class="date-badge"><i class="fa-regular fa-compass"></i> 啟航日期：2027/1/25 - 1/28</div>
+
+            <div class="countdown-container" id="countdown">
+                <div class="countdown-item"><span class="cd-num" id="cd-days">00</span><span class="cd-label">天</span>
+                </div>
+                <div class="countdown-item"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">時</span>
+                </div>
+                <div class="countdown-item"><span class="cd-num" id="cd-minutes">00</span><span
+                        class="cd-label">分</span></div>
+                <div class="countdown-item"><span class="cd-num" id="cd-seconds">00</span><span
+                        class="cd-label">秒</span></div>
+            </div>
+        </div>
+        <div class="wave-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                preserveAspectRatio="none">
+                <path
+                    d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+                    opacity=".25" class="shape-fill"></path>
+                <path
+                    d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5V0Z"
+                    opacity=".5" class="shape-fill"></path>
+                <path
+                    d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
+                    class="shape-fill"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- 1. 核心資訊 -->
+    <section id="overview" class="reveal">
+        <h2 class="section-title">團隊核心資訊</h2>
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=600&q=80"
+                        alt="同行成員" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-users"></i></div>
+                    <i class="fa-solid fa-users card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>同行成員與艙房</h3>
+                    <p>兩家共 4 大 3 小 (11歲、9歲、8歲)。<br>入住<strong>專屬禮賓艙房與連通房</strong>。享有禮賓專屬提早預訂特權與優先通道，尊榮啟航。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80"
+                        alt="航班配置" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-plane-departure"></i></div>
+                    <i class="fa-solid fa-plane-departure card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>航班配置</h3>
+                    <p>搭乘星宇航空。<br>去程：JX771<br>回程：JX772 (14:45起飛，以郵輪離船日來說時間極度充裕，可從容下船)。</p>
+                </div>
+            </div>
+            <div class="card alert">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80"
+                        alt="帳務死線" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-file-invoice"></i></div>
+                    <i class="fa-solid fa-triangle-exclamation card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>帳務與資料死線</h3>
+                    <p>2026/10/27 為全額付款期限。<br>可追蹤匯率<strong>還有固定小費需線上支付</strong>。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 巨艦數據 -->
+    <section id="ship-stats" class="reveal"
+        style="background-color: #FFFFFF; border-radius: 30px; padding: 50px 30px; box-shadow: var(--shadow-sm); margin-bottom: 30px;">
+        <h2 class="section-title" style="margin-bottom: 20px;">巨艦數據與人流分流</h2>
+        <div class="ship-stats-grid">
+            <div class="stat-card">
+                <i class="fa-solid fa-arrows-left-right stat-icon"></i>
+                <span class="stat-number" data-target="342">0</span>
+                <span class="stat-label">船隻全長 (公尺)</span>
+                <div class="stat-progress-container">
+                    <div class="stat-progress-fill" data-width="100"><i class="fa-solid fa-ship stat-boat-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-layer-group stat-icon"></i>
+                <span class="stat-number" data-target="20">0</span>
+                <span class="stat-label">甲板層數</span>
+                <div class="stat-progress-container">
+                    <div class="stat-progress-fill" data-width="85"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-users-viewfinder stat-icon"></i>
+                <span class="stat-number" data-target="6700">0</span>
+                <span class="stat-label">乘載旅客數量</span>
+                <div class="stat-progress-container">
+                    <div class="stat-progress-fill" data-width="95"></div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-star stat-icon"></i>
+                <span class="stat-number" data-target="7">0</span>
+                <span class="stat-label">分流主題區域</span>
+                <div class="stat-progress-container">
+                    <div class="stat-progress-fill" data-width="70"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. 每日推薦行程 (Mock Schedule) -->
+    <section id="schedule" class="reveal">
+        <h2 class="section-title">每日魔法行程推薦</h2>
+
+        <!-- Day 1 -->
+        <div class="day-container">
+            <div class="day-header">
+                <h3>🌟 Day 1｜登船日</h3>
+            </div>
+            <div class="day-goal">
+                <strong>核心目標：</strong>越早登船越好，把登船日做成「熟悉郵輪＋定錨活動」的一天。優先完成 Open House 與動線熟悉。
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="schedule-time">10:30–11:30</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-concierge">禮賓優先</span>
+                        <span class="schedule-title">抵達碼頭、完成報到</span>
+                        <p class="schedule-desc">用禮賓優先權避開人潮。留意迎賓小禮與優先登船動線。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">11:45–12:30</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-food">精緻午餐</span>
+                        <span class="schedule-title">主餐廳坐下式午餐</span>
+                        <p class="schedule-desc">建議前往 Pixar Market。請確認晚餐時段(First Seating)與餐廳順序。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">12:30–13:10</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-concierge">管家協助</span>
+                        <span class="schedule-title">禮賓酒廊報到 (Deck 17)</span>
+                        <p class="schedule-desc">向管家確認皇家見面會時段，及當晚大秀「免排隊提前入座」安排。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">13:20–14:10</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-kids">全員參加</span>
+                        <span class="schedule-title">海洋俱樂部 Open House (Deck 8)</span>
+                        <p class="schedule-desc">澤澤、彤妹熟悉四大沉浸區。<strong>必做設定：取孩密語。</strong></p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">14:20–16:00</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">核心動線</span>
+                        <span class="schedule-title">熟悉動線與玩水暖身</span>
+                        <p class="schedule-desc">帶小寶看 Edge 隱藏入口。隨後前往 Toy Story Pool 玩水（登船日人最少）。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">16:00–16:30</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">強制參加</span>
+                        <span class="schedule-title">旅客集合演練 (Assembly Drill)</span>
+                        <p class="schedule-desc">全船旅客必須參加的安全演習。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">17:30–晚間</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">魔法之夜</span>
+                        <span class="schedule-title">晚宴、大秀與酒廊宵夜</span>
+                        <p class="schedule-desc">第一輪晚餐(與專屬服務員見面) → 劇院大秀 → 酒廊宵夜收尾。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-container">
+            <div class="day-header">
+                <h3>🦸 Day 2｜海上冒險日</h3>
+            </div>
+            <div class="day-goal">
+                <strong>核心目標：</strong>上午衝刺激設施（Marvel）、下午放鬆與採買、晚上看秀。
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="schedule-time">09:00–11:20</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">激戰區</span>
+                        <span class="schedule-title">Marvel Landing & 滑水道</span>
+                        <p class="schedule-desc">主攻鋼鐵人測試車、皮姆量子賽車。隨後衝 Woody’s Wide Slide 避免長排隊。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">13:20–15:10</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-kids">舊京山街道</span>
+                        <span class="schedule-title">街區電玩秀 (Deck 7)</span>
+                        <p class="schedule-desc">觀賞復仇者聯盟特技秀。全家刷房卡免費玩大英雄天團體感電玩。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">15:15–17:10</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-concierge">舒緩時光</span>
+                        <span class="schedule-title">採買與酒廊下午茶</span>
+                        <p class="schedule-desc">商店區集中採買。回禮賓酒廊享用三明治與司康，收整晚餐前狀態。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 3 -->
+        <div class="day-container">
+            <div class="day-header">
+                <h3>💦 Day 3｜水域與皇家日</h3>
+            </div>
+            <div class="day-goal">
+                <strong>核心目標：</strong>水域玩足、完成公主見面會、確保大人禮賓放鬆時間。
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="schedule-time">09:00–11:40</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">水上活動</span>
+                        <span class="schedule-title">Wayfinder Bay & Toy Story Pool</span>
+                        <p class="schedule-desc">海洋奇緣主題泳池。順路去 Discovery Reef 買烏蘇拉珍珠奶茶。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">13:20–14:20</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-concierge">家長放風</span>
+                        <span class="schedule-title">Oceaneer Club 完整托育</span>
+                        <p class="schedule-desc">孩子們參加完整活動。大人前往酒吧或 Spa 享受專屬寧靜時光。</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">14:40–15:30</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">唯一必搶</span>
+                        <span class="schedule-title">Royal Meet & Greet 皇家見面會</span>
+                        <p class="schedule-desc">完成最重要的公主見面合照任務！</p>
+                    </div>
+                </div>
+                <div class="schedule-item">
+                    <div class="schedule-time">19:30–晚間</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-highlight">最終高潮</span>
+                        <span class="schedule-title">海上煙火秀：獅子王</span>
+                        <p class="schedule-desc">The Lion King: Celebration in the Sky。最後一晚酒廊收尾。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Day 4 -->
+        <div class="day-container" style="border-bottom: 5px solid var(--dcl-gold);">
+            <div class="day-header">
+                <h3>🧳 Day 4｜下船日</h3>
+            </div>
+            <div class="schedule-list">
+                <div class="schedule-item">
+                    <div class="schedule-time">07:00–09:00</div>
+                    <div class="schedule-marker"></div>
+                    <div class="schedule-content">
+                        <span class="schedule-tag tag-concierge">優先撤離</span>
+                        <span class="schedule-title">安靜早餐與優先下船</span>
+                        <p class="schedule-desc">酒廊享用從容早餐。憑禮賓專屬通道下船，從容前往機場。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. 預約時間軸 -->
+    <section id="timeline" class="reveal">
+        <h2 class="section-title">禮賓預約黃金時間軸</h2>
+        <div class="timeline">
+            <div class="timeline-item left highlight reveal">
+                <div class="timeline-content">
+                    <h3><i class="fa-solid fa-crown" style="margin-right: 8px;"></i> 出發前 130 天 (禮賓特權)</h3>
+                    <p style="color: var(--text-dark); font-weight: bold; margin-bottom: 10px;">唯一必搶目標：發信請禮賓客服代訂「公主見面會」
+                        (Princess Meet & Greet)！</p>
+                    <p style="font-size: 0.95rem;">
+                        <strong>客製需求：</strong>同時要求兩家人在輪替主餐廳必須「<strong>同桌用餐</strong>」。將精力專注於此，其餘隨緣體驗即可。</p>
+                </div>
+            </div>
+            <div class="timeline-item right reveal">
+                <div class="timeline-content">
+                    <h3>出發前 125 天</h3>
+                    <p>系統開放禮賓客房進行<strong>一般預訂</strong>，若有其他臨時起意的付費活動（如沙龍等）可在此階段佛系補齊。</p>
+                </div>
+            </div>
+            <div class="timeline-item left reveal">
+                <div class="timeline-content">
+                    <h3>出發前 60 天</h3>
+                    <p><strong>必備動作：</strong>全員下載「Disney Cruise Line Navigator App」，這是船上查行程、地圖與角色時間的核心中樞。</p>
+                </div>
+            </div>
+            <div class="timeline-item right reveal">
+                <div class="timeline-content">
+                    <h3>出發前 40 天 (線上報到)</h3>
+                    <p>台灣時間 12:00/13:00 開放。務必準時上線，搶下 <strong>11:00 AM 最早的港口抵達時間</strong>！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. 報到與登船 -->
+    <section id="checkin" class="reveal">
+        <h2 class="section-title">零失誤通關與登船實戰</h2>
+        <div class="grid-container">
+            <div class="card alert">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=600&q=80"
+                        alt="SGAC" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-passport"></i></div>
+                    <i class="fa-solid fa-file-contract card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>新加坡入境卡 (SGAC) 填兩次！</h3>
+                    <p>抵達前 3 天透過 <strong>MyICA Mobile APP</strong> 填寫。1/24 飛抵新加坡填第一次；<br><strong
+                            style="color: var(--dcl-red);">1/28 郵輪下船日視為「重新入境新加坡」，必須再填第二次！</strong></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=600&q=80"
+                        alt="極速登船" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-ship"></i></div>
+                    <i class="fa-solid fa-bolt card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>35 分鐘極速登船 (Day 1)</h3>
+                    <p>11:00 抵達碼頭出示 QR 碼。行李吊牌現場發放手寫。若線上報到完備，實測安檢到登船只需 <strong>35 分鐘</strong>！</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80"
+                        alt="啟航派對" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-music"></i></div>
+                    <i class="fa-solid fa-music card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>啟航派對與午餐分流</h3>
+                    <p>登船直奔中庭舞台參加「Let's Set Sail」米奇帶動跳。午餐直衝輪替主餐廳享用「<strong>坐下式套餐（登船日限定）</strong>」，切勿去自助餐廳。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. 設施與水區 -->
+    <section id="facilities" class="reveal">
+        <h2 class="section-title">兒童育樂與水區防雷</h2>
+        <div class="grid-container">
+            <div class="card alert">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1519340333755-56e9c1d04579?auto=format&fit=crop&w=600&q=80"
+                        alt="泳池" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-water"></i></div>
+                    <i class="fa-solid fa-life-ring card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>水區深度警告 (家長注意)</h3>
+                    <p>第 17 層玩具總動員主泳池，<strong>水深約達成年人的胸口</strong>。對於 8 歲與 9 歲的孩童，強烈建議家長務必陪同下水或穿戴救生衣！</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1511268559489-34b624fbfba3?auto=format&fit=crop&w=600&q=80"
+                        alt="手環" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-child"></i></div>
+                    <i class="fa-solid fa-id-badge card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>海洋俱樂部註冊 (13:20-14:10)</h3>
+                    <p>趁 Open House 期間全家進入，領取孩童的「白色防水 RFID 追蹤手環」，並務必設定兩家專屬的「<strong>取孩密語</strong>」以確保安全。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. 獨家大秀與餐飲 -->
+    <section id="entertainment" class="reveal">
+        <h2 class="section-title">娛樂大秀與極致餐飲</h2>
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
+                        alt="劇院" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-masks-theater"></i></div>
+                    <i class="fa-solid fa-masks-theater card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>必看海上大秀</h3>
+                    <p><strong>《Remember》：</strong>以瓦力為主軸的百老匯級實體木偶秀，評價極高。<br><strong>《獅子王煙火秀》：</strong>全球唯一海上煙火，由寶萊塢巨星沙魯克·汗旁白，極具震撼！
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
+                        alt="美食" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-burger"></i></div>
+                    <i class="fa-solid fa-burger card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>極致快餐地圖</h3>
+                    <p>白天遊玩別錯過甲板快餐：印度料理 <strong>Mowgli's Eatery</strong>、中東烤肉口袋餅 <strong>Cosmic
+                            Kebabs</strong>，以及打卡聖地：<strong>烏蘇拉主題珍奶</strong>！</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"
+                        alt="角色" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-camera-retro"></i></div>
+                    <i class="fa-solid fa-camera-retro card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>野生捕獲角色 & 電影院</h3>
+                    <p>走廊與吃飯時間角色會主動互動，靠 App 極易收集。想休息時，隱藏的 <strong>Baymax Cinemas</strong> 會播放首輪迪士尼院線片。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. 隱藏攻略、購物與離船 -->
+    <section id="tips" class="reveal">
+        <h2 class="section-title">購物、隱藏預算與離船</h2>
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80"
+                        alt="購物" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <i class="fa-solid fa-bag-shopping card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>獨家購物策略</h3>
+                    <p>第 7 層商店（含達菲專賣店）一開門就去逛！船上有 Bacha Coffee 與 TWG 迪士尼角色限定茶。獨家商品事後網購運費極高，看準就下手。</p>
+                </div>
+            </div>
+            <div class="card alert">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80"
+                        alt="飯店房內" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-bed"></i></div>
+                    <i class="fa-solid fa-wallet card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>自備物品與隱藏帳單</h3>
+                    <p><strong>房內無牙刷與拖鞋，務必自備。</strong><br>Wi-Fi 需額外付費；一般小費約每位 $64 將自動計入房帳（禮賓房另計）。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=600&q=80"
+                        alt="行李走廊" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-suitcase"></i></div>
+                    <i class="fa-solid fa-door-open card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>離船前置與當日 (1/27-1/28)</h3>
+                    <p><strong>1/27 晚上 10:00 前</strong>：將打包好的大型行李貼上專屬吊牌放於房外走廊。<br><strong>1/28 早上</strong>：6:30
+                        開放早餐。憑禮賓通道從容下船。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. 在地資訊與小工具 -->
+    <section id="local-info" class="reveal">
+        <h2 class="section-title">在地資訊與小工具</h2>
+        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+
+            <div class="card">
+                <div class="card-content"
+                    style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="justify-content: center;"><i class="fa-solid fa-cloud-sun"></i> 新加坡即時天氣</h3>
+                    <div id="weather-widget"
+                        style="margin-top: 20px; padding: 20px; background: var(--bg-body); border-radius: 16px;">
+                        <div style="font-size: 3.5rem; color: var(--dcl-navy); font-weight: 700; line-height: 1.2;"
+                            id="w-temp">--°C</div>
+                        <div style="font-size: 1.2rem; color: var(--text-gray); font-weight: 500; margin-top: 5px;"
+                            id="w-desc"><i class="fa-solid fa-spinner fa-spin"></i> 載入中...</div>
+                    </div>
+                    <p
+                        style="margin-top: 20px; font-size: 0.95rem; color: var(--text-gray); text-align: left; padding: 0 10px;">
+                        <i class="fa-solid fa-circle-info" style="color: var(--dcl-gold);"></i>
+                        <strong>1月穿搭建議：</strong>新加坡全年炎熱，1月偶有陣雨。建議穿著透氣夏裝，並隨身攜帶輕薄雨具與應付室內冷氣的薄外套。
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content"
+                    style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                    <h3 style="justify-content: center;"><i class="fa-solid fa-coins"></i> 實用匯率參考</h3>
+                    <div style="margin-top: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; background: var(--bg-body); padding: 15px 20px; border-radius: 12px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-navy);">1 USD</div>
+                            <i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--dcl-gold);"></i>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-red);">~ 32 TWD</div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-around; align-items: center; background: var(--bg-body); padding: 15px 20px; border-radius: 12px;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-navy);">1 SGD</div>
+                            <i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--dcl-gold);"></i>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-red);">~ 24 TWD</div>
+                        </div>
+                        <p
+                            style="margin-top: 20px; font-size: 0.95rem; color: var(--text-gray); text-align: left; padding: 0 10px;">
+                            <i class="fa-solid fa-circle-info" style="color: var(--dcl-gold);"></i>
+                            <strong>消費建議：</strong>郵輪上全為<strong>美金(USD)</strong>計價；新加坡市區則使用<strong>新幣(SGD)</strong>。建議綁定海外免手續費信用卡(如
+                            Wise)。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="back-to-top" title="回到頂端">
+        <i class="fa-solid fa-anchor"></i>
+    </div>
+
+    <footer>
+        <h2>準備好迎接魔法了嗎？</h2>
+        <p style="margin-top: 15px; color: #B0C4DE; font-size: 1.2rem;">祝 兩家人航行順利！收穫滿滿的回憶！</p>
+
+        <div id="easter-egg-trigger" title="點擊召喚魔法！">
+            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--dcl-gold);"></i>
+            <span class="egg-hint">給孩子們的專屬驚喜 (點擊 3 次)</span>
+            <div class="mickey-shape" style="color: var(--dcl-gold);"></div>
+        </div>
+
+        <p style="margin-top: 40px; font-size: 0.9rem; color: rgba(255,255,255,0.4); letter-spacing: 1px;">Disney
+            Adventure Cruise Guide © 2027</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // 1. 滾動進度條
+            const progressBar = document.getElementById('scroll-progress');
+            if (progressBar) {
+                window.addEventListener('scroll', () => {
+                    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = (winScroll / height) * 100;
+                    progressBar.style.width = scrolled + "%";
+                });
+            }
+
+            // 2. 元素淡入動畫
+            const reveals = document.querySelectorAll('.reveal');
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
+
+            const revealOnScroll = new IntersectionObserver(function (entries, observer) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        if (entry.target.id === 'ship-stats') {
+                            animateShipStats();
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, revealOptions);
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+
+            function animateShipStats() {
+                const numbers = document.querySelectorAll('.stat-number');
+                numbers.forEach(num => {
+                    const target = +num.getAttribute('data-target');
+                    const increment = target / 50;
+                    let count = 0;
+                    const updateCount = () => {
+                        if (count < target) {
+                            count += increment;
+                            num.innerText = Math.ceil(count).toLocaleString();
+                            setTimeout(updateCount, 30);
+                        } else {
+                            num.innerText = target.toLocaleString();
+                        }
+                    };
+                    updateCount();
+                });
+                const bars = document.querySelectorAll('.stat-progress-fill');
+                bars.forEach(bar => {
+                    const width = bar.getAttribute('data-width');
+                    if (bar) bar.style.width = width + '%';
+                });
+            }
+
+            // 3. 回到頂端按鈕
+            const backToTopBtn = document.getElementById('back-to-top');
+            if (backToTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+                backToTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            // 4. 倒數計時
+            const targetDate = new Date("2027-01-25T11:00:00+08:00").getTime();
+            const cdDays = document.getElementById("cd-days");
+            const cdHours = document.getElementById("cd-hours");
+            const cdMinutes = document.getElementById("cd-minutes");
+            const cdSeconds = document.getElementById("cd-seconds");
+            const countdownContainer = document.getElementById("countdown");
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                if (distance < 0) {
+                    if (countdownContainer) countdownContainer.innerHTML = "<div class='countdown-item' style='width:auto; padding: 10px 30px;'><span class='cd-num' style='font-size: 1.8rem;'>✨ 魔法已啟航！ ✨</span></div>";
+                    return;
+                }
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                if (cdDays) cdDays.innerText = days.toString().padStart(2, '0');
+                if (cdHours) cdHours.innerText = hours.toString().padStart(2, '0');
+                if (cdMinutes) cdMinutes.innerText = minutes.toString().padStart(2, '0');
+                if (cdSeconds) cdSeconds.innerText = seconds.toString().padStart(2, '0');
+            }
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // 5. 新加坡天氣
+            async function fetchSingaporeWeather() {
+                const tempEl = document.getElementById('w-temp');
+                const descEl = document.getElementById('w-desc');
+                if (!tempEl || !descEl) return;
+
+                try {
+                    const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=1.2897&longitude=103.8501&current_weather=true');
+                    if (!response.ok) throw new Error('Weather API error');
+                    const data = await response.json();
+                    const temp = Math.round(data.current_weather.temperature);
+                    const weatherCode = data.current_weather.weathercode;
+                    tempEl.innerText = `${temp}°C`;
+                    let desc = "多雲";
+                    let icon = "<i class='fa-solid fa-cloud' style='color:#546681;'></i>";
+                    if (weatherCode <= 1) { desc = "晴朗"; icon = "<i class='fa-solid fa-sun' style='color:#F3B500;'></i>"; }
+                    else if (weatherCode <= 3) { desc = "晴時多雲"; icon = "<i class='fa-solid fa-cloud-sun' style='color:#F3B500;'></i>"; }
+                    else if (weatherCode <= 67) { desc = "陣雨"; icon = "<i class='fa-solid fa-cloud-rain' style='color:#0A3A70;'></i>"; }
+                    else if (weatherCode >= 95) { desc = "雷陣雨"; icon = "<i class='fa-solid fa-cloud-bolt' style='color:#E11837;'></i>"; }
+                    descEl.innerHTML = `${icon} ${desc}`;
+                } catch (error) {
+                    tempEl.innerText = "--°C";
+                    descEl.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> 暫時無法取得天氣";
+                }
+            }
+            fetchSingaporeWeather();
+
+            // 6. 魔法彩蛋
+            let eggClicks = 0;
+            const eggTrigger = document.getElementById('easter-egg-trigger');
+            if (eggTrigger) {
+                eggTrigger.addEventListener('click', () => {
+                    eggClicks++;
+                    eggTrigger.style.transform = `scale(${1 + eggClicks * 0.05})`;
+                    if (eggClicks === 3) {
+                        triggerMagic();
+                        eggClicks = 0;
+                        setTimeout(() => { eggTrigger.style.transform = 'scale(1)'; }, 1000);
+                    }
+                });
+            }
+
+            function triggerMagic() {
+                const modal = document.createElement('div');
+                modal.className = 'magic-modal';
+                modal.innerHTML = `
+                    <div class="magic-modal-content">
+                        <div class="mickey-shape" style="font-size: 45px; color: var(--dcl-gold); margin: 0 auto 15px;"></div>
+                        <h2 style="color: var(--dcl-navy); font-size: 1.8rem; margin-bottom: 15px;">✨ 專屬魔法解鎖 ✨</h2>
+                        <p style="color: var(--text-gray); font-size: 1.15rem; line-height: 1.6;"><strong>小寶、澤澤、彤妹：</strong><br>準備好跟我們一起迎接<br>最棒的迪士尼海上探險了嗎？</p>
+                        <button class="modal-close-btn" style="margin-top: 25px; padding: 12px 30px; background: var(--dcl-red); color: white; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(225, 24, 55, 0.4); transition: transform 0.2s;">進入魔法世界</button>
+                    </div>`;
+                document.body.appendChild(modal);
+
+                modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
+                createConfetti();
+            }
+
+            function createConfetti() {
+                const colors = ['#E11837', '#F3B500', '#0A3A70', '#FFFFFF'];
+                const container = document.createElement('div');
+                container.style.position = 'fixed'; container.style.top = '0'; container.style.left = '0';
+                container.style.width = '100vw'; container.style.height = '100vh';
+                container.style.pointerEvents = 'none'; container.style.zIndex = '9999';
+                container.style.overflow = 'hidden';
+                document.body.appendChild(container);
+                for (let i = 0; i < 100; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'confetti-particle';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    if (Math.random() > 0.5) {
+                        particle.innerHTML = '<i class="fa-solid fa-star"></i>';
+                        particle.style.color = color;
+                        particle.style.fontSize = (Math.random() * 12 + 10) + 'px';
+                    } else {
+                        particle.innerHTML = '<div class="mickey-shape"></div>';
+                        particle.style.color = color;
+                        particle.style.fontSize = (Math.random() * 15 + 10) + 'px';
+                    }
+                    container.appendChild(particle);
+                }
+                setTimeout(() => container.remove(), 6000);
+            }
+
+            // 7. 游標魔法 (PC)
+            let lastSparkleTime = 0;
+            document.addEventListener('mousemove', (e) => {
+                const now = Date.now();
+                if (now - lastSparkleTime < 60) return;
+                lastSparkleTime = now;
+                if (Math.random() > 0.4) {
+                    const sparkle = document.createElement('i');
+                    sparkle.className = 'fa-solid fa-star cursor-sparkle';
+                    sparkle.style.left = e.clientX + 'px';
+                    sparkle.style.top = e.clientY + 'px';
+                    document.body.appendChild(sparkle);
+                    setTimeout(() => sparkle.remove(), 800);
+                }
+            });
+
+            // 8. 漂浮泡泡
+            function createMickeyBubble() {
+                const bubble = document.createElement('div');
+                bubble.className = 'mickey-shape mickey-bubble';
+                bubble.style.left = Math.random() * 90 + 'vw';
+                const size = Math.random() * 20 + 20;
+                bubble.style.fontSize = `${size}px`;
+                bubble.addEventListener('click', function () {
+                    this.classList.add('bubble-pop');
+                    this.innerHTML = '<i class="fa-solid fa-sparkles"></i>';
+                    setTimeout(() => this.remove(), 300);
+                });
+                document.body.appendChild(bubble);
+                setTimeout(() => { if (document.body.contains(bubble)) bubble.remove(); }, 12000);
+            }
+            setInterval(createMickeyBubble, 6000);
+
+        });
+    </script>
+</body>
+
+</html>
