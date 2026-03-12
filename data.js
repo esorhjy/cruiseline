@@ -2,7 +2,7 @@ const cruiseSchedule = [
     {
         id: "day1",
         tabTitle: "Day 1 登船",
-        dateTitle: "🌟 Day 1｜登船日",
+        dateTitle: "🌟 Day 1｜登船日（更早登船＋全家一起熟悉郵輪＋Open House）",
         goals: [
             "越早登船越好，把登船日做成「熟悉郵輪＋定錨活動」的一天",
             "優先完成：Open House → 動線熟悉 → 玩水暖身 → 晚餐與首秀節奏"
@@ -14,8 +14,8 @@ const cruiseSchedule = [
                     {
                         time: "10:30–11:30",
                         title: "抵達碼頭、完成報到",
-                        tag: "禮賓優先",
-                        tagClass: "tag-concierge",
+                        tag: "登船流程",
+                        tagClass: "tag-boarding",
                         desc: [
                             "<strong>目的：</strong>用禮賓優先登船避開人潮、保留下午完整活動時間",
                             "<strong>提醒：</strong>留意禮賓迎賓小禮與優先動線"
@@ -24,21 +24,21 @@ const cruiseSchedule = [
                     {
                         time: "11:45–12:30",
                         title: "坐下式午餐（主餐廳）",
-                        tag: "精緻午餐",
-                        tagClass: "tag-food",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
                             "<strong>建議：</strong>直接前往 Pixar Market 或 Enchanted Summer",
                             "<strong>用餐必確認：</strong> 晚餐第一時段（First Seating）、輪替餐廳順序"
                         ]
                     },
                     {
-                        time: "12:30–13:10",
-                        title: "禮賓酒廊報到 (Deck 17)",
-                        tag: "管家協助",
+                        time: "12:30–13:00",
+                        title: "禮賓酒廊報到：Concierge Lounge (Deck 17)",
+                        tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>地點：</strong>Concierge Lounge（阿拉丁主題）",
-                            "<strong>請管家協助確認：</strong>出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
+                            "<strong>請管家協助確認：</strong>",
+                            "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
                             "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排"
                         ]
                     }
@@ -48,9 +48,9 @@ const cruiseSchedule = [
                 name: "下午｜Open House 放最前＋全家熟悉核心動線＋登船日玩水",
                 events: [
                     {
-                        time: "13:20–14:10",
+                        time: "13:00–14:00",
                         title: "Disney Oceaneer Club Open House (Deck 8)",
-                        tag: "全員參加",
+                        tag: "孩子專屬",
                         tagClass: "tag-kids",
                         desc: [
                             "全家一起參加：澤澤、彤妹先熟悉四大沉浸區域",
@@ -58,34 +58,34 @@ const cruiseSchedule = [
                         ]
                     },
                     {
-                        time: "14:20–15:00",
-                        title: "全家熟悉郵輪核心動線",
-                        tag: "核心動線",
-                        tagClass: "tag-highlight",
+                        time: "14:00–15:00",
+                        title: "全家熟悉郵輪核心動線 (Deck 8 → 7 → 10/11 → 17)",
+                        tag: "熟悉郵輪",
+                        tagClass: "tag-explore",
                         desc: [
-                            "<strong>Deck 7：</strong>帶小寶看 Edge 隱藏入口（舊京山街道商店立面）、了解 大英雄天團電玩樂場",
-                            "<strong>Deck 10/11：</strong>確認 Imagination Garden 與花園舞台位置，到花園舞台看表演"
+                            "<strong>Deck 7：</strong>帶小寶看 Edge 隱藏入口、了解 大英雄天團電玩樂場",
+                            "<strong>Deck 10/11：</strong>確認 Imagination Garden 位置，到花園舞台看表演"
                         ]
                     },
                     {
                         time: "15:00–16:00",
                         title: "Toy Story Pool／Splash Pad (Deck 17)",
-                        tag: "玩水暖身",
-                        tagClass: "tag-highlight",
+                        tag: "玩水活動",
+                        tagClass: "tag-water",
                         desc: [
                             "<strong>目的：</strong>登船日通常人少，適合暖身玩水",
                             "<strong>點心補給：</strong>披薩星球、吱吱冰飲",
-                            "<strong>Concierge Sundeck & Pool (Deck 19)：</strong>讓孩子認識禮賓專屬區域；大人先鎖定躺椅與傍晚酒水動線"
+                            "<strong>Woody’s Wide Slide（胡迪與翠絲的瘋狂滑水道入口）（Deck 17/19）</strong>"
                         ]
                     },
                     {
                         time: "16:00–16:30",
-                        title: "強制旅客集合演練 (Assembly Drill)",
-                        tag: "強制參加",
-                        tagClass: "tag-alert",
+                        title: "Mandatory Guest Assembly Drill (安全演練)",
+                        tag: "安全演練",
+                        tagClass: "tag-safety",
                         desc: [
-                            "全船旅客必須參加的安全演習",
-                            "時間是 4:00 PM–4:30 PM，務必準時"
+                            "也就是強制旅客集合演練",
+                            "時間是 4:00 PM–4:30 PM"
                         ]
                     }
                 ]
@@ -95,10 +95,12 @@ const cruiseSchedule = [
                 events: [
                     {
                         time: "17:15–19:00",
-                        title: "第一時段晚餐（輪替餐廳）",
-                        tag: "精緻晚餐",
-                        tagClass: "tag-food",
+                        title: "第一時段晚餐：Animator’s Palate（餐廳）",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
+                            "經典「黑白變彩色」動畫互動用餐體驗",
+                            "若輪到 Animator's Palate：準備互動驚喜（手繪草圖變動畫）",
                             "<strong>提醒：</strong>專屬服務員開始跟隨你們",
                             "<strong>建議：</strong>這晚拍全家正式照片"
                         ]
@@ -106,19 +108,20 @@ const cruiseSchedule = [
                     {
                         time: "19:30–21:00",
                         title: "Walt Disney Theatre 首日晚間大秀 (Deck 5–7)",
-                        tag: "魔法之夜",
-                        tagClass: "tag-highlight",
+                        tag: "精彩看秀",
+                        tagClass: "tag-show",
                         desc: [
-                            "享受百老匯級別的開場大秀"
+                            "音樂劇《Remember》",
+                            "晚間秀建議提早 30 分鐘入場；選中間區域視野最佳。"
                         ]
                     },
                     {
                         time: "21:05–21:40",
-                        title: "Concierge Lounge 宵夜與收尾 (Deck 17)",
+                        title: "Concierge Lounge (Deck 17) 宵夜收尾",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "返回酒廊享用宵夜，結束完美的第一天"
+                            "結束完美的第一天"
                         ]
                     }
                 ]
@@ -128,7 +131,7 @@ const cruiseSchedule = [
     {
         id: "day2",
         tabTitle: "Day 2 海上",
-        dateTitle: "🦸 Day 2｜海上冒險日 (Marvel 主題)",
+        dateTitle: "🦸 Day 2｜海上日（Marvel 主題＋滑水道＋舊京山街區）",
         goals: [
             "上午衝刺激、下午放鬆與合體、晚上看秀"
         ],
@@ -139,8 +142,8 @@ const cruiseSchedule = [
                     {
                         time: "07:00–09:00",
                         title: "早餐時間",
-                        tag: "朝食補充",
-                        tagClass: "tag-food",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
                             "先在海景陽台房享受簡單 room service",
                             "再到正式早餐餐廳吃主食"
@@ -152,31 +155,32 @@ const cruiseSchedule = [
                 name: "上午｜同樓層連打（動線最順）",
                 events: [
                     {
-                        time: "09:00–10:40",
+                        time: "09:00–09:30",
                         title: "Marvel Landing (Deck 18/19)",
-                        tag: "激戰區",
-                        tagClass: "tag-highlight",
+                        tag: "刺激設施",
+                        tagClass: "tag-thrill",
                         desc: [
-                            "<strong>主攻：</strong>Ironcycle Test Run（鋼鐵人測試車）",
-                            "<strong>接著：</strong>皮姆量子賽車、格魯特星系旋轉"
+                            "<strong>主攻：Ironcycle Test Run（鋼鐵人測試車）</strong>",
+                            "接著：皮姆量子賽車、格魯特星系旋轉"
                         ]
                     },
                     {
-                        time: "10:45–11:20",
-                        title: "Woody’s Wide Slide (Deck 17/19)",
-                        tag: "滑水道",
-                        tagClass: "tag-highlight",
+                        time: "09:30–10:30",
+                        title: "Infinity Pool & Bar (Deck 18)",
+                        tag: "玩水活動",
+                        tagClass: "tag-water",
                         desc: [
-                            "<strong>目的：</strong>趁早排隊、避免後段失控"
+                            "戶外無邊際泳池與吧台 (Jetfinity Bar)"
                         ]
                     },
                     {
-                        time: "11:25–12:00",
-                        title: "Concierge Sundeck & Pool (Deck 19)",
-                        tag: "禮賓放鬆",
-                        tagClass: "tag-concierge",
+                        time: "10:30–11:00",
+                        title: "Wayfinder Bay (Deck 10 船尾)",
+                        tag: "玩水活動",
+                        tagClass: "tag-water",
                         desc: [
-                            "休息補給與放鬆"
+                            "海洋奇緣主題露天泳池＋海景",
+                            "可順逛：Discovery Reef（買烏蘇拉珍珠奶茶）"
                         ]
                     }
                 ]
@@ -185,12 +189,12 @@ const cruiseSchedule = [
                 name: "中午",
                 events: [
                     {
-                        time: "12:10–13:10",
-                        title: "午餐：Pixar Market (Deck 17)",
-                        tag: "精緻午餐",
-                        tagClass: "tag-food",
+                        time: "11:00–12:00",
+                        title: "午餐：Enchanted Summer Restaurant (Deck 6)",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
-                            "享用披薩、漢堡等快餐美味"
+                            "花園／仲夏意象沉浸式佈景。"
                         ]
                     }
                 ]
@@ -199,41 +203,41 @@ const cruiseSchedule = [
                 name: "下午｜街區電玩＋電影／購物＋下午茶整理狀態",
                 events: [
                     {
-                        time: "13:20–14:10",
-                        title: "Disney Imagination Garden (Deck 10/11)",
-                        tag: "花園表演",
-                        tagClass: "tag-highlight",
+                        time: "12:00–14:00",
+                        title: "舊京山街道 (Deck 7)",
+                        tag: "漫步探索",
+                        tagClass: "tag-explore",
                         desc: [
-                            "<strong>觀賞：</strong>Avengers Assemble! 特技秀／或 Duffy 大型派對（依當日安排擇一）"
+                            "全家：刷房卡免費玩 大英雄天團電玩樂場（四款專屬雙人體感遊戲）",
+                            "或商店區集中採買 (Deck 6/7)"
                         ]
                     },
                     {
-                        time: "14:20–15:10",
-                        title: "舊京山街道 (Deck 7)",
-                        tag: "街區電玩",
+                        time: "14:00–15:00",
+                        title: "澤澤、小寶：Deck 7 Edge",
+                        tag: "孩子專屬",
                         tagClass: "tag-kids",
                         desc: [
-                            "<strong>小寶：</strong>進 Edge 交朋友",
-                            "<strong>全家：</strong>刷房卡免費玩 大英雄天團電玩樂場（體感雙人遊戲）"
+                            "少年會所 (11–14 歲)；其他人逛街"
                         ]
                     },
                     {
-                        time: "15:15–16:20",
-                        title: "Baymax Cinemas 影片／或採買 (Deck 6/7)",
-                        tag: "採買與電影",
-                        tagClass: "tag-highlight",
-                        desc: [
-                            "看短片或是到商店區集中採買"
-                        ]
-                    },
-                    {
-                        time: "16:25–17:10",
-                        title: "Concierge Lounge 下午茶 (Deck 17)",
-                        tag: "禮賓下午茶",
+                        time: "15:00–15:30",
+                        title: "Concierge Lounge 下午茶補給",
+                        tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
                             "<strong>下午茶補給：</strong>三明治、司康",
                             "<strong>目的：</strong>收整晚餐前狀態"
+                        ]
+                    },
+                    {
+                        time: "15:30–17:10",
+                        title: "Disney Imagination Garden (Deck 10/11)",
+                        tag: "精彩看秀",
+                        tagClass: "tag-show",
+                        desc: [
+                            "<strong>觀賞：</strong>Avengers Assemble! 特技秀／或 Duffy 大型派對"
                         ]
                     }
                 ]
@@ -243,29 +247,29 @@ const cruiseSchedule = [
                 events: [
                     {
                         time: "17:15–19:00",
-                        title: "輪替餐廳晚餐",
-                        tag: "精緻晚餐",
-                        tagClass: "tag-food",
+                        title: "晚餐：Navigator’s Club (航海家俱樂部)",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
-                            "享用第二晚的輪替餐廳主題餐飲"
+                            "有米奇米妮的船長晚餐。"
                         ]
                     },
                     {
                         time: "19:30–21:15",
-                        title: "劇院主秀 (Deck 5–7)",
-                        tag: "魔法之夜",
-                        tagClass: "tag-highlight",
+                        title: "劇院主秀《Disney Seas the Adventure》",
+                        tag: "精彩看秀",
+                        tagClass: "tag-show",
                         desc: [
-                            "觀賞今晚的重頭戲"
+                            "百老匯等級主題秀"
                         ]
                     },
                     {
                         time: "21:20–21:50",
-                        title: "Concierge Lounge 收尾 (Deck 17)",
+                        title: "Concierge Lounge 收尾",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "返回酒廊享用宵夜，結束第二天"
+                            "結束充實的第二天"
                         ]
                     }
                 ]
@@ -274,41 +278,47 @@ const cruiseSchedule = [
     },
     {
         id: "day3",
-        tabTitle: "Day 3 水域",
-        dateTitle: "💦 Day 3｜水域與皇家日",
+        tabTitle: "Day 3 海上",
+        dateTitle: "💦 Day 3｜海上日（水域大日＋Oceaneer＋皇家見面會＋海上煙火）",
         goals: [
             "水域玩足＋完成公主見面會＋大人禮賓放鬆時間要確保到"
         ],
         periods: [
             {
+                name: "早上｜早餐",
+                events: [
+                    {
+                        time: "07:00–08:00",
+                        title: "早餐時間",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
+                        desc: [
+                            "到正式早餐餐廳吃主食"
+                        ]
+                    }
+                ]
+            },
+            {
                 name: "上午｜水域集中",
                 events: [
                     {
-                        time: "09:00–10:40",
-                        title: "Wayfinder Bay (Deck 17 船尾)",
-                        tag: "海洋奇緣",
-                        tagClass: "tag-highlight",
+                        time: "08:00–10:00",
+                        title: "Toy Story Pool / Splash Pad (Deck 17)",
+                        tag: "玩水活動",
+                        tagClass: "tag-water",
                         desc: [
-                            "海洋奇緣主題露天泳池＋無敵海景",
-                            "<strong>可順逛：</strong>Discovery Reef（買烏蘇拉珍珠奶茶）"
+                            "<strong>Woody’s Wide Slide（滑水道入口在 Deck 19）</strong>",
+                            "<strong>目的：</strong>趁早排隊、避免後段失控"
                         ]
                     },
                     {
-                        time: "10:50–11:40",
-                        title: "Toy Story Pool／Splash Pad (Deck 17)",
-                        tag: "水上活動",
-                        tagClass: "tag-highlight",
-                        desc: [
-                            "把握人少時刻盡情玩水"
-                        ]
-                    },
-                    {
-                        time: "11:45–12:10",
-                        title: "Concierge Lounge 首戰收尾",
-                        tag: "禮賓補給",
+                        time: "10:00–11:00",
+                        title: "Opulence Spa & Fitness Center (Deck 18)",
+                        tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "回酒廊補水與享用小點心"
+                            "<strong>Spa 水療中心：</strong>禮賓專屬門區＋進階療程 (請禮賓代訂)",
+                            "<strong>Fitness Center：</strong>禮賓專用健身空間"
                         ]
                     }
                 ]
@@ -317,47 +327,55 @@ const cruiseSchedule = [
                 name: "中午",
                 events: [
                     {
-                        time: "12:10–13:10",
-                        title: "午餐",
-                        tag: "精緻午餐",
-                        tagClass: "tag-food",
+                        time: "11:00–12:00",
+                        title: "午餐：Pixar Market (Deck 17)",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
-                            "選擇喜歡的主題餐廳或快餐區享用午飯"
+                            "披薩、漢堡快餐"
                         ]
                     }
                 ]
             },
             {
-                name: "下午｜Oceaneer 托育＋大人放鬆＋皇家見面會",
+                name: "下午｜唯一一次 Oceaneer 完整入場＋大人放鬆窗口",
                 events: [
                     {
-                        time: "13:20–14:20",
-                        title: "Disney Oceaneer Club (Deck 8)",
-                        tag: "分流活動",
-                        tagClass: "tag-kids",
+                        time: "12:30–13:30",
+                        title: "Disney Oceaneer Club & Royal Meet & Greet",
+                        tag: "亮點活動",
+                        tagClass: "tag-highlight",
                         desc: [
-                            "<strong>澤澤、彤妹：</strong>完整參與互動關卡",
-                            "<strong>大人專屬時間（擇一或分流）：</strong> Spellbound（Deck 6黑魔法酒吧） 或 Opulence Spa（水療桑拿短時段）",
-                            "<strong>小寶：</strong>Deck 7 看電影或玩街機（自由活動）"
+                            "<strong>澤澤、彤妹：</strong>完整參與活動",
+                            "<strong>大人帶小寶：</strong>Royal Meet & Greet（免費皇家見面會）"
                         ]
                     },
                     {
-                        time: "14:40–15:30",
-                        title: "Royal Meet & Greet 皇家見面會",
-                        tag: "核心特權",
-                        tagClass: "tag-alert",
+                        time: "13:30–15:30",
+                        title: "Baymax Cinemas 看電影 (Deck 7)",
+                        tag: "休閒時光",
+                        tagClass: "tag-highlight",
                         desc: [
-                            "<strong>免費皇家公主見面會：</strong>由禮賓預約完成的最重要合影時刻！"
+                            "在大英雄天團主題劇院看熱門電影"
                         ]
                     },
                     {
-                        time: "15:40–16:30",
+                        time: "15:30–16:30",
                         title: "Concierge Sundeck & Pool (Deck 19)",
-                        tag: "禮賓放鬆",
+                        tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>目的：</strong>最後一次長時間使用專屬甲板",
+                            "<strong>目的：</strong>最後一次長時段放鬆",
                             "<strong>提醒：</strong>傍晚開始供應啤酒、葡萄酒、香檳暢飲！"
+                        ]
+                    },
+                    {
+                        time: "16:30–17:00",
+                        title: "回房間收拾行李",
+                        tag: "準備返家",
+                        tagClass: "tag-prepare",
+                        desc: [
+                            "整理大型行李放在房門外"
                         ]
                     }
                 ]
@@ -367,29 +385,29 @@ const cruiseSchedule = [
                 events: [
                     {
                         time: "17:15–19:00",
-                        title: "第一時段晚餐（輪替餐廳）",
-                        tag: "精緻晚餐",
-                        tagClass: "tag-food",
+                        title: "第一時段晚餐：Hollywood Spotlight Club",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
                         desc: [
-                            "若輪到 Animator's Palate：準備互動驚喜（手繪草圖變動畫）"
+                            "最後一晚的輪替餐廳美食"
                         ]
                     },
                     {
-                        time: "21:00–22:00",
-                        title: "Disney Imagination Garden (Deck 10/11)",
-                        tag: "花園派對",
-                        tagClass: "tag-highlight",
+                        time: "19:00–21:00",
+                        title: "Disney Imagination Garden 表演 (Deck 10/11)",
+                        tag: "精彩看秀",
+                        tagClass: "tag-show",
                         desc: [
-                            "<strong>觀賞：</strong>Avengers Assemble! 特技秀／或 Duffy 大型派對（依當日安排擇一）"
+                            "觀賞：Avengers Assemble! 特技秀／或 Duffy 大型派對"
                         ]
                     },
                     {
                         time: "22:00–23:00",
-                        title: "The Lion King: Celebration in the Sky",
-                        tag: "唯一煙火",
-                        tagClass: "tag-alert",
+                        title: "甲板煙火派對：The Lion King (全球獨家)",
+                        tag: "絕美煙火",
+                        tagClass: "tag-highlight",
                         desc: [
-                            "甲板派對與<strong>獅子王主題全球獨家海上煙火</strong>！"
+                            "<strong>獅子王主題海上煙火：Celebration in the Sky</strong>"
                         ]
                     }
                 ]
@@ -399,31 +417,30 @@ const cruiseSchedule = [
     {
         id: "day4",
         tabTitle: "Day 4 下船",
-        dateTitle: "🧳 Day 4｜依依不捨下船日",
+        dateTitle: "🧳 Day 4｜下船日（禮賓節奏）",
         goals: [
-            "優雅吃完早餐，憑禮賓通道安靜撤離，銜接星宇航空回程。"
+            "優雅吃完早餐，憑禮賓通道安靜下船，前往樟宜機場。"
         ],
         periods: [
             {
-                name: "早上｜禮賓節奏",
+                name: "下船日｜禮賓優勢",
                 events: [
                     {
                         time: "07:00–08:00",
                         title: "Concierge Lounge 早餐 (Deck 17)",
-                        tag: "最後享受",
+                        tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "避開人潮，在酒廊安靜從容地享用早餐"
+                            "最後一次享受安靜從容的服務"
                         ]
                     },
                     {
                         time: "08:00–09:00",
                         title: "禮賓優先下船通道",
                         tag: "極速通關",
-                        tagClass: "tag-alert",
+                        tagClass: "tag-boarding",
                         desc: [
-                            "憑專屬通道下船，順暢通關，無壓力前往樟宜機場",
-                            "別忘了登船前三天與下船當日都要填寫 SGAC 入境卡！"
+                            "避開人潮，順暢撤離並前往機場"
                         ]
                     }
                 ]
@@ -432,7 +449,7 @@ const cruiseSchedule = [
     }
 ];
 
-// --- 行前準備清單資料 (Phase 4: Interactive Checklist) ---
+// --- 行行準備清單資料 (Phase 4: Interactive Checklist) ---
 const checklistData = [
     {
         category: "必辦文件與 App",
