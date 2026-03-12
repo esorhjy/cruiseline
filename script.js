@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', function () {
 
     // 1. 滾動進度條
     const progressBar = document.getElementById('scroll-progress');
