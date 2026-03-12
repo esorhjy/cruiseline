@@ -1316,3 +1316,227 @@ footer h2 {
         margin-bottom: 15px;
     }
 }
+
+/* ==========================================
+   11. 甲板與表演設施 (Phase 5)
+   ========================================== */
+.main-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.main-tab-btn {
+    padding: 12px 30px;
+    background: var(--white);
+    border: 2px solid var(--dcl-navy-light);
+    color: var(--dcl-navy-light);
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.main-tab-btn.active {
+    background: var(--dcl-navy-light);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(10, 58, 112, 0.3);
+}
+
+.main-tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.main-tab-content.active {
+    display: block;
+}
+
+/* 甲板頁籤 */
+.deck-tabs-container {
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.deck-tabs {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-start;
+    min-width: max-content;
+}
+
+.deck-tab-btn {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 35, 75, 0.1);
+    border-radius: 12px;
+    color: var(--text-gray);
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.deck-tab-btn.active {
+    background: var(--dcl-gold);
+    color: var(--dcl-navy);
+    border-color: var(--dcl-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(243, 181, 0, 0.3);
+}
+
+/* 設施卡片 */
+.deck-details-container {
+    animation: slideUp 0.4s ease forwards;
+}
+
+.deck-info-header {
+    background: linear-gradient(135deg, var(--dcl-navy), var(--dcl-navy-light));
+    color: var(--white);
+    padding: 20px 30px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+}
+
+.deck-info-header h3 {
+    color: var(--dcl-gold);
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.deck-theme {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.facility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.facility-card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 35, 75, 0.05);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.facility-card:hover {
+    transform: scale(1.02);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.facility-card.highlight {
+    border: 2px solid var(--dcl-gold);
+    background: rgba(243, 181, 0, 0.05);
+}
+
+.facility-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--dcl-navy);
+    color: var(--white);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.facility-card.highlight .facility-icon {
+    background: var(--dcl-gold);
+    color: var(--dcl-navy);
+}
+
+.facility-name {
+    font-weight: 700;
+    color: var(--dcl-navy);
+    margin-bottom: 5px;
+    display: block;
+}
+
+.facility-desc {
+    font-size: 0.9rem;
+    color: var(--text-gray);
+    line-height: 1.5;
+}
+
+/* 表演卡片 */
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+}
+
+.performance-category {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.performance-category h3 {
+    border-bottom: 2px solid var(--dcl-gold);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.show-item {
+    margin-bottom: 20px;
+    padding-left: 15px;
+    border-left: 3px solid var(--dcl-red);
+}
+
+.show-title {
+    display: block;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--dcl-navy);
+    margin-bottom: 5px;
+}
+
+.show-desc {
+    font-size: 0.95rem;
+    color: var(--text-gray);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .main-tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .deck-info-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}
