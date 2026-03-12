@@ -16,6 +16,22 @@
 
 <body>
 
+    <!-- 導覽列 -->
+    <nav class="sticky-nav">
+        <div class="nav-container">
+            <a href="#overview" class="nav-logo">Disney Adventure</a>
+            <div class="hamburger" id="hamburger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 核心資訊</a></li>
+                <li><a href="#schedule"><i class="fa-solid fa-calendar-days"></i> 每日行程</a></li>
+                <li><a href="#timeline"><i class="fa-solid fa-clock-rotate-left"></i> 準備時間軸</a></li>
+                <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 實用工具</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <div id="scroll-progress"></div>
 
     <header class="hero">
@@ -139,8 +155,16 @@
     <section id="schedule" class="reveal">
         <h2 class="section-title">每日魔法行程推薦</h2>
 
+        <!-- 頁籤按鈕 (Tabs) -->
+        <div class="schedule-tabs">
+            <button class="tab-btn active" data-tab="day1">Day 1 登船</button>
+            <button class="tab-btn" data-tab="day2">Day 2 海上</button>
+            <button class="tab-btn" data-tab="day3">Day 3 水域</button>
+            <button class="tab-btn" data-tab="day4">Day 4 下船</button>
+        </div>
+
         <!-- Day 1 -->
-        <div class="day-container">
+        <div id="day1" class="day-container tab-content active">
             <div class="day-header">
                 <h3>🌟 Day 1｜登船日</h3>
             </div>
@@ -215,7 +239,7 @@
         </div>
 
         <!-- Day 2 -->
-        <div class="day-container">
+        <div id="day2" class="day-container tab-content">
             <div class="day-header">
                 <h3>🦸 Day 2｜海上冒險日</h3>
             </div>
@@ -254,7 +278,7 @@
         </div>
 
         <!-- Day 3 -->
-        <div class="day-container">
+        <div id="day3" class="day-container tab-content">
             <div class="day-header">
                 <h3>💦 Day 3｜水域與皇家日</h3>
             </div>
@@ -302,7 +326,7 @@
         </div>
 
         <!-- Day 4 -->
-        <div class="day-container" style="border-bottom: 5px solid var(--dcl-gold);">
+        <div id="day4" class="day-container tab-content" style="border-bottom: 5px solid var(--dcl-gold);">
             <div class="day-header">
                 <h3>🧳 Day 4｜下船日</h3>
             </div>
