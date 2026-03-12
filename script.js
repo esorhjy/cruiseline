@@ -219,7 +219,66 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     setInterval(createMickeyBubble, 6000);
 
-    // 9. 行程表頁籤切換
+    // 9. 動態渲染行程表資料
+    function renderSchedule() {
+        if (typeof cruiseSchedule === 'undefined') return;
+
+        cruiseSchedule.forEach((dayData, index) => {
+            const container = document.getElementById(dayData.id);
+            if (!container) return;
+
+            // 清空容器 (防範二次渲染)
+            container.innerHTML = '';
+
+            // 1. 生成標題與目標
+            let html = `
+                <div class="day-header">
+                    <h3>${dayData.dateTitle}</h3>
+                </div>
+                <div class="day-goal">
+                    <strong>核心目標：</strong>
+                    <ul style="margin: 5px 0 0 20px; padding: 0;">
+                        ${dayData.goals.map(g => `<li>${g}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="schedule-list">
+            `;
+
+            // 2. 生成各個時段 (Periods)
+            dayData.periods.forEach(period => {
+                html += `
+                    <div class="period-header">
+                        <h4>${period.name}</h4>
+                    </div>
+                `;
+
+                // 3. 生成時段內的事件 (Events)
+                period.events.forEach(event => {
+                    html += `
+                        <div class="schedule-item">
+                            <div class="schedule-time">${event.time}</div>
+                            <div class="schedule-marker"></div>
+                            <div class="schedule-content">
+                                <span class="schedule-tag ${event.tagClass}">${event.tag}</span>
+                                <span class="schedule-title">${event.title}</span>
+                                <ul class="schedule-desc-list">
+                                    ${event.desc.map(d => `<li>${d}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            html += `</div>`; // Close .schedule-list
+            container.innerHTML = html;
+        });
+    }
+
+    // 執行渲染
+    renderSchedule();
+
+    // 10. 行程表頁籤切換
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     
