@@ -219,4 +219,38 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     setInterval(createMickeyBubble, 6000);
 
+    // 9. 行程表頁籤切換
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 移除所有 active 狀態
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+            
+            // 加上當前的 active
+            btn.classList.add('active');
+            const targetId = btn.getAttribute('data-tab');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+
+    // 10. 導覽列與漢堡選單
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('nav-links');
+    const navItems = document.querySelectorAll('.nav-links a');
+
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
 });
