@@ -57,22 +57,17 @@ h4 {
    3. ?梢?? (憭???脣?)
    ========================================== */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    text-align: center;
     position: relative;
     background-color: var(--dcl-navy);
     background-image:
-        linear-gradient(to bottom, rgba(0, 35, 75, 0.4), rgba(0, 35, 75, 0.85)),
-        url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Disney_Dream_in_Nassau.jpg/1920px-Disney_Dream_in_Nassau.jpg'),
-        linear-gradient(to bottom, var(--dcl-navy), var(--dcl-navy-light));
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    padding: 0 20px;
+        radial-gradient(circle at 78% 28%, rgba(74, 163, 255, 0.26), transparent 26%),
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.08), transparent 22%),
+        linear-gradient(135deg, #00162f 0%, #00234B 42%, #0A3A70 100%);
+    padding: 110px 20px 90px;
     color: var(--white);
     overflow: hidden;
 }
@@ -80,22 +75,77 @@ h4 {
 .hero-content {
     position: relative;
     z-index: 2;
+    width: min(1220px, 100%);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 56px;
+}
+
+.hero-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(14px);
+    pointer-events: none;
+}
+
+.hero-glow-left {
+    width: 360px;
+    height: 360px;
+    left: -90px;
+    top: 110px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 72%);
+}
+
+.hero-glow-right {
+    width: 520px;
+    height: 520px;
+    right: 4%;
+    top: 80px;
+    background: radial-gradient(circle, rgba(74, 163, 255, 0.18), transparent 68%);
+}
+
+.hero-copy {
+    flex: 0 1 560px;
+    text-align: left;
+}
+
+.hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 10px 16px;
+    border: 1px solid rgba(243, 181, 0, 0.4);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #F4E7BB;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+}
+
+.hero-kicker i {
+    color: var(--dcl-gold);
 }
 
 .hero h1 {
     color: var(--dcl-gold);
     font-size: 4.5rem;
-    margin-bottom: 15px;
-    letter-spacing: 3px;
+    margin-bottom: 18px;
+    letter-spacing: 2px;
     text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.6);
     animation: fadeInDown 1.2s ease forwards;
 }
 
-.hero p {
+.hero-copy>p {
     font-size: 1.6rem;
     color: #E2E8F0;
-    max-width: 800px;
-    margin: 0 auto 30px;
+    max-width: 620px;
+    margin: 0 0 30px;
     animation: fadeInUp 1.2s ease forwards;
     opacity: 0;
     animation-delay: 0.3s;
@@ -126,7 +176,8 @@ h4 {
 
 .countdown-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
     gap: 15px;
     margin-top: 30px;
     animation: fadeInUp 1.2s ease forwards;
@@ -157,6 +208,125 @@ h4 {
     font-size: 0.9rem;
     color: var(--white);
     letter-spacing: 2px;
+}
+
+.hero-visual {
+    position: relative;
+    flex: 0 1 510px;
+    z-index: 2;
+    animation: fadeInUp 1.2s ease forwards;
+    opacity: 0;
+    animation-delay: 0.45s;
+}
+
+.hero-story-card {
+    position: relative;
+    padding: 16px 16px 18px;
+    border-radius: 34px;
+    background: linear-gradient(180deg, rgba(255, 250, 240, 0.96), rgba(245, 236, 219, 0.92));
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow:
+        0 30px 60px rgba(0, 11, 35, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.hero-story-card::before {
+    content: '';
+    position: absolute;
+    inset: 12px;
+    border: 1.5px solid rgba(243, 181, 0, 0.6);
+    border-radius: 28px;
+    pointer-events: none;
+}
+
+.hero-story-arch {
+    position: relative;
+    overflow: hidden;
+    border-radius: 260px 260px 34px 34px;
+    background: linear-gradient(180deg, #BFE3FF 0%, #4E8CC7 30%, #0C4D8B 100%);
+    aspect-ratio: 0.9 / 1.18;
+    box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.hero-story-arch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 34%;
+    display: block;
+    transform: scale(1.02);
+}
+
+.hero-story-plaque {
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    min-width: 72%;
+    padding: 14px 20px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(0, 35, 75, 0.96), rgba(4, 23, 54, 0.98));
+    border: 1px solid rgba(243, 181, 0, 0.75);
+    color: var(--white);
+    text-align: center;
+    box-shadow: 0 18px 36px rgba(0, 17, 45, 0.34);
+}
+
+.hero-story-title,
+.hero-story-caption {
+    display: block;
+}
+
+.hero-story-title {
+    font-family: 'Playfair Display', 'Noto Sans TC', serif;
+    color: var(--dcl-gold);
+    font-size: 1.2rem;
+    letter-spacing: 0.03em;
+}
+
+.hero-story-caption {
+    font-size: 0.92rem;
+    color: #DDE7F6;
+    margin-top: 4px;
+}
+
+.hero-story-note {
+    margin-top: 44px;
+    text-align: center;
+    color: #F8EED0;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.hero-story-note i {
+    color: var(--dcl-gold);
+    margin-right: 8px;
+}
+
+.hero-sparkle {
+    position: absolute;
+    color: rgba(243, 181, 0, 0.95);
+    filter: drop-shadow(0 0 10px rgba(243, 181, 0, 0.4));
+    z-index: 3;
+}
+
+.hero-sparkle-a {
+    top: 40px;
+    right: 40px;
+    font-size: 1.2rem;
+}
+
+.hero-sparkle-b {
+    top: 190px;
+    left: -14px;
+    font-size: 1rem;
+}
+
+.hero-sparkle-c {
+    bottom: 88px;
+    right: -6px;
+    font-size: 1.05rem;
 }
 
 /* --- ??瘚瑟答??寞? --- */
@@ -1218,12 +1388,55 @@ footer h2 {
 }
 
 @media screen and (max-width: 768px) {
+    .hero {
+        padding: 104px 18px 90px;
+    }
+
+    .hero-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 34px;
+    }
+
+    .hero-copy {
+        text-align: center;
+    }
+
+    .hero-kicker {
+        justify-content: center;
+    }
+
     .hero h1 {
         font-size: 2.8rem;
     }
 
-    .hero p {
+    .hero-copy>p {
         font-size: 1.2rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .date-badge {
+        justify-content: center;
+    }
+
+    .countdown-container {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .hero-visual {
+        width: min(100%, 460px);
+        margin: 0 auto;
+    }
+
+    .hero-story-card {
+        padding: 12px 12px 16px;
+    }
+
+    .hero-story-plaque {
+        width: calc(100% - 72px);
+        min-width: 0;
     }
 
     .day-container {
@@ -1273,10 +1486,6 @@ footer h2 {
     .right::after {
         left: 17px;
         right: auto;
-    }
-
-    .countdown-container {
-        gap: 8px;
     }
 
     .countdown-item {
@@ -1672,6 +1881,36 @@ footer h2 {
 }
 
 @media (max-width: 600px) {
+    .hero {
+        padding: 98px 14px 84px;
+    }
+
+    .hero-kicker {
+        font-size: 0.82rem;
+        padding: 9px 14px;
+        letter-spacing: 0.05em;
+    }
+
+    .hero-story-plaque {
+        width: calc(100% - 44px);
+        bottom: -14px;
+        padding: 12px 16px;
+    }
+
+    .hero-story-title {
+        font-size: 1.05rem;
+    }
+
+    .hero-story-caption,
+    .hero-story-note {
+        font-size: 0.88rem;
+    }
+
+    .hero-sparkle-b,
+    .hero-sparkle-c {
+        display: none;
+    }
+
     .deck-guide-shell {
         padding: 22px 16px;
     }
