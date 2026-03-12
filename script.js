@@ -480,7 +480,7 @@
 
         const missionButtons = missionsContainer.querySelectorAll('.playbook-mission-btn');
 
-        function buildItemMarkup(item, index) {
+        function buildItemMarkup(item) {
             const source = sourceMeta[item.sourceType] || sourceMeta.community;
             const relatedLabel = item.relatedSectionId ? relatedSectionLabels[item.relatedSectionId] : '';
             const relatedMarkup = relatedLabel ? `
@@ -491,7 +491,7 @@
             ` : '';
 
             return `
-                <details class="playbook-card source-${item.sourceType}" ${index === 0 ? 'open' : ''}>
+                <details class="playbook-card source-${item.sourceType}">
                     <summary class="playbook-summary">
                         <div class="playbook-card-icon">
                             <i class="${item.icon}"></i>
@@ -558,7 +558,7 @@
                     </div>
                 </div>
                 <div class="playbook-grid">
-                    ${mission.items.map((item, index) => buildItemMarkup(item, index)).join('')}
+                    ${mission.items.map(item => buildItemMarkup(item)).join('')}
                 </div>
             `;
         }

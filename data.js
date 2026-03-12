@@ -17,8 +17,9 @@
                         tag: "登船流程",
                         tagClass: "tag-boarding",
                         desc: [
-                            "<strong>目的：</strong>用禮賓優先登船避開人潮、保留下午完整活動時間",
-                            "<strong>提醒：</strong>留意禮賓迎賓小禮與優先動線"
+                            "<strong>目的：</strong>若住 DCL 合作飯店，可先聯繫安排接駁，通常會比一般自到客更早進入登船節奏。",
+                            "<strong>提醒：</strong>QR code 先截圖或列印最穩；接駁車行李通常另有處理，不用停在自助 drop-off。",
+                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。"
                         ]
                     },
                     {
@@ -28,7 +29,8 @@
                         tagClass: "tag-dining",
                         desc: [
                             "<strong>建議：</strong>直接前往 Pixar Market 或 Enchanted Summer",
-                            "<strong>用餐必確認：</strong> 晚餐第一時段（First Seating）、輪替餐廳順序"
+                            "<strong>用餐必確認：</strong> 晚餐第一時段（First Seating）、輪替餐廳順序",
+                            "<strong>提醒：</strong>房卡與行李常會分批到房，必備品務必先放隨身包。"
                         ]
                     },
                     {
@@ -39,7 +41,9 @@
                         desc: [
                             "<strong>請管家協助確認：</strong>",
                             "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
-                            "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排"
+                            "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排",
+                            "<strong>登船補位：</strong>若先被引導回房卻還沒拿到房卡，先看門口信封，再不行就去 Deck 6 Mid 的 Guest Services。",
+                            "<strong>中午左右：</strong>留意 Navigator App 是否已開通，首日若有商品販售或活動預約要盡快看。"
                         ]
                     }
                 ]
@@ -84,8 +88,18 @@
                         tag: "安全演練",
                         tagClass: "tag-safety",
                         desc: [
-                            "也就是強制旅客集合演練",
-                            "時間是 4:00 PM–4:30 PM"
+                            "也就是強制旅客集合演練，每個人都必須到，不要遲到。",
+                            "房卡上會寫集合區號，若不確定位置請提早問工作人員。"
+                        ]
+                    },
+                    {
+                        time: "17:25–17:35",
+                        title: "到甲板上聽啟航汽笛",
+                        tag: "啟航儀式",
+                        tagClass: "tag-highlight",
+                        desc: [
+                            "大約 5:30 左右會以汽笛播放音樂，第一次搭船很值得到甲板上感受一次。",
+                            "離汽笛太近會非常大聲，想體驗氣氛但不必硬卡最近的位置。"
                         ]
                     }
                 ]
@@ -356,7 +370,8 @@
                         tag: "休閒時光",
                         tagClass: "tag-highlight",
                         desc: [
-                            "在大英雄天團主題劇院看熱門電影"
+                            "在大英雄天團主題劇院看熱門電影",
+                            "若有安排 Baymax 合照，前後切到室內休息會很順。"
                         ]
                     },
                     {
@@ -407,7 +422,8 @@
                         tag: "絕美煙火",
                         tagClass: "tag-highlight",
                         desc: [
-                            "<strong>獅子王主題海上煙火：Celebration in the Sky</strong>"
+                            "<strong>獅子王主題海上煙火：Celebration in the Sky</strong>",
+                            "接近 10:30 會直接施放，通常不太暖場，先找空曠少遮擋的位置。"
                         ]
                     }
                 ]
@@ -427,20 +443,23 @@
                 events: [
                     {
                         time: "07:00–08:00",
-                        title: "Concierge Lounge 早餐 (Deck 17)",
+                        title: "早餐＋最後確認手提物品",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "最後一次享受安靜從容的服務"
+                            "早餐節奏以餐廳或當天實際供應為準，別完全依賴清晨 room service。",
+                            "<strong>提醒：</strong>大型行李若前晚已外放，證件、外套、點心與孩子晨間用品要留在手提包。"
                         ]
                     },
                     {
                         time: "08:00–09:00",
-                        title: "禮賓優先下船通道",
+                        title: "下船、找行李、前往樟宜機場",
                         tag: "極速通關",
                         tagClass: "tag-boarding",
                         desc: [
-                            "避開人潮，順暢撤離並前往機場"
+                            "若交給 DCL 帶行李，港口角色吊牌區不一定集中，請預留找行李時間。",
+                            "若自己搬行李通常能略早下船，但時間差不必當成保證。",
+                            "接港口後續交通時，Grab、limo 或行李推車都可現場再決定。"
                         ]
                     }
                 ]
@@ -520,9 +539,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-bag-shopping",
                 name: "World of Disney / World of Disney Too",
-                summary: "探險號限定與迪士尼皮克斯周邊最集中的一層。",
-                bestTime: "開航日下午比演後散場好逛得多。",
-                tripUse: "可和 Deck 7 商店街一起安排，但不建議秀後硬擠。",
+                summary: "探險號限定與迪士尼皮克斯周邊最集中的一層，兩邊店面可一路拿著商品逛完再集中結帳。",
+                bestTime: "開航日下午比演後散場好逛得多，首日若能提早買最省排隊。",
+                tripUse: "可和 Deck 7 商店街一起安排；先自備購物袋，若能直接入房帳通常會比現場刷卡順。",
                 highlight: false
             }
         ]
@@ -546,9 +565,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-headset",
                 name: "Guest Services 客務中心",
-                summary: "帳單、網路、遺失物、需求協助都在這裡處理。",
+                summary: "帳單、網路、遺失物、需求協助都在這裡處理，登船日若房卡或現場引導有落差時也常要回來補位。",
                 bestTime: "避開開船日下午與最後一晚尖峰。",
-                tripUse: "若房卡、Wi-Fi 或帳單有狀況，先記得回這裡補位。",
+                tripUse: "若房卡、Wi-Fi、帳單或現場指引讓人摸不著頭緒，先記得回這裡補位。",
                 highlight: true
             },
             {
@@ -596,7 +615,7 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-film",
                 name: "Baymax Cinemas",
-                summary: "兩個小影廳節奏安靜，當孩子需要降噪休息時非常好用。",
+                summary: "兩個小影廳節奏安靜，當孩子需要降噪休息時非常好用，也很適合安排在 Baymax 合照前後當室內分流點。",
                 bestTime: "片單出來就先看，提早一點進場能挑舒服位置。",
                 tripUse: "Day 3 下午若想切到室內模式，這裡是很穩的備案。",
                 highlight: true
@@ -764,7 +783,7 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-pizza-slice",
                 name: "Pixar Market / Pizza Planet / Wheezy’s Freezies",
-                summary: "濕答答也能快速補能量，幾乎是家長最省力的一站式解法。",
+                summary: "濕答答也能快速補能量，幾乎是家長最省力的一站式解法，甲板最穩定的補給通常就是披薩、冰沙與冰淇淋機。",
                 bestTime: "先找位子再分工取餐，效率最高。",
                 tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用。",
                 highlight: true
@@ -791,7 +810,7 @@ const deckGuideData = [
                 icon: "fa-solid fa-bolt",
                 name: "Marvel Landing",
                 summary: "漫威主題區就是 Day 2 上午最有速度感的開局，適合先衝再慢下來。",
-                bestTime: "越早越好，風勢穩時最容易玩得順。",
+                bestTime: "越早越好，風勢穩時最容易玩得順；Quantum Racers 要避免亂撞卡住全場。",
                 tripUse: "Day 2 先攻 Ironcycle 與周邊設施，早上完成最省排隊。",
                 highlight: true
             },
@@ -926,7 +945,7 @@ const showGuideData = [
                 name: "《The Lion King: Celebration in the Sky》",
                 theme: "獅子王主題海上煙火，配樂與旁白都走大型慶典級別的震撼路線。",
                 location: "高層戶外甲板與開放視野區",
-                timingTip: "先找好不會被人潮壓縮的視角，並留意當天即時公告。",
+                timingTip: "通常約 10:30 準時施放、暖場不多；先找空曠少遮擋的位置，並留意當天即時公告。",
                 tripLink: "Day 3 晚間是你們目前行程裡最明確的壓軸安排。"
             }
         ]
@@ -939,6 +958,16 @@ const playbookGuideData = [
         label: "行前防雷",
         intro: "把最容易卡在報到前的錯誤先排除。這區只保留網站其他地方沒講清楚的技術準備、資料整理與老手小技巧。",
         items: [
+            {
+                title: "住 DCL 合作飯店的話，接駁車要提早打電話確認",
+                icon: "fa-solid fa-hotel",
+                sourceType: "community",
+                whenToUse: "訂好合作飯店後、出發前就先處理。",
+                action: "若入住 DCL 合作飯店，可主動聯繫 DCL 登記接駁，確認旅客資料與付款方式；到飯店後再去 DCL 櫃檯看隔天集合組別、時間與行李外放規則。",
+                tripFit: "這趟若住聖淘沙香格里拉，接駁能把從飯店到碼頭的焦慮感降很多，也更容易接上較早的登船節奏。",
+                caution: "這屬合作飯店實務流程，不是所有住宿都適用；實際集合時間與上船時段仍以當地 DCL 櫃檯通知為準。",
+                relatedSectionId: "checkin"
+            },
             {
                 title: "英文帳號加上兩家人資料夾，先整理再開搶",
                 icon: "fa-solid fa-folder-tree",
@@ -1001,9 +1030,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-route",
                 sourceType: "community",
                 whenToUse: "真正踏上船後的第一個下午。",
-                action: "把節奏固定成：坐下式午餐 → 禮賓 Lounge 短補給 → Kids Club Open House → 水區放電，只保留最重要的第一圈。",
+                action: "把節奏固定成：接駁車下車後直接跟指引前進 → QR code 安檢與 check-in → 坐下式午餐 → 禮賓 Lounge 短補給 → Kids Club Open House → 水區放電，只保留最重要的第一圈。",
                 tripFit: "這條路線能同時滿足大人報到、孩子熟悉環境與第一天放電，最適合你們兩家同行的協作節奏。",
-                caution: "若當天天氣或集合演練時間有變，優先保留 Open House 與玩水，商店和拍照都能往後挪。",
+                caution: "房卡與行李常不會同時到位，先別急著把回房當第一優先；接駁客的行李也通常不用停在自助 drop-off。",
                 relatedSectionId: "checkin"
             },
             {
@@ -1038,10 +1067,20 @@ const playbookGuideData = [
                 icon: "fa-solid fa-film",
                 sourceType: "community",
                 whenToUse: "準備進 Baymax Cinemas、劇院或夜間甲板活動前。",
-                action: "先去續杯爆米花，再從免費飲料站補汽水或水，兩樣帶著進場，會比臨時在付費攤位排隊更從容。",
+                action: "先去續杯爆米花，再從免費飲料站補汽水或水，兩樣帶著進場，會比臨時在付費攤位排隊更從容；中午左右若 App 一開通，也順手先看當天商品販售或活動預約。",
                 tripFit: "這趟有劇院、影廳和煙火夜，多一個穩定補給流程就少一個孩子臨時喊餓的插曲。",
                 caution: "各販售點營運時間和當船杯桶政策可能不同，進場前先看一眼 App 與現場營業狀況。",
                 relatedSectionId: "entertainment"
+            },
+            {
+                title: "首日購物不要空手上陣，袋子和入房帳都能救節奏",
+                icon: "fa-solid fa-bag-shopping",
+                sourceType: "community",
+                whenToUse: "Day 1 下午第一次進 World of Disney / Too 時。",
+                action: "先自備能裝貨的袋子，兩間店可以一路拿著商品逛完再集中結帳；若現場排隊或刷卡機卡住，能入房帳時通常更省時間。",
+                tripFit: "探險號首日商店很容易一逛就雙手抱滿，提早準備會比臨時找袋子或等刷卡機更從容。",
+                caution: "首日商品販售與結帳動線可能依當船安排調整，別把社群分享的晚間時段當成固定保證。",
+                relatedSectionId: "tips"
             },
             {
                 title: "房務宵夜可以做成親子儀式感",
@@ -1142,10 +1181,20 @@ const playbookGuideData = [
                 icon: "fa-solid fa-moon",
                 sourceType: "community",
                 whenToUse: "出發前打包藥品與睡前用品時。",
-                action: "白噪音以手機 App 最穩，暈船備援則把薑糖、薄鹽餅乾、手環或藥物先放進固定小包，真的需要時就不用到處找。",
+                action: "白噪音以手機 App 最穩，暈船備援則把薑糖、薄鹽餅乾、手環或藥物先放進固定小包；若孩子還小，也可考慮帶輕便防水小凳應付偏高的浴室馬桶。",
                 tripFit: "這種看起來不起眼的小包，往往比多帶一套衣服更能救 Day 2、Day 3 的狀態。",
-                caution: "若要攜帶額外裝置型白噪音機，建議放隨身行李並預留人工檢視空間。",
+                caution: "若要攜帶額外裝置型白噪音機，建議放隨身行李並預留人工檢視空間；孩子在走道小斜坡與高馬桶周邊也要多提醒。",
                 relatedSectionId: ""
+            },
+            {
+                title: "房內真正常用的細節，比你以為的更實用",
+                icon: "fa-solid fa-bed",
+                sourceType: "community",
+                whenToUse: "一進房到第一晚安頓下來的那段時間。",
+                action: "房內可善用床底收納行李，衣櫃衣架數量不少，水龍頭的水通常可直接喝；吹風機雖堪用，但要持續按壓才會運作。",
+                tripFit: "這些小細節會直接決定房間是不是好整理、孩子回房後能不能快速補水與收心。",
+                caution: "Wi-Fi 整體可用，但影音平台支援度不一定一致，別把它當成完整串流網路來安排。",
+                relatedSectionId: "tips"
             },
             {
                 title: "洗衣時間抓在晚餐或看秀時，最不打擾主行程",
@@ -1169,7 +1218,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-bag-shopping",
                 sourceType: "community",
                 whenToUse: "大型行李要放門外之前。",
-                action: "把隔天早餐後會用到的證件、外套、濕紙巾、簡單點心、孩子換洗衣物與機場路上要用的東西先留在手提包。",
+                action: "把隔天早餐後會用到的證件、外套、濕紙巾、簡單點心、孩子換洗衣物與機場路上要用的東西先留在手提包，別等行李 22:00 外放後才發現還需要翻大箱。",
                 tripFit: "這會讓你們下船當天的節奏從容很多，不會在大件行李已經外放後才發現重要物品還在箱內。",
                 caution: "孩子最常臨時需要的是外套、零食和小玩具，這三樣特別值得先留下。",
                 relatedSectionId: "tips"
@@ -1179,9 +1228,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-utensils",
                 sourceType: "community",
                 whenToUse: "最後一晚安排隔天早上的節奏時。",
-                action: "把撤船日早餐預設成餐廳節奏，若怕孩子起床後先餓，可以前一晚就留簡單點心在房內，不要完全期待清晨還有完整 room service。",
+                action: "把撤船日早餐預設成餐廳節奏，若怕孩子起床後先餓，可以前一晚就留簡單點心在房內；若行李交給 DCL 帶下船，也把港口找行李和轉車時間一起算進去。",
                 tripFit: "你們回程航班時間很充裕，真正重要的是早上不要餓著、也不要趕著找吃的。",
-                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期。",
+                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期；港口現場若行李多，也可再看要不要用推車、Grab 或 limo。",
                 relatedSectionId: "checkin"
             },
             {
