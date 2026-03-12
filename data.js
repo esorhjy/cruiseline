@@ -786,7 +786,7 @@ const deckGuideData = [
                 name: "Pixar Market / Pizza Planet / Wheezy’s Freezies",
                 summary: "濕答答也能快速補能量，幾乎是家長最省力的一站式解法，甲板最穩定的補給通常就是披薩、冰沙與冰淇淋機。",
                 bestTime: "先找位子再分工取餐，效率最高。",
-                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用。",
+                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
                 highlight: true
             },
             {
@@ -882,20 +882,20 @@ const showGuideData = [
         id: "stage-musicals",
         title: "華特迪士尼劇院主秀",
         icon: "fa-solid fa-masks-theater",
-        intro: "最值得提早卡位的大秀都集中在劇院，晚餐節奏只要抓順，這幾場幾乎就是整趟旅程的晚間主軸。",
+        intro: "最值得提早卡位的大秀都集中在劇院，通常會依晚餐時段自動分流，不一定會出現在可預約清單裡；晚餐節奏只要抓順，這幾場幾乎就是整趟旅程的晚間主軸。",
         shows: [
             {
                 name: "《Remember》",
                 theme: "以瓦力與伊芙為主線，串起可可夜總會、小美人魚、阿拉丁等迪士尼記憶的原創音樂劇。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
-                timingTip: "建議提早 20–30 分鐘進場，優先選中間區。",
+                timingTip: "建議提早 20–30 分鐘進場，優先搶一樓中間區；二樓視野較容易被前排遮住。",
                 tripLink: "Day 1 晚餐後直接銜接，是首日晚間最重要的一場。"
             },
             {
                 name: "《Disney Seas the Adventure》",
                 theme: "由經典角色串起的海上百老匯式大秀，節奏熱鬧、全家都容易進入狀況。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
-                timingTip: "和晚餐時段綁在一起看最順，仍建議提早入座。",
+                timingTip: "和晚餐時段綁在一起看最順，仍建議提早入座並優先搶一樓區域。",
                 tripLink: "適合作為另一晚的正式看秀主線，沿用 Day 1 的進場策略即可。"
             }
         ]
@@ -1068,9 +1068,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-glass-water",
                 sourceType: "official",
                 whenToUse: "Day 1 熟悉船上動線時就先記住位置。",
-                action: "主餐廳、自助餐與泳池飲料站的汽水、茶、咖啡與水本來就能用，先帶一個隨行水瓶，通常比急著買飲料套票更實用。",
+                action: "主餐廳、自助餐與泳池飲料站的汽水、茶、咖啡與水本來就能用，先帶一個隨行水瓶，通常比急著買飲料套票更實用；若人在披薩星球附近，記得免費飲料機通常在泳池另一側，不是緊鄰的付費酒吧吧台。",
                 tripFit: "你們多是親子行程，真正高頻補給的是水、汽水和熱飲，不是整天跑酒吧。",
-                caution: "罐裝飲料、酒吧飲品與部分房務項目仍可能另外計費，不要把免費飲料站和全部飲品混為一談。",
+                caution: "罐裝飲料、酒吧飲品與部分房務項目仍可能另外計費，不要把免費飲料站和全部飲品混為一談；若大人常喝啤酒，專屬啤酒杯加 token 玩法通常比每次重買杯子更划算。",
                 relatedSectionId: ""
             },
             {
@@ -1078,9 +1078,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-film",
                 sourceType: "community",
                 whenToUse: "準備進 Baymax Cinemas、劇院或夜間甲板活動前。",
-                action: "先去續杯爆米花，再從免費飲料站補汽水或水，兩樣帶著進場，會比臨時在付費攤位排隊更從容；中午左右若 App 一開通，也順手先看當天商品販售或活動預約。",
+                action: "若打算這趟連看幾場秀，通常 Day 1 就先買桶最划算；之後先去續杯爆米花，再從免費飲料站補汽水或水，兩樣帶著進場，會比臨時在付費攤位排隊更從容；中午左右若 App 一開通，也順手先看當天商品販售或活動預約。",
                 tripFit: "這趟有劇院、影廳和煙火夜，多一個穩定補給流程就少一個孩子臨時喊餓的插曲。",
-                caution: "各販售點營運時間和當船杯桶政策可能不同，進場前先看一眼 App 與現場營業狀況。",
+                caution: "各販售點營運時間和當船杯桶政策可能不同，進場前先看一眼 App 與現場營業狀況；劇院與秀場通常不適合拍照錄影，補給拿好後就專心看演出最穩。",
                 relatedSectionId: "entertainment"
             },
             {
@@ -1098,9 +1098,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-cheese",
                 sourceType: "community",
                 whenToUse: "孩子洗好澡、全家回房後想吃點熱食時；若是晚上 11–12 點才打電話，要把接線與出餐時間一起算進去。",
-                action: "打給 room service team 後可能要先等 10–20 分鐘才接到客服，點完餐再等約 30–40 分鐘送達；可先把小桌子打開，方便工作人員把餐點送進房，若要自己搬整盤進房也可以，但托盤通常偏重。",
+                action: "App 內的 Room Service 入口通常藏得很深，真要點餐多半還是直接打給 room service team；電話可能要先等 10–20 分鐘才接到客服，點完餐再等約 30–40 分鐘送達。可先把小桌子打開，方便工作人員把餐點送進房，若要自己搬整盤進房也可以，但托盤通常偏重。",
                 tripFit: "這會把『還要不要再去找東西吃』變成簡單、固定又很有記憶點的收尾儀式，特別適合孩子洗完澡後直接在房內安靜補一輪。",
-                caution: "小費可用社群常見抓法：每項約 1–2 USD 或每托盤約 5 USD；吃完後托盤可放門外或留房內等房務收走。菜單仍以當次供應為準，wonton soup noodle 與可嘗試詢問的 cookie & milk 偏推薦，Dan Dan noodle 則屬主觀不推。",
+                caution: "小費可用社群常見抓法：每項約 1–2 USD 或每托盤約 5 USD；吃完後托盤可放門外或留房內等房務收走。菜單仍以當次供應為準，wonton soup noodle 與可嘗試詢問的 cookie & milk 偏推薦，Dan Dan noodle 則屬主觀不推；熱食送到時也可能不像剛出鍋那麼燙，先有這個預期會比較舒服。",
                 relatedSectionId: "tips"
             },
             {
@@ -1202,9 +1202,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-bed",
                 sourceType: "community",
                 whenToUse: "一進房到第一晚安頓下來的那段時間。",
-                action: "房內可善用床底收納行李，衣櫃衣架數量不少，水龍頭的水通常可直接喝；吹風機雖堪用，但要持續按壓才會運作。",
+                action: "房內可善用床底收納行李，衣櫃衣架數量不少，水龍頭的水通常可直接喝；吹風機雖堪用，但要持續按壓才會運作，保險箱則是先輸入密碼再轉把手，和一般飯店習慣剛好相反。",
                 tripFit: "這些小細節會直接決定房間是不是好整理、孩子回房後能不能快速補水與收心。",
-                caution: "Wi-Fi 整體可用，但影音平台支援度不一定一致，別把它當成完整串流網路來安排。",
+                caution: "Wi-Fi 整體可用，但影音平台支援度不一定一致，別把它當成完整串流網路來安排；餐廳區域收訊可能偏弱，自備漫遊網卡 Day 1 也不一定立刻有訊號，常要等離岸後再恢復得比較穩。",
                 relatedSectionId: "tips"
             },
             {
