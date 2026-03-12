@@ -10,6 +10,7 @@
     --text-dark: #1A2B4C;
     --text-gray: #546681;
     --white: #FFFFFF;
+    --playbook-coral: #EF7F6D;
     --shadow-sm: 0 4px 15px rgba(0, 35, 75, 0.05);
     --shadow-md: 0 10px 30px rgba(0, 35, 75, 0.1);
     --shadow-hover: 0 20px 40px rgba(0, 35, 75, 0.15);
@@ -1277,7 +1278,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
+    padding: 14px 18px;
 }
 
 .nav-logo {
@@ -1292,20 +1293,20 @@ section {
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 10px;
 }
 
 .nav-links li a {
     color: var(--white);
     text-decoration: none;
     font-weight: 500;
-    font-size: 1rem;
-    padding: 8px 12px;
+    font-size: 0.92rem;
+    padding: 7px 10px;
     border-radius: 8px;
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .nav-links li a:hover {
@@ -1527,7 +1528,378 @@ footer h2 {
 }
 
 /* ==========================================
-   11. 甲板與表演設施 (Phase 5)
+   11. 實戰攻略 Playbook
+   ========================================== */
+.playbook-intro {
+    text-align: center;
+    color: var(--text-gray);
+    margin: -20px auto 28px;
+    max-width: 860px;
+    font-size: 1rem;
+    line-height: 1.75;
+}
+
+.playbook-intro i {
+    color: var(--dcl-gold);
+    margin-right: 8px;
+}
+
+.playbook-shell {
+    padding: 30px;
+    border-radius: 30px;
+    background:
+        radial-gradient(circle at top left, rgba(10, 58, 112, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(243, 181, 0, 0.13), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(244, 249, 255, 0.95));
+    border: 1px solid rgba(10, 58, 112, 0.08);
+    box-shadow: var(--shadow-md);
+}
+
+.playbook-missions-container {
+    overflow-x: auto;
+    padding-bottom: 12px;
+    margin-bottom: 28px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.playbook-missions {
+    display: flex;
+    gap: 14px;
+    min-width: max-content;
+}
+
+.playbook-mission-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 18px 13px 34px;
+    border-radius: 18px;
+    border: 1px solid rgba(0, 35, 75, 0.12);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 252, 0.92));
+    color: var(--dcl-navy);
+    font-weight: 700;
+    font-size: 0.98rem;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.playbook-mission-btn::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-body);
+    box-shadow: inset 0 0 0 2px rgba(10, 58, 112, 0.15);
+    transform: translateY(-50%);
+}
+
+.playbook-mission-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.playbook-mission-btn.active {
+    background: linear-gradient(135deg, var(--dcl-navy), var(--dcl-navy-light));
+    color: var(--white);
+    border-color: rgba(243, 181, 0, 0.82);
+    box-shadow: 0 16px 32px rgba(0, 35, 75, 0.18);
+}
+
+.playbook-mission-btn.active i {
+    color: var(--dcl-gold);
+}
+
+.playbook-mission-btn.active::before {
+    background: rgba(243, 181, 0, 0.9);
+    box-shadow: inset 0 0 0 2px rgba(0, 35, 75, 0.25);
+}
+
+.playbook-content {
+    animation: slideUp 0.4s ease forwards;
+}
+
+.playbook-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 24px 28px;
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(243, 181, 0, 0.18), transparent 26%),
+        linear-gradient(135deg, #001f45 0%, #0A3A70 100%);
+    color: var(--white);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 24px;
+}
+
+.playbook-panel-copy {
+    max-width: 720px;
+}
+
+.playbook-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.playbook-panel-copy h3 {
+    color: var(--dcl-gold);
+    margin: 0 0 10px;
+    font-size: 2rem;
+}
+
+.playbook-panel-copy p {
+    color: #E1EAF7;
+    line-height: 1.7;
+    font-size: 1rem;
+}
+
+.playbook-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.playbook-card {
+    --playbook-source: var(--dcl-navy-light);
+    display: block;
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 22px;
+    border: 1px solid rgba(0, 35, 75, 0.08);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.playbook-card.source-official {
+    --playbook-source: var(--dcl-navy-light);
+}
+
+.playbook-card.source-concierge {
+    --playbook-source: var(--dcl-gold);
+}
+
+.playbook-card.source-community {
+    --playbook-source: var(--playbook-coral);
+}
+
+.playbook-card:hover,
+.playbook-card[open] {
+    transform: translateY(-4px);
+    border-color: var(--playbook-source);
+    box-shadow: var(--shadow-md);
+}
+
+.playbook-card summary {
+    list-style: none;
+}
+
+.playbook-card summary::-webkit-details-marker,
+.playbook-card summary::marker {
+    display: none;
+}
+
+.playbook-summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.playbook-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--playbook-source);
+    color: var(--white);
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    box-shadow: inset 0 -6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.playbook-card.source-concierge .playbook-card-icon {
+    color: var(--dcl-navy);
+}
+
+.playbook-card-head h4 {
+    margin: 10px 0 8px;
+    color: var(--dcl-navy);
+    font-size: 1.18rem;
+    line-height: 1.4;
+}
+
+.playbook-preview {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.playbook-source-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.playbook-source-chip.official {
+    background: rgba(10, 58, 112, 0.1);
+    color: var(--dcl-navy-light);
+}
+
+.playbook-source-chip.concierge {
+    background: rgba(243, 181, 0, 0.16);
+    color: #7A5300;
+}
+
+.playbook-source-chip.community {
+    background: rgba(239, 127, 109, 0.13);
+    color: #B94B3A;
+}
+
+.playbook-toggle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 35, 75, 0.06);
+    color: var(--dcl-navy-light);
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.playbook-card[open] .playbook-toggle {
+    transform: rotate(180deg);
+    background: rgba(10, 58, 112, 0.1);
+}
+
+.playbook-body {
+    padding: 0 20px 20px;
+    border-top: 1px solid rgba(0, 35, 75, 0.08);
+}
+
+.playbook-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.playbook-meta-block,
+.playbook-note {
+    padding: 15px 16px;
+    border-radius: 16px;
+}
+
+.playbook-meta-block {
+    background: rgba(10, 58, 112, 0.05);
+}
+
+.playbook-emphasis {
+    display: grid;
+    gap: 14px;
+    margin-top: 14px;
+}
+
+.playbook-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.playbook-tripfit {
+    background: rgba(10, 58, 112, 0.06);
+}
+
+.playbook-caution {
+    background: rgba(243, 181, 0, 0.12);
+}
+
+.playbook-note i {
+    color: var(--playbook-source);
+    margin-top: 3px;
+    font-size: 1rem;
+}
+
+.playbook-meta-label {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: var(--dcl-navy);
+    font-size: 0.77rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.playbook-meta-block p,
+.playbook-note p {
+    color: var(--text-dark);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.playbook-related-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    color: var(--dcl-navy-light);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.playbook-related-link:hover {
+    color: var(--dcl-red);
+    transform: translateX(2px);
+}
+
+@media (max-width: 768px) {
+    .playbook-shell {
+        padding: 24px 18px;
+    }
+
+    .playbook-panel-header {
+        flex-direction: column;
+    }
+
+    .playbook-grid,
+    .playbook-meta-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================
+   12. 甲板與表演設施 (Phase 5)
    ========================================== */
 .deck-guide-intro {
     text-align: center;
@@ -1913,6 +2285,42 @@ footer h2 {
 
     .deck-guide-shell {
         padding: 22px 16px;
+    }
+
+    .playbook-shell {
+        padding: 22px 16px;
+    }
+
+    .playbook-panel-header {
+        padding: 20px 18px;
+    }
+
+    .playbook-panel-copy h3 {
+        font-size: 1.7rem;
+    }
+
+    .playbook-summary {
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        padding: 18px 16px;
+    }
+
+    .playbook-card-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .playbook-card-head h4 {
+        font-size: 1.05rem;
+    }
+
+    .playbook-source-chip {
+        font-size: 0.74rem;
+    }
+
+    .playbook-body {
+        padding: 0 16px 18px;
     }
 
     .main-tabs {

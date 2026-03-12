@@ -932,3 +932,278 @@ const showGuideData = [
         ]
     }
 ];
+
+const playbookGuideData = [
+    {
+        id: "pretrip",
+        label: "行前防雷",
+        intro: "把最容易卡在報到前的錯誤先排除。這區只保留網站其他地方沒講清楚的技術準備、資料整理與老手小技巧。",
+        items: [
+            {
+                title: "英文帳號加上兩家人資料夾，先整理再開搶",
+                icon: "fa-solid fa-folder-tree",
+                sourceType: "community",
+                whenToUse: "出發前 40 天線上報到前，就先整理完成。",
+                action: "用全英文姓名的 Disney 帳號綁好訂位代號，並把兩家人的英文地址、緊急聯絡人、Security Photo、護照頁和航班號碼集中成一個資料夾，報到時直接複製貼上最穩。",
+                tripFit: "你們這趟是兩家三童一起作業，真正拖慢速度的通常不是系統本身，而是邊填邊找資料。",
+                caution: "英文帳號較穩屬高實用社群心得，不是官方保證，但很值得提早採用。",
+                relatedSectionId: "timeline"
+            },
+            {
+                title: "線上報到五步驟不要在倒數時才想",
+                icon: "fa-solid fa-list-ol",
+                sourceType: "official",
+                whenToUse: "40 天前開放的那一刻直接照流程走。",
+                action: "先把 Guest Info、Onboard Account、Travel Plan、Port Arrival Time、Cruise Contract 五步驟要填的內容準備好，完成後把 QR 碼截圖存進手機或 Apple Wallet。",
+                tripFit: "這張卡不是重講最早到港時段，而是讓你在開放瞬間不需要邊翻資料邊想下一步。",
+                caution: "照片若顯示 Pending 通常是人工審核中，不代表上傳失敗。",
+                relatedSectionId: "checkin"
+            },
+            {
+                title: "禁帶電器先排雷，充電頭走輕量化",
+                icon: "fa-solid fa-plug-circle-xmark",
+                sourceType: "official",
+                whenToUse: "開始打包行李時就先檢查，不要到碼頭才被退件。",
+                action: "延長線、多孔插座與電源分接器都先排除；如果只是多人充電，改帶 USB 多孔充電頭會更穩。",
+                tripFit: "兩家人加上手機、手錶、行動電源很多，最容易在『怕不夠插』這件事上帶錯設備。",
+                caution: "安檢對供電設備很敏感，不要賭看起來像是可以通過的灰色地帶。",
+                relatedSectionId: "checklist"
+            },
+            {
+                title: "爆米花桶先進隨身包，不要上船後才想起來",
+                icon: "fa-solid fa-bucket",
+                sourceType: "community",
+                whenToUse: "出發前收隨身行李時一起放進去。",
+                action: "若你們已經有園區爆米花桶，直接把它當成這趟的看秀補給工具，上船後就能自然串進影城、劇院與甲板活動。",
+                tripFit: "這趟看秀很多、孩子也多，有自己的桶能把『排隊買零食』變成固定補給節奏。",
+                caution: "續杯販售點與價格仍以當船營運為準，這張卡偏向老乘客常用技巧。",
+                relatedSectionId: "entertainment"
+            }
+        ]
+    },
+    {
+        id: "embark-sprint",
+        label: "登船日 3 小時",
+        intro: "這區不是再重講登船流程，而是把 Day 1 最容易失控的前三小時整理成家庭版節奏卡。",
+        items: [
+            {
+                title: "隨身包要以『下午先玩』為前提",
+                icon: "fa-solid fa-suitcase-rolling",
+                sourceType: "community",
+                whenToUse: "1/25 登船前一晚收手提行李時。",
+                action: "把泳衣、防曬、防滑拖鞋、孩子換洗衣物、行動電源和必要文件放在同一包，別讓玩水裝備跟托運行李分開。",
+                tripFit: "你們的 Day 1 不是只有報到，而是要接 Open House 與玩水暖身，少一樣都會拖慢全家節奏。",
+                caution: "這張卡不取代證件檢查，它只是提醒真正影響心情的通常是『下午要用的東西有沒有跟著上船』。",
+                relatedSectionId: "checklist"
+            },
+            {
+                title: "登船 3 小時 SOP：只跑第一圈，不要一開始就滿船亂衝",
+                icon: "fa-solid fa-route",
+                sourceType: "community",
+                whenToUse: "真正踏上船後的第一個下午。",
+                action: "把節奏固定成：坐下式午餐 → 禮賓 Lounge 短補給 → Kids Club Open House → 水區放電，只保留最重要的第一圈。",
+                tripFit: "這條路線能同時滿足大人報到、孩子熟悉環境與第一天放電，最適合你們兩家同行的協作節奏。",
+                caution: "若當天天氣或集合演練時間有變，優先保留 Open House 與玩水，商店和拍照都能往後挪。",
+                relatedSectionId: "checkin"
+            },
+            {
+                title: "Lounge 要當緩衝區，不要把它當正餐替代",
+                icon: "fa-solid fa-couch",
+                sourceType: "concierge",
+                whenToUse: "每天下午或秀前後需要重新集合時。",
+                action: "把 Lounge 當成 15–20 分鐘的補水、降噪、等人與重新同步的中轉站；有點心就補一輪，但主餐與正式演出仍照原節奏走。",
+                tripFit: "對兩家三童來說，最難的不是有沒有吃到，而是全員能不能重新同步；Lounge 正好是最好用的集合點。",
+                caution: "點心多半是冷盤與輕食，不要因為下午茶吃太滿，把輪替晚餐的儀式感擠掉。",
+                relatedSectionId: "deck-guide"
+            }
+        ]
+    },
+    {
+        id: "daily-ops",
+        label: "船上省時省力",
+        intro: "這組是整趟旅程最值得反覆翻看的日常攻略，目標是少排一次隊、多留一點玩的體力。",
+        items: [
+            {
+                title: "免費飲料站比套票更值得先熟",
+                icon: "fa-solid fa-glass-water",
+                sourceType: "official",
+                whenToUse: "Day 1 熟悉船上動線時就先記住位置。",
+                action: "主餐廳、自助餐與泳池飲料站的汽水、茶、咖啡與水本來就能用，先帶一個隨行水瓶，通常比急著買飲料套票更實用。",
+                tripFit: "你們多是親子行程，真正高頻補給的是水、汽水和熱飲，不是整天跑酒吧。",
+                caution: "罐裝飲料、酒吧飲品與部分房務項目仍可能另外計費，不要把免費飲料站和全部飲品混為一談。",
+                relatedSectionId: ""
+            },
+            {
+                title: "爆米花桶加免費汽水，就是最順手的觀影組合",
+                icon: "fa-solid fa-film",
+                sourceType: "community",
+                whenToUse: "準備進 Baymax Cinemas、劇院或夜間甲板活動前。",
+                action: "先去續杯爆米花，再從免費飲料站補汽水或水，兩樣帶著進場，會比臨時在付費攤位排隊更從容。",
+                tripFit: "這趟有劇院、影廳和煙火夜，多一個穩定補給流程就少一個孩子臨時喊餓的插曲。",
+                caution: "各販售點營運時間和當船杯桶政策可能不同，進場前先看一眼 App 與現場營業狀況。",
+                relatedSectionId: "entertainment"
+            },
+            {
+                title: "房務宵夜可以做成親子儀式感",
+                icon: "fa-solid fa-cheese",
+                sourceType: "community",
+                whenToUse: "孩子洗好澡、全家準備進房收尾時。",
+                action: "孩子走米奇冰淇淋棒或熱可可路線，大人可以配起司拼盤和熱茶，把陽台或房內短暫放空做成每天的小慶功。",
+                tripFit: "這會把『還要不要再去找東西吃』變成簡單、固定又很有記憶點的收尾儀式。",
+                caution: "房務菜單近年可能調整，實際項目以 App 當次菜單為準，簽單時也別忘了額外小費。",
+                relatedSectionId: "tips"
+            },
+            {
+                title: "角色排隊和空景拍照，都盡量搶早檔",
+                icon: "fa-solid fa-camera-retro",
+                sourceType: "community",
+                whenToUse: "海上日早上與一般 meet-and-greet 前。",
+                action: "角色合照通常提早 10–15 分鐘排最省時間；若想拍空景，D2、D3 的 07:30–08:30 是最容易拍到乾淨甲板的時段。",
+                tripFit: "這種『早點去就省很多力』的節奏，比臨時在人潮中硬排更適合多孩家庭。",
+                caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯，新區塊只補一般排隊節奏。",
+                relatedSectionId: "timeline"
+            }
+        ]
+    },
+    {
+        id: "concierge-plus",
+        label: "禮賓隱藏加值",
+        intro: "這區只放網站其他地方沒明講的 concierge bonus，重點不是『有什麼』，而是『怎麼用才真的省力』。",
+        items: [
+            {
+                title: "歡迎午宴與迎賓小禮，是登船情緒的第一個加速器",
+                icon: "fa-solid fa-gift",
+                sourceType: "concierge",
+                whenToUse: "Day 1 剛登船、全家還在適應節奏的那段時間。",
+                action: "把迎賓小禮與歡迎午宴視為『進入度假模式』的起點，不必安排成大事，但很適合拿來穩住孩子情緒與大人節奏。",
+                tripFit: "這種被照顧到的開場感，對第一次把兩家人一起帶上船特別有幫助。",
+                caution: "實際形式可能依船上安排微調，不要把時間卡得過死。",
+                relatedSectionId: "checkin"
+            },
+            {
+                title: "房內冰箱的軟飲與瓶水，用完就請管家補",
+                icon: "fa-solid fa-bottle-water",
+                sourceType: "concierge",
+                whenToUse: "每天回房、孩子玩水後或睡前最常用到。",
+                action: "把房內冰箱當作固定補給點，喝完就直接請管家補齊，不用等到真的見底才想起來。",
+                tripFit: "這會讓房間變成真正的回血站，尤其孩子回房後常常先找水和冷飲。",
+                caution: "不要假設每次都會自動補到你要的節奏，主動開口通常更快。",
+                relatedSectionId: ""
+            },
+            {
+                title: "需要省力時，先想到的是管家，不是自己排隊",
+                icon: "fa-solid fa-user-tie",
+                sourceType: "concierge",
+                whenToUse: "遇到限額活動、劇院座位或臨時需求時。",
+                action: "若孩子想要限額活動、你們想確認劇院提前入座、或有需要協調的特殊需求，第一步先問管家能不能協助，而不是自己先去碰運氣。",
+                tripFit: "禮賓價值最大的地方不是尊榮感，而是把你們從某些排隊與來回溝通裡解放出來。",
+                caution: "可協助不等於保證一定有位，越早提出越有機會。",
+                relatedSectionId: "deck-guide"
+            },
+            {
+                title: "Lounge 的正確打開方式：下午茶、中轉站、偶遇角色",
+                icon: "fa-solid fa-martini-glass-citrus",
+                sourceType: "concierge",
+                whenToUse: "午後空檔、晚餐前、看秀後與全家需要安靜休息時。",
+                action: "把 Lounge 視為下午茶、中場集合與偶爾碰到禮賓專屬角色合照的空間，它最大的價值是舒服與安靜，不是取代所有餐食。",
+                tripFit: "這種『進可補給、退可躲人潮』的空間，很適合兩家同行時當作每日中轉站。",
+                caution: "不同船與時段供應內容會有差異，別用 Wish 或其他船的餐量去期待這趟一定一樣。",
+                relatedSectionId: "deck-guide"
+            }
+        ]
+    },
+    {
+        id: "stateroom-family",
+        label: "客艙與親子神隊友",
+        intro: "這裡放的是最容易被忽略、但一旦做對就能讓全家舒服很多的客艙與孩子攻略。",
+        items: [
+            {
+                title: "RFID 手環的進階用法：整天戴、最後記得還",
+                icon: "fa-solid fa-id-badge",
+                sourceType: "official",
+                whenToUse: "Day 1 領取手環後到最後一次使用兒童俱樂部前。",
+                action: "手環防水，可以讓孩子整天戴著去跑活動和玩水；等到最後一次參加俱樂部或離船前，再記得一併歸還。",
+                tripFit: "你們的重點不是只拿到手環，而是讓接送與定位流程一路維持順暢，不必每天重新適應。",
+                caution: "若遺失可能會收費，但各船型金額可能不同，Adventure 仍以船上實際公告為準。",
+                relatedSectionId: "facilities"
+            },
+            {
+                title: "磁吸掛勾很值得，它會直接提升客艙秩序感",
+                icon: "fa-solid fa-magnet",
+                sourceType: "community",
+                whenToUse: "一進房整理泳衣、lanyard 和濕物時。",
+                action: "艙壁是金屬，帶幾顆小而有力的磁吸掛勾，就能把泳衣、掛牌與小包分流掛好，不用全堆在椅子或沙發上。",
+                tripFit: "多孩家庭最怕房內一濕就亂，掛起來比疊起來更省心。",
+                caution: "挑強力但小顆的款式就好，太大太重反而占空間。",
+                relatedSectionId: "checklist"
+            },
+            {
+                title: "睡眠與暈船備援包，別等孩子不舒服才開始補救",
+                icon: "fa-solid fa-moon",
+                sourceType: "community",
+                whenToUse: "出發前打包藥品與睡前用品時。",
+                action: "白噪音以手機 App 最穩，暈船備援則把薑糖、薄鹽餅乾、手環或藥物先放進固定小包，真的需要時就不用到處找。",
+                tripFit: "這種看起來不起眼的小包，往往比多帶一套衣服更能救 Day 2、Day 3 的狀態。",
+                caution: "若要攜帶額外裝置型白噪音機，建議放隨身行李並預留人工檢視空間。",
+                relatedSectionId: ""
+            },
+            {
+                title: "洗衣時間抓在晚餐或看秀時，最不打擾主行程",
+                icon: "fa-solid fa-shirt",
+                sourceType: "community",
+                whenToUse: "海上日出現濕衣、泳衣堆積時。",
+                action: "把自助洗衣安排在大家進晚餐或看表演的時段，並用 App 先看機台狀態，再決定要不要立刻去處理。",
+                tripFit: "這能把家務感壓到最低，不會占掉本來屬於白天玩樂的黃金時間。",
+                caution: "不要等到最後一晚才想一次洗完，否則容易遇到他人也在收尾整理。",
+                relatedSectionId: "tips"
+            }
+        ]
+    },
+    {
+        id: "last-night",
+        label: "最後一晚與撤船",
+        intro: "這組不是重講下船流程，而是把最後一晚真正容易手忙腳亂的決策先幫你排好。",
+        items: [
+            {
+                title: "最後一晚先做一個『孩子晨間包』",
+                icon: "fa-solid fa-bag-shopping",
+                sourceType: "community",
+                whenToUse: "大型行李要放門外之前。",
+                action: "把隔天早餐後會用到的證件、外套、濕紙巾、簡單點心、孩子換洗衣物與機場路上要用的東西先留在手提包。",
+                tripFit: "這會讓你們下船當天的節奏從容很多，不會在大件行李已經外放後才發現重要物品還在箱內。",
+                caution: "孩子最常臨時需要的是外套、零食和小玩具，這三樣特別值得先留下。",
+                relatedSectionId: "tips"
+            },
+            {
+                title: "撤船日早餐與房務供應，要先分清楚",
+                icon: "fa-solid fa-utensils",
+                sourceType: "community",
+                whenToUse: "最後一晚安排隔天早上的節奏時。",
+                action: "把撤船日早餐預設成餐廳節奏，若怕孩子起床後先餓，可以前一晚就留簡單點心在房內，不要完全期待清晨還有完整 room service。",
+                tripFit: "你們回程航班時間很充裕，真正重要的是早上不要餓著、也不要趕著找吃的。",
+                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期。",
+                relatedSectionId: "checkin"
+            },
+            {
+                title: "額外小費信封是感謝工具，不用變成床頭壓力",
+                icon: "fa-solid fa-envelope-open-text",
+                sourceType: "community",
+                whenToUse: "最後一晚想額外謝謝服務人員時。",
+                action: "基本小費如果已經在船費或帳單內處理好，就不用再床頭分散留現金；若特別想感謝某位房務或餐飲人員，再把現金放進信封或當面交給對方即可。",
+                tripFit: "這能把『想表達謝意』和『怕自己漏給或重複給』拆開來看，心情會輕鬆很多。",
+                caution: "先確認你們的每日小費是否已經預付，再決定額外加給，避免誤會成基本小費還沒處理。",
+                relatedSectionId: "tips"
+            },
+            {
+                title: "密封汽水能自帶，酒精規則則一定要最後再核對",
+                icon: "fa-solid fa-wine-bottle",
+                sourceType: "official",
+                whenToUse: "最後確認手提行李與陽台宵夜計畫時。",
+                action: "若家人有固定想喝的口味，可以把未開封汽水放進手提行李；至於酒精攜帶量、品項與規則，出發前最後再以官網最新條款確認。",
+                tripFit: "這能讓房內與陽台的補給更自由，但又不必為了少量需求去買整套飲料方案。",
+                caution: "酒精政策時效性高，不要照其他船或舊攻略的經驗直接套用到 2027/1/25 這趟。",
+                relatedSectionId: "tips"
+            }
+        ]
+    }
+];

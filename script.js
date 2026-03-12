@@ -437,7 +437,144 @@
 
     renderDeckGuide();
 
-    // 12. 行程表頁籤切換
+    // 12. 實戰攻略 Playbook
+    function renderPlaybookGuide() {
+        const missionsContainer = document.getElementById('playbook-missions');
+        const contentContainer = document.getElementById('playbook-content');
+        if (!missionsContainer || !contentContainer || typeof playbookGuideData === 'undefined') return;
+
+        const relatedSectionLabels = {
+            checklist: '行前防呆清單',
+            timeline: '準備時間軸',
+            checkin: '通關與登船',
+            facilities: '兒童育樂',
+            'deck-guide': '甲板導覽',
+            entertainment: '娛樂大秀',
+            tips: '購物、預算與離船',
+            'local-info': '在地工具'
+        };
+
+        const sourceMeta = {
+            official: { label: '官方規則', icon: 'fa-solid fa-shield-heart' },
+            concierge: { label: '禮賓加值', icon: 'fa-solid fa-crown' },
+            community: { label: '社群心得', icon: 'fa-solid fa-comments' }
+        };
+
+        const missionIcons = {
+            pretrip: 'fa-solid fa-passport',
+            'embark-sprint': 'fa-solid fa-bolt',
+            'daily-ops': 'fa-solid fa-wand-magic-sparkles',
+            'concierge-plus': 'fa-solid fa-crown',
+            'stateroom-family': 'fa-solid fa-bed',
+            'last-night': 'fa-solid fa-anchor'
+        };
+
+        let activeMission = playbookGuideData[0]?.id;
+
+        missionsContainer.innerHTML = playbookGuideData.map(mission => `
+            <button type="button" class="playbook-mission-btn ${mission.id === activeMission ? 'active' : ''}" data-playbook-mission="${mission.id}">
+                <i class="${missionIcons[mission.id] || 'fa-solid fa-compass'}"></i>
+                <span>${mission.label}</span>
+            </button>
+        `).join('');
+
+        const missionButtons = missionsContainer.querySelectorAll('.playbook-mission-btn');
+
+        function buildItemMarkup(item, index) {
+            const source = sourceMeta[item.sourceType] || sourceMeta.community;
+            const relatedLabel = item.relatedSectionId ? relatedSectionLabels[item.relatedSectionId] : '';
+            const relatedMarkup = relatedLabel ? `
+                <a class="playbook-related-link" href="#${item.relatedSectionId}">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    延伸看法：這張是進階玩法，基本資訊已整理在「${relatedLabel}」
+                </a>
+            ` : '';
+
+            return `
+                <details class="playbook-card source-${item.sourceType}" ${index === 0 ? 'open' : ''}>
+                    <summary class="playbook-summary">
+                        <div class="playbook-card-icon">
+                            <i class="${item.icon}"></i>
+                        </div>
+                        <div class="playbook-card-head">
+                            <span class="playbook-source-chip ${item.sourceType}">
+                                <i class="${source.icon}"></i>${source.label}
+                            </span>
+                            <h4>${item.title}</h4>
+                            <p class="playbook-preview">${item.tripFit}</p>
+                        </div>
+                        <span class="playbook-toggle" aria-hidden="true">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </summary>
+                    <div class="playbook-body">
+                        <div class="playbook-meta-grid">
+                            <div class="playbook-meta-block">
+                                <span class="playbook-meta-label">何時用</span>
+                                <p>${item.whenToUse}</p>
+                            </div>
+                            <div class="playbook-meta-block">
+                                <span class="playbook-meta-label">這趟怎麼用</span>
+                                <p>${item.action}</p>
+                            </div>
+                        </div>
+                        <div class="playbook-emphasis">
+                            <div class="playbook-note playbook-tripfit">
+                                <i class="fa-solid fa-route"></i>
+                                <div>
+                                    <span class="playbook-meta-label">這趟最有感的原因</span>
+                                    <p>${item.tripFit}</p>
+                                </div>
+                            </div>
+                            <div class="playbook-note playbook-caution">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <div>
+                                    <span class="playbook-meta-label">避免踩雷</span>
+                                    <p>${item.caution}</p>
+                                </div>
+                            </div>
+                        </div>
+                        ${relatedMarkup}
+                    </div>
+                </details>
+            `;
+        }
+
+        function updatePlaybook(targetId) {
+            activeMission = targetId;
+            missionButtons.forEach(button => {
+                button.classList.toggle('active', button.dataset.playbookMission === activeMission);
+            });
+
+            const mission = playbookGuideData.find(item => item.id === activeMission) || playbookGuideData[0];
+            if (!mission) return;
+
+            contentContainer.innerHTML = `
+                <div class="playbook-panel-header">
+                    <div class="playbook-panel-copy">
+                        <span class="playbook-kicker">Captain's Pocket Guide</span>
+                        <h3>${mission.label}</h3>
+                        <p>${mission.intro}</p>
+                    </div>
+                </div>
+                <div class="playbook-grid">
+                    ${mission.items.map((item, index) => buildItemMarkup(item, index)).join('')}
+                </div>
+            `;
+        }
+
+        missionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updatePlaybook(button.dataset.playbookMission);
+            });
+        });
+
+        updatePlaybook(activeMission);
+    }
+
+    renderPlaybookGuide();
+
+    // 13. 行程表頁籤切換
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     
@@ -454,7 +591,7 @@
         });
     });
 
-    // 13. 導覽列與漢堡選單
+    // 14. 導覽列與漢堡選單
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
     const navItems = document.querySelectorAll('.nav-links a');
