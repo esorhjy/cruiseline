@@ -431,3 +431,34 @@ const cruiseSchedule = [
         ]
     }
 ];
+
+// --- 行前準備清單資料 (Phase 4: Interactive Checklist) ---
+const checklistData = [
+    {
+        category: "必辦文件與 App",
+        items: [
+            { id: "sgac", text: "填寫新加坡電子入境卡 (SGAC) - 抵達前 3 天內" },
+            { id: "dcl-app", text: "下載 Disney Cruise Line 官方 App 並登入" },
+            { id: "visa", text: "確認同行成員護照效期 (需 6 個月以上)" },
+            { id: "insurance", text: "投保海外旅遊平安險 (包含醫療與不便險)" }
+        ]
+    },
+    {
+        category: "禮賓特權與預約",
+        items: [
+            { id: "shore-ex", text: "確認岸上觀光行程 (禮賓艙房可優先預約)" },
+            { id: "palo", text: "預約 Palo Steakhouse 大人專屬晚餐" },
+            { id: "bibbidi", text: "幫孩子預約神仙教母美容院 (Bibbidi Bobbidi Boutique)" },
+            { id: "concierge-request", text: "如有特殊餐飲需求，提早透過 App 聯絡管家" }
+        ]
+    },
+    {
+        category: "孩子專屬準備",
+        items: [
+            { id: "club-pass", text: "記住海洋俱樂部 (Oceaneer Club) 的家長安全密語" },
+            { id: "costume", text: "準備漫威海上帝日 (Marvel Day at Sea) 的英雄變裝服" },
+            { id: "swim-gear", text: "準備泳裝與防曬衣 (滑水道與米奇泳池必備)" },
+            { id: "kids-medicine", text: "攜帶孩子常備藥品 (退燒、感冒、防暈車藥)" }
+        ]
+    }
+];
