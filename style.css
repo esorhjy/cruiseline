@@ -806,7 +806,99 @@ section {
 }
 
 /* ==========================================
-   7. 其他結構
+   7. 行前準備清單 (Phase 4)
+   ========================================== */
+.checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.checklist-category {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0, 35, 75, 0.05);
+}
+
+.checklist-category h3 {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--bg-body);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checklist-category h3 i {
+    color: var(--dcl-gold);
+}
+
+.checklist-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.checklist-item:hover {
+    background: var(--bg-body);
+}
+
+.checklist-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--dcl-navy-light);
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.checklist-item.checked .checklist-checkbox {
+    background: var(--dcl-gold);
+    border-color: var(--dcl-gold);
+}
+
+.checklist-item.checked .checklist-checkbox::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--dcl-navy);
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.checklist-item-text {
+    font-size: 1.05rem;
+    color: var(--text-dark);
+    transition: all 0.2s;
+}
+
+.checklist-item.checked .checklist-item-text {
+    color: var(--text-gray);
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* ==========================================
+   8. 其他結構
    ========================================== */
 .timeline {
     position: relative;

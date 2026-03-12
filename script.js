@@ -278,7 +278,54 @@ document.addEventListener('DOMContentLoaded', function () {
     // 執行渲染
     renderSchedule();
 
-    // 10. 行程表頁籤切換
+    // 10. 行前準備清單渲染與邏輯 (Phase 4)
+    function renderChecklist() {
+        const grid = document.getElementById('checklist-grid');
+        if (!grid || typeof checklistData === 'undefined') return;
+
+        // 讀取本地儲存狀態
+        const savedStatus = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
+
+        checklistData.forEach(category => {
+            const catDiv = document.createElement('div');
+            catDiv.className = 'checklist-category';
+            
+            catDiv.innerHTML = `
+                <h3><i class="fa-solid fa-star"></i> ${category.category}</h3>
+                <div class="checklist-items"></div>
+            `;
+            
+            const itemsDiv = catDiv.querySelector('.checklist-items');
+            
+            category.items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = `checklist-item ${savedStatus[item.id] ? 'checked' : ''}`;
+                itemDiv.dataset.id = item.id;
+                
+                itemDiv.innerHTML = `
+                    <div class="checklist-checkbox"></div>
+                    <div class="checklist-item-text">${item.text}</div>
+                `;
+                
+                itemDiv.addEventListener('click', () => {
+                    const isChecked = itemDiv.classList.toggle('checked');
+                    
+                    // 更新本地儲存
+                    const currentStatus = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
+                    currentStatus[item.id] = isChecked;
+                    localStorage.setItem('dcl_checklist_status', JSON.stringify(currentStatus));
+                });
+                
+                itemsDiv.appendChild(itemDiv);
+            });
+            
+            grid.appendChild(catDiv);
+        });
+    }
+
+    renderChecklist();
+
+    // 11. 行程表頁籤切換
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     
