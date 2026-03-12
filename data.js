@@ -449,33 +449,36 @@ const cruiseSchedule = [
     }
 ];
 
-// --- 行行準備清單資料 (Phase 4: Interactive Checklist) ---
+// --- 行前準備清單資料 (Phase 4: Interactive Checklist) ---
 const checklistData = [
     {
-        category: "必辦文件與 App",
+        category: "登船重要手續",
         items: [
-            { id: "sgac", text: "填寫新加坡電子入境卡 (SGAC) - 抵達前 3 天內" },
-            { id: "dcl-app", text: "下載 Disney Cruise Line 官方 App 並登入" },
-            { id: "visa", text: "確認同行成員護照效期 (需 6 個月以上)" },
-            { id: "insurance", text: "投保海外旅遊平安險 (包含醫療與不便險)" }
+            { id: "pay-full", text: "完成全額支付，支付線上小費" },
+            { id: "online-checkin", text: "出發前 40 天完成線上辦理登船手續" },
+            { id: "concierge-10am", text: "禮賓艙房 10:00 即可抵達碼頭報到" },
+            { id: "health-form", text: "登船前完成線上健康問卷填寫" },
+            { id: "sgac-twice", text: "新加坡入境卡 (SGAC) 需填寫兩次 (入境+回船)" }
         ]
     },
     {
-        category: "禮賓特權與預約",
+        category: "預約與購買",
         items: [
-            { id: "shore-ex", text: "確認岸上觀光行程 (禮賓艙房可優先預約)" },
-            { id: "palo", text: "預約 Palo Steakhouse 大人專屬晚餐" },
-            { id: "bibbidi", text: "幫孩子預約神仙教母美容院 (Bibbidi Bobbidi Boutique)" },
-            { id: "concierge-request", text: "如有特殊餐飲需求，提早透過 App 聯絡管家" }
+            { id: "royal-meet-130d", text: "130 天前禮賓預約：皇家公主見面會" },
+            { id: "dinner-table", text: "聯絡管家確認用餐需求 (如併桌安排)" },
+            { id: "photo-package", text: "考慮是否預購郵輪拍照套裝 (比較划算)" },
+            { id: "wifi-buy", text: "考慮是否預購郵輪 Wi-Fi 上網方案" },
+            { id: "kids-club-booking", text: "預定 Oceaneer Club 兒童俱樂部時段" }
         ]
     },
     {
-        category: "孩子專屬準備",
+        category: "事先準備",
         items: [
-            { id: "club-pass", text: "記住海洋俱樂部 (Oceaneer Club) 的家長安全密語" },
-            { id: "costume", text: "準備漫威海上帝日 (Marvel Day at Sea) 的英雄變裝服" },
-            { id: "swim-gear", text: "準備泳裝與防曬衣 (滑水道與米奇泳池必備)" },
-            { id: "kids-medicine", text: "攜帶孩子常備藥品 (退燒、感冒、防暈車藥)" }
+            { id: "passport-expiry", text: "確認護照效期 (6 個月以上) 與旅遊保險" },
+            { id: "personal-essentials", text: "攜帶個人備品 (牙刷、拖鞋、常備藥)" },
+            { id: "door-decor", text: "準備房門布置磁鐵或給家人的驚喜小禮" },
+            { id: "swimsuit-bag", text: "先玩滑道：登船日將泳裝放於隨身包" },
+            { id: "last-night-luggage", text: "下船前一晚 10:00 前將大型行李放於門口" }
         ]
     }
 ];
