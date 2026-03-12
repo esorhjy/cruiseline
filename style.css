@@ -683,6 +683,18 @@ section {
     padding-left: 0;
 }
 
+.period-header {
+    margin: 40px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed rgba(10, 58, 112, 0.1);
+}
+
+.period-header h4 {
+    font-size: 1.3rem;
+    color: var(--dcl-navy);
+    font-weight: 700;
+}
+
 .schedule-item {
     display: flex;
     gap: 20px;
@@ -731,6 +743,29 @@ section {
     color: var(--dcl-navy);
     margin-bottom: 6px;
     display: block;
+}
+
+.schedule-desc-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+}
+
+.schedule-desc-list li {
+    font-size: 0.95rem;
+    color: var(--text-gray);
+    line-height: 1.6;
+    margin-bottom: 5px;
+    position: relative;
+    padding-left: 18px;
+}
+
+.schedule-desc-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--dcl-gold);
+    font-weight: bold;
 }
 
 .schedule-desc {
