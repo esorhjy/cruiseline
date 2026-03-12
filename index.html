@@ -29,9 +29,10 @@
                 <i class="fa-solid fa-bars"></i>
             </div>
             <ul class="nav-links" id="nav-links">
-                <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 核心資訊</a></li>
-                <li><a href="#checklist"><i class="fa-solid fa-list-check"></i> 行前清單</a></li>
                 <li><a href="#schedule"><i class="fa-solid fa-calendar-days"></i> 每日行程</a></li>
+                <li><a href="#checklist"><i class="fa-solid fa-list-check"></i> 行前清單</a></li>
+                <li><a href="#ship-stats"><i class="fa-solid fa-ship"></i> 巨艦數據</a></li>
+                <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 核心資訊</a></li>
                 <li><a href="#timeline"><i class="fa-solid fa-clock-rotate-left"></i> 準備時間軸</a></li>
                 <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 實用工具</a></li>
             </ul>
@@ -73,46 +74,39 @@
         </div>
     </header>
 
-    <!-- 1. 核心資訊 -->
-    <section id="overview" class="reveal">
-        <h2 class="section-title">團隊核心資訊</h2>
-        <div class="grid-container">
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=600&q=80"
-                        alt="同行成員" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-users"></i></div>
-                    <i class="fa-solid fa-users card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>同行成員與艙房</h3>
-                    <p>兩家共 4 大 3 小 (11歲、9歲、8歲)。<br>入住<strong>專屬禮賓艙房與海景陽台房</strong>。享有禮賓專屬提早預訂特權與優先通道，尊榮啟航。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80"
-                        alt="航班配置" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-plane-departure"></i></div>
-                    <i class="fa-solid fa-plane-departure card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>航班配置</h3>
-                    <p>搭乘星宇航空。<br>去程：JX771<br>回程：JX772 (14:45起飛，以郵輪離船日來說時間極度充裕，可從容下船)。</p>
-                </div>
-            </div>
-            <div class="card alert">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80"
-                        alt="帳務死線" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-file-invoice"></i></div>
-                    <i class="fa-solid fa-triangle-exclamation card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>帳務與資料死線</h3>
-                    <p>2026/10/27 為全額付款期限。<br>可追蹤匯率<strong>還有固定小費需線上支付</strong>。</p>
-                </div>
-            </div>
+    <!-- 3. 每日推薦行程 (Mock Schedule) -->
+    <section id="schedule" class="reveal">
+        <h2 class="section-title">每日魔法行程推薦</h2>
+
+        <!-- 頁籤按鈕 (Tabs) -->
+        <div class="schedule-tabs">
+            <button class="tab-btn active" data-tab="day1">Day 1 登船</button>
+            <button class="tab-btn" data-tab="day2">Day 2 海上</button>
+            <button class="tab-btn" data-tab="day3">Day 3 水域</button>
+            <button class="tab-btn" data-tab="day4">Day 4 下船</button>
+        </div>
+
+        <!-- Day 1 -->
+        <div id="day1" class="day-container tab-content active"></div>
+
+        <!-- Day 2 -->
+        <div id="day2" class="day-container tab-content"></div>
+
+        <!-- Day 3 -->
+        <div id="day3" class="day-container tab-content"></div>
+
+        <!-- Day 4 -->
+        <div id="day4" class="day-container tab-content" style="border-bottom: 5px solid var(--dcl-gold);"></div>
+    </section>
+
+    <!-- 2. 行前準備清單 (Phase 4) -->
+    <section id="checklist" class="reveal">
+        <h2 class="section-title">行前防呆清單</h2>
+        <p style="text-align: center; color: var(--text-gray); margin-top: -20px; margin-bottom: 30px;">
+            <i class="fa-solid fa-floppy-disk"></i> 狀態會自動儲存在您的手機中，離線也可查看。
+        </p>
+        <div id="checklist-grid" class="checklist-grid">
+            <!-- 由 JavaScript 動態生成 -->
         </div>
     </section>
 
@@ -157,40 +151,47 @@
         </div>
     </section>
 
-    <!-- 2. 行前準備清單 (Phase 4) -->
-    <section id="checklist" class="reveal">
-        <h2 class="section-title">行前防呆清單</h2>
-        <p style="text-align: center; color: var(--text-gray); margin-top: -20px; margin-bottom: 30px;">
-            <i class="fa-solid fa-floppy-disk"></i> 狀態會自動儲存在您的手機中，離線也可查看。
-        </p>
-        <div id="checklist-grid" class="checklist-grid">
-            <!-- 由 JavaScript 動態生成 -->
+    <!-- 1. 核心資訊 -->
+    <section id="overview" class="reveal">
+        <h2 class="section-title">團隊核心資訊</h2>
+        <div class="grid-container">
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=600&q=80"
+                        alt="同行成員" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-users"></i></div>
+                    <i class="fa-solid fa-users card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>同行成員與艙房</h3>
+                    <p>兩家共 4 大 3 小 (11歲、9歲、8歲)。<br>入住<strong>專屬禮賓艙房與海景陽台房</strong>。享有禮賓專屬提早預訂特權與優先通道，尊榮啟航。</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80"
+                        alt="航班配置" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-plane-departure"></i></div>
+                    <i class="fa-solid fa-plane-departure card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>航班配置</h3>
+                    <p>搭乘星宇航空。<br>去程：JX771<br>回程：JX772 (14:45起飛，以郵輪離船日來說時間極度充裕，可從容下船)。</p>
+                </div>
+            </div>
+            <div class="card alert">
+                <div class="card-image">
+                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80"
+                        alt="帳務死線" onerror="this.style.opacity='0';">
+                    <div class="fallback-bg"><i class="fa-solid fa-file-invoice"></i></div>
+                    <i class="fa-solid fa-triangle-exclamation card-icon"></i>
+                </div>
+                <div class="card-content">
+                    <h3>帳務與資料死線</h3>
+                    <p>2026/10/27 為全額付款期限。<br>可追蹤匯率<strong>還有固定小費需線上支付</strong>。</p>
+                </div>
+            </div>
         </div>
-    </section>
-
-    <!-- 3. 每日推薦行程 (Mock Schedule) -->
-    <section id="schedule" class="reveal">
-        <h2 class="section-title">每日魔法行程推薦</h2>
-
-        <!-- 頁籤按鈕 (Tabs) -->
-        <div class="schedule-tabs">
-            <button class="tab-btn active" data-tab="day1">Day 1 登船</button>
-            <button class="tab-btn" data-tab="day2">Day 2 海上</button>
-            <button class="tab-btn" data-tab="day3">Day 3 水域</button>
-            <button class="tab-btn" data-tab="day4">Day 4 下船</button>
-        </div>
-
-        <!-- Day 1 -->
-        <div id="day1" class="day-container tab-content active"></div>
-
-        <!-- Day 2 -->
-        <div id="day2" class="day-container tab-content"></div>
-
-        <!-- Day 3 -->
-        <div id="day3" class="day-container tab-content"></div>
-
-        <!-- Day 4 -->
-        <div id="day4" class="day-container tab-content" style="border-bottom: 5px solid var(--dcl-gold);"></div>
     </section>
 
     <!-- 4. 預約時間軸 -->
