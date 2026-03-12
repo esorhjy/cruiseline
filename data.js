@@ -477,7 +477,8 @@ const checklistData = [
             { id: "online-checkin", text: "出發前 40 天完成線上辦理登船手續" },
             { id: "concierge-10am", text: "禮賓艙房 10:00 即可抵達碼頭報到" },
             { id: "health-form", text: "登船前完成線上健康問卷填寫" },
-            { id: "sgac-twice", text: "新加坡入境卡 (SGAC) 需填寫兩次 (入境+回船)" }
+            { id: "sgac-twice", text: "新加坡入境卡 (SGAC) 需填寫兩次 (入境+回船)" },
+            { id: "phone-timezone-off", text: "上船前關閉手機自動時區，船上以 Navigator App 時間為準" }
         ]
     },
     {
@@ -958,6 +959,16 @@ const playbookGuideData = [
         label: "行前防雷",
         intro: "把最容易卡在報到前的錯誤先排除。這區只保留網站其他地方沒講清楚的技術準備、資料整理與老手小技巧。",
         items: [
+            {
+                title: "手機時間不要自己亂跳，進入公海後一律跟 Navigator App 對時",
+                icon: "fa-solid fa-clock",
+                sourceType: "community",
+                whenToUse: "上船前先設定好，進入公海後每天再確認一次。",
+                action: "上船前先把手機自動調整時區關掉；之後看船上活動、集合或演出時間時，都以 Disney Cruise Line Navigator App 顯示的時間為準。",
+                tripFit: "這趟從新加坡出發，海上行進時手機可能因為鄰近海域訊號或時區判定自己跳 1 小時，但船上活動節奏未必跟著手機變。",
+                caution: "這是非常高風險的實戰提醒：若手機自己跳時區，最容易直接錯過活動、集合或預約時間，所以不要只相信手機狀態列上的時間。",
+                relatedSectionId: "checkin"
+            },
             {
                 title: "住 DCL 合作飯店的話，接駁車要提早打電話確認",
                 icon: "fa-solid fa-hotel",
