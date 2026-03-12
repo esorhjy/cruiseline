@@ -26,7 +26,7 @@
     *   將行程抽離至 `data.js`，採用 **JSON 陣列格式**。
     *   建立 **Dynamic Rendering Engine**（動態渲染邏輯），讓資料與 UI 結構徹底分離。
 
-### 第三階段：離線應用化與 PWA (Offline Capability) - **規劃中**
+### 第三階段：離線應用化與 PWA (Offline Capability) - **已完成**
 *   **分析：** 郵輪公海網路極不穩定，離線載入能力是「實戰攻略」能否發揮作用的關鍵指標。
 *   **解決方案：** 升級為 PWA (Progressive Web App)，確保即使在飛航模式下也能存取完整的行程與地圖。
 
@@ -56,7 +56,7 @@
 | **重構** | ✅ | CSS/JS 外部化，程式碼清潔度 100% |
 | **Phase 1** | ✅ | 導入導覽系統、行程切換頁籤 |
 | **Phase 2** | ✅ | 資料 JSON 化動態生成、最新行程同步 |
-| **Phase 3** | ⏳ | 加入 Manifest/Service Worker 實現離線查閱 |
+| **Phase 3** | ✅ | 加入 Manifest/Service Worker 實現離線查閱 |
 | **Phase 4** | ⏳ | 實作行前確認 Checklist、地圖指引 |
 
 ---
