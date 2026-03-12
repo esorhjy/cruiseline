@@ -325,7 +325,119 @@
 
     renderChecklist();
 
-    // 11. 行程表頁籤切換
+    // 11. 甲板與表演設施導覽 (Phase 5)
+    function renderDeckGuide() {
+        const tabsContainer = document.getElementById('deck-tabs');
+        const contentContainer = document.getElementById('deck-guide-content');
+        if (!tabsContainer || !contentContainer || typeof deckGuideData === 'undefined' || typeof showGuideData === 'undefined') return;
+
+        const tabs = [
+            ...deckGuideData.map(deck => ({ id: deck.id, label: deck.label })),
+            { id: 'shows', label: '表演精華' }
+        ];
+
+        const defaultDeck = deckGuideData.find(deck => deck.id === 'deck17') || deckGuideData[0];
+        let activeTab = defaultDeck.id;
+
+        tabsContainer.innerHTML = tabs.map(tab => `
+            <button type="button" class="deck-tab-btn ${tab.id === activeTab ? 'active' : ''}" data-deck-tab="${tab.id}">
+                ${tab.label}
+            </button>
+        `).join('');
+
+        const tabButtons = tabsContainer.querySelectorAll('.deck-tab-btn');
+
+        function buildDeckMarkup(deck) {
+            return `
+                <div class="deck-info-header">
+                    <div class="deck-info-copy">
+                        <span class="deck-kicker">${deck.label}</span>
+                        <h3>${deck.title}</h3>
+                        <div class="deck-theme">${deck.theme}</div>
+                    </div>
+                    <div class="deck-trip-focus">
+                        <i class="fa-solid fa-route"></i>
+                        <span>${deck.tripFocus}</span>
+                    </div>
+                </div>
+                <div class="deck-badges">
+                    ${deck.badges.map(badge => `
+                        <span class="deck-badge">
+                            <i class="fa-solid fa-star"></i>${badge}
+                        </span>
+                    `).join('')}
+                </div>
+                <div class="facility-grid">
+                    ${deck.facilities.map(facility => `
+                        <article class="facility-card ${facility.highlight ? 'highlight' : ''}">
+                            <div class="facility-icon">
+                                <i class="${facility.icon}"></i>
+                            </div>
+                            <div class="facility-content">
+                                <span class="facility-name">${facility.name}</span>
+                                <p class="facility-desc">${facility.summary}</p>
+                                <div class="facility-meta">
+                                    <span><i class="fa-regular fa-clock"></i> 最佳時機：${facility.bestTime}</span>
+                                    <span><i class="fa-solid fa-wand-magic-sparkles"></i> 這趟用途：${facility.tripUse}</span>
+                                </div>
+                            </div>
+                        </article>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function buildShowMarkup() {
+            return `
+                <div class="performance-grid">
+                    ${showGuideData.map(category => `
+                        <section class="performance-category">
+                            <h3><i class="${category.icon}"></i> ${category.title}</h3>
+                            <p class="performance-intro">${category.intro}</p>
+                            ${category.shows.map(show => `
+                                <article class="show-item">
+                                    <span class="show-title">${show.name}</span>
+                                    <p class="show-desc">${show.theme}</p>
+                                    <div class="show-meta">
+                                        <span><i class="fa-solid fa-location-dot"></i> ${show.location}</span>
+                                        <span><i class="fa-regular fa-clock"></i> ${show.timingTip}</span>
+                                        <span><i class="fa-solid fa-calendar-check"></i> ${show.tripLink}</span>
+                                    </div>
+                                </article>
+                            `).join('')}
+                        </section>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateDeckGuide(targetId) {
+            activeTab = targetId;
+            tabButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.deckTab === activeTab);
+            });
+
+            if (activeTab === 'shows') {
+                contentContainer.innerHTML = buildShowMarkup();
+                return;
+            }
+
+            const deck = deckGuideData.find(item => item.id === activeTab) || defaultDeck;
+            contentContainer.innerHTML = buildDeckMarkup(deck);
+        }
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                updateDeckGuide(button.dataset.deckTab);
+            });
+        });
+
+        updateDeckGuide(activeTab);
+    }
+
+    renderDeckGuide();
+
+    // 12. 行程表頁籤切換
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     
@@ -342,7 +454,7 @@
         });
     });
 
-    // 10. 導覽列與漢堡選單
+    // 13. 導覽列與漢堡選單
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('nav-links');
     const navItems = document.querySelectorAll('.nav-links a');
