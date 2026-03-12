@@ -65,6 +65,8 @@
 
 ## 3. 建置關鍵邏輯與原則 (Design Principles)
 
+補充說明：實際的內容投放規則與三大互動區塊分工，請參考 [CONTENT_RULES.md](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/CONTENT_RULES.md)。
+
 ### A. 關鍵邏輯：資料驅動 (Data-Driven Logic)
 
 * **單一事實來源 (Single Source of Truth)：** 網頁不直接儲存行程內容，而是透過 JavaScript 讀取 JSON 物件。
