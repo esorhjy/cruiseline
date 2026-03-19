@@ -495,7 +495,7 @@ const checklistData = [
         category: "事先準備",
         items: [
             { id: "passport-expiry", text: "確認護照效期 (6 個月以上) 與旅遊保險" },
-            { id: "personal-essentials", text: "攜帶個人備品 (牙刷、拖鞋、常備藥)" },
+            { id: "personal-essentials", text: "攜帶個人備品 (牙刷、購物袋、防曬/曬後舒緩用品、幼童防水小凳、常備藥)" },
             { id: "door-decor", text: "準備房門布置磁鐵或給家人的驚喜小禮" },
             { id: "swimsuit-bag", text: "先玩滑道：登船日將泳裝放於隨身包" },
             { id: "last-night-luggage", text: "下船前一晚 10:00 前將大型行李放於門口" }
@@ -617,7 +617,7 @@ const deckGuideData = [
                 icon: "fa-solid fa-film",
                 name: "Baymax Cinemas",
                 summary: "兩個小影廳節奏安靜，當孩子需要降噪休息時非常好用，也很適合安排在 Baymax 合照前後當室內分流點。",
-                bestTime: "片單出來就先看，提早一點進場能挑舒服位置。",
+                bestTime: "片單出來就先看，提早一點進場能挑舒服位置；若孩子或長輩依賴字幕，要先有目前多半沒有字幕的心理準備。",
                 tripUse: "Day 3 下午若想切到室內模式，這裡是很穩的備案。",
                 highlight: true
             },
@@ -1043,7 +1043,7 @@ const playbookGuideData = [
                 whenToUse: "真正踏上船後的第一個下午。",
                 action: "把節奏固定成：接駁車下車後直接跟指引前進 → QR code 安檢與 check-in → 坐下式午餐 → 禮賓 Lounge 短補給 → Kids Club Open House → 水區放電，只保留最重要的第一圈。",
                 tripFit: "這條路線能同時滿足大人報到、孩子熟悉環境與第一天放電，最適合你們兩家同行的協作節奏。",
-                caution: "房卡與行李常不會同時到位，先別急著把回房當第一優先；接駁客的行李也通常不用停在自助 drop-off。",
+                caution: "房卡與行李常不會同時到位，先別急著把回房當第一優先；接駁客的行李也通常不用停在自助 drop-off。若現場拿到行李吊牌，只撕尾端貼紙固定即可，不要整條撕開。",
                 relatedSectionId: "checkin"
             },
             {
@@ -1112,6 +1112,16 @@ const playbookGuideData = [
                 tripFit: "這種『早點去就省很多力』的節奏，比臨時在人潮中硬排更適合多孩家庭。",
                 caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯，新區塊只補一般排隊節奏。",
                 relatedSectionId: "timeline"
+            },
+            {
+                title: "App 出錯先現場問，不要直接放棄",
+                icon: "fa-solid fa-triangle-exclamation",
+                sourceType: "community",
+                whenToUse: "活動預約突然消失、快速服務顯示錯誤或客滿時。",
+                action: "若 App 裡的角色見面會或活動預約突然不見，先去 Guest Services 反應；若快餐預約報錯或顯示客滿，也先找座位再去現場問，通常比一直重刷更有效。",
+                tripFit: "你們是多人同行，一個小 bug 就可能拖慢整串節奏，所以最重要的是知道『不要只卡在 App 裡』。",
+                caution: "這屬常見實測補救，不代表系統一定會出錯；但一旦遇到，第一時間直接找現場工作人員通常最省力。",
+                relatedSectionId: ""
             }
         ]
     },
@@ -1198,13 +1208,13 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
-                title: "房內真正常用的細節，比你以為的更實用",
+                title: "房內與走廊的實用細節，比你以為的更有用",
                 icon: "fa-solid fa-bed",
                 sourceType: "community",
                 whenToUse: "一進房到第一晚安頓下來的那段時間。",
-                action: "房內可善用床底收納行李，衣櫃衣架數量不少，水龍頭的水通常可直接喝；吹風機雖堪用，但要持續按壓才會運作，保險箱則是先輸入密碼再轉把手，和一般飯店習慣剛好相反。",
+                action: "房內可善用床底收納行李，衣櫃衣架數量不少，水龍頭的水通常可直接喝；吹風機雖堪用，但要持續按壓才會運作，保險箱則是先輸入密碼再轉把手，和一般飯店習慣剛好相反。走廊地毯上的米奇頭方向固定朝船頭，也能拿來快速辨認 FWD。",
                 tripFit: "這些小細節會直接決定房間是不是好整理、孩子回房後能不能快速補水與收心。",
-                caution: "Wi-Fi 整體可用，但影音平台支援度不一定一致，別把它當成完整串流網路來安排；餐廳區域收訊可能偏弱，自備漫遊網卡 Day 1 也不一定立刻有訊號，常要等離岸後再恢復得比較穩。",
+                caution: "Wi-Fi 整體可用，但影音平台支援度不一定一致，別把它當成完整串流網路來安排；若不買 Wi-Fi，只連船內網路時 iMessage 和 WhatsApp 文字訊息常常也能先用。餐廳區域收訊可能偏弱，自備漫遊網卡 Day 1 也不一定立刻有訊號，常要等離岸後再恢復得比較穩。",
                 relatedSectionId: "tips"
             },
             {
