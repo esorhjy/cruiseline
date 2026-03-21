@@ -126,7 +126,8 @@
                         tagClass: "tag-show",
                         desc: [
                             "音樂劇《Remember》",
-                            "晚間秀建議提早 30 分鐘入場；選中間區域視野最佳。"
+                            "晚間秀建議提早 30 分鐘入場；選中間區域視野最佳。",
+                            "若當晚 Navigator App 顯示可走禮賓提前入場，演前 40 分鐘到 Deck 5 forward 電梯大廳集合，帶金色房卡與 App 證明。"
                         ]
                     },
                     {
@@ -135,7 +136,8 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "結束完美的第一天"
+                            "結束完美的第一天",
+                            "這段剛好可接上 Lounge 20:30–22:00 的 Dessert Treats。"
                         ]
                     }
                 ]
@@ -242,7 +244,8 @@
                         tagClass: "tag-concierge",
                         desc: [
                             "<strong>下午茶補給：</strong>三明治、司康",
-                            "<strong>目的：</strong>收整晚餐前狀態"
+                            "<strong>目的：</strong>收整晚餐前狀態",
+                            "<strong>提醒：</strong>Lounge 下午茶實際供應到 16:30。"
                         ]
                     },
                     {
@@ -274,7 +277,8 @@
                         tag: "精彩看秀",
                         tagClass: "tag-show",
                         desc: [
-                            "百老匯等級主題秀"
+                            "百老匯等級主題秀",
+                            "若當晚 Navigator App 顯示可走禮賓提前入場，演前 40 分鐘到 Deck 5 forward 電梯大廳集合，帶金色房卡與 App 證明。"
                         ]
                     },
                     {
@@ -283,7 +287,8 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "結束充實的第二天"
+                            "結束充實的第二天",
+                            "這段剛好可接上 Lounge 20:30–22:00 的 Dessert Treats。"
                         ]
                     }
                 ]
@@ -381,7 +386,8 @@
                         tagClass: "tag-concierge",
                         desc: [
                             "<strong>目的：</strong>最後一次長時段放鬆",
-                            "<strong>提醒：</strong>傍晚開始供應啤酒、葡萄酒、香檳暢飲！"
+                            "<strong>補給：</strong>11:00–16:30 可補輕食與熱食。",
+                            "<strong>提醒：</strong>晚間免費酒精主場在 Concierge Lounge，不是在 Sundeck。"
                         ]
                     },
                     {
@@ -487,7 +493,7 @@ const checklistData = [
             { id: "royal-meet-130d", text: "130 天前禮賓預約：皇家公主見面會" },
             { id: "dinner-table", text: "聯絡管家確認用餐需求 (如併桌安排)" },
             { id: "photo-package", text: "考慮是否預購郵輪拍照套裝 (比較划算)" },
-            { id: "wifi-buy", text: "考慮是否預購郵輪 Wi-Fi 上網方案" },
+            { id: "wifi-buy", text: "確認是否需要額外 Wi-Fi；禮賓房每位房客含 24 小時連續網路，不必太早啟用" },
             { id: "kids-club-booking", text: "預定 Oceaneer Club 兒童俱樂部時段" }
         ]
     },
@@ -768,9 +774,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-crown",
                 name: "Concierge Lounge",
-                summary: "禮賓家庭最穩的補給基地，點心、飲品與安靜座位都讓節奏很舒服。",
-                bestTime: "秀前、秀後、孩子需要降躁的時候最有價值。",
-                tripUse: "Day 1 報到、Day 1 宵夜、Day 4 早餐都會回到這裡。",
+                summary: "禮賓家庭最穩的補給基地，07:00–22:00 開放，點心、飲品與安靜座位都讓節奏很舒服。",
+                bestTime: "07:00–10:30 晨間輕食、11:00–14:30 午間補給、15:00–16:30 下午茶、17:00–20:00 晚間輕食、20:30–22:00 甜點收尾。",
+                tripUse: "Day 1 報到、Day 1 宵夜、Day 4 早餐都會回到這裡；17:00–22:00 有免費精選酒精飲品，早晨部分 specialty beverage 可能另計。",
                 highlight: true
             },
             {
@@ -827,7 +833,7 @@ const deckGuideData = [
                 icon: "fa-solid fa-heart-pulse",
                 name: "Running Track / Concierge Fitness Center",
                 summary: "若有人真的想晨跑或健身，這層是少數能把運動和海景結合起來的地方。",
-                bestTime: "清晨人最少，傍晚風會比較大。",
+                bestTime: "Concierge Fitness Center 06:00–22:00 可用；清晨人最少，傍晚風會比較大。",
                 tripUse: "不是主線，但適合早起的大人自己偷一段時間。",
                 highlight: false
             },
@@ -835,7 +841,7 @@ const deckGuideData = [
                 icon: "fa-solid fa-spa",
                 name: "Opulence Spa – Elemis at Sea",
                 summary: "較進階的大人享受都在這層，熱門時段最好讓禮賓先幫忙看位。",
-                bestTime: "熱門檔提前預約，不要現場碰運氣。",
+                bestTime: "Spa 區 08:00–22:00 開放，熱門檔提前預約，不要現場碰運氣。",
                 tripUse: "可列入願望清單，不占親子主流程。",
                 highlight: false
             }
@@ -852,9 +858,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-sun",
                 name: "Concierge Sundeck & Pool / Sundeck Dining",
-                summary: "禮賓專屬空間的最大價值不是奢華，而是能在最吵的時候快速抽離。",
-                bestTime: "中途孩子累了、秀後太擠、想安靜喝點東西時。",
-                tripUse: "可當作 Day 2、Day 3 的中場休息點，重新整理體力。",
+                summary: "禮賓專屬空間的最大價值不是奢華，而是能在最吵的時候快速抽離；整區 07:00–22:00 開放。",
+                bestTime: "11:00–16:30 最適合補 light bites 與 hot items；07:00–22:00 都能回來休息和補基本飲品。",
+                tripUse: "可當作 Day 2、Day 3 的中場休息點，重新整理體力；基本免費飲品供應到 22:00，付費酒水則從 11:00–22:00 可點。",
                 highlight: true
             },
             {
@@ -1155,7 +1161,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-user-tie",
                 sourceType: "concierge",
                 whenToUse: "遇到限額活動、劇院座位或臨時需求時。",
-                action: "若孩子想要限額活動、你們想確認劇院提前入座、或有需要協調的特殊需求，第一步先問管家能不能協助，而不是自己先去碰運氣。",
+                action: "若孩子想要限額活動、你們想確認劇院提前入座、或有需要協調的特殊需求，第一步先問管家能不能協助，而不是自己先去碰運氣；人在房內時也可以先按電話上的 Concierge 或 Guest Services，不一定要全家走去 Lounge。",
                 tripFit: "禮賓價值最大的地方不是尊榮感，而是把你們從某些排隊與來回溝通裡解放出來。",
                 caution: "可協助不等於保證一定有位，越早提出越有機會。",
                 relatedSectionId: "deck-guide"
@@ -1165,9 +1171,29 @@ const playbookGuideData = [
                 icon: "fa-solid fa-martini-glass-citrus",
                 sourceType: "concierge",
                 whenToUse: "午後空檔、晚餐前、看秀後與全家需要安靜休息時。",
-                action: "把 Lounge 視為下午茶、中場集合與偶爾碰到禮賓專屬角色合照的空間，它最大的價值是舒服與安靜，不是取代所有餐食。",
+                action: "把 Lounge 視為整天可切換節奏的基地：07:00–10:30 晨間輕食、11:00–14:30 午間補給、15:00–16:30 下午茶、17:00–20:00 晚間輕食、20:30–22:00 甜點收尾；它最大的價值是舒服與安靜，不是取代所有餐食。",
                 tripFit: "這種『進可補給、退可躲人潮』的空間，很適合兩家同行時當作每日中轉站。",
-                caution: "不同船與時段供應內容會有差異，別用 Wish 或其他船的餐量去期待這趟一定一樣。",
+                caution: "基本飲品幾乎全天可用，17:00–22:00 通常還有免費 beer / wine / cocktails；但早晨部分 specialty beverages 可能另外計費，不同船與時段供應內容也會有差異。",
+                relatedSectionId: "deck-guide"
+            },
+            {
+                title: "24 小時網路方案不要太早開",
+                icon: "fa-solid fa-wifi",
+                sourceType: "concierge",
+                whenToUse: "登船後第一次真的需要正式上網前。",
+                action: "每位房客通常都有一台裝置的 24 小時網路權益；先連上 DCL-GUEST，再用瀏覽器進 login.com 完成註冊，需要時再啟用就好。",
+                tripFit: "這趟不必一上船就急著把網路開掉，真正要查資料、傳照片或長時間聯絡時再啟用，會比白白浪費在登船日更有感。",
+                caution: "通知上的 continuous 比較安全的理解是『一旦啟用就會連續倒數 24 小時』，先不要假設能拆成全航程分段使用。",
+                relatedSectionId: ""
+            },
+            {
+                title: "禮賓看秀提早入場要帶對東西",
+                icon: "fa-solid fa-ticket",
+                sourceType: "concierge",
+                whenToUse: "每次 Walt Disney Theatre 主秀當晚。",
+                action: "若當晚走禮賓提前入場，演前 40 分鐘到 Deck 5 forward Elevator Lobby 集合，身上先準備好金色 Key To The World Card 和 Navigator App 上的預訂證明。",
+                tripFit: "這是最能直接感受到禮賓差別的家庭級福利之一，尤其孩子累的時候，有穩定進場節奏和爆米花真的很有感。",
+                caution: "提前入場通道演前 30 分鐘就會關閉，通常還會提供免費新鮮爆米花；不要壓最後一刻才趕過去。",
                 relatedSectionId: "deck-guide"
             }
         ]
