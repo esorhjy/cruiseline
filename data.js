@@ -19,7 +19,8 @@
                         desc: [
                             "<strong>目的：</strong>若住 DCL 合作飯店，可先聯繫安排接駁，通常會比一般自到客更早進入登船節奏。",
                             "<strong>提醒：</strong>QR code 先截圖或列印最穩；接駁車行李通常另有處理，不用停在自助 drop-off。",
-                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。"
+                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。",
+                            "<strong>行李提醒：</strong>行李可能分批送達，隨身包先放證件、藥品與換洗等必需品。"
                         ]
                     },
                     {
@@ -39,11 +40,9 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>請管家協助確認：</strong>",
-                            "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
-                            "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排",
-                            "<strong>登船補位：</strong>若先被引導回房卻還沒拿到房卡，先看門口信封，再不行就去 Deck 6 Mid 的 Guest Services。",
-                            "<strong>中午左右：</strong>留意 Navigator App 是否已開通，首日若有商品販售或活動預約要盡快看。"
+                            "<strong>請管家協助確認：</strong>Royal Meet & Greet（免費皇家見面會）時段與當晚主秀提前入座安排。",
+                            "<strong>房卡補位：</strong>房卡若未即時到手，先看房門信封，再到 Deck 6 Mid Guest Services。",
+                            "<strong>App 提醒：</strong>Navigator App 一開通就先做活動／商品預約，熱門項目可能很快額滿。"
                         ]
                     }
                 ]
