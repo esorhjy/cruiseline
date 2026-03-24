@@ -776,9 +776,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-crown",
                 name: "Concierge Lounge",
-                summary: "禮賓家庭最穩的補給基地，07:00–22:00 開放，點心、飲品與安靜座位都讓節奏很舒服。",
-                bestTime: "07:00–10:30 晨間輕食、11:00–14:30 午間補給、15:00–16:30 下午茶、17:00–20:00 晚間輕食、20:30–22:00 甜點收尾。",
-                tripUse: "Day 1 報到、Day 1 宵夜、Day 4 早餐都會回到這裡；17:00–22:00 有免費精選酒精飲品，早晨部分 specialty beverage 可能另計。",
+                summary: "禮賓家庭最穩的補給基地；每日供應與酒水節奏請直接看 Playbook「禮賓隱藏加值」卡片。",
+                bestTime: "Day 1 報到後先熟路線；每晚晚餐前後再回來做中轉補位。",
+                tripUse: "把 Lounge 當集合與節奏切換點即可，詳細時段與注意事項不在這裡重複。",
                 highlight: true
             },
             {
@@ -1179,6 +1179,16 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                title: "禮賓每日供應與酒水時段怎麼用",
+                icon: "fa-solid fa-wine-glass",
+                sourceType: "concierge",
+                whenToUse: "Day 1 報到後先熟悉一次；之後每晚晚餐前後固定回來。",
+                action: "把 Lounge 當全天中轉站：17:00–22:00 酒水時段先補位、再去晚餐或晚間活動，回程再做一次短休整隊。",
+                tripFit: "兩家同行時，先在 Lounge 同步全員狀態再移動，通常比邊走邊等人更省力。",
+                caution: "每日供應內容與酒水項目會依當航次與現場營運調整，先看當天告示與服務人員說明。",
+                relatedSectionId: "deck-guide"
+            },
+            {
                 title: "24 小時網路方案不要太早開",
                 icon: "fa-solid fa-wifi",
                 sourceType: "concierge",
@@ -1189,14 +1199,14 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
-                title: "禮賓看秀提早入場要帶對東西",
-                icon: "fa-solid fa-ticket",
+                title: "劇院優先入場 SOP",
+                icon: "fa-solid fa-door-open",
                 sourceType: "concierge",
-                whenToUse: "每次 Walt Disney Theatre 主秀當晚。",
-                action: "若當晚走禮賓提前入場，演前 40 分鐘到 Deck 5 forward Elevator Lobby 集合，身上先準備好金色 Key To The World Card 和 Navigator App 上的預訂證明。",
-                tripFit: "這是最能直接感受到禮賓差別的家庭級福利之一，尤其孩子累的時候，有穩定進場節奏和爆米花真的很有感。",
-                caution: "提前入場通道演前 30 分鐘就會關閉，通常還會提供免費新鮮爆米花；不要壓最後一刻才趕過去。",
-                relatedSectionId: "deck-guide"
+                whenToUse: "每次主秀當晚、開演前 40 分鐘。",
+                action: "全員先到 Deck 5 船頭（forward）集合點，身上帶好房卡與 Navigator App 預訂證明，再一起走優先入場流程。",
+                tripFit: "把集合點、時間與證明文件固定成 SOP，最能避免孩子累了時還要臨場找資料。",
+                caution: "若錯過集合或壓線到場，優先通道可能關閉並改回一般入場；請以當晚現場公告為準。",
+                relatedSectionId: "entertainment"
             }
         ]
     },
