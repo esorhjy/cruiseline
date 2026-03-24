@@ -9,7 +9,7 @@
         ],
         periods: [
             {
-                name: "早／中午｜提早登船＋主餐廳午餐＋禮賓報到",
+                name: "早／中午｜提早登船＋Open House 優先＋禮賓報到",
                 events: [
                     {
                         time: "10:30–11:30",
@@ -24,12 +24,12 @@
                     },
                     {
                         time: "11:45–12:30",
-                        title: "坐下式午餐（主餐廳）",
+                        title: "快速補給（自助餐／Concierge Lounge）",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "<strong>建議：</strong>直接前往 Pixar Market 或 Enchanted Summer",
-                            "<strong>用餐必確認：</strong> 晚餐第一時段（First Seating）、輪替餐廳順序",
+                            "<strong>決策理由：</strong>避免首日高價值時段被長午餐吃掉，保留 Open House 與設施熟悉時間。",
+                            "<strong>建議：</strong>以快速補給為主，優先選自助餐或 Concierge Lounge，控制用餐節奏。",
                             "<strong>提醒：</strong>房卡與行李常會分批到房，必備品務必先放隨身包。"
                         ]
                     },
@@ -39,6 +39,7 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
+                            "<strong>請一併確認：</strong>晚餐第一時段（First Seating）、輪替餐廳順序。",
                             "<strong>請管家協助確認：</strong>",
                             "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
                             "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排",
