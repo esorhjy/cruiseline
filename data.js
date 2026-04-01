@@ -710,10 +710,18 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-bowl-food",
-                name: "Mowgli’s Eatery / Stitch’s ’Ohana Grill / Flavors of Asia",
-                summary: "這層快餐密度很高，最適合先佔位再分頭取餐。",
-                bestTime: "錯峰吃最省時間，中午尖峰盡量提早或延後。",
-                tripUse: "若不想回主餐廳，這裡是全家分工取餐效率最高的地方。",
+                name: "Gramma Tala’s Kitchen",
+                summary: "Deck 10 中段少數偏亞洲口味的補給點，想念熟悉飯食時會比一直吃西式快餐更有安定感。",
+                bestTime: "常見窗口大約是 11:00–18:00 與 22:00–00:00；中午與宵夜時段最值得留意當天是否有開。",
+                tripUse: "帶小孩家庭若開始想念雞飯、牛肉飯這類亞洲口味，這裡通常最容易救回胃口；點飯時也常能像雜飯一樣自己選配菜，牛肉若能加上炒牛肉會特別下飯。",
+                highlight: true
+            },
+            {
+                icon: "fa-solid fa-burger",
+                name: "Stitch’s ’Ohana Grill",
+                summary: "Deck 10 船尾最有飽足感的快餐主力，漢堡、熱狗和薯條都是這層最容易讓全家快速吃飽的選項。",
+                bestTime: "常見營運時段約 10:30–22:00；午晚餐尖峰最多人，若能錯峰拿餐會更舒服。",
+                tripUse: "若真的想用高滿足快餐取代一頓正式晚餐，這裡通常是最穩的 fallback；漢堡份量普遍偏大，真的很餓時可以用社群推薦的心態考慮直接點兩份。",
                 highlight: true
             },
             {
@@ -795,9 +803,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-pizza-slice",
                 name: "Pixar Market / Pizza Planet / Wheezy’s Freezies",
-                summary: "濕答答也能快速補能量，幾乎是家長最省力的一站式解法，甲板最穩定的補給通常就是披薩、冰沙與冰淇淋機。",
-                bestTime: "先找位子再分工取餐，效率最高。",
-                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
+                summary: "濕答答也能快速補能量，尤其 Pizza Planet 幾乎是最不打斷節奏的披薩補給點，剛出爐時表現通常特別好。",
+                bestTime: "常見窗口約 10:30–18:00 與 21:00–00:00；下午點心、玩水後與宵夜時段特別好用，先找位子再分工取餐效率最高。",
+                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；披薩通常不用排太久，常常變成先拿一片、又順手補第二片第三片的家庭補給站。若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
                 highlight: true
             },
             {
@@ -829,9 +837,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-water-ladder",
                 name: "Infinity Pool & Jetfinity Bar",
-                summary: "無邊際泳池配海景視野很強，屬於玩完刺激後立刻放鬆的完美切換。",
-                bestTime: "上午或夕陽前氣氛都很好，風大要注意保暖。",
-                tripUse: "Day 2 Marvel 行程之後順接最自然，不用再跨太多層。",
+                summary: "無邊際泳池配海景視野很強，除了看海和放鬆，池邊 bar 也常被熟門熟路的人當成隱藏補給點。",
+                bestTime: "常見時段大約 09:00–23:00；上午玩完設施後或午後放鬆都很適合，夕陽前氣氛也很好，風大要注意保暖。",
+                tripUse: "Day 2 Marvel 行程之後順接最自然，不用再跨太多層；若孩子在 Deck 18 玩到一半餓了，池邊常可順手補免費 hotdog 麵包，不必急著離開這層找食物。",
                 highlight: true
             },
             {
