@@ -1108,6 +1108,87 @@
         return merged;
     }
 
+    function getAiSourceGroup(sourceType) {
+        return sourceType === 'deck' || sourceType === 'show' ? 'deck-show' : sourceType;
+    }
+
+    function getAiSourcePriority(profileType) {
+        const priorityMap = {
+            sequence: ['schedule', 'playbook', 'deck-show', 'static'],
+            'facility-detail': ['deck-show', 'playbook', 'schedule', 'static'],
+            'operational-detail': ['playbook', 'deck-show', 'schedule', 'static'],
+            'policy-or-tip': ['playbook', 'schedule', 'deck-show', 'static']
+        };
+
+        return priorityMap[profileType] || priorityMap['operational-detail'];
+    }
+
+    function getAiAnswerSourceLabel(sourceType) {
+        const labels = {
+            schedule: '行程',
+            deck: '甲板 / 設施卡',
+            show: '甲板 / 設施卡',
+            playbook: '攻略本',
+            static: '其他資訊'
+        };
+
+        return labels[sourceType] || '站內內容';
+    }
+
+    function buildAiIntentProfile(queryData = {}) {
+        const normalizedQuery = queryData.normalizedQuery || '';
+        const intents = queryData.intents || {};
+        const sequenceSignal = intents.scheduleFocus && (
+            intents.actionFocus
+            || hasQueryHint(normalizedQuery, ['順序', '第一步', '先去', '先做', '先做什麼', '怎麼安排', '路線'])
+        );
+        const facilitySignal = intents.deckFocus
+            || intents.theatreFocus
+            || hasQueryHint(normalizedQuery, [
+                '哪個設施', '什麼設施', '哪一層', '在哪裡', '哪裡', '電影院', '劇院', '字幕',
+                '泳池', '酒廊', '餐廳', '披薩', 'baymax', 'deck'
+            ]);
+        const operationalSignal = intents.conciergeFocus
+            || intents.roomServiceFocus
+            || hasQueryHint(normalizedQuery, [
+                '特殊服務', '怎麼用', '怎麼做', '技巧', '攻略', '優先入場', '提早進', '怎麼點'
+            ]);
+        const policySignal = hasQueryHint(normalizedQuery, [
+            '注意', '限制', '規則', '該不該', '要不要', '可不可以', '能不能', '多久', '幾點', '會不會', '值得嗎'
+        ]);
+
+        let type = 'operational-detail';
+        if (sequenceSignal) {
+            type = 'sequence';
+        } else if (operationalSignal) {
+            type = 'operational-detail';
+        } else if (facilitySignal || intents.foodFocus || intents.kidFocus) {
+            type = 'facility-detail';
+        } else if (policySignal) {
+            type = 'policy-or-tip';
+        } else if (intents.scheduleFocus) {
+            type = 'sequence';
+        }
+
+        const focusTerms = uniqueItems([
+            ...(queryData.highlightTerms || []).slice(0, 6),
+            ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge', '酒廊', '劇院優先入場'] : []),
+            ...(intents.roomServiceFocus ? ['room service', '房務', '客房服務', '早餐', '宵夜'] : []),
+            ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀', 'remember', '提早入場', '優先入場'] : []),
+            ...(intents.foodFocus ? ['補給', '點心', '快餐', '餐廳', '披薩', 'pizza', '漢堡'] : []),
+            ...(intents.kidFocus ? ['孩子', '小孩', '兒童', '親子', 'open house', 'oceaneer'] : []),
+            ...(sequenceSignal ? ['第一天', '登船日', 'day 1', '順序', '先做什麼'] : [])
+        ]).filter(Boolean).slice(0, 12);
+
+        return {
+            type,
+            sourcePriority: getAiSourcePriority(type),
+            focusTerms,
+            prefersScheduleContext: type === 'sequence' || Boolean(intents.scheduleFocus),
+            requiresDetailSupport: type === 'sequence'
+        };
+    }
+
     function buildAiExpansionUnits(text) {
         const normalized = normalizeSearchText(text);
         if (!normalized) return [];
@@ -1181,6 +1262,11 @@
             buildAiIntents(normalizedQuery),
             rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {}
         );
+        const intentProfile = buildAiIntentProfile({
+            normalizedQuery,
+            highlightTerms,
+            intents
+        });
 
         return {
             normalizedQuery,
@@ -1188,10 +1274,30 @@
             highlightTerms,
             signalLength: getSearchSignalLength(normalizedQuery),
             intents,
+            intentProfile,
             rewriteMeta: normalizedRewrite.keywords.length || normalizedRewrite.alternates.length || normalizedRewrite.rewrittenQuery
                 ? normalizedRewrite
                 : null
         };
+    }
+
+    function sourceTextMatchesUnit(sourceText, unit) {
+        if (!sourceText || !unit) return false;
+        if (sourceText.includes(unit)) return true;
+        const synonyms = searchSynonymMap.get(unit) || [];
+        return synonyms.some(synonym => sourceText.includes(synonym));
+    }
+
+    function countMatchedUnits(sourceText, units = []) {
+        return uniqueItems(units).filter(unit => sourceTextMatchesUnit(sourceText, unit)).length;
+    }
+
+    function countMatchedTerms(sourceText, terms = []) {
+        return uniqueItems(terms)
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean)
+            .filter(term => sourceText.includes(term))
+            .length;
     }
 
     function scoreMatch(sourceText, term, synonyms, baseWeight, synonymWeight) {
@@ -1250,49 +1356,138 @@
         if (baseScore <= 0) return 0;
 
         let score = baseScore;
+        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
+        const sourceGroup = getAiSourceGroup(doc.sourceType);
+        const sourcePriorityIndex = intentProfile.sourcePriority.indexOf(sourceGroup);
+        const titleMatches = countMatchedUnits(doc.normalizedTitle, queryData.units);
+        const keywordMatches = countMatchedUnits(doc.normalizedKeywords, queryData.units);
+        const focusTitleMatches = countMatchedTerms(doc.normalizedTitle, intentProfile.focusTerms);
+        const focusBodyMatches = countMatchedTerms(`${doc.normalizedKeywords} ${doc.normalizedText}`, intentProfile.focusTerms);
 
-        if (queryData.intents?.scheduleFocus && doc.sourceType === 'schedule') {
-            score += 16;
+        if (sourcePriorityIndex === 0) {
+            score += 18;
+        } else if (sourcePriorityIndex === 1) {
+            score += 10;
+        } else if (sourcePriorityIndex === 2) {
+            score += 4;
         }
 
-        if (queryData.intents?.actionFocus && (doc.sourceType === 'schedule' || doc.sourceType === 'playbook')) {
+        if (titleMatches >= 2) {
+            score += 14;
+        } else if (titleMatches === 1) {
+            score += 8;
+        }
+
+        if (keywordMatches >= 2) {
+            score += 8;
+        } else if (keywordMatches === 1) {
+            score += 4;
+        }
+
+        if (focusTitleMatches >= 1) {
+            score += 12;
+        } else if (focusBodyMatches >= 2) {
+            score += 6;
+        }
+
+        if (queryData.intents?.actionFocus) {
+            if (intentProfile.type === 'sequence' && doc.sourceType === 'schedule') {
+                score += 10;
+            }
+            if ((intentProfile.type === 'operational-detail' || intentProfile.type === 'policy-or-tip') && doc.sourceType === 'playbook') {
+                score += 12;
+            }
+        }
+
+        if (queryData.intents?.deckFocus && intentProfile.type === 'facility-detail' && sourceGroup === 'deck-show') {
             score += 12;
         }
 
-        if (queryData.intents?.deckFocus && (doc.sourceType === 'deck' || doc.sourceType === 'show')) {
-            score += 9;
-        }
-
-        if (queryData.intents?.day1Focus && (doc.normalizedKeywords.includes('day 1') || doc.normalizedCombined.includes('登船'))) {
+        if (queryData.intents?.day1Focus && intentProfile.type === 'sequence' && (doc.normalizedKeywords.includes('day 1') || doc.normalizedCombined.includes('登船'))) {
             score += 18;
         }
 
-        if (queryData.intents?.day2Focus && doc.normalizedKeywords.includes('day 2')) {
+        if (queryData.intents?.day2Focus && intentProfile.type === 'sequence' && doc.normalizedKeywords.includes('day 2')) {
             score += 14;
         }
 
         if (queryData.intents?.conciergeFocus && documentIncludesAny(doc, ['禮賓', 'concierge', 'lounge', '酒廊'])) {
-            score += 12;
+            if (doc.sourceType === 'playbook') {
+                score += 18;
+            } else if (sourceGroup === 'deck-show') {
+                score += 10;
+            } else if (doc.sourceType === 'schedule') {
+                score += intentProfile.type === 'sequence' ? 6 : 1;
+            }
         }
 
         if (queryData.intents?.theatreFocus && documentIncludesAny(doc, ['劇院', 'theatre', 'theater', '主秀', 'remember', '看秀', '提早入場'])) {
-            score += doc.sourceType === 'show' ? 22 : 14;
+            if (doc.sourceType === 'show') {
+                score += 22;
+            } else if (doc.sourceType === 'playbook') {
+                score += 16;
+            } else if (doc.sourceType === 'schedule') {
+                score += intentProfile.type === 'sequence' ? 12 : 4;
+            }
         }
 
         if (queryData.intents?.roomServiceFocus && documentIncludesAny(doc, ['room service', '房務', '客房服務'])) {
-            score += 20;
+            score += doc.sourceType === 'playbook' ? 22 : 8;
         }
 
         if (queryData.intents?.foodFocus && documentIncludesAny(doc, ['補給', '點心', '快餐', 'pizza', '披薩', '餐'])) {
-            score += doc.sourceType === 'deck' ? 16 : 10;
+            if (sourceGroup === 'deck-show') {
+                score += 18;
+            } else if (doc.sourceType === 'playbook') {
+                score += 10;
+            } else if (doc.sourceType === 'schedule') {
+                score += intentProfile.type === 'sequence' ? 8 : 2;
+            }
         }
 
         if (queryData.intents?.kidFocus && documentIncludesAny(doc, ['孩子', '小孩', '兒童', '親子', 'kids'])) {
-            score += 8;
+            if (doc.sourceType === 'playbook') {
+                score += 12;
+            } else if (sourceGroup === 'deck-show') {
+                score += 10;
+            } else {
+                score += 6;
+            }
+        }
+
+        if (intentProfile.type === 'operational-detail' || intentProfile.type === 'policy-or-tip') {
+            if (doc.sourceType === 'playbook' && focusBodyMatches >= 1) {
+                score += 18;
+            }
+            if (doc.sourceType === 'schedule' && titleMatches === 0 && focusTitleMatches === 0) {
+                score -= 14;
+            }
+        }
+
+        if (intentProfile.type === 'facility-detail') {
+            if (sourceGroup === 'deck-show' && focusBodyMatches >= 1) {
+                score += 18;
+            }
+            if (doc.sourceType === 'schedule' && titleMatches === 0 && focusTitleMatches === 0) {
+                score -= 12;
+            }
+        }
+
+        if (intentProfile.type === 'sequence') {
+            if (doc.sourceType === 'schedule') {
+                score += 8;
+            }
+            if ((sourceGroup === 'deck-show' || doc.sourceType === 'playbook') && focusBodyMatches >= 1) {
+                score += 8;
+            }
+        }
+
+        if (doc.sourceType === 'schedule' && intentProfile.type !== 'sequence' && doc.normalizedText.length > 260 && titleMatches === 0 && focusTitleMatches === 0) {
+            score -= 8;
         }
 
         if (doc.sourceType === 'static') {
-            score -= 4;
+            score -= 6;
         }
 
         return score;
@@ -1422,52 +1617,134 @@
         }
     }
 
+    function scoreAiSelectionCandidate(result, focusTerms = [], preferTitle = false) {
+        let score = result.score || 0;
+        const focusTitleMatches = countMatchedTerms(result.normalizedTitle, focusTerms);
+        const focusBodyMatches = countMatchedTerms(`${result.normalizedKeywords} ${result.normalizedText}`, focusTerms);
+
+        if (focusTitleMatches >= 1) {
+            score += preferTitle ? 18 : 12;
+        } else if (focusBodyMatches >= 1) {
+            score += 8;
+        }
+
+        return score;
+    }
+
+    function getBestAiCandidate(results, sourceGroups, seenIds, options = {}) {
+        const groups = Array.isArray(sourceGroups) ? sourceGroups : [sourceGroups];
+        const focusTerms = options.focusTerms || [];
+        const preferTitle = Boolean(options.preferTitle);
+        const requireFocus = Boolean(options.requireFocus);
+        const candidates = results.filter(result =>
+            !seenIds.has(result.id)
+            && groups.includes(getAiSourceGroup(result.sourceType))
+        );
+
+        if (!candidates.length) return null;
+
+        const focusedCandidates = candidates.filter(result => {
+            const titleMatches = countMatchedTerms(result.normalizedTitle, focusTerms);
+            const bodyMatches = countMatchedTerms(`${result.normalizedKeywords} ${result.normalizedText}`, focusTerms);
+            return titleMatches >= 1 || bodyMatches >= 1;
+        });
+        const pool = requireFocus && focusedCandidates.length
+            ? focusedCandidates
+            : (requireFocus ? [] : (focusedCandidates.length ? focusedCandidates : candidates));
+
+        if (!pool.length) return null;
+
+        return [...pool].sort((a, b) =>
+            scoreAiSelectionCandidate(b, focusTerms, preferTitle) - scoreAiSelectionCandidate(a, focusTerms, preferTitle)
+        )[0];
+    }
+
     function selectAiEvidenceResults(results, queryData = {}) {
         const selected = [];
         const seenIds = new Set();
+        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
+        const sourceCounts = new Map();
 
         const addResult = (result) => {
             if (!result || seenIds.has(result.id)) return;
+            const sourceGroup = getAiSourceGroup(result.sourceType);
+            const currentCount = sourceCounts.get(sourceGroup) || 0;
+
+            if (sourceGroup === 'static' && currentCount >= 1) return;
+            if (sourceGroup === 'schedule' && intentProfile.type !== 'sequence' && currentCount >= 1) return;
+            if (sourceGroup === intentProfile.sourcePriority[0] && currentCount >= 2) return;
+
             seenIds.add(result.id);
+            sourceCounts.set(sourceGroup, currentCount + 1);
             selected.push(result);
         };
 
-        const findFocusedResult = (predicate) => results.find(result => predicate(result) && !seenIds.has(result.id));
+        const focusTerms = intentProfile.focusTerms || [];
+        const sourcePriority = intentProfile.sourcePriority || ['playbook', 'deck-show', 'schedule', 'static'];
+        const primary = getBestAiCandidate(results, sourcePriority[0], seenIds, {
+            focusTerms,
+            preferTitle: true,
+            requireFocus: intentProfile.type !== 'sequence'
+        })
+            || getBestAiCandidate(results, sourcePriority[1], seenIds, {
+                focusTerms,
+                preferTitle: true,
+                requireFocus: intentProfile.type !== 'sequence'
+            })
+            || getBestAiCandidate(results, sourcePriority[0], seenIds, {
+                focusTerms,
+                preferTitle: true
+            })
+            || results[0];
+        addResult(primary);
 
-        addResult(queryData.intents?.theatreFocus
-            ? (
-                findFocusedResult(result =>
-                    result.sourceType === 'playbook'
-                    && documentTitleIncludesAny(result, ['劇院', '提早入場', '優先入場', '看秀'])
-                )
-                || findFocusedResult(result =>
-                    result.sourceType === 'show'
-                    && documentIncludesAny(result, ['劇院', 'theatre', 'theater', '主秀', 'remember'])
-                )
-                || findFocusedResult(result =>
-                    result.sourceType === 'schedule'
-                    && documentIncludesAny(result, ['劇院', '主秀', '看秀', '提早入場'])
-                )
-            )
-            : results.find(result => result.sourceType === 'schedule')
-        );
+        if (intentProfile.type === 'sequence') {
+            addResult(getBestAiCandidate(results, ['playbook', 'deck-show'], seenIds, {
+                focusTerms,
+                preferTitle: true,
+                requireFocus: true
+            }) || getBestAiCandidate(results, ['playbook', 'deck-show'], seenIds, {
+                focusTerms,
+                preferTitle: true
+            }));
 
-        addResult(queryData.intents?.roomServiceFocus
-            ? findFocusedResult(result =>
-                result.sourceType === 'playbook' && documentIncludesAny(result, ['room service', '房務', '客房服務'])
-            )
-            : results.find(result => result.sourceType === 'playbook')
-        );
+            if (queryData.intents?.conciergeFocus || queryData.intents?.roomServiceFocus || queryData.intents?.theatreFocus || queryData.intents?.kidFocus) {
+                addResult(getBestAiCandidate(results, ['playbook', 'deck-show'], seenIds, {
+                    focusTerms,
+                    preferTitle: true,
+                    requireFocus: true
+                }));
+            }
+        } else if (intentProfile.type === 'facility-detail') {
+            addResult(getBestAiCandidate(results, ['playbook'], seenIds, {
+                focusTerms,
+                preferTitle: true
+            }));
 
-        if (queryData.intents?.foodFocus) {
-            addResult(findFocusedResult(result =>
-                (result.sourceType === 'deck' || result.sourceType === 'schedule' || result.sourceType === 'playbook')
-                && documentIncludesAny(result, ['補給', '點心', '快餐', 'pizza', '披薩', '餐'])
-            ));
+            if (intentProfile.prefersScheduleContext) {
+                addResult(getBestAiCandidate(results, ['schedule'], seenIds, {
+                    focusTerms
+                }));
+            }
+        } else {
+            addResult(getBestAiCandidate(results, ['deck-show'], seenIds, {
+                focusTerms,
+                preferTitle: true,
+                requireFocus: queryData.intents?.deckFocus || queryData.intents?.theatreFocus || queryData.intents?.foodFocus || queryData.intents?.kidFocus
+            }));
+
+            if (queryData.intents?.scheduleFocus || intentProfile.type === 'policy-or-tip') {
+                addResult(getBestAiCandidate(results, ['schedule'], seenIds, {
+                    focusTerms
+                }));
+            }
         }
 
-        if (queryData.intents?.deckFocus) {
-            addResult(results.find(result => result.sourceType === 'deck' || result.sourceType === 'show'));
+        if (intentProfile.requiresDetailSupport && !selected.some(result => getAiSourceGroup(result.sourceType) !== 'schedule')) {
+            addResult(getBestAiCandidate(results, ['playbook', 'deck-show'], seenIds, {
+                focusTerms,
+                preferTitle: true
+            }));
         }
 
         results.forEach(result => {
@@ -1487,16 +1764,22 @@
             return 'insufficient';
         }
 
+        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
         const strongCount = selectedResults.filter(result => result.score >= 18).length;
         const topScore = results[0]?.score || 0;
-        const hasSchedule = selectedResults.some(result => result.sourceType === 'schedule');
+        const primaryGroup = intentProfile.sourcePriority[0];
+        const hasPrimary = selectedResults.some(result => getAiSourceGroup(result.sourceType) === primaryGroup);
         const hasSupportingGuide = selectedResults.some(result =>
-            result.sourceType === 'playbook' || result.sourceType === 'deck' || result.sourceType === 'show'
+            getAiSourceGroup(result.sourceType) !== primaryGroup && getAiSourceGroup(result.sourceType) !== 'static'
         );
         const hasWeakEvidence = results.length >= 2 || topScore >= 12;
         const hasIntentSignal = Object.values(queryData.intents || {}).some(Boolean);
 
-        if (strongCount >= 2 || (hasSchedule && hasSupportingGuide) || topScore >= 30) {
+        if (intentProfile.type === 'sequence') {
+            if (hasPrimary && hasSupportingGuide && (strongCount >= 1 || topScore >= 22)) {
+                return 'strong';
+            }
+        } else if (hasPrimary && (strongCount >= 1 || topScore >= 24)) {
             return 'strong';
         }
 
@@ -1595,6 +1878,12 @@
                     <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> AI 解答</span>
                     ${confidence ? `<span class="search-ai-confidence ${confidence}">${confidenceLabel[confidence]}</span>` : ''}
                 </div>
+                ${state.primarySourceType ? `
+                    <div class="search-ai-source-hint">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>本次答案主要依據：${escapeHtml(getAiAnswerSourceLabel(state.primarySourceType))}</span>
+                    </div>
+                ` : ''}
                 ${state.rewriteInfo?.hintTerms?.length ? `
                     <div class="search-ai-rewrite-note">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
@@ -1665,6 +1954,7 @@
             title: result.title,
             locationLabel: result.locationLabel,
             sectionId: result.sectionId,
+            sourceType: result.sourceType,
             navTarget: result.navTarget,
             text: createPlainExcerpt(result, queryData, 320)
         }));
@@ -1840,6 +2130,9 @@
 
         try {
             const payload = await askAiAnswer(rawQuery, chunks);
+            if (!payload.primarySourceType) {
+                payload.primarySourceType = selectedResults[0]?.sourceType || '';
+            }
             if (rewriteMeta) {
                 payload.rewriteInfo = rewriteMeta;
             }
