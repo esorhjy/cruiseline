@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
+    <meta name="ai-answer-endpoint" content="https://disney-adventure-ai-answer.esorhjy.workers.dev/api/ai-answer">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -57,18 +58,35 @@
                 <div class="search-panel-copy">
                     <span class="search-kicker">Quick Find</span>
                     <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
-                    <p>可直接搜尋 SGAC、Lounge、Room Service、Deck 17、Baymax、Pizza 等關鍵字。</p>
+                    <p>可直接搜尋關鍵字，或切到 AI 解答模式，用自然語言問站內資料。</p>
                 </div>
                 <button type="button" class="search-close-btn" id="search-close-btn" aria-label="關閉搜尋">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div class="search-input-shell">
+            <div class="search-mode-switch" id="search-mode-switch" role="tablist" aria-label="搜尋模式">
+                <button type="button" class="search-mode-btn active" data-search-mode="keyword" aria-pressed="true">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>關鍵字搜尋</span>
+                </button>
+                <button type="button" class="search-mode-btn" data-search-mode="ai" aria-pressed="false">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>AI 解答</span>
+                </button>
+            </div>
+            <form class="search-input-shell" id="search-form">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
                     autocomplete="off">
+                <button type="submit" class="search-submit-btn" id="search-ai-submit" hidden>
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>AI 解答</span>
+                </button>
+            </form>
+            <div class="search-panel-body" id="search-panel-body">
+                <div class="search-ai-answer" id="search-ai-answer" hidden></div>
+                <div class="search-results" id="search-results"></div>
             </div>
-            <div class="search-results" id="search-results"></div>
         </div>
     </div>
 

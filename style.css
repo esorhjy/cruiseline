@@ -1394,6 +1394,16 @@ body.search-open {
     z-index: 1;
 }
 
+.search-panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
 .search-panel-header {
     display: flex;
     justify-content: space-between;
@@ -1445,6 +1455,36 @@ body.search-open {
     transform: rotate(90deg);
 }
 
+.search-mode-switch {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-mode-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid rgba(10, 58, 112, 0.12);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--dcl-navy);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-mode-btn.active,
+.search-mode-btn:hover {
+    background: rgba(10, 58, 112, 0.92);
+    border-color: rgba(10, 58, 112, 0.92);
+    color: var(--white);
+}
+
 .search-input-shell {
     display: flex;
     align-items: center;
@@ -1475,9 +1515,196 @@ body.search-open {
     color: #7A889E;
 }
 
+.search-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--dcl-red), #ff6b8e);
+    color: var(--white);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(225, 24, 55, 0.24);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-submit-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(225, 24, 55, 0.3);
+}
+
+.search-ai-answer[hidden] {
+    display: none;
+}
+
+.search-ai-answer {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.search-ai-card {
+    padding: 18px 20px;
+    border-radius: 24px;
+    border: 1px solid rgba(10, 58, 112, 0.12);
+    background:
+        radial-gradient(circle at top right, rgba(243, 181, 0, 0.12), transparent 26%),
+        linear-gradient(180deg, rgba(10, 58, 112, 0.96), rgba(7, 39, 80, 0.98));
+    color: var(--white);
+    box-shadow: 0 18px 40px rgba(0, 11, 35, 0.22);
+}
+
+.search-ai-card.loading,
+.search-ai-card.info {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--text-dark);
+}
+
+.search-ai-card.error {
+    background: linear-gradient(180deg, rgba(255, 243, 243, 0.98), rgba(255, 249, 249, 0.96));
+    color: var(--text-dark);
+    border-color: rgba(225, 24, 55, 0.2);
+}
+
+.search-ai-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.search-ai-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.search-ai-card.loading .search-ai-badge,
+.search-ai-card.info .search-ai-badge,
+.search-ai-card.error .search-ai-badge {
+    background: rgba(10, 58, 112, 0.08);
+}
+
+.search-ai-confidence {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 92px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.search-ai-confidence.high {
+    background: rgba(112, 198, 116, 0.18);
+    color: #d7ffd4;
+}
+
+.search-ai-confidence.medium {
+    background: rgba(243, 181, 0, 0.18);
+    color: #fff0b5;
+}
+
+.search-ai-confidence.low {
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.search-ai-summary {
+    margin: 0 0 12px;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    font-weight: 700;
+}
+
+.search-ai-bullets {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    line-height: 1.7;
+}
+
+.search-ai-note {
+    margin-top: 12px;
+    color: inherit;
+    opacity: 0.92;
+    line-height: 1.7;
+}
+
+.search-ai-citations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.search-ai-citation {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--white);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-ai-citation:hover {
+    background: rgba(255, 255, 255, 0.16);
+    transform: translateY(-1px);
+}
+
+.search-ai-rewrite-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.search-ai-card.loading .search-ai-citation,
+.search-ai-card.info .search-ai-citation,
+.search-ai-card.error .search-ai-citation {
+    border-color: rgba(10, 58, 112, 0.12);
+    background: rgba(10, 58, 112, 0.06);
+    color: var(--dcl-navy);
+}
+
+.search-ai-card.loading .search-ai-rewrite-note,
+.search-ai-card.info .search-ai-rewrite-note,
+.search-ai-card.error .search-ai-rewrite-note {
+    background: rgba(10, 58, 112, 0.08);
+}
+
 .search-results {
-    overflow-y: auto;
-    padding-right: 6px;
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -1815,6 +2042,9 @@ footer h2 {
         padding: 18px;
         border-radius: 24px;
     }
+    .search-panel-body {
+        padding-right: 2px;
+    }
     .search-panel-header {
         flex-direction: column;
         align-items: stretch;
@@ -1822,8 +2052,28 @@ footer h2 {
     .search-panel-copy h2 {
         font-size: 1.6rem;
     }
+    .search-mode-switch {
+        width: 100%;
+    }
+    .search-mode-btn {
+        flex: 1 1 0;
+        justify-content: center;
+    }
+    .search-input-shell {
+        flex-wrap: wrap;
+    }
+    .search-submit-btn {
+        width: 100%;
+        justify-content: center;
+    }
     .search-group-list {
         grid-template-columns: 1fr;
+    }
+    .search-ai-citations {
+        flex-direction: column;
+    }
+    .search-ai-citation {
+        justify-content: center;
     }
 }
 
