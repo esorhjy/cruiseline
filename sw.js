@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'dcl-guide-v2';
+const CACHE_NAME = 'dcl-guide-v3';
 const ASSETS_TO_CACHE = [
   'index.html',
   'style.css',

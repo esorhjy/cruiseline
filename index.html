@@ -25,9 +25,6 @@
     <nav class="sticky-nav">
         <div class="nav-container">
             <a href="#overview" class="nav-logo">Disney Adventure</a>
-            <div class="hamburger" id="hamburger">
-                <i class="fa-solid fa-bars"></i>
-            </div>
             <ul class="nav-links" id="nav-links">
                 <li><a href="#schedule"><i class="fa-solid fa-calendar-days"></i> 行程</a></li>
                 <li><a href="#checklist"><i class="fa-solid fa-list-check"></i> 清單</a></li>
@@ -38,10 +35,42 @@
                 <li><a href="#playbook"><i class="fa-solid fa-book-open-reader"></i> 攻略</a></li>
                 <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 工具</a></li>
             </ul>
+            <div class="nav-utilities">
+                <button type="button" class="nav-search-trigger" id="nav-search-trigger" aria-haspopup="dialog"
+                    aria-controls="search-overlay" aria-label="開啟搜尋">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>搜尋</span>
+                </button>
+                <div class="hamburger" id="hamburger">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </div>
         </div>
     </nav>
 
     <div id="scroll-progress"></div>
+
+    <div class="search-overlay" id="search-overlay" hidden>
+        <div class="search-backdrop" data-search-close></div>
+        <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-panel-title">
+            <div class="search-panel-header">
+                <div class="search-panel-copy">
+                    <span class="search-kicker">Quick Find</span>
+                    <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
+                    <p>可直接搜尋 SGAC、Lounge、Room Service、Deck 17、Baymax、Pizza 等關鍵字。</p>
+                </div>
+                <button type="button" class="search-close-btn" id="search-close-btn" aria-label="關閉搜尋">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="search-input-shell">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
+                    autocomplete="off">
+            </div>
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
 
     <header class="hero">
         <div class="hero-glow hero-glow-left"></div>

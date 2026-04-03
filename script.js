@@ -1,5 +1,150 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
 
+    let setScheduleTab = () => {};
+    let setDeckGuideTab = () => {};
+    let setPlaybookMission = () => {};
+
+    const SEARCH_MIN_LENGTH = 2;
+    const SEARCH_GROUP_ICONS = {
+        '行程': 'fa-solid fa-calendar-days',
+        '甲板與表演': 'fa-solid fa-compass',
+        '攻略本': 'fa-solid fa-book-open-reader',
+        '其他資訊': 'fa-solid fa-folder-open'
+    };
+    const SEARCH_SYNONYM_GROUPS = [
+        ['禮賓', 'concierge', 'lounge', '酒廊', '管家'],
+        ['房務', 'room service', '客房服務'],
+        ['海洋俱樂部', 'oceaneer', 'kids club', '兒童俱樂部'],
+        ['杯麵', 'baymax'],
+        ['爆米花', 'popcorn'],
+        ['登船', 'check in', 'check-in', 'qr', 'sgac'],
+        ['煙火', 'lion king', '獅子王'],
+        ['披薩', 'pizza', 'pizza planet'],
+        ['劇院', 'theatre', 'theater', 'remember'],
+        ['行前清單', 'checklist', '清單'],
+        ['房卡', 'key to the world'],
+        ['滑水道', 'woodys wide slide', "woody's wide slide"],
+        ['甲板', 'deck'],
+        ['酒吧', 'bar']
+    ];
+    const searchSynonymMap = buildSynonymMap(SEARCH_SYNONYM_GROUPS);
+    const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
+    const searchState = {
+        documents: [],
+        resultsById: new Map(),
+        debounceTimer: null
+    };
+
+    function buildSynonymMap(groups) {
+        const map = new Map();
+        groups.forEach(group => {
+            const normalizedGroup = uniqueItems(group.map(item => normalizeSearchText(item)).filter(Boolean));
+            normalizedGroup.forEach(term => {
+                map.set(term, normalizedGroup.filter(candidate => candidate !== term));
+            });
+        });
+        return map;
+    }
+
+    function buildDisplayMap(groups) {
+        const map = new Map();
+        groups.forEach(group => {
+            group.forEach(item => {
+                const normalized = normalizeSearchText(item);
+                if (normalized && !map.has(normalized)) {
+                    map.set(normalized, item);
+                }
+            });
+        });
+        return map;
+    }
+
+    function normalizeSearchText(text) {
+        return String(text || '')
+            .toLowerCase()
+            .normalize('NFKC')
+            .replace(/[\u2019']/g, '')
+            .replace(/\u3000/g, ' ')
+            .replace(/[^a-z0-9\u4e00-\u9fff\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function escapeHtml(text) {
+        return String(text || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function escapeRegExp(text) {
+        return String(text || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function uniqueItems(items) {
+        return [...new Set(items)];
+    }
+
+    function getScheduleEventId(dayId, periodIndex, eventIndex) {
+        return `search-schedule-${dayId}-${periodIndex}-${eventIndex}`;
+    }
+
+    function getDeckFacilityId(deckId, facilityIndex) {
+        return `search-deck-${deckId}-${facilityIndex}`;
+    }
+
+    function getShowItemId(categoryId, showIndex) {
+        return `search-show-${categoryId}-${showIndex}`;
+    }
+
+    function getPlaybookItemId(missionId, itemIndex) {
+        return `search-playbook-${missionId}-${itemIndex}`;
+    }
+
+    function getStaticCardId(sectionId, cardIndex) {
+        return `search-static-${sectionId}-${cardIndex}`;
+    }
+
+    function getStickyOffset() {
+        const stickyNav = document.querySelector('.sticky-nav');
+        return stickyNav ? stickyNav.offsetHeight + 18 : 96;
+    }
+
+    function scrollToTarget(target) {
+        if (!target) return;
+        const top = target.getBoundingClientRect().top + window.scrollY - getStickyOffset();
+        window.scrollTo({
+            top: Math.max(top, 0),
+            behavior: 'smooth'
+        });
+        pulseSearchTarget(target);
+    }
+
+    function pulseSearchTarget(target) {
+        if (!target) return;
+        target.classList.remove('search-hit');
+        void target.offsetWidth;
+        target.classList.add('search-hit');
+        window.setTimeout(() => target.classList.remove('search-hit'), 2600);
+    }
+
+    function waitForTargetAndScroll(targetId) {
+        const attemptScroll = (triesLeft = 12) => {
+            const target = document.getElementById(targetId);
+            if (target) {
+                scrollToTarget(target);
+                return;
+            }
+            if (triesLeft > 0) {
+                window.setTimeout(() => attemptScroll(triesLeft - 1), 120);
+            }
+        };
+
+        attemptScroll();
+    }
+
     // 1. 滾動進度條
     const progressBar = document.getElementById('scroll-progress');
     if (progressBar) {
@@ -223,7 +368,7 @@
     function renderSchedule() {
         if (typeof cruiseSchedule === 'undefined') return;
 
-        cruiseSchedule.forEach((dayData, index) => {
+        cruiseSchedule.forEach(dayData => {
             const container = document.getElementById(dayData.id);
             if (!container) return;
 
@@ -245,7 +390,7 @@
             `;
 
             // 2. 生成各個時段 (Periods)
-            dayData.periods.forEach(period => {
+            dayData.periods.forEach((period, periodIndex) => {
                 html += `
                     <div class="period-header">
                         <h4>${period.name}</h4>
@@ -253,9 +398,10 @@
                 `;
 
                 // 3. 生成時段內的事件 (Events)
-                period.events.forEach(event => {
+                period.events.forEach((event, eventIndex) => {
+                    const eventId = getScheduleEventId(dayData.id, periodIndex, eventIndex);
                     html += `
-                        <div class="schedule-item">
+                        <div class="schedule-item" id="${eventId}" data-search-id="${eventId}">
                             <div class="schedule-time">${event.time}</div>
                             <div class="schedule-marker"></div>
                             <div class="schedule-content">
@@ -368,8 +514,10 @@
                     `).join('')}
                 </div>
                 <div class="facility-grid">
-                    ${deck.facilities.map(facility => `
-                        <article class="facility-card ${facility.highlight ? 'highlight' : ''}">
+                    ${deck.facilities.map((facility, facilityIndex) => {
+                        const facilityId = getDeckFacilityId(deck.id, facilityIndex);
+                        return `
+                        <article class="facility-card ${facility.highlight ? 'highlight' : ''}" id="${facilityId}" data-search-id="${facilityId}">
                             <div class="facility-icon">
                                 <i class="${facility.icon}"></i>
                             </div>
@@ -382,7 +530,8 @@
                                 </div>
                             </div>
                         </article>
-                    `).join('')}
+                    `;
+                    }).join('')}
                 </div>
             `;
         }
@@ -394,8 +543,10 @@
                         <section class="performance-category">
                             <h3><i class="${category.icon}"></i> ${category.title}</h3>
                             <p class="performance-intro">${category.intro}</p>
-                            ${category.shows.map(show => `
-                                <article class="show-item">
+                            ${category.shows.map((show, showIndex) => {
+                                const showId = getShowItemId(category.id, showIndex);
+                                return `
+                                <article class="show-item" id="${showId}" data-search-id="${showId}">
                                     <span class="show-title">${show.name}</span>
                                     <p class="show-desc">${show.theme}</p>
                                     <div class="show-meta">
@@ -404,7 +555,8 @@
                                         <span><i class="fa-solid fa-calendar-check"></i> ${show.tripLink}</span>
                                     </div>
                                 </article>
-                            `).join('')}
+                            `;
+                            }).join('')}
                         </section>
                     `).join('')}
                 </div>
@@ -432,6 +584,7 @@
             });
         });
 
+        setDeckGuideTab = updateDeckGuide;
         updateDeckGuide(activeTab);
     }
 
@@ -480,9 +633,10 @@
 
         const missionButtons = missionsContainer.querySelectorAll('.playbook-mission-btn');
 
-        function buildItemMarkup(item) {
+        function buildItemMarkup(item, missionId, itemIndex) {
             const source = sourceMeta[item.sourceType] || sourceMeta.community;
             const relatedLabel = item.relatedSectionId ? relatedSectionLabels[item.relatedSectionId] : '';
+            const itemId = getPlaybookItemId(missionId, itemIndex);
             const relatedMarkup = relatedLabel ? `
                 <a class="playbook-related-link" href="#${item.relatedSectionId}">
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -491,7 +645,7 @@
             ` : '';
 
             return `
-                <details class="playbook-card source-${item.sourceType}">
+                <details class="playbook-card source-${item.sourceType}" id="${itemId}" data-search-id="${itemId}">
                     <summary class="playbook-summary">
                         <div class="playbook-card-icon">
                             <i class="${item.icon}"></i>
@@ -540,7 +694,7 @@
             `;
         }
 
-        function updatePlaybook(targetId) {
+        function updatePlaybook(targetId, options = {}) {
             activeMission = targetId;
             missionButtons.forEach(button => {
                 button.classList.toggle('active', button.dataset.playbookMission === activeMission);
@@ -558,9 +712,14 @@
                     </div>
                 </div>
                 <div class="playbook-grid">
-                    ${mission.items.map(item => buildItemMarkup(item)).join('')}
+                    ${mission.items.map((item, itemIndex) => buildItemMarkup(item, mission.id, itemIndex)).join('')}
                 </div>
             `;
+
+            if (options.openItemId) {
+                const detail = document.getElementById(options.openItemId);
+                if (detail) detail.open = true;
+            }
         }
 
         missionButtons.forEach(button => {
@@ -569,6 +728,7 @@
             });
         });
 
+        setPlaybookMission = updatePlaybook;
         updatePlaybook(activeMission);
     }
 
@@ -577,19 +737,23 @@
     // 13. 行程表頁籤切換
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-    
+
+    function activateScheduleTab(targetId) {
+        tabBtns.forEach(button => {
+            button.classList.toggle('active', button.getAttribute('data-tab') === targetId);
+        });
+        tabContents.forEach(content => {
+            content.classList.toggle('active', content.id === targetId);
+        });
+    }
+
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // 移除所有 active 狀態
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            // 加上當前的 active
-            btn.classList.add('active');
-            const targetId = btn.getAttribute('data-tab');
-            document.getElementById(targetId).classList.add('active');
+            activateScheduleTab(btn.getAttribute('data-tab'));
         });
     });
+
+    setScheduleTab = activateScheduleTab;
 
     // 14. 導覽列與漢堡選單
     const hamburger = document.getElementById('hamburger');
@@ -607,5 +771,473 @@
             });
         });
     }
+
+    // 15. 全站搜尋
+    function stripHtmlTags(text) {
+        return String(text || '').replace(/<[^>]+>/g, ' ');
+    }
+
+    function getSectionLabel(sectionId) {
+        const labels = {
+            overview: '團隊核心資訊',
+            timeline: '禮賓預約黃金時間軸',
+            checkin: '零失誤通關與登船實戰',
+            facilities: '兒童育樂與水區防雷',
+            entertainment: '娛樂大秀與極致餐飲',
+            tips: '購物、隱藏預算與離船',
+            'local-info': '在地資訊與小工具'
+        };
+        return labels[sectionId] || '其他資訊';
+    }
+
+    function getSourceLabel(sourceType) {
+        const labels = {
+            schedule: '行程',
+            deck: '甲板',
+            show: '表演',
+            playbook: '攻略本',
+            static: '其他資訊'
+        };
+        return labels[sourceType] || '內容';
+    }
+
+    function buildScheduleSearchDocuments() {
+        return cruiseSchedule.flatMap(dayData =>
+            dayData.periods.flatMap((period, periodIndex) =>
+                period.events.map((event, eventIndex) => ({
+                    id: getScheduleEventId(dayData.id, periodIndex, eventIndex),
+                    sourceType: 'schedule',
+                    sectionId: 'schedule',
+                    groupLabel: '行程',
+                    title: event.title,
+                    text: [event.tag, period.name, ...event.desc.map(stripHtmlTags)].join(' '),
+                    keywords: [dayData.tabTitle, dayData.dateTitle, period.name, event.tag, event.title],
+                    locationLabel: `${dayData.tabTitle} · ${period.name}`,
+                    navTarget: {
+                        type: 'schedule',
+                        dayId: dayData.id,
+                        itemId: getScheduleEventId(dayData.id, periodIndex, eventIndex)
+                    }
+                }))
+            )
+        );
+    }
+
+    function buildDeckSearchDocuments() {
+        return deckGuideData.flatMap(deck =>
+            deck.facilities.map((facility, facilityIndex) => ({
+                id: getDeckFacilityId(deck.id, facilityIndex),
+                sourceType: 'deck',
+                sectionId: 'deck-guide',
+                groupLabel: '甲板與表演',
+                title: facility.name,
+                text: [facility.summary, facility.bestTime, facility.tripUse].join(' '),
+                keywords: [deck.label, deck.title, deck.theme, deck.tripFocus, ...deck.badges],
+                locationLabel: `${deck.label} · ${deck.title}`,
+                navTarget: {
+                    type: 'deck',
+                    tabId: deck.id,
+                    itemId: getDeckFacilityId(deck.id, facilityIndex)
+                }
+            }))
+        );
+    }
+
+    function buildShowSearchDocuments() {
+        return showGuideData.flatMap(category =>
+            category.shows.map((show, showIndex) => ({
+                id: getShowItemId(category.id, showIndex),
+                sourceType: 'show',
+                sectionId: 'deck-guide',
+                groupLabel: '甲板與表演',
+                title: show.name,
+                text: [show.theme, show.location, show.timingTip, show.tripLink, category.intro].join(' '),
+                keywords: [category.title, category.intro, show.location, show.tripLink],
+                locationLabel: `表演精華 · ${category.title}`,
+                navTarget: {
+                    type: 'show',
+                    tabId: 'shows',
+                    itemId: getShowItemId(category.id, showIndex)
+                }
+            }))
+        );
+    }
+
+    function buildPlaybookSearchDocuments() {
+        return playbookGuideData.flatMap(mission =>
+            mission.items.map((item, itemIndex) => ({
+                id: getPlaybookItemId(mission.id, itemIndex),
+                sourceType: 'playbook',
+                sectionId: 'playbook',
+                groupLabel: '攻略本',
+                title: item.title,
+                text: [item.whenToUse, item.action, item.tripFit, item.caution].join(' '),
+                keywords: [mission.label, mission.intro, item.sourceType],
+                locationLabel: `攻略本 · ${mission.label}`,
+                navTarget: {
+                    type: 'playbook',
+                    missionId: mission.id,
+                    itemId: getPlaybookItemId(mission.id, itemIndex)
+                }
+            }))
+        );
+    }
+
+    function buildStaticSearchDocuments() {
+        const sectionConfigs = [
+            { sectionId: 'overview', selector: '.card' },
+            { sectionId: 'timeline', selector: '.timeline-content' },
+            { sectionId: 'checkin', selector: '.card' },
+            { sectionId: 'facilities', selector: '.card' },
+            { sectionId: 'entertainment', selector: '.card' },
+            { sectionId: 'tips', selector: '.card' },
+            { sectionId: 'local-info', selector: '.card' }
+        ];
+
+        return sectionConfigs.flatMap(config => {
+            const section = document.getElementById(config.sectionId);
+            if (!section) return [];
+
+            const sectionLabel = getSectionLabel(config.sectionId);
+            const cards = section.querySelectorAll(config.selector);
+            return Array.from(cards).map((card, cardIndex) => {
+                if (!card.id) {
+                    card.id = getStaticCardId(config.sectionId, cardIndex);
+                }
+
+                const titleNode = card.querySelector('h3, h4');
+                const title = titleNode ? titleNode.textContent.trim() : sectionLabel;
+                const text = card.textContent.replace(/\s+/g, ' ').trim();
+
+                return {
+                    id: card.id,
+                    sourceType: 'static',
+                    sectionId: config.sectionId,
+                    groupLabel: '其他資訊',
+                    title,
+                    text,
+                    keywords: [sectionLabel, title],
+                    locationLabel: sectionLabel,
+                    navTarget: {
+                        type: 'static',
+                        itemId: card.id
+                    }
+                };
+            });
+        });
+    }
+
+    function prepareSearchDocuments() {
+        const docs = [
+            ...buildScheduleSearchDocuments(),
+            ...buildDeckSearchDocuments(),
+            ...buildShowSearchDocuments(),
+            ...buildPlaybookSearchDocuments(),
+            ...buildStaticSearchDocuments()
+        ];
+
+        searchState.documents = docs.map(doc => {
+            const normalizedTitle = normalizeSearchText(doc.title);
+            const normalizedText = normalizeSearchText(doc.text);
+            const normalizedKeywords = normalizeSearchText(doc.keywords.join(' '));
+            return {
+                ...doc,
+                normalizedTitle,
+                normalizedText,
+                normalizedKeywords,
+                normalizedCombined: uniqueItems([normalizedTitle, normalizedKeywords, normalizedText].filter(Boolean)).join(' ')
+            };
+        });
+    }
+
+    function getSearchUnits(rawQuery) {
+        const normalizedQuery = normalizeSearchText(rawQuery);
+        if (!normalizedQuery) {
+            return { normalizedQuery: '', units: [], highlightTerms: [] };
+        }
+
+        const splitUnits = normalizedQuery.split(' ').filter(Boolean);
+        const units = uniqueItems(normalizedQuery.includes(' ') ? [normalizedQuery, ...splitUnits] : splitUnits);
+        const highlightTerms = uniqueItems(units.map(unit => searchDisplayMap.get(unit) || unit));
+
+        return { normalizedQuery, units, highlightTerms };
+    }
+
+    function scoreMatch(sourceText, term, synonyms, baseWeight, synonymWeight) {
+        let score = 0;
+        if (!sourceText) return score;
+
+        if (sourceText.includes(term)) {
+            score += baseWeight + Math.min(term.length, 8);
+        }
+
+        synonyms.forEach(synonym => {
+            if (sourceText.includes(synonym)) {
+                score += synonymWeight + Math.min(synonym.length, 6);
+            }
+        });
+
+        return score;
+    }
+
+    function scoreDocument(doc, queryData) {
+        if (!queryData.units.length) return 0;
+
+        let score = 0;
+        let matchedUnits = 0;
+
+        queryData.units.forEach(unit => {
+            const synonyms = searchSynonymMap.get(unit) || [];
+            const unitScore =
+                scoreMatch(doc.normalizedTitle, unit, synonyms, 30, 15) +
+                scoreMatch(doc.normalizedKeywords, unit, synonyms, 22, 10) +
+                scoreMatch(doc.normalizedText, unit, synonyms, 12, 5);
+
+            if (unitScore > 0) {
+                matchedUnits += 1;
+                score += unitScore;
+            }
+        });
+
+        if (doc.normalizedTitle.includes(queryData.normalizedQuery)) {
+            score += 28;
+        } else if (doc.normalizedCombined.includes(queryData.normalizedQuery)) {
+            score += 14;
+        }
+
+        if (matchedUnits === queryData.units.length) {
+            score += 16;
+        } else if (matchedUnits > 1) {
+            score += 8;
+        }
+
+        return score;
+    }
+
+    function highlightSnippet(text, terms) {
+        let html = escapeHtml(text);
+        const sortedTerms = uniqueItems(terms.filter(Boolean)).sort((a, b) => b.length - a.length);
+
+        sortedTerms.forEach(term => {
+            const safeTerm = escapeHtml(term);
+            if (!safeTerm) return;
+            html = html.replace(new RegExp(escapeRegExp(safeTerm), 'gi'), match => `<mark>${match}</mark>`);
+        });
+
+        return html;
+    }
+
+    function createExcerpt(doc, queryData) {
+        const rawSource = [doc.title, doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+        const lowerSource = rawSource.toLowerCase();
+        const searchTerms = uniqueItems([
+            ...queryData.highlightTerms,
+            ...queryData.units.map(unit => searchDisplayMap.get(unit) || unit)
+        ]).filter(Boolean);
+
+        let matchIndex = -1;
+        searchTerms.forEach(term => {
+            const index = lowerSource.indexOf(String(term).toLowerCase());
+            if (index !== -1 && (matchIndex === -1 || index < matchIndex)) {
+                matchIndex = index;
+            }
+        });
+
+        const start = matchIndex === -1 ? 0 : Math.max(matchIndex - 28, 0);
+        const end = Math.min(start + 120, rawSource.length);
+        const snippet = `${start > 0 ? '…' : ''}${rawSource.slice(start, end).trim()}${end < rawSource.length ? '…' : ''}`;
+        return highlightSnippet(snippet, searchTerms);
+    }
+
+    function renderSearchResults(results, query) {
+        const container = document.getElementById('search-results');
+        if (!container) return;
+
+        if (!query) {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>開始搜尋郵輪重點</strong></p>
+                    <p>可以試試看：禮賓、Baymax、Room Service、Deck 17、爆米花、SGAC。</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (query.length < SEARCH_MIN_LENGTH) {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>再多輸入一點點</strong></p>
+                    <p>至少輸入 ${SEARCH_MIN_LENGTH} 個字元，搜尋結果會更準。</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (!results.length) {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>目前沒有找到相符內容</strong></p>
+                    <p>可以換成常見別名試試，例如：禮賓 / Concierge、杯麵 / Baymax、房務 / Room Service。</p>
+                </div>
+            `;
+            return;
+        }
+
+        const groupedResults = new Map();
+        results.forEach(result => {
+            if (!groupedResults.has(result.groupLabel)) {
+                groupedResults.set(result.groupLabel, []);
+            }
+            groupedResults.get(result.groupLabel).push(result);
+        });
+
+        const groupOrder = ['行程', '甲板與表演', '攻略本', '其他資訊'];
+        container.innerHTML = groupOrder
+            .filter(groupLabel => groupedResults.has(groupLabel))
+            .map(groupLabel => `
+                <section class="search-group">
+                    <div class="search-group-title">
+                        <i class="${SEARCH_GROUP_ICONS[groupLabel] || 'fa-solid fa-magnifying-glass'}"></i>
+                        <span>${groupLabel}</span>
+                    </div>
+                    <div class="search-group-list">
+                        ${groupedResults.get(groupLabel).map(result => `
+                            <button type="button" class="search-result-card" data-result-id="${result.id}">
+                                <div class="search-result-meta">
+                                    <span>${getSourceLabel(result.sourceType)}</span>
+                                    <span>•</span>
+                                    <span>${result.locationLabel}</span>
+                                </div>
+                                <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
+                                <div class="search-result-location">${escapeHtml(result.locationLabel)}</div>
+                                <div class="search-result-snippet">${createExcerpt(result, getSearchUnits(query))}</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </section>
+            `).join('');
+    }
+
+    function performSearch(query) {
+        const queryData = getSearchUnits(query);
+        if (!queryData.normalizedQuery || queryData.normalizedQuery.length < SEARCH_MIN_LENGTH) {
+            searchState.resultsById = new Map();
+            renderSearchResults([], queryData.normalizedQuery);
+            return;
+        }
+
+        const results = searchState.documents
+            .map(doc => ({ ...doc, score: scoreDocument(doc, queryData) }))
+            .filter(doc => doc.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 16);
+
+        searchState.resultsById = new Map(results.map(result => [result.id, result]));
+        renderSearchResults(results, queryData.normalizedQuery);
+    }
+
+    function navigateToSearchResult(result) {
+        if (!result?.navTarget) return;
+
+        closeSearchOverlay();
+
+        window.setTimeout(() => {
+            const { navTarget } = result;
+
+            if (navTarget.type === 'schedule') {
+                setScheduleTab(navTarget.dayId);
+                waitForTargetAndScroll(navTarget.itemId);
+                return;
+            }
+
+            if (navTarget.type === 'deck') {
+                setDeckGuideTab(navTarget.tabId);
+                waitForTargetAndScroll(navTarget.itemId);
+                return;
+            }
+
+            if (navTarget.type === 'show') {
+                setDeckGuideTab(navTarget.tabId);
+                waitForTargetAndScroll(navTarget.itemId);
+                return;
+            }
+
+            if (navTarget.type === 'playbook') {
+                setPlaybookMission(navTarget.missionId, { openItemId: navTarget.itemId });
+                waitForTargetAndScroll(navTarget.itemId);
+                return;
+            }
+
+            waitForTargetAndScroll(navTarget.itemId);
+        }, 140);
+    }
+
+    function openSearchOverlay() {
+        const overlay = document.getElementById('search-overlay');
+        const input = document.getElementById('search-input');
+        if (!overlay || !input) return;
+
+        overlay.hidden = false;
+        document.body.classList.add('search-open');
+        renderSearchResults([], '');
+        window.setTimeout(() => input.focus(), 40);
+    }
+
+    function closeSearchOverlay() {
+        const overlay = document.getElementById('search-overlay');
+        const input = document.getElementById('search-input');
+        if (!overlay || overlay.hidden) return;
+
+        overlay.hidden = true;
+        document.body.classList.remove('search-open');
+        if (input) input.value = '';
+        searchState.resultsById = new Map();
+    }
+
+    function initializeSearch() {
+        const overlay = document.getElementById('search-overlay');
+        const trigger = document.getElementById('nav-search-trigger');
+        const closeBtn = document.getElementById('search-close-btn');
+        const input = document.getElementById('search-input');
+        const results = document.getElementById('search-results');
+        const backdrop = overlay?.querySelector('[data-search-close]');
+
+        if (!overlay || !trigger || !closeBtn || !input || !results) return;
+
+        prepareSearchDocuments();
+
+        trigger.addEventListener('click', openSearchOverlay);
+        closeBtn.addEventListener('click', closeSearchOverlay);
+        backdrop?.addEventListener('click', closeSearchOverlay);
+
+        input.addEventListener('input', () => {
+            window.clearTimeout(searchState.debounceTimer);
+            searchState.debounceTimer = window.setTimeout(() => {
+                performSearch(input.value);
+            }, 110);
+        });
+
+        results.addEventListener('click', event => {
+            const button = event.target.closest('.search-result-card');
+            if (!button) return;
+
+            const result = searchState.resultsById.get(button.dataset.resultId);
+            navigateToSearchResult(result);
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !overlay.hidden) {
+                closeSearchOverlay();
+            }
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+                event.preventDefault();
+                openSearchOverlay();
+            }
+        });
+
+        renderSearchResults([], '');
+    }
+
+    initializeSearch();
 
 });
