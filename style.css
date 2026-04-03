@@ -1625,6 +1625,20 @@ body.search-open {
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+.search-ai-source-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.14);
+    color: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
 .search-ai-summary {
     margin: 0 0 12px;
     font-size: 1.05rem;
@@ -1698,6 +1712,9 @@ body.search-open {
     color: var(--dcl-navy);
 }
 
+.search-ai-card.loading .search-ai-source-hint,
+.search-ai-card.info .search-ai-source-hint,
+.search-ai-card.error .search-ai-source-hint,
 .search-ai-card.loading .search-ai-rewrite-note,
 .search-ai-card.info .search-ai-rewrite-note,
 .search-ai-card.error .search-ai-rewrite-note {

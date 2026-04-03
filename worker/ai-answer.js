@@ -4,34 +4,34 @@ const MIN_REWRITE_CHUNKS = 1;
 const MAX_QUERY_LENGTH = 500;
 const MAX_TEXT_LENGTH = 420;
 const MIN_QUERY_SIGNAL = 6;
+const ALLOWED_SOURCE_TYPES = ['schedule', 'deck', 'show', 'playbook', 'static'];
 
-function createCorsHeaders(origin = '*') {
+function createCorsHeaders() {
   return {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
-    Vary: 'Origin'
+    'Access-Control-Max-Age': '86400'
   };
 }
 
-function jsonResponse(data, status = 200, origin = '*') {
-  return new Response(JSON.stringify(data), {
+function jsonResponse(body, status = 200) {
+  return new Response(JSON.stringify(body), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
-      ...createCorsHeaders(origin)
+      ...createCorsHeaders()
     }
   });
 }
 
 function uniqueItems(items) {
-  return [...new Set(items)];
+  return [...new Set(items.filter(Boolean))];
 }
 
 function normalizeQuery(text) {
   return String(text || '')
     .normalize('NFKC')
-    .replace(/[\u2019']/g, '')
     .replace(/\u3000/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -41,151 +41,166 @@ function getQuerySignalLength(text) {
   return normalizeQuery(text).replace(/\s+/g, '').length;
 }
 
-function sanitizeString(value, maxLength = 200) {
-  return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength);
+function sanitizeString(value, maxLength = MAX_TEXT_LENGTH) {
+  return String(value || '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, maxLength);
 }
 
-function sanitizeNavTarget(navTarget = {}) {
+function sanitizeNavTarget(navTarget) {
   if (!navTarget || typeof navTarget !== 'object') return null;
+  return JSON.parse(JSON.stringify(navTarget));
+}
 
-  const safeTarget = {};
-  if (typeof navTarget.type === 'string') safeTarget.type = navTarget.type;
-  if (typeof navTarget.dayId === 'string') safeTarget.dayId = navTarget.dayId;
-  if (typeof navTarget.tabId === 'string') safeTarget.tabId = navTarget.tabId;
-  if (typeof navTarget.missionId === 'string') safeTarget.missionId = navTarget.missionId;
-  if (typeof navTarget.itemId === 'string') safeTarget.itemId = navTarget.itemId;
-
-  return Object.keys(safeTarget).length ? safeTarget : null;
+function sanitizeSourceType(sourceType) {
+  const normalized = sanitizeString(sourceType, 24).toLowerCase();
+  return ALLOWED_SOURCE_TYPES.includes(normalized) ? normalized : 'static';
 }
 
 function sanitizeChunks(chunks) {
-  if (!Array.isArray(chunks)) return [];
-
-  return chunks
-    .slice(0, MAX_CHUNKS)
+  return (Array.isArray(chunks) ? chunks : [])
     .map((chunk) => ({
       id: sanitizeString(chunk?.id, 120),
       title: sanitizeString(chunk?.title, 160),
-      locationLabel: sanitizeString(chunk?.locationLabel, 180),
+      locationLabel: sanitizeString(chunk?.locationLabel, 200),
       sectionId: sanitizeString(chunk?.sectionId, 80),
+      sourceType: sanitizeSourceType(chunk?.sourceType),
       navTarget: sanitizeNavTarget(chunk?.navTarget),
       text: sanitizeString(chunk?.text, MAX_TEXT_LENGTH)
     }))
-    .filter((chunk) => chunk.id && chunk.title && chunk.text && chunk.navTarget);
+    .filter((chunk) => chunk.id && chunk.title && chunk.text)
+    .slice(0, MAX_CHUNKS);
 }
 
 function buildGroundedPrompt(query, chunks) {
-  const sources = chunks
-    .map(
-      (chunk, index) =>
-        `SOURCE ${index + 1}\n` +
-        `id: ${chunk.id}\n` +
-        `title: ${chunk.title}\n` +
-        `location: ${chunk.locationLabel}\n` +
-        `section: ${chunk.sectionId}\n` +
+  const sourceDump = chunks
+    .map((chunk, index) => {
+      return [
+        `[#${index + 1}]`,
+        `id: ${chunk.id}`,
+        `sourceType: ${chunk.sourceType}`,
+        `title: ${chunk.title}`,
+        `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
+        `sectionId: ${chunk.sectionId || 'unknown'}`,
         `text: ${chunk.text}`
-    )
+      ].join('\n');
+    })
     .join('\n\n');
 
-  return [
-    `User question: ${query}`,
-    '',
-    'Answer only from the provided website chunks.',
-    'Use the same language as the user question.',
-    'If the question asks what to do first, how to arrange, or what order to follow, answer in a recommended order.',
-    'Do not add external facts or assumptions beyond the chunks.',
-    'If the chunks are incomplete, answer conservatively and explain the gap in missingReason.',
-    'Every bullet must be supported by the cited chunk ids.',
-    'If there is not enough support, set insufficientData to true.',
-    '',
-    sources
-  ].join('\n');
+  return `你是「郵輪攻略站內解答助手」，只能根據提供的站內片段回答。
+
+規則：
+1. 只能使用下方 sources 的內容回答，不可使用任何外部知識補空白。
+2. 若問題是「先做什麼／怎麼安排」，請以建議順序回答。
+3. 若 sources 同時有總覽型內容與細節型卡片，優先根據最具體的卡片回答。
+4. schedule 只能補充順序與時段，不可蓋過 playbook、deck、show 的細節。
+5. 每一個 bullet 都必須能被至少一個 source 支撐。
+6. 若資料不足，請明確指出不足，不可幻想。
+7. 使用和使用者相同的語言作答（本題通常是繁體中文）。
+8. primarySourceType 請填最主要依據的來源類型：schedule / deck / show / playbook / static。
+
+使用者問題：
+${query}
+
+sources:
+${sourceDump}`;
 }
 
 function buildRewritePrompt(query, chunks) {
-  const sourceHints = chunks
-    .map(
-      (chunk, index) =>
-        `HINT ${index + 1}\n` +
-        `title: ${chunk.title}\n` +
-        `location: ${chunk.locationLabel}\n` +
+  const sourceDump = chunks
+    .map((chunk, index) => {
+      return [
+        `[#${index + 1}] ${chunk.title}`,
+        `sourceType: ${chunk.sourceType}`,
+        `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
         `text: ${chunk.text}`
-    )
+      ].join('\n');
+    })
     .join('\n\n');
 
-  return [
-    `User question: ${query}`,
-    '',
-    'Do not answer the question.',
-    'Rewrite the question into search-friendly hints for this cruise website only.',
-    'Return short website-style keywords, aliases, and one rewritten query.',
-    'Prefer terms likely to appear in the provided hints.',
-    'Prefer Chinese keywords, but keep official English names when helpful.',
-    'Do not invent places or activities that are not suggested by the hints.',
-    '',
-    sourceHints
-  ].join('\n');
+  return `你是「郵輪攻略站內搜尋改寫助手」，只能幫忙把問題改寫成更適合站內搜尋的詞，不可以直接回答問題。
+
+規則：
+1. 只能根據下方 sources 的語彙改寫，不可加入外部世界知識。
+2. rewrittenQuery 要更像站內卡片標題或常見別名。
+3. keywords 請提供 3 到 6 個最有用的搜尋詞。
+4. alternates 請提供 2 到 4 個替代表達。
+5. confidence 只能填 high / medium / low。
+
+使用者問題：
+${query}
+
+可參考的站內語彙：
+${sourceDump}`;
 }
 
-function extractCandidateText(payload) {
-  const parts = payload?.candidates?.[0]?.content?.parts || [];
-  return parts.map((part) => part.text || '').join('').trim();
+function extractCandidateText(data) {
+  return data?.candidates?.[0]?.content?.parts
+    ?.map((part) => part?.text || '')
+    .join('\n')
+    .trim() || '';
 }
 
 function safeJsonParse(text) {
   try {
     return JSON.parse(text);
   } catch {
-    const cleaned = String(text || '')
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/, '')
-      .trim();
-    return JSON.parse(cleaned);
+    return null;
   }
 }
 
 function buildGroundedSchema() {
   return {
-    type: 'object',
-    additionalProperties: false,
+    type: 'OBJECT',
     properties: {
-      answer: { type: 'string' },
+      answer: { type: 'STRING' },
       bullets: {
-        type: 'array',
-        items: { type: 'string' }
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 4
       },
       confidence: {
-        type: 'string',
+        type: 'STRING',
         enum: ['high', 'medium', 'low']
       },
-      missingReason: { type: 'string' },
-      citationIds: {
-        type: 'array',
-        items: { type: 'string' }
+      primarySourceType: {
+        type: 'STRING',
+        enum: ALLOWED_SOURCE_TYPES
       },
-      insufficientData: { type: 'boolean' }
+      missingReason: { type: 'STRING' },
+      citationIds: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: MAX_CHUNKS
+      },
+      insufficientData: { type: 'BOOLEAN' }
     },
-    required: ['answer', 'bullets', 'confidence', 'citationIds', 'insufficientData']
+    required: ['answer', 'bullets', 'confidence', 'primarySourceType', 'citationIds', 'insufficientData']
   };
 }
 
 function buildRewriteSchema() {
   return {
-    type: 'object',
-    additionalProperties: false,
+    type: 'OBJECT',
     properties: {
-      rewrittenQuery: { type: 'string' },
+      rewrittenQuery: { type: 'STRING' },
       keywords: {
-        type: 'array',
-        items: { type: 'string' }
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 6
       },
       alternates: {
-        type: 'array',
-        items: { type: 'string' }
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 4
       },
       confidence: {
-        type: 'string',
+        type: 'STRING',
         enum: ['high', 'medium', 'low']
       }
     },
@@ -199,263 +214,252 @@ function buildInsufficientDataPayload(message) {
     bullets: [],
     citations: [],
     confidence: 'low',
-    missingReason: message,
+    primarySourceType: 'static',
+    missingReason: '目前站內沒有足夠片段可支撐更完整的回答。',
     insufficientData: true
   };
 }
 
-function normalizeConfidence(value, citations, insufficientData) {
-  const normalized = String(value || '').trim().toLowerCase();
-  if (normalized === 'high' || normalized === 'medium' || normalized === 'low') {
-    return normalized;
-  }
+function normalizeConfidence(confidence) {
+  return ['high', 'medium', 'low'].includes(confidence) ? confidence : 'low';
+}
 
-  if (insufficientData || citations.length <= 1) {
-    return 'low';
+function extractKeywordCandidates(query) {
+  const normalized = normalizeQuery(query).toLowerCase();
+  if (!normalized) return [];
+  const asciiTokens = normalized
+    .split(/[^a-z0-9\u4e00-\u9fff]+/)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 2);
+  const compactChinese = normalized.replace(/[^\u4e00-\u9fff]/g, '');
+  const chineseNgrams = [];
+  for (let size = Math.min(4, compactChinese.length); size >= 2; size -= 1) {
+    for (let index = 0; index <= compactChinese.length - size; index += 1) {
+      chineseNgrams.push(compactChinese.slice(index, index + size));
+    }
   }
-
-  if (citations.length >= 3) {
-    return 'high';
-  }
-
-  return 'medium';
+  return uniqueItems([...asciiTokens, ...chineseNgrams]).slice(0, 6);
 }
 
 function buildLowConfidenceFallback(query, chunks) {
   const topChunks = chunks.slice(0, 3);
+  const primarySourceType = topChunks[0]?.sourceType || 'static';
   const citations = topChunks.map((chunk) => ({
     id: chunk.id,
     title: chunk.title,
     locationLabel: chunk.locationLabel,
     navTarget: chunk.navTarget
   }));
-  const bullets = topChunks.map((chunk) => sanitizeString(chunk.title, 120)).filter(Boolean);
+
+  const bullets = topChunks.map((chunk) => {
+    const text = chunk.text || '';
+    return text.length > 90 ? `${text.slice(0, 90).trim()}…` : text;
+  }).filter(Boolean);
 
   return {
-    answer: bullets.length
-      ? `我先根據目前站內最接近的片段整理：通常可以先從「${bullets[0]}」開始，再搭配下方引用快速核對。`
-      : `我目前只能從少量站內片段整理出方向，建議直接點下方引用來源快速核對。`,
+    answer: `我先根據目前最相關的站內卡片整理重點，這題和「${query}」最接近的資料在下方引用來源。`,
     bullets,
     citations,
     confidence: 'low',
-    missingReason: '目前 Gemini 雖然沒有整理出穩定答案，但站內仍有一些相近片段可先提供參考。',
+    primarySourceType,
+    missingReason: '這次主要依據少量站內片段整理，建議點引用來源直接查看原文。',
     insufficientData: false
   };
 }
 
-function extractKeywordCandidates(text) {
-  const normalized = normalizeQuery(text).toLowerCase();
-  if (!normalized) return [];
-
-  const chinesePhrases = normalized.match(/[\u4e00-\u9fff]{2,6}/g) || [];
-  const wordTerms = normalized
-    .split(' ')
-    .filter((term) => term.length >= 2 && /[a-z0-9]/.test(term));
-
-  return uniqueItems([...chinesePhrases, ...wordTerms]).slice(0, 8);
-}
-
 function buildRewriteFallback(query, chunks) {
-  const hintSource = [
-    query,
-    ...chunks.flatMap((chunk) => [chunk.title, chunk.locationLabel])
-  ].join(' ');
-  const keywords = extractKeywordCandidates(hintSource).slice(0, 6);
+  const keywords = uniqueItems([
+    ...extractKeywordCandidates(query),
+    ...chunks.flatMap((chunk) => chunk.title.split(/[／/、\s:：()-]+/))
+  ].map((item) => sanitizeString(item, 40))).filter((item) => item.length >= 2).slice(0, 6);
+
+  const alternates = uniqueItems(chunks
+    .map((chunk) => sanitizeString(chunk.title, 80))
+    .filter(Boolean))
+    .slice(0, 4);
 
   return {
-    rewrittenQuery: sanitizeString(query, 160),
+    rewrittenQuery: keywords.join(' '),
     keywords,
-    alternates: keywords.slice(0, 3),
+    alternates,
     confidence: keywords.length >= 3 ? 'medium' : 'low'
   };
 }
 
 async function callGemini(env, mode, query, chunks) {
   const apiKey = String(env.GEMINI_API_KEY || '').trim();
-  const model = String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim() || 'gemini-2.5-flash-lite';
-
   if (!apiKey) {
     throw new Error('Missing GEMINI_API_KEY');
   }
 
-  const isRewrite = mode === 'query_rewrite_v1';
+  const model = String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
+  const schema = mode === 'query_rewrite_v1' ? buildRewriteSchema() : buildGroundedSchema();
+  const prompt = mode === 'query_rewrite_v1'
+    ? buildRewritePrompt(query, chunks)
+    : buildGroundedPrompt(query, chunks);
+
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        system_instruction: {
-          parts: [
-            {
-              text: isRewrite
-                ? 'You rewrite search queries for a cruise guide website. Never answer the question directly. Return only valid JSON.'
-                : 'You are a grounded assistant for a cruise guide website. Answer only from the provided chunks and return only valid JSON.'
-            }
-          ]
-        },
         contents: [
           {
             role: 'user',
-            parts: [
-              {
-                text: isRewrite ? buildRewritePrompt(query, chunks) : buildGroundedPrompt(query, chunks)
-              }
-            ]
+            parts: [{ text: prompt }]
           }
         ],
         generationConfig: {
-          temperature: isRewrite ? 0.2 : 0.1,
-          thinkingConfig: {
-            thinkingBudget: 0
-          },
+          temperature: 0.2,
+          maxOutputTokens: mode === 'query_rewrite_v1' ? 500 : 700,
           responseMimeType: 'application/json',
-          responseJsonSchema: isRewrite ? buildRewriteSchema() : buildGroundedSchema()
+          responseSchema: schema
         }
       })
     }
   );
 
-  const payload = await response.json().catch(() => null);
-  if (!response.ok || !payload) {
-    throw new Error(payload?.error?.message || 'Gemini API request failed');
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data) {
+    throw new Error(data?.error?.message || 'Gemini request failed');
   }
 
-  const text = extractCandidateText(payload);
-  if (!text) {
-    throw new Error('Gemini returned an empty answer');
+  const candidateText = extractCandidateText(data);
+  const parsed = safeJsonParse(candidateText);
+  if (!parsed) {
+    throw new Error('Gemini returned invalid JSON');
   }
 
-  return safeJsonParse(text);
+  return parsed;
 }
 
 function finalizeGroundedAnswer(modelOutput, chunks, query) {
   const chunkMap = new Map(chunks.map((chunk) => [chunk.id, chunk]));
-  const citationIds = Array.isArray(modelOutput?.citationIds) ? modelOutput.citationIds : [];
-  const citations = citationIds
-    .map((id) => chunkMap.get(id))
-    .filter(Boolean)
-    .slice(0, 4)
-    .map((chunk) => ({
+  const citationIds = uniqueItems((Array.isArray(modelOutput?.citationIds) ? modelOutput.citationIds : [])
+    .map((item) => sanitizeString(item, 120))
+    .filter((item) => chunkMap.has(item)));
+
+  const citations = citationIds.map((id) => {
+    const chunk = chunkMap.get(id);
+    return {
       id: chunk.id,
       title: chunk.title,
       locationLabel: chunk.locationLabel,
       navTarget: chunk.navTarget
-    }));
-  const insufficientData = Boolean(modelOutput?.insufficientData);
-  const answer = sanitizeString(modelOutput?.answer, 320);
+    };
+  });
 
-  if ((!answer || !citations.length || insufficientData) && chunks.length >= MIN_CHUNKS) {
+  const primarySourceType = ALLOWED_SOURCE_TYPES.includes(modelOutput?.primarySourceType)
+    ? modelOutput.primarySourceType
+    : citations[0]
+      ? chunkMap.get(citations[0].id)?.sourceType || 'static'
+      : chunks[0]?.sourceType || 'static';
+
+  const payload = {
+    answer: sanitizeString(modelOutput?.answer, 600),
+    bullets: (Array.isArray(modelOutput?.bullets) ? modelOutput.bullets : [])
+      .map((item) => sanitizeString(item, 180))
+      .filter(Boolean)
+      .slice(0, 4),
+    citations,
+    confidence: normalizeConfidence(modelOutput?.confidence),
+    primarySourceType,
+    missingReason: sanitizeString(modelOutput?.missingReason, 220),
+    insufficientData: Boolean(modelOutput?.insufficientData)
+  };
+
+  if (!payload.answer || !payload.citations.length || payload.insufficientData) {
     return buildLowConfidenceFallback(query, chunks);
   }
 
-  return {
-    answer: answer || '我已根據站內片段整理出方向，建議搭配下方引用快速核對。',
-    bullets: Array.isArray(modelOutput?.bullets)
-      ? modelOutput.bullets.map((bullet) => sanitizeString(bullet, 180)).filter(Boolean).slice(0, 4)
-      : [],
-    citations,
-    confidence: normalizeConfidence(modelOutput?.confidence, citations, insufficientData),
-    missingReason: sanitizeString(modelOutput?.missingReason, 220),
-    insufficientData
-  };
+  return payload;
 }
 
 function finalizeRewriteOutput(modelOutput, query, chunks) {
-  const rewrittenQuery = sanitizeString(modelOutput?.rewrittenQuery, 160);
-  const keywords = uniqueItems(
-    (Array.isArray(modelOutput?.keywords) ? modelOutput.keywords : [])
-      .map((keyword) => sanitizeString(keyword, 40))
-      .filter(Boolean)
-  ).slice(0, 6);
-  const alternates = uniqueItems(
-    (Array.isArray(modelOutput?.alternates) ? modelOutput.alternates : [])
-      .map((alternate) => sanitizeString(alternate, 80))
-      .filter(Boolean)
-  ).slice(0, 4);
-  const confidence = ['high', 'medium', 'low'].includes(modelOutput?.confidence) ? modelOutput.confidence : 'low';
+  const keywords = uniqueItems((Array.isArray(modelOutput?.keywords) ? modelOutput.keywords : [])
+    .map((item) => sanitizeString(item, 40))
+    .filter((item) => item.length >= 2))
+    .slice(0, 6);
+
+  const alternates = uniqueItems((Array.isArray(modelOutput?.alternates) ? modelOutput.alternates : [])
+    .map((item) => sanitizeString(item, 80))
+    .filter(Boolean))
+    .slice(0, 4);
+
+  const rewrittenQuery = sanitizeString(modelOutput?.rewrittenQuery, 160) || keywords.join(' ');
 
   if (!rewrittenQuery && !keywords.length && !alternates.length) {
     return buildRewriteFallback(query, chunks);
   }
 
   return {
-    rewrittenQuery: rewrittenQuery || sanitizeString(query, 160),
+    rewrittenQuery,
     keywords,
     alternates,
-    confidence
+    confidence: normalizeConfidence(modelOutput?.confidence)
   };
 }
 
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
-    const origin = request.headers.get('Origin') || '*';
-
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: createCorsHeaders(origin)
+        headers: createCorsHeaders()
       });
     }
 
+    const url = new URL(request.url);
     if (url.pathname !== '/api/ai-answer') {
-      return jsonResponse({ error: 'Not found' }, 404, origin);
+      return jsonResponse({ error: 'Not found' }, 404);
     }
 
     if (request.method !== 'POST') {
-      return jsonResponse({ error: 'Method not allowed' }, 405, origin);
+      return jsonResponse({ error: 'Method not allowed' }, 405);
     }
 
-    if (!env.GEMINI_API_KEY) {
-      return jsonResponse({ error: 'Missing GEMINI_API_KEY secret' }, 500, origin);
+    let body;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonResponse({ error: 'Invalid JSON body' }, 400);
     }
 
-    const body = await request.json().catch(() => null);
-    const mode = sanitizeString(body?.mode || 'grounded_qa_v1', 40);
-    const query = sanitizeString(body?.query, MAX_QUERY_LENGTH);
-    const normalizedQuery = normalizeQuery(query);
+    const query = normalizeQuery(body?.query).slice(0, MAX_QUERY_LENGTH);
+    const mode = body?.mode === 'query_rewrite_v1' ? 'query_rewrite_v1' : 'grounded_qa_v1';
     const chunks = sanitizeChunks(body?.chunks);
 
-    if (!query || getQuerySignalLength(normalizedQuery) < MIN_QUERY_SIGNAL) {
+    if (getQuerySignalLength(query) < MIN_QUERY_SIGNAL) {
       if (mode === 'query_rewrite_v1') {
-        return jsonResponse(buildRewriteFallback(query, chunks), 200, origin);
+        return jsonResponse(buildRewriteFallback(query, chunks));
       }
-      return jsonResponse(buildInsufficientDataPayload('請把問題再問得完整一些，至少 6 個字會更容易整理站內資料。'), 200, origin);
+      return jsonResponse(buildInsufficientDataPayload('問題太短，請至少輸入 6 個字以上，AI 才能根據站內資料整理答案。'));
     }
 
-    if (mode === 'query_rewrite_v1') {
-      if (chunks.length < MIN_REWRITE_CHUNKS) {
-        return jsonResponse(buildRewriteFallback(query, chunks), 200, origin);
+    if ((mode === 'query_rewrite_v1' && chunks.length < MIN_REWRITE_CHUNKS) || (mode !== 'query_rewrite_v1' && chunks.length < MIN_CHUNKS)) {
+      if (mode === 'query_rewrite_v1') {
+        return jsonResponse(buildRewriteFallback(query, chunks));
       }
-
-      try {
-        const modelOutput = await callGemini(env, mode, query, chunks);
-        return jsonResponse(finalizeRewriteOutput(modelOutput, query, chunks), 200, origin);
-      } catch (error) {
-        return jsonResponse(buildRewriteFallback(query, chunks), 200, origin);
-      }
-    }
-
-    if (chunks.length < MIN_CHUNKS) {
-      return jsonResponse(buildInsufficientDataPayload('目前站內抓到的片段還不夠集中，請換更具體的問法或先看下方搜尋結果。'), 200, origin);
+      return jsonResponse(buildInsufficientDataPayload('目前站內命中的內容還不夠集中，建議換更具體的設施、時段或步驟再試一次。'));
     }
 
     try {
       const modelOutput = await callGemini(env, mode, query, chunks);
-      return jsonResponse(finalizeGroundedAnswer(modelOutput, chunks, query), 200, origin);
+      if (mode === 'query_rewrite_v1') {
+        return jsonResponse(finalizeRewriteOutput(modelOutput, query, chunks));
+      }
+      return jsonResponse(finalizeGroundedAnswer(modelOutput, chunks, query));
     } catch (error) {
-      return jsonResponse(
-        {
-          error: 'Gemini request failed',
-          detail: error.message || 'Unknown error'
-        },
-        502,
-        origin
-      );
+      if (mode === 'query_rewrite_v1') {
+        return jsonResponse(buildRewriteFallback(query, chunks));
+      }
+      return jsonResponse({
+        error: 'Gemini request failed',
+        detail: error?.message || 'Unknown error'
+      }, 502);
     }
   }
 };
