@@ -27,12 +27,44 @@
         ['甲板', 'deck'],
         ['酒吧', 'bar']
     ];
+    const AI_QUERY_EXTRA_SYNONYM_GROUPS = [
+        ['第一天', 'day 1', 'day1', '登船日', '提早登船', '登船後'],
+        ['第二天', 'day 2', 'day2'],
+        ['第三天', 'day 3', 'day3'],
+        ['第四天', 'day 4', 'day4', '下船日'],
+        ['孩子', '小孩', '兒童', '親子'],
+        ['open house', 'openhouse', '開放參觀'],
+        ['早餐', '早上', 'morning'],
+        ['下午', '午後', 'afternoon'],
+        ['晚上', '今晚', 'night'],
+        ['主秀', '看秀', '劇院提前入場'],
+        ['玩水', '泳池', 'splash pad', 'toy story pool'],
+        ['補給', '點心', '快餐']
+    ];
+    const AI_QUERY_STOP_WORDS = [
+        '什麼', '怎麼', '如何', '請問', '一下', '值得', '推薦', '安排', '有沒有',
+        '可以', '是否', '會不會', '需要', '想問', '最', '先', '去', '做', '呢', '嗎'
+    ];
     const searchSynonymMap = buildSynonymMap(SEARCH_SYNONYM_GROUPS);
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
+    const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
+    const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
+    const AI_SEARCH_MIN_LENGTH = 6;
+    const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
+    const AI_REWRITE_MAX_ATTEMPTS = 1;
+    const AI_REWRITE_MAX_RESULTS = 4;
     const searchState = {
         documents: [],
         resultsById: new Map(),
-        debounceTimer: null
+        aiCitationsById: new Map(),
+        debounceTimer: null,
+        isComposing: false,
+        pendingSubmit: false,
+        aiPending: false,
+        activeMode: 'keyword',
+        lastQuery: '',
+        lastResults: [],
+        lastQueryData: null
     };
 
     function buildSynonymMap(groups) {
@@ -85,6 +117,53 @@
 
     function uniqueItems(items) {
         return [...new Set(items)];
+    }
+
+    function getSearchSignalLength(text) {
+        return normalizeSearchText(text).replace(/\s+/g, '').length;
+    }
+
+    function collectMatchingTerms(normalizedQuery, displayMap) {
+        if (!normalizedQuery) return [];
+        return Array.from(displayMap.keys())
+            .filter(term => term.length >= 2 && normalizedQuery.includes(term))
+            .sort((a, b) => b.length - a.length);
+    }
+
+    function stripAiStopWords(normalizedQuery) {
+        let stripped = normalizedQuery;
+        AI_QUERY_STOP_WORDS
+            .map(word => normalizeSearchText(word))
+            .filter(Boolean)
+            .sort((a, b) => b.length - a.length)
+            .forEach(word => {
+                stripped = stripped.replace(new RegExp(escapeRegExp(word), 'g'), ' ');
+            });
+
+        return stripped.replace(/\s+/g, ' ').trim();
+    }
+
+    function extractChineseNgrams(text, min = 2, max = 4) {
+        const compact = String(text || '').replace(/[^\u4e00-\u9fff]/g, '');
+        if (compact.length < min) return [];
+
+        const grams = [];
+        for (let size = Math.min(max, compact.length); size >= min; size -= 1) {
+            for (let index = 0; index <= compact.length - size; index += 1) {
+                const gram = compact.slice(index, index + size);
+                if (AI_QUERY_STOP_WORDS.includes(gram)) continue;
+                grams.push(gram);
+            }
+        }
+
+        return uniqueItems(grams).slice(0, 10);
+    }
+
+    function hasQueryHint(normalizedQuery, terms = []) {
+        return terms.some(term => {
+            const normalizedTerm = normalizeSearchText(term);
+            return normalizedTerm && normalizedQuery.includes(normalizedTerm);
+        });
     }
 
     function getScheduleEventId(dayId, periodIndex, eventIndex) {
@@ -143,6 +222,11 @@
         };
 
         attemptScroll();
+    }
+
+    function getAiAnswerEndpoint() {
+        const endpointMeta = document.querySelector('meta[name="ai-answer-endpoint"]');
+        return endpointMeta?.content?.trim() || '/api/ai-answer';
     }
 
     // 1. 滾動進度條
@@ -801,6 +885,35 @@
         return labels[sourceType] || '內容';
     }
 
+    function deriveContextualKeywords(text) {
+        const normalized = normalizeSearchText(text);
+        const keywords = [];
+
+        if (!normalized) return keywords;
+
+        if (normalized.includes('看秀') || normalized.includes('提早入場') || normalized.includes('主秀')) {
+            keywords.push('劇院', 'theatre', '主秀', '提早入場');
+        }
+
+        if (normalized.includes('concierge') || normalized.includes('lounge') || normalized.includes('酒廊') || normalized.includes('禮賓')) {
+            keywords.push('禮賓', 'concierge', 'lounge', '酒廊');
+        }
+
+        if (normalized.includes('room service') || normalized.includes('客房服務') || normalized.includes('房務')) {
+            keywords.push('room service', '客房服務', '房務');
+        }
+
+        if (normalized.includes('open house') || normalized.includes('oceaneer') || normalized.includes('kids club')) {
+            keywords.push('open house', 'oceaneer', 'kids club', '孩子', '兒童');
+        }
+
+        if (normalized.includes('披薩') || normalized.includes('pizza') || normalized.includes('補給') || normalized.includes('點心') || normalized.includes('快餐')) {
+            keywords.push('披薩', 'pizza', '補給', '點心', '快餐');
+        }
+
+        return uniqueItems(keywords);
+    }
+
     function buildScheduleSearchDocuments() {
         return cruiseSchedule.flatMap(dayData =>
             dayData.periods.flatMap((period, periodIndex) =>
@@ -865,21 +978,23 @@
 
     function buildPlaybookSearchDocuments() {
         return playbookGuideData.flatMap(mission =>
-            mission.items.map((item, itemIndex) => ({
+            mission.items.map((item, itemIndex) => {
+                const combinedText = [item.title, item.whenToUse, item.action, item.tripFit, item.caution].join(' ');
+                return ({
                 id: getPlaybookItemId(mission.id, itemIndex),
                 sourceType: 'playbook',
                 sectionId: 'playbook',
                 groupLabel: '攻略本',
                 title: item.title,
                 text: [item.whenToUse, item.action, item.tripFit, item.caution].join(' '),
-                keywords: [mission.label, mission.intro, item.sourceType],
+                keywords: [mission.label, mission.intro, item.sourceType, ...deriveContextualKeywords(combinedText)],
                 locationLabel: `攻略本 · ${mission.label}`,
                 navTarget: {
                     type: 'playbook',
                     missionId: mission.id,
                     itemId: getPlaybookItemId(mission.id, itemIndex)
                 }
-            }))
+            })})
         );
     }
 
@@ -963,6 +1078,122 @@
         return { normalizedQuery, units, highlightTerms };
     }
 
+    function buildAiIntents(normalizedQuery) {
+        return {
+            day1Focus: hasQueryHint(normalizedQuery, ['第一天', 'day 1', 'day1', '登船日', '登船後', '提早登船']),
+            day2Focus: hasQueryHint(normalizedQuery, ['第二天', 'day 2', 'day2']),
+            scheduleFocus: hasQueryHint(normalizedQuery, [
+                '第一天', '第二天', '第三天', '第四天', 'day 1', 'day 2', 'day 3', 'day 4',
+                '登船日', '下船日', '登船後', '早餐', '早上', '下午', '晚上', '今晚'
+            ]),
+            actionFocus: hasQueryHint(normalizedQuery, ['怎麼', '如何', '先做什麼', '怎麼安排', '值得先去', '值得先做']),
+            deckFocus: hasQueryHint(normalizedQuery, [
+                'deck', '甲板', '劇院', 'baymax', 'pizza', 'pool', 'lounge', 'concierge', 'open house', 'oceaneer'
+            ]),
+            conciergeFocus: hasQueryHint(normalizedQuery, ['禮賓', 'concierge', 'lounge', '酒廊']),
+            theatreFocus: hasQueryHint(normalizedQuery, ['劇院', 'theatre', 'theater', '主秀', '看秀', 'remember', '提早入場']),
+            roomServiceFocus: hasQueryHint(normalizedQuery, ['room service', '房務', '客房服務']),
+            foodFocus: hasQueryHint(normalizedQuery, ['補給', '點心', '快餐', '餐廳', 'pizza', '披薩', '吃什麼']),
+            kidFocus: hasQueryHint(normalizedQuery, ['孩子', '小孩', '兒童', '親子', 'kids'])
+        };
+    }
+
+    function mergeAiIntents(...intentMaps) {
+        const merged = {};
+        intentMaps.forEach(intentMap => {
+            Object.entries(intentMap || {}).forEach(([key, value]) => {
+                merged[key] = merged[key] || Boolean(value);
+            });
+        });
+        return merged;
+    }
+
+    function buildAiExpansionUnits(text) {
+        const normalized = normalizeSearchText(text);
+        if (!normalized) return [];
+
+        const phraseMatches = collectMatchingTerms(normalized, aiSearchDisplayMap);
+        const strippedQuery = stripAiStopWords(normalized);
+        const splitUnits = strippedQuery.split(' ').filter(unit => unit.length >= 2);
+        const chineseNgrams = extractChineseNgrams(strippedQuery);
+
+        return uniqueItems([
+            ...phraseMatches,
+            ...splitUnits,
+            ...chineseNgrams
+        ]).filter(Boolean);
+    }
+
+    function normalizeAiRewriteMeta(rewriteMeta = {}) {
+        const safeRewriteMeta = rewriteMeta && typeof rewriteMeta === 'object' ? rewriteMeta : {};
+        const rewrittenQuery = String(safeRewriteMeta.rewrittenQuery || '').trim();
+        const keywords = uniqueItems((safeRewriteMeta.keywords || [])
+            .map(item => String(item || '').trim())
+            .filter(Boolean))
+            .slice(0, 6);
+        const alternates = uniqueItems((safeRewriteMeta.alternates || [])
+            .map(item => String(item || '').trim())
+            .filter(Boolean))
+            .slice(0, 4);
+        const confidence = ['high', 'medium', 'low'].includes(safeRewriteMeta.confidence) ? safeRewriteMeta.confidence : 'low';
+
+        return {
+            rewrittenQuery,
+            keywords,
+            alternates,
+            confidence,
+            hintTerms: uniqueItems([...keywords, ...alternates]).slice(0, 4)
+        };
+    }
+
+    function getAiSearchUnits(rawQuery, rewriteMeta = null) {
+        const normalizedQuery = normalizeSearchText(rawQuery);
+        if (!normalizedQuery) {
+            return {
+                normalizedQuery: '',
+                units: [],
+                highlightTerms: [],
+                signalLength: 0,
+                intents: {},
+                rewriteMeta: null
+            };
+        }
+
+        const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
+        const rewriteSeed = [
+            normalizedRewrite.rewrittenQuery,
+            ...normalizedRewrite.keywords,
+            ...normalizedRewrite.alternates
+        ].join(' ');
+
+        const baseUnits = buildAiExpansionUnits(normalizedQuery);
+        const rewriteUnits = buildAiExpansionUnits(rewriteSeed);
+        const units = uniqueItems([
+            ...baseUnits,
+            ...rewriteUnits
+        ]).slice(0, 18);
+
+        const highlightTerms = uniqueItems(
+            units.map(unit => aiSearchDisplayMap.get(unit) || searchDisplayMap.get(unit) || unit)
+        );
+
+        const intents = mergeAiIntents(
+            buildAiIntents(normalizedQuery),
+            rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {}
+        );
+
+        return {
+            normalizedQuery,
+            units: units.length ? units : normalizedQuery.split(' ').filter(Boolean),
+            highlightTerms,
+            signalLength: getSearchSignalLength(normalizedQuery),
+            intents,
+            rewriteMeta: normalizedRewrite.keywords.length || normalizedRewrite.alternates.length || normalizedRewrite.rewrittenQuery
+                ? normalizedRewrite
+                : null
+        };
+    }
+
     function scoreMatch(sourceText, term, synonyms, baseWeight, synonymWeight) {
         let score = 0;
         if (!sourceText) return score;
@@ -1014,6 +1245,77 @@
         return score;
     }
 
+    function scoreDocumentForAi(doc, queryData) {
+        const baseScore = scoreDocument(doc, queryData);
+        if (baseScore <= 0) return 0;
+
+        let score = baseScore;
+
+        if (queryData.intents?.scheduleFocus && doc.sourceType === 'schedule') {
+            score += 16;
+        }
+
+        if (queryData.intents?.actionFocus && (doc.sourceType === 'schedule' || doc.sourceType === 'playbook')) {
+            score += 12;
+        }
+
+        if (queryData.intents?.deckFocus && (doc.sourceType === 'deck' || doc.sourceType === 'show')) {
+            score += 9;
+        }
+
+        if (queryData.intents?.day1Focus && (doc.normalizedKeywords.includes('day 1') || doc.normalizedCombined.includes('登船'))) {
+            score += 18;
+        }
+
+        if (queryData.intents?.day2Focus && doc.normalizedKeywords.includes('day 2')) {
+            score += 14;
+        }
+
+        if (queryData.intents?.conciergeFocus && documentIncludesAny(doc, ['禮賓', 'concierge', 'lounge', '酒廊'])) {
+            score += 12;
+        }
+
+        if (queryData.intents?.theatreFocus && documentIncludesAny(doc, ['劇院', 'theatre', 'theater', '主秀', 'remember', '看秀', '提早入場'])) {
+            score += doc.sourceType === 'show' ? 22 : 14;
+        }
+
+        if (queryData.intents?.roomServiceFocus && documentIncludesAny(doc, ['room service', '房務', '客房服務'])) {
+            score += 20;
+        }
+
+        if (queryData.intents?.foodFocus && documentIncludesAny(doc, ['補給', '點心', '快餐', 'pizza', '披薩', '餐'])) {
+            score += doc.sourceType === 'deck' ? 16 : 10;
+        }
+
+        if (queryData.intents?.kidFocus && documentIncludesAny(doc, ['孩子', '小孩', '兒童', '親子', 'kids'])) {
+            score += 8;
+        }
+
+        if (doc.sourceType === 'static') {
+            score -= 4;
+        }
+
+        return score;
+    }
+
+    function documentIncludesAny(doc, terms = []) {
+        return terms.some(term => {
+            const normalizedTerm = normalizeSearchText(term);
+            return normalizedTerm && (
+                doc.normalizedTitle.includes(normalizedTerm) ||
+                doc.normalizedKeywords.includes(normalizedTerm) ||
+                doc.normalizedText.includes(normalizedTerm)
+            );
+        });
+    }
+
+    function documentTitleIncludesAny(doc, terms = []) {
+        return terms.some(term => {
+            const normalizedTerm = normalizeSearchText(term);
+            return normalizedTerm && doc.normalizedTitle.includes(normalizedTerm);
+        });
+    }
+
     function highlightSnippet(text, terms) {
         let html = escapeHtml(text);
         const sortedTerms = uniqueItems(terms.filter(Boolean)).sort((a, b) => b.length - a.length);
@@ -1049,24 +1351,562 @@
         return highlightSnippet(snippet, searchTerms);
     }
 
-    function renderSearchResults(results, query) {
-        const container = document.getElementById('search-results');
+    function createPlainExcerpt(doc, queryData, maxLength = 320) {
+        const rawSource = [doc.title, doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+        const lowerSource = rawSource.toLowerCase();
+        const searchTerms = uniqueItems([
+            ...queryData.highlightTerms,
+            ...queryData.units.map(unit => searchDisplayMap.get(unit) || unit)
+        ]).filter(Boolean);
+
+        let matchIndex = -1;
+        searchTerms.forEach(term => {
+            const index = lowerSource.indexOf(String(term).toLowerCase());
+            if (index !== -1 && (matchIndex === -1 || index < matchIndex)) {
+                matchIndex = index;
+            }
+        });
+
+        const start = matchIndex === -1 ? 0 : Math.max(matchIndex - 36, 0);
+        const end = Math.min(start + maxLength, rawSource.length);
+        return `${start > 0 ? '…' : ''}${rawSource.slice(start, end).trim()}${end < rawSource.length ? '…' : ''}`;
+    }
+
+    function getRankedSearchResults(query) {
+        const queryData = getSearchUnits(query);
+        if (!queryData.normalizedQuery || queryData.normalizedQuery.length < SEARCH_MIN_LENGTH) {
+            return { queryData, results: [] };
+        }
+
+        const results = searchState.documents
+            .map(doc => ({ ...doc, score: scoreDocument(doc, queryData) }))
+            .filter(doc => doc.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 16);
+
+        return { queryData, results };
+    }
+
+    function getAiRankedSearchResults(query, rewriteMeta = null) {
+        const queryData = getAiSearchUnits(query, rewriteMeta);
+        if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
+            return { queryData, results: [] };
+        }
+
+        const results = searchState.documents
+            .map(doc => ({ ...doc, score: scoreDocumentForAi(doc, queryData) }))
+            .filter(doc => doc.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 20);
+
+        return { queryData, results };
+    }
+
+    function safeGetAiRankedSearchResults(query, rewriteMeta = null) {
+        try {
+            const payload = getAiRankedSearchResults(query, rewriteMeta);
+            return {
+                ok: true,
+                queryData: payload.queryData,
+                results: payload.results,
+                error: null
+            };
+        } catch (error) {
+            console.error('AI local retrieval failed:', error);
+            return {
+                ok: false,
+                queryData: getAiSearchUnits(query),
+                results: [],
+                error
+            };
+        }
+    }
+
+    function selectAiEvidenceResults(results, queryData = {}) {
+        const selected = [];
+        const seenIds = new Set();
+
+        const addResult = (result) => {
+            if (!result || seenIds.has(result.id)) return;
+            seenIds.add(result.id);
+            selected.push(result);
+        };
+
+        const findFocusedResult = (predicate) => results.find(result => predicate(result) && !seenIds.has(result.id));
+
+        addResult(queryData.intents?.theatreFocus
+            ? (
+                findFocusedResult(result =>
+                    result.sourceType === 'playbook'
+                    && documentTitleIncludesAny(result, ['劇院', '提早入場', '優先入場', '看秀'])
+                )
+                || findFocusedResult(result =>
+                    result.sourceType === 'show'
+                    && documentIncludesAny(result, ['劇院', 'theatre', 'theater', '主秀', 'remember'])
+                )
+                || findFocusedResult(result =>
+                    result.sourceType === 'schedule'
+                    && documentIncludesAny(result, ['劇院', '主秀', '看秀', '提早入場'])
+                )
+            )
+            : results.find(result => result.sourceType === 'schedule')
+        );
+
+        addResult(queryData.intents?.roomServiceFocus
+            ? findFocusedResult(result =>
+                result.sourceType === 'playbook' && documentIncludesAny(result, ['room service', '房務', '客房服務'])
+            )
+            : results.find(result => result.sourceType === 'playbook')
+        );
+
+        if (queryData.intents?.foodFocus) {
+            addResult(findFocusedResult(result =>
+                (result.sourceType === 'deck' || result.sourceType === 'schedule' || result.sourceType === 'playbook')
+                && documentIncludesAny(result, ['補給', '點心', '快餐', 'pizza', '披薩', '餐'])
+            ));
+        }
+
+        if (queryData.intents?.deckFocus) {
+            addResult(results.find(result => result.sourceType === 'deck' || result.sourceType === 'show'));
+        }
+
+        results.forEach(result => {
+            if (selected.length >= 6) return;
+            addResult(result);
+        });
+
+        return selected.slice(0, 6);
+    }
+
+    function getAiRetrievalStatus(queryData, results, selectedResults) {
+        if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
+            return 'insufficient';
+        }
+
+        if (!results.length) {
+            return 'insufficient';
+        }
+
+        const strongCount = selectedResults.filter(result => result.score >= 18).length;
+        const topScore = results[0]?.score || 0;
+        const hasSchedule = selectedResults.some(result => result.sourceType === 'schedule');
+        const hasSupportingGuide = selectedResults.some(result =>
+            result.sourceType === 'playbook' || result.sourceType === 'deck' || result.sourceType === 'show'
+        );
+        const hasWeakEvidence = results.length >= 2 || topScore >= 12;
+        const hasIntentSignal = Object.values(queryData.intents || {}).some(Boolean);
+
+        if (strongCount >= 2 || (hasSchedule && hasSupportingGuide) || topScore >= 30) {
+            return 'strong';
+        }
+
+        if (selectedResults.length >= 2 || hasWeakEvidence || hasIntentSignal) {
+            return 'rewrite';
+        }
+
+        return 'insufficient';
+    }
+
+    function mergeAiRankedResults(primaryResults, secondaryResults) {
+        const merged = new Map();
+
+        [...primaryResults, ...secondaryResults].forEach(result => {
+            const existing = merged.get(result.id);
+            if (!existing || existing.score < result.score) {
+                merged.set(result.id, result);
+            }
+        });
+
+        return Array.from(merged.values())
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 20);
+    }
+
+    function renderAiAnswerState(state) {
+        const container = document.getElementById('search-ai-answer');
         if (!container) return;
 
-        if (!query) {
+        if (!state) {
+            container.hidden = true;
+            container.innerHTML = '';
+            searchState.aiCitationsById = new Map();
+            return;
+        }
+
+        container.hidden = false;
+
+        if (state.type === 'loading') {
             container.innerHTML = `
-                <div class="search-empty-state">
-                    <p><strong>開始搜尋郵輪重點</strong></p>
-                    <p>可以試試看：禮賓、Baymax、Room Service、Deck 17、爆米花、SGAC。</p>
+                <div class="search-ai-card loading">
+                    <div class="search-ai-header">
+                        <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> AI 解答整理中</span>
+                    </div>
+                    ${state.rewriteInfo?.hintTerms?.length ? `
+                        <div class="search-ai-rewrite-note">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>已依站內常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
+                        </div>
+                    ` : ''}
+                    <p class="search-ai-summary">${escapeHtml(state.message || '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。')}</p>
+                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
                 </div>
             `;
             return;
         }
 
-        if (query.length < SEARCH_MIN_LENGTH) {
+        if (state.type === 'info') {
+            container.innerHTML = `
+                <div class="search-ai-card info">
+                    <div class="search-ai-header">
+                        <span class="search-ai-badge"><i class="fa-solid fa-circle-info"></i> AI 解答提示</span>
+                    </div>
+                    <p class="search-ai-summary">${escapeHtml(state.message)}</p>
+                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
+                </div>
+            `;
+            return;
+        }
+
+        if (state.type === 'error') {
+            container.innerHTML = `
+                <div class="search-ai-card error">
+                    <div class="search-ai-header">
+                        <span class="search-ai-badge"><i class="fa-solid fa-triangle-exclamation"></i> AI 解答暫時不可用</span>
+                    </div>
+                    <p class="search-ai-summary">${escapeHtml(state.message)}</p>
+                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
+                </div>
+            `;
+            return;
+        }
+
+        const citations = state.citations || [];
+        searchState.aiCitationsById = new Map(citations.map(citation => [citation.id, citation]));
+        const confidenceLabel = {
+            high: '高信心',
+            medium: '中等信心',
+            low: '低信心'
+        };
+        const confidence = confidenceLabel[state.confidence] ? state.confidence : '';
+
+        container.innerHTML = `
+            <div class="search-ai-card">
+                <div class="search-ai-header">
+                    <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> AI 解答</span>
+                    ${confidence ? `<span class="search-ai-confidence ${confidence}">${confidenceLabel[confidence]}</span>` : ''}
+                </div>
+                ${state.rewriteInfo?.hintTerms?.length ? `
+                    <div class="search-ai-rewrite-note">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>已依站內資料常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
+                    </div>
+                ` : ''}
+                <p class="search-ai-summary">${escapeHtml(state.answer)}</p>
+                ${state.bullets?.length ? `
+                    <ul class="search-ai-bullets">
+                        ${state.bullets.map(bullet => `<li>${escapeHtml(bullet)}</li>`).join('')}
+                    </ul>
+                ` : ''}
+                ${state.insufficientData ? `
+                    <p class="search-ai-note">目前命中的站內資料不足以給更完整的回答，建議換更具體的問法，或先看下方關鍵字結果。</p>
+                ` : state.confidence === 'low' ? `
+                    <p class="search-ai-note">目前這段答案是根據少量站內片段整理，建議同時點開下方引用來源快速核對。</p>
+                ` : `
+                    <p class="search-ai-note">這段回答只根據目前站內命中的內容整理，沒有額外查外部資料。</p>
+                `}
+                ${state.missingReason ? `<p class="search-ai-note">${escapeHtml(state.missingReason)}</p>` : ''}
+                ${citations.length ? `
+                    <div class="search-ai-citations">
+                        ${citations.map(citation => `
+                            <button type="button" class="search-ai-citation" data-ai-citation-id="${citation.id}">
+                                <i class="fa-solid fa-link"></i>
+                                <span>${escapeHtml(citation.title)}</span>
+                            </button>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    function getAiCacheKey(query, chunks) {
+        return `cruise-ai-answer::${normalizeSearchText(query)}::${chunks.map(chunk => chunk.id).join('|')}`;
+    }
+
+    function readAiCache(cacheKey) {
+        try {
+            const raw = sessionStorage.getItem(cacheKey);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            if (!parsed?.savedAt || Date.now() - parsed.savedAt > AI_CACHE_TTL) {
+                sessionStorage.removeItem(cacheKey);
+                return null;
+            }
+            return parsed.payload || null;
+        } catch {
+            return null;
+        }
+    }
+
+    function writeAiCache(cacheKey, payload) {
+        try {
+            sessionStorage.setItem(cacheKey, JSON.stringify({
+                savedAt: Date.now(),
+                payload
+            }));
+        } catch {
+            // ignore cache errors
+        }
+    }
+
+    function buildAnswerContext(results, queryData) {
+        return results.map(result => ({
+            id: result.id,
+            title: result.title,
+            locationLabel: result.locationLabel,
+            sectionId: result.sectionId,
+            navTarget: result.navTarget,
+            text: createPlainExcerpt(result, queryData, 320)
+        }));
+    }
+
+    async function askAiAnswer(query, chunks) {
+        const response = await fetch(getAiAnswerEndpoint(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query,
+                mode: 'grounded_qa_v1',
+                contentVersion: 'site-search-v1',
+                chunks
+            })
+        });
+
+        const payload = await response.json().catch(() => null);
+        if (!response.ok || !payload) {
+            throw new Error(payload?.error || 'AI 解答服務暫時無法使用。');
+        }
+
+        return payload;
+    }
+
+    async function askAiRewrite(query, chunks) {
+        const response = await fetch(getAiAnswerEndpoint(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query,
+                mode: 'query_rewrite_v1',
+                contentVersion: 'site-search-v1',
+                chunks
+            })
+        });
+
+        const payload = await response.json().catch(() => null);
+        if (!response.ok || !payload) {
+            throw new Error(payload?.error || 'AI 改寫服務暫時無法使用。');
+        }
+
+        return normalizeAiRewriteMeta(payload);
+    }
+
+    async function requestAiAnswer() {
+        const input = document.getElementById('search-input');
+        if (!input) return;
+        if (searchState.aiPending) return;
+
+        const rawQuery = input.value.trim();
+        let rewriteMeta = null;
+        let rewriteAttempts = 0;
+        let aiSearchPayload = safeGetAiRankedSearchResults(rawQuery);
+
+        if (!aiSearchPayload.ok) {
+            renderAiAnswerState({
+                type: 'error',
+                message: 'AI 解答前置檢索發生錯誤，請重新整理後再試。',
+                note: aiSearchPayload.error?.message || '本地召回流程沒有完成，所以這次沒有送出 AI 解答。'
+            });
+            renderSearchResultsError('AI 模式的本地召回暫時失敗，重新整理頁面後再試一次。');
+            return;
+        }
+
+        let { queryData, results } = aiSearchPayload;
+        let selectedResults = selectAiEvidenceResults(results, queryData);
+        let retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults);
+
+        searchState.lastQuery = queryData.normalizedQuery;
+        searchState.lastQueryData = queryData;
+        searchState.lastResults = results;
+        searchState.resultsById = new Map(results.map(result => [result.id, result]));
+        renderSearchResults(results, queryData);
+
+        if (!queryData.normalizedQuery) {
+            renderAiAnswerState({
+                type: 'info',
+                message: '先輸入一個自然語言問題，例如「第一天提早登船後最值得先做什麼？」'
+            });
+            return;
+        }
+
+        if (queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
+            renderAiAnswerState({
+                type: 'info',
+                message: `AI 解答建議至少輸入 ${AI_SEARCH_MIN_LENGTH} 個字，問法越完整越容易整理出重點。`
+            });
+            return;
+        }
+
+        if (!navigator.onLine) {
+            renderAiAnswerState({
+                type: 'info',
+                message: '目前沒有網路連線，本地搜尋仍可用，但 AI 解答需要連線。',
+                note: '你可以先看下方關鍵字結果，恢復連線後再按一次 AI 解答。'
+            });
+            return;
+        }
+
+        if (retrievalStatus === 'rewrite' && rewriteAttempts < AI_REWRITE_MAX_ATTEMPTS) {
+            const rewriteSeedResults = selectedResults.length
+                ? selectedResults
+                : results.slice(0, AI_REWRITE_MAX_RESULTS);
+            const rewriteChunks = buildAnswerContext(rewriteSeedResults, queryData).slice(0, AI_REWRITE_MAX_RESULTS);
+
+            if (rewriteChunks.length) {
+                renderAiAnswerState({
+                    type: 'loading',
+                    message: '第一輪命中的線索還不夠集中，正在依站內常見詞換一種方式再找一次。',
+                    note: '這一步只會做一次受控改寫，不會無限重試。'
+                });
+
+                try {
+                    rewriteMeta = await askAiRewrite(rawQuery, rewriteChunks);
+                    rewriteAttempts += 1;
+
+                    const secondPass = safeGetAiRankedSearchResults(rawQuery, rewriteMeta);
+                    if (!secondPass.ok) {
+                        throw secondPass.error || new Error('AI rewrite retrieval failed');
+                    }
+
+                    results = mergeAiRankedResults(results, secondPass.results);
+                    queryData = secondPass.queryData;
+                    selectedResults = selectAiEvidenceResults(results, queryData);
+                    retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults);
+
+                    searchState.lastQuery = queryData.normalizedQuery;
+                    searchState.lastQueryData = queryData;
+                    searchState.lastResults = results;
+                    searchState.resultsById = new Map(results.map(result => [result.id, result]));
+                    renderSearchResults(results, queryData);
+                } catch (error) {
+                    rewriteMeta = null;
+                    renderAiAnswerState({
+                        type: 'info',
+                        message: 'AI 改寫這次沒有成功，但我仍保留第一輪命中的站內片段供你快速查看。',
+                        note: error.message || '你可以把問法再具體一點，或直接點下方搜尋結果。'
+                    });
+                }
+            }
+        }
+
+        if (retrievalStatus === 'insufficient' || selectedResults.length < 2) {
+            renderAiAnswerState({
+                type: 'info',
+                message: '目前站內資料還抓不到足夠證據來整理答案，先看下方搜尋結果或把問題問得更具體一點。',
+                note: rewriteMeta?.hintTerms?.length
+                    ? `這次已試過相近詞：${rewriteMeta.hintTerms.join('、')}，若還不夠，建議直接問設施、時段或步驟。`
+                    : '例如把「第一天先做什麼」改成「第一天提早登船後先去 Lounge 還是 Open House？」會更容易整理出答案。'
+            });
+            return;
+        }
+
+        const chunks = buildAnswerContext(selectedResults, queryData);
+        const cacheKey = getAiCacheKey(rawQuery, chunks);
+        const cachedAnswer = readAiCache(cacheKey);
+        if (cachedAnswer) {
+            renderAiAnswerState(cachedAnswer);
+            return;
+        }
+
+        renderAiAnswerState({
+            type: 'loading',
+            message: '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。',
+            rewriteInfo: rewriteMeta
+        });
+        searchState.aiPending = true;
+
+        try {
+            const payload = await askAiAnswer(rawQuery, chunks);
+            if (rewriteMeta) {
+                payload.rewriteInfo = rewriteMeta;
+            }
+            renderAiAnswerState(payload);
+            writeAiCache(cacheKey, payload);
+        } catch (error) {
+            renderAiAnswerState({
+                type: 'error',
+                message: 'AI 解答目前沒有成功回應，但原本的關鍵字搜尋結果仍可用。',
+                note: error.message || '請稍後再試，或先確認 Worker 與 GEMINI_API_KEY 是否已部署。'
+            });
+        } finally {
+            searchState.aiPending = false;
+        }
+    }
+
+    function setSearchMode(mode) {
+        searchState.activeMode = mode;
+        searchState.pendingSubmit = false;
+        const modeButtons = document.querySelectorAll('.search-mode-btn');
+        const submitBtn = document.getElementById('search-ai-submit');
+        const input = document.getElementById('search-input');
+
+        modeButtons.forEach(button => {
+            const isActive = button.dataset.searchMode === mode;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        if (submitBtn) {
+            submitBtn.hidden = mode !== 'ai';
+        }
+
+        if (input) {
+            input.placeholder = mode === 'ai'
+                ? '用自然語言提問，例如：第一天提早登船後最值得先做什麼？'
+                : '輸入關鍵字，例如：禮賓、Baymax、Room Service';
+        }
+
+        renderAiAnswerState(null);
+        renderSearchResults(searchState.lastResults, searchState.lastQueryData || searchState.lastQuery);
+    }
+
+    function renderSearchResults(results, queryContext) {
+        const container = document.getElementById('search-results');
+        if (!container) return;
+        const resolvedQueryData = typeof queryContext === 'object' && queryContext?.normalizedQuery
+            ? queryContext
+            : getSearchUnits(queryContext);
+        const currentQuery = resolvedQueryData.normalizedQuery;
+
+        if (!currentQuery) {
             container.innerHTML = `
                 <div class="search-empty-state">
-                    <p><strong>再多輸入一點點</strong></p>
+                    <p><strong>${searchState.activeMode === 'ai' ? '先用自然語言提問' : '開始搜尋郵輪重點'}</strong></p>
+                    <p>${searchState.activeMode === 'ai'
+                        ? '例如：第一天提早登船後最值得先做什麼？、禮賓怎麼提早進劇院？'
+                        : '可以試試看：禮賓、Baymax、Room Service、Deck 17、爆米花、SGAC。'}</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (currentQuery.length < SEARCH_MIN_LENGTH) {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>${searchState.activeMode === 'ai' ? '先讓本地搜尋抓到足夠線索' : '再多輸入一點點'}</strong></p>
                     <p>至少輸入 ${SEARCH_MIN_LENGTH} 個字元，搜尋結果會更準。</p>
                 </div>
             `;
@@ -1110,7 +1950,7 @@
                                 </div>
                                 <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
                                 <div class="search-result-location">${escapeHtml(result.locationLabel)}</div>
-                                <div class="search-result-snippet">${createExcerpt(result, getSearchUnits(query))}</div>
+                                <div class="search-result-snippet">${createExcerpt(result, resolvedQueryData)}</div>
                             </button>
                         `).join('')}
                     </div>
@@ -1118,22 +1958,25 @@
             `).join('');
     }
 
+    function renderSearchResultsError(message) {
+        const container = document.getElementById('search-results');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="search-empty-state">
+                <p><strong>搜尋暫時發生錯誤</strong></p>
+                <p>${escapeHtml(message)}</p>
+            </div>
+        `;
+    }
+
     function performSearch(query) {
-        const queryData = getSearchUnits(query);
-        if (!queryData.normalizedQuery || queryData.normalizedQuery.length < SEARCH_MIN_LENGTH) {
-            searchState.resultsById = new Map();
-            renderSearchResults([], queryData.normalizedQuery);
-            return;
-        }
-
-        const results = searchState.documents
-            .map(doc => ({ ...doc, score: scoreDocument(doc, queryData) }))
-            .filter(doc => doc.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 16);
-
+        const { queryData, results } = getRankedSearchResults(query);
+        searchState.lastQuery = queryData.normalizedQuery;
+        searchState.lastQueryData = queryData;
+        searchState.lastResults = results;
         searchState.resultsById = new Map(results.map(result => [result.id, result]));
-        renderSearchResults(results, queryData.normalizedQuery);
+        renderSearchResults(results, queryData);
     }
 
     function navigateToSearchResult(result) {
@@ -1175,46 +2018,141 @@
     function openSearchOverlay() {
         const overlay = document.getElementById('search-overlay');
         const input = document.getElementById('search-input');
+        const panelBody = document.getElementById('search-panel-body');
         if (!overlay || !input) return;
 
+        searchState.isComposing = false;
+        searchState.pendingSubmit = false;
         overlay.hidden = false;
         document.body.classList.add('search-open');
+        setSearchMode('keyword');
         renderSearchResults([], '');
+        if (panelBody) panelBody.scrollTop = 0;
         window.setTimeout(() => input.focus(), 40);
     }
 
     function closeSearchOverlay() {
         const overlay = document.getElementById('search-overlay');
         const input = document.getElementById('search-input');
+        const panelBody = document.getElementById('search-panel-body');
         if (!overlay || overlay.hidden) return;
 
         overlay.hidden = true;
         document.body.classList.remove('search-open');
         if (input) input.value = '';
+        if (panelBody) panelBody.scrollTop = 0;
+        searchState.isComposing = false;
+        searchState.pendingSubmit = false;
         searchState.resultsById = new Map();
+        searchState.aiCitationsById = new Map();
+        searchState.lastQuery = '';
+        searchState.lastResults = [];
+        searchState.lastQueryData = null;
+        setSearchMode('keyword');
+        renderAiAnswerState(null);
     }
 
     function initializeSearch() {
         const overlay = document.getElementById('search-overlay');
         const trigger = document.getElementById('nav-search-trigger');
         const closeBtn = document.getElementById('search-close-btn');
+        const form = document.getElementById('search-form');
         const input = document.getElementById('search-input');
         const results = document.getElementById('search-results');
+        const modeButtons = document.querySelectorAll('.search-mode-btn');
+        const aiSubmit = document.getElementById('search-ai-submit');
+        const aiAnswer = document.getElementById('search-ai-answer');
         const backdrop = overlay?.querySelector('[data-search-close]');
 
-        if (!overlay || !trigger || !closeBtn || !input || !results) return;
+        if (!overlay || !trigger || !closeBtn || !form || !input || !results || !aiSubmit || !aiAnswer) return;
 
         prepareSearchDocuments();
+
+        function runSearchPreview(rawValue) {
+            if (searchState.activeMode === 'ai') {
+                const aiSearchPayload = safeGetAiRankedSearchResults(rawValue);
+                if (!aiSearchPayload.ok) {
+                    renderAiAnswerState({
+                        type: 'error',
+                        message: 'AI 模式的前置搜尋暫時發生錯誤，請重新整理後再試。',
+                        note: aiSearchPayload.error?.message || '本地召回沒有完成，因此這次先不送出 AI 解答。'
+                    });
+                    renderSearchResultsError('AI 模式的本地召回暫時失敗。');
+                    return;
+                }
+                const { queryData, results } = aiSearchPayload;
+                searchState.lastQuery = queryData.normalizedQuery;
+                searchState.lastQueryData = queryData;
+                searchState.lastResults = results;
+                searchState.resultsById = new Map(results.map(result => [result.id, result]));
+                renderSearchResults(results, queryData);
+                return;
+            }
+
+            performSearch(rawValue);
+        }
+
+        function submitCurrentSearch() {
+            searchState.pendingSubmit = false;
+
+            if (searchState.activeMode === 'ai') {
+                requestAiAnswer();
+                return;
+            }
+
+            performSearch(input.value);
+        }
 
         trigger.addEventListener('click', openSearchOverlay);
         closeBtn.addEventListener('click', closeSearchOverlay);
         backdrop?.addEventListener('click', closeSearchOverlay);
 
+        modeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                setSearchMode(button.dataset.searchMode);
+                runSearchPreview(input.value);
+            });
+        });
+
         input.addEventListener('input', () => {
             window.clearTimeout(searchState.debounceTimer);
+            if (searchState.activeMode === 'ai') {
+                renderAiAnswerState(null);
+            }
+
+            if (searchState.isComposing) {
+                return;
+            }
+
             searchState.debounceTimer = window.setTimeout(() => {
-                performSearch(input.value);
+                runSearchPreview(input.value);
             }, 110);
+        });
+
+        input.addEventListener('compositionstart', () => {
+            searchState.isComposing = true;
+            searchState.pendingSubmit = false;
+            window.clearTimeout(searchState.debounceTimer);
+        });
+
+        input.addEventListener('compositionend', () => {
+            searchState.isComposing = false;
+            runSearchPreview(input.value);
+
+            if (searchState.pendingSubmit) {
+                submitCurrentSearch();
+            }
+        });
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+
+            if (searchState.isComposing) {
+                searchState.pendingSubmit = true;
+                return;
+            }
+
+            submitCurrentSearch();
         });
 
         results.addEventListener('click', event => {
@@ -1223,6 +2161,14 @@
 
             const result = searchState.resultsById.get(button.dataset.resultId);
             navigateToSearchResult(result);
+        });
+
+        aiAnswer.addEventListener('click', event => {
+            const button = event.target.closest('.search-ai-citation');
+            if (!button) return;
+
+            const citation = searchState.aiCitationsById.get(button.dataset.aiCitationId);
+            navigateToSearchResult(citation);
         });
 
         document.addEventListener('keydown', event => {
@@ -1235,6 +2181,7 @@
             }
         });
 
+        setSearchMode('keyword');
         renderSearchResults([], '');
     }
 
