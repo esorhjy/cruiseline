@@ -619,9 +619,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-gamepad",
                 name: "Big Hero 6 Arcade",
-                summary: "房卡就能啟動的大英雄天團體感電玩，是下午最好的放電分流點。",
+                summary: "房卡就能啟動的大英雄天團體感電玩，四款遊戲都需要全身互動，是下午最好的放電分流點。",
                 bestTime: "避開晚間尖峰，下午更能玩到完整體感機。",
-                tripUse: "Day 2 下午很適合全家刷房卡輪流玩四款雙人體感遊戲。",
+                tripUse: "Day 2 下午很適合全家刷房卡輪流玩四款雙人體感遊戲：Super Fred Kaiju Chaos（怪獸追逐）、Go Go Racers（節奏賽車）、Honey Lemon Chem-Ball Blast（化學球射擊）、Wasabi Speed Slice（電漿切片）。",
                 highlight: true
             },
             {
@@ -695,9 +695,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-tree-city",
                 name: "Disney Imagination Garden",
-                summary: "全船最核心的舞台廣場，白天活動與夜間表演都靠這裡帶節奏。",
+                summary: "全船最核心的花園舞台，白天活動與夜間表演都靠這裡帶節奏。",
                 bestTime: "演前 15–20 分鐘到，想看全景可往樓上環繞區。",
-                tripUse: "Day 1、Day 2、Day 3 都會來，這裡是整趟最該先熟的公共空間。",
+                tripUse: "Day 1、Day 2、Day 3 都會來，這裡是整趟最該先熟的公共空間；若從船頭要去花園舞台，通常先走到 Deck 11 再下樓最穩，若人在船尾，多半可直接沿 Deck 10 走過去。",
                 highlight: true
             },
             {
@@ -1117,9 +1117,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-cheese",
                 sourceType: "community",
                 whenToUse: "孩子洗好澡、全家回房後想吃點熱食時，或隔天早餐想先靠 room service 墊一下時。",
-                action: "App 內的 Room Service 入口通常藏得很深，真要點餐多半還是直接打給 room service team；電話可能要先等 10–20 分鐘才接到客服，點完餐再等約 30–40 分鐘送達。若想 12 點前後剛好吃到，通常在看完秀、回房整理一下就該先打，不要等真的餓了才叫；可先把小桌子打開，方便工作人員把餐點送進房，若要自己搬整盤進房也可以，但托盤通常偏重。",
+                action: "App 內的 Room Service 入口通常藏得很深，可先走 Explore -> Dining and lounges -> 滑到最底下 -> Room Service 看菜單；真要點餐多半還是直接打給 room service team。一般情況下，電話可能要先等 10–20 分鐘才接到客服，點完餐再等約 30–40 分鐘送達。若想 12 點前後剛好吃到，通常在看完秀、回房整理一下就該先打，不要等真的餓了才叫；可先把小桌子打開，方便工作人員把餐點送進房，若要自己搬整盤進房也可以，但托盤通常偏重。",
                 tripFit: "這會把『還要不要再去找東西吃』變成簡單、固定又很有記憶點的收尾儀式，特別適合孩子洗完澡後直接在房內安靜補一輪。",
-                caution: "小費可用社群常見抓法：每項約 1–2 USD 或每托盤約 5 USD；吃完後托盤可放門外或留房內等房務收走。半夜等待時間可能遠高於常態，早餐若排超過 08:00 也較容易晚到而卡住上午預約。菜單仍以當次供應為準，wonton soup noodle 與可嘗試詢問的 cookie & milk 偏推薦，Dan Dan noodle 則屬主觀不推；熱食送到時也可能不像剛出鍋那麼燙，先有這個預期會比較舒服。",
+                caution: "小費可用社群常見抓法：每項約 1–2 USD 或每托盤約 5 USD；吃完後托盤可放門外或留房內等房務收走。一般情況下可能是 10–20 分鐘接通、30–40 分鐘送達，但半夜高峰也可能接線超過 30 分鐘、送來已是 1–2 小時後；早餐若排超過 08:00 也較容易晚到而卡住上午預約。菜單仍以當次供應為準，wonton soup noodle 與可嘗試詢問的 cookie & milk 偏推薦，Dan Dan noodle 則屬主觀不推；熱食送到時也可能已經變溫，先有這個預期會比較舒服。",
                 relatedSectionId: "tips"
             },
             {
@@ -1214,9 +1214,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-door-open",
                 sourceType: "concierge",
                 whenToUse: "每次主秀當晚、開演前 40 分鐘。",
-                action: "全員先到 Deck 5 船頭（forward）集合點，身上帶好房卡與 Navigator App 預訂證明，再一起走優先入場流程。",
+                action: "全員先到 Deck 5 船頭（forward）集合點，身上帶好金色房卡與 Navigator App 預訂證明，再一起走優先入場流程；實際集合細節仍以當晚禮賓通知信為主。",
                 tripFit: "把集合點、時間與證明文件固定成 SOP，最能避免孩子累了時還要臨場找資料。",
-                caution: "若錯過集合或壓線到場，優先通道可能關閉並改回一般入場；請以當晚現場公告為準。",
+                caution: "若錯過集合或壓線到場，優先通道可能關閉並改回一般入場；演前 30 分鐘後通常不建議再壓線。現場常可拿免費新鮮爆米花；若想兼顧舞台與左右螢幕，社群常把第二區第一排視為很穩的視野選擇，但仍以當晚現場座位狀況為準。",
                 relatedSectionId: "entertainment"
             }
         ]
@@ -1231,7 +1231,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-id-badge",
                 sourceType: "official",
                 whenToUse: "Day 1 領取手環後到最後一次使用兒童俱樂部前。",
-                action: "手環防水，可以讓孩子整天戴著去跑活動和玩水；等到最後一次參加俱樂部或離船前，再記得一併歸還。",
+                action: "登船前可先在 App 完成兒童俱樂部基本註冊，上船後再到俱樂部入口或指定註冊區報到領手環。手環防水，可以讓孩子整天戴著去跑活動和玩水；若暫時不進俱樂部，也可以先拿下。等到最後一次參加俱樂部或離船前，再記得一併歸還。",
                 tripFit: "你們的重點不是只拿到手環，而是讓接送與定位流程一路維持順暢，不必每天重新適應。",
                 caution: "若遺失可能會收費，但各船型金額可能不同，Adventure 仍以船上實際公告為準。",
                 relatedSectionId: "facilities"
