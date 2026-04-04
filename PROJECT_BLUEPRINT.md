@@ -69,6 +69,7 @@
   * 導入 **本地語意化關鍵字搜尋**，同時索引 `cruiseSchedule`、`deckGuideData`、`showGuideData`、`playbookGuideData` 與重要靜態 section。
   * 搜尋結果支援 **自動跳轉與自動展開**，可直達對應的 Day、Deck、Playbook mission 或靜態卡片。
   * 在不破壞原搜尋的前提下，新增 **Gemini grounded AI 解答模式**，以「本地搜尋先召回 → Worker 整理命中片段」的方式提供自然語言答案。
+  * AI 檢索策略已升級為 **意圖導向 + 精準度優先 (precision-first)**，不再固定先抓 `schedule`，而是依問題類型優先挑選 `playbook`、`deck/show` 或 `schedule` 作為主證據。
   * AI 解答嚴格限制為 **只根據站內命中的內容回答**，並附引用來源與信心提示，避免外部幻覺。
   * 針對中文輸入法與長答案閱讀，補強 **form submit、composition 保護、單次 rewrite 回補、可捲動答案區與快取版控**，確保實際可用性。
 
@@ -87,6 +88,7 @@
 * **階層化展示：** 從「每日目標」->「時段標頭」->「具體事件」、以及「甲板主題」->「關鍵設施」->「這趟用途」、再到「任務類別」->「攻略卡」->「何時用 / 這趟怎麼用 / 避免踩雷」進行階層式渲染，讓資訊呈現具備清楚節奏感。
 * **模組化擴充：** 新功能優先採用獨立資料源與獨立 renderer，例如 `cruiseSchedule`、`checklistData`、`deckGuideData`、`showGuideData`、`playbookGuideData`，確保互動區塊彼此不干擾。
 * **搜尋可追溯性：** 搜尋與 AI 解答都必須回到站內原文，保留 `搜尋命中 -> 跳轉定位 -> 使用者自行核對` 的路徑，不可讓模型成為唯一資訊來源。
+* **精準度優先檢索：** 當問題屬於技巧、設施細節或規則時，AI 應優先抓取 `playbook` 與 `deck/show` 這類細節卡，而不是讓廣泛的行程總覽先蓋掉答案。
 
 ### B. 設計原則：Premium & Magicial
 

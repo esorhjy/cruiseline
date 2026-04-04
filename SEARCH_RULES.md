@@ -145,6 +145,26 @@ AI 解答採兩段式：
    - Gemini 只負責把問句改寫成更適合本站搜尋的關鍵詞
    - 前端再用這些關鍵詞 **只重跑一次** 本地搜尋
 
+### AI 問句分型 (Intent Profile)
+
+AI 不再把所有問題都當成同一種搜尋，而是先判斷問題意圖，再決定應優先抓哪一種區塊。
+
+目前分成 4 類：
+
+| 意圖類型 | 代表問題 | 預設主來源順序 |
+| :--- | :--- | :--- |
+| `sequence` | `第一天提早登船後最值得先做什麼？` | `schedule > playbook > deck/show > static` |
+| `facility-detail` | `Baymax 電影院有字幕嗎？` | `deck/show > playbook > schedule > static` |
+| `operational-detail` | `禮賓有什麼特殊服務？` | `playbook > deck/show > schedule > static` |
+| `policy-or-tip` | `Room Service 半夜怎麼點比較穩？` | `playbook > schedule > deck/show > static` |
+
+判斷原則：
+
+- 問 `順序 / 第一步 / 怎麼安排 / 先做什麼`，偏向 `sequence`
+- 問 `某設施 / 哪一層 / 有沒有字幕 / 在哪裡`，偏向 `facility-detail`
+- 問 `怎麼做 / 特殊服務 / 技巧 / 優先入場 / 房務 / 禮賓`，偏向 `operational-detail`
+- 問 `限制 / 注意事項 / 該不該 / 穩不穩`，偏向 `policy-or-tip`
+
 ### 重要限制
 
 - AI 改寫最多一次
@@ -161,10 +181,51 @@ AI 只會讀取前端送出的命中片段 `chunks`，每筆片段包含：
 - `title`
 - `locationLabel`
 - `sectionId`
+- `sourceType`
 - `navTarget`
 - `text excerpt`
 
 Gemini 不會收到整站全文，也不會自己搜尋網站。
+
+### 證據卡選取原則 (Precision-first)
+
+AI 解答現在不是固定先抓 `schedule`，而是採「精準度優先」：
+
+1. 先依 `intent profile` 選 1 張主證據卡
+2. 再補 1 到 2 張支援卡
+3. 最後才補背景卡，總數不超過 6 張
+
+具體規則：
+
+- `operational-detail / policy-or-tip`
+  - 主證據優先 `playbook`
+  - 若問題明顯指向設施，再補 `deck/show`
+  - `schedule` 只能當背景，不可當第一張
+- `facility-detail`
+  - 主證據優先 `deck/show`
+  - `playbook` 作為技巧補充
+  - `schedule` 只有在問題明確帶有 `Day 1 / Day 2 / 早餐 / 晚上` 時才補
+- `sequence`
+  - 主證據可以是 `schedule`
+  - 但必須至少補 1 張 `playbook` 或 `deck/show` 細節卡
+  - 不允許只靠單張 schedule 直接進 QA
+
+### 卡片精細度 (Specificity Score)
+
+AI 排序時除了原本的關鍵字分數，還會另外看「卡片是不是夠具體」。
+
+加分方向：
+
+- 標題直接命中設施名、服務名、規則詞
+- `playbook` 命中操作詞
+- `deck/show` 命中設施或表演名
+- 文字較聚焦，像單張攻略卡或單一設施卡
+
+扣分方向：
+
+- `static` 維持低權重
+- `schedule` 若只是大面積日程總覽、沒有命中具體設施或動作詞，會被壓低
+- 同一題已經命中更精準的 `playbook / deck / show` 時，廣泛的 schedule 卡不應排在前面
 
 ### AI 回答模式
 
@@ -183,8 +244,37 @@ Gemini 不會收到整站全文，也不會自己搜尋網站。
 - `bullets`
 - `citations`
 - `confidence`
+- `primarySourceType`
 - `missingReason`（可選）
 - `insufficientData`
+
+### `primarySourceType` 的用途
+
+AI 回答卡會顯示「本次答案主要依據：哪一種區塊」，目前可能值為：
+
+- `schedule`
+- `deck`
+- `show`
+- `playbook`
+- `static`
+
+這個欄位的目的是讓使用者與維護者都能快速判斷：
+
+- 這次答案是偏「順序整理」
+- 還是偏「設施細節」
+- 或是偏「攻略技巧」
+
+### Worker 的回答合約
+
+Worker 在 `grounded_qa_v1` 內必須遵守這些規則：
+
+- 只能根據傳入 chunks 回答
+- 若 chunks 同時有總覽型與細節型內容，要優先依據最具體的卡片
+- `schedule` 只能補充順序與時段，不可蓋過 `playbook / deck / show`
+- 若問題是 `怎麼做 / 特殊服務 / 需要注意什麼`
+  - 應優先整理規則、技巧、細節
+  - 不應先講大範圍介紹
+- citation 必須對應實際片段，不能自由生成
 
 ### 信心分級原則
 
@@ -258,6 +348,9 @@ Gemini 不會收到整站全文，也不會自己搜尋網站。
 4. 新設施或新活動有常用別名  
    需要更新 `SEARCH_SYNONYM_GROUPS` 或 `AI_QUERY_EXTRA_SYNONYM_GROUPS`
 
+5. 某類問題的主來源應改變  
+   需要更新 `buildAiIntentProfile()`、`scoreDocumentForAi()`、`selectAiEvidenceResults()`
+
 ### B. 新增同義詞的原則
 
 - 先補高頻、真正常搜尋的詞
@@ -291,6 +384,7 @@ Gemini 不會收到整站全文，也不會自己搜尋網站。
 - `禮賓怎麼提早進劇院？`
 - `Room Service 半夜要怎麼點比較穩？`
 - `Deck 17 有哪些適合孩子的補給？`
+- `Baymax 電影院有字幕嗎？`
 
 ### 拒答
 
@@ -304,15 +398,26 @@ Gemini 不會收到整站全文，也不會自己搜尋網站。
 - AI 答案可往下捲
 - citation 點擊後可正確跳轉
 
+### 精準度驗收
+
+- `禮賓有什麼特殊服務？`
+  - 主來源應優先來自 `playbook concierge-plus`
+- `Baymax 電影院有字幕嗎？`
+  - 主來源應優先來自 `Deck 7 / Baymax Cinemas`
+- `Room Service 半夜怎麼點比較穩？`
+  - 主來源應優先來自 `playbook daily-ops`
+- `第一天提早登船後最值得先做什麼？`
+  - 可以先抓 `schedule Day 1`
+  - 但必須補 `playbook / deck` 的細節卡，不可只有行程總覽
+
 ---
 
 ## 9. 一句話維護原則
 
-**搜尋負責找到原文，AI 只負責根據已命中的原文整理答案。**
+**搜尋負責找到最精準的原文卡片，AI 只負責根據已命中的原文整理答案。**
 
 只要後續維持這個分工，網站就能同時保有：
 
 - 可預期的本地搜尋
 - 可控的 AI 自然語言回答
 - 可追溯的引用跳轉
-
