@@ -59,7 +59,8 @@
                         tagClass: "tag-kids",
                         desc: [
                             "全家一起參加：澤澤、彤妹先熟悉四大沉浸區域",
-                            "<strong>必做設定：</strong>取孩密語"
+                            "<strong>必做設定：</strong>取孩密語",
+                            "<strong>登船優先任務：</strong>先到 Deck 8 FWD 完成報到、領手環，把孩子接送機制一次設定好，後面行程才真的能放手。"
                         ]
                     },
                     {
@@ -78,7 +79,8 @@
                         tag: "玩水活動",
                         tagClass: "tag-water",
                         desc: [
-                            "<strong>目的：</strong>登船日通常人少，適合暖身玩水",
+                            "<strong>目的：</strong>登船日越早換裝越好，通常比後面時段更適合暖身玩水。",
+                            "<strong>節奏判斷：</strong>越晚泳池越滿、滑水道越排，正午後甲板曝曬也會更強。",
                             "<strong>點心補給：</strong>披薩星球、吱吱冰飲",
                             "<strong>Woody’s Wide Slide（胡迪與翠絲的瘋狂滑水道入口）（Deck 17/19）</strong>"
                         ]
@@ -433,7 +435,8 @@
                         tagClass: "tag-highlight",
                         desc: [
                             "<strong>獅子王主題海上煙火：Celebration in the Sky</strong>",
-                            "接近 10:30 會直接施放，通常不太暖場，先找空曠少遮擋的位置。"
+                            "接近 10:30 會直接施放，通常不太暖場，先找空曠少遮擋的位置。",
+                            "<strong>提醒：</strong>別只等房內廣播，約 10:00 後就開始留意 App 與甲板即時動靜，房內常常聽不清楚。"
                         ]
                     }
                 ]
@@ -457,8 +460,9 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "早餐可依家庭節奏二選一：餐廳早餐（較完整）或 Lounge 冷食早餐（較快）。",
-                            "<strong>提醒：</strong>大型行李若前晚已外放，證件、外套、點心與孩子晨間用品要留在手提包；前晚先核對房帳。"
+                            "最後一天早餐不必完全被動照 App 分配；若有最喜歡的主餐廳，通常一早去排第一輪會更有彈性。",
+                            "若偏好 Animator's Table / Animator’s Palate 這類點餐早餐，早點到通常較容易先吃到。",
+                            "<strong>提醒：</strong>船上通知與 App 仍值得先看；大型行李若前晚已外放，證件、外套、點心與孩子晨間用品要留在手提包，前晚也先核對房帳。"
                         ]
                     },
                     {
@@ -497,7 +501,7 @@ const checklistData = [
         items: [
             { id: "royal-meet-130d", text: "130 天前禮賓預約：皇家公主見面會" },
             { id: "dinner-table", text: "聯絡管家確認用餐需求 (如併桌安排)" },
-            { id: "photo-package", text: "考慮是否預購郵輪拍照套裝 (比較划算)" },
+            { id: "photo-package", text: "確認拍照套裝是否要先買；一房通常只需一人買，可於付完全額後在 My Plan > Onboard Fun 查看，若買無限拍從第一天起算最划算" },
             { id: "wifi-buy", text: "確認是否需要額外 Wi-Fi；禮賓房每位房客含 24 小時連續網路，不必太早啟用" },
             { id: "kids-club-booking", text: "預定 Oceaneer Club 兒童俱樂部時段" }
         ]
@@ -635,9 +639,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-mug-hot",
                 name: "Alley Cat Café / Pics Photo Shop / 商店街",
-                summary: "咖啡、照片取件與周邊都集中在同一帶，很適合邊走邊補貨。",
+                summary: "咖啡、照片取件與周邊都集中在同一帶，很適合邊走邊補貨，也方便把當天拍的照片快速檢查一輪。",
                 bestTime: "下午或白天比演後散場友善。",
-                tripUse: "大人等孩子跑活動時，可以順手處理照片與小型採買。",
+                tripUse: "大人等孩子跑活動時，可以順手到 Pics 或感應機台看大圖、確認照片有沒有入帳；若買了拍照套裝，也最好在航行中把想留的照片檢查與下載完成，看完機台記得登出。Deck 7 也是 roaming character 偶爾會經過的流動走廊，剛好路過時值得抬頭多看一眼。",
                 highlight: false
             }
         ]
@@ -717,11 +721,19 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                icon: "fa-solid fa-drumstick-bite",
+                name: "Mowgli’s Eatery",
+                summary: "Deck 10 上很值得記住的印度料理快餐點，和一般 buffet 或披薩相比更像一個有主題、有香氣的口味切換站。",
+                bestTime: "午餐時段最適合順路補一輪；若白天活動很多，拿完就近找位子比特地排正式餐廳更省節奏。",
+                tripUse: "若午餐不想再吃普通 buffet，這裡是很穩的主題小吃替代；烤雞特別值得記住，搭上現場看到的脆薯通常就很有滿足感。",
+                highlight: true
+            },
+            {
                 icon: "fa-solid fa-burger",
                 name: "Stitch’s ’Ohana Grill",
                 summary: "Deck 10 船尾最有飽足感的快餐主力，漢堡、熱狗和薯條都是這層最容易讓全家快速吃飽的選項。",
                 bestTime: "常見營運時段約 10:30–22:00；午晚餐尖峰最多人，若能錯峰拿餐會更舒服。",
-                tripUse: "若真的想用高滿足快餐取代一頓正式晚餐，這裡通常是最穩的 fallback；漢堡份量普遍偏大，真的很餓時可以用社群推薦的心態考慮直接點兩份。",
+                tripUse: "若真的想用高滿足快餐取代一頓正式晚餐，這裡通常是最穩的 fallback；熱狗堡、漢堡都很扛餓，有薯條時也很適合直接順手補一份，真的很餓時可以用社群推薦的心態考慮直接點兩份。",
                 highlight: true
             },
             {
@@ -747,7 +759,7 @@ const deckGuideData = [
                 name: "Imagination Garden 上層環繞區",
                 summary: "想看整個花園舞台的動態，站在上層環繞區比平面更容易掌握全場。",
                 bestTime: "表演前 15 分鐘先來找邊側或欄杆位。",
-                tripUse: "如果不想在人群最前排硬擠，這層是看秀很聰明的角度。",
+                tripUse: "如果不想在人群最前排硬擠，這層是看秀很聰明的角度；某些花園秀開演前約 15 分鐘，後方電梯一帶也可能看到角色或英雄進場準備，其中一台有時還會顯示 PRIORITY SERVICE。",
                 highlight: true
             },
             {
@@ -803,9 +815,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-pizza-slice",
                 name: "Pixar Market / Pizza Planet / Wheezy’s Freezies",
-                summary: "濕答答也能快速補能量，尤其 Pizza Planet 幾乎是最不打斷節奏的披薩補給點，剛出爐時表現通常特別好。",
+                summary: "濕答答也能快速補能量，尤其 Pizza Planet 是最不打斷節奏的披薩補給點之一，剛出爐時表現通常特別好。",
                 bestTime: "常見窗口約 10:30–18:00 與 21:00–00:00；下午點心、玩水後與宵夜時段特別好用，先找位子再分工取餐效率最高。",
-                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；披薩通常不用排太久，常常變成先拿一片、又順手補第二片第三片的家庭補給站。若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
+                tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；它比較像方便補給站，不必神化成必吃目的地，高峰時段仍可能明顯排隊。若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
                 highlight: true
             },
             {
@@ -929,8 +941,8 @@ const showGuideData = [
                 name: "《Avengers Assemble!》",
                 theme: "漫威特技秀，英雄群像加上死侍的吐槽節奏，很適合全家一起看熱鬧。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
-                timingTip: "提早 15–20 分鐘到，樓上環繞區較容易掌握全景。",
-                tripLink: "Day 2 下午最對味，和 Marvel Landing 主題可以串成完整的一天。"
+                timingTip: "這場比一般花園秀更值得早到，至少提早 45 分鐘到 Deck 10 MID 中間草皮區卡位最穩；若只是想看英雄進場，開演前約 15 分鐘也可先去 Deck 11 後方電梯一帶碰碰運氣。",
+                tripLink: "Day 2 下午最對味，和 Marvel Landing 主題可以串成完整的一天；兩天都有場次，但常會有一場和晚餐打架，先選 Avengers 的時間再排角色見面會最不容易衝突。"
             },
             {
                 name: "《Duffy and The Friend Ship》",
@@ -965,7 +977,7 @@ const showGuideData = [
                 name: "《The Lion King: Celebration in the Sky》",
                 theme: "獅子王主題海上煙火，配樂與旁白都走大型慶典級別的震撼路線。",
                 location: "高層戶外甲板與開放視野區",
-                timingTip: "通常約 10:30 準時施放、暖場不多；先找空曠少遮擋的位置，並留意當天即時公告。",
+                timingTip: "通常約 10:30 準時施放、暖場不多；先找空曠少遮擋的位置，並留意當天即時公告。房內廣播不一定清楚，接近 10:00 後就應主動看 App 或甲板現場動靜。",
                 tripLink: "Day 3 晚間是你們目前行程裡最明確的壓軸安排。"
             }
         ]
@@ -1129,8 +1141,28 @@ const playbookGuideData = [
                 whenToUse: "海上日早上與一般 meet-and-greet 前。",
                 action: "角色合照通常提早 10–15 分鐘排最省時間；若想拍空景，D2、D3 的 07:30–08:30 是最容易拍到乾淨甲板的時段。",
                 tripFit: "這種『早點去就省很多力』的節奏，比臨時在人潮中硬排更適合多孩家庭。",
-                caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯，新區塊只補一般排隊節奏。",
+                caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯；若是有人數控管的角色場次，登船後與隔日下午多刷幾次 App 看是否釋出通常比死守單一時段更有效。Deck 7 也常是 roaming character 會經過的走廊，但移動中的公主不一定都會停下互動。",
                 relatedSectionId: "timeline"
+            },
+            {
+                title: "想看的秀先在 Live Shows 點愛心，再排角色見面會",
+                icon: "fa-solid fa-heart-circle-check",
+                sourceType: "community",
+                whenToUse: "登船後第一次開始整理活動、想避免花園秀與晚餐打架時。",
+                action: "先進 App 的 Explore -> Live Shows，把 Garden Stage 和 Wayfinder Bay 想看的秀都點愛心，My Plan 會更容易幫你把演出節奏排出來。真正要先確定的通常是 Avengers Assemble! 的場次，再去排角色見面會，會比反過來更不容易和晚餐、主秀或其他甲板活動撞期。",
+                tripFit: "你們這趟花園舞台和戶外秀很多，先把秀程定下來，再往外排角色與其他活動，整體衝突會少很多。",
+                caution: "這不是保證一定自動排得完美，而是先把高優先秀固定下來的實戰技巧；角色場次與開放時間仍以當天 App 顯示為準。",
+                relatedSectionId: "entertainment"
+            },
+            {
+                title: "拍照套裝怎麼買才不浪費，下載時機更重要",
+                icon: "fa-solid fa-camera",
+                sourceType: "community",
+                whenToUse: "付完全額船費後到航行中的最後兩天，都還能評估要不要買。",
+                action: "拍照方案可先在 App 的 My Plan > Onboard Fun 查看；一房通常只需一人買，若確定要買無限拍，從第一天起算通常最划算。實際使用時，看到攝影師就拍，通常提早 5–10 分鐘去排最省時；App 也可直接搜尋 photo 找拍照點，攝影師常會在一個點駐 1–2 小時。拍照時務必刷到房卡或至少報到正確房號，照片通常 1–2 小時後就會出現在 App 裡。",
+                tripFit: "若你們很重視全家合照，關鍵不是只決定買不買，而是把拍照節奏固定下來：以有買方案的人為中心拍大合照、角色場次可帶簽名本與筆、每天晚上順手把照片下載下來最穩。",
+                caution: "是否值得仍看拍照習慣，但如果要買，必須在航行中完成購買與下載；離船後 App 轉成歷史訂單，就可能看不到照片。船內免費網路通常已足夠看與下載照片，感應機台用完也記得登出。",
+                relatedSectionId: "entertainment"
             },
             {
                 title: "App 出錯先現場問，不要直接放棄",
@@ -1298,9 +1330,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-utensils",
                 sourceType: "community",
                 whenToUse: "最後一晚安排隔天早上的節奏時。",
-                action: "把撤船日早餐預設成餐廳節奏，若怕孩子起床後先餓，可以前一晚就留簡單點心在房內；若行李交給 DCL 帶下船，也把港口找行李和轉車時間一起算進去。",
+                action: "若想吃自己最喜歡的早餐餐廳，通常早點去排第一輪會比完全被動照 App 分配更有彈性；若怕孩子起床後先餓，可以前一晚就留簡單點心在房內。若想走快速下船節奏，也把早餐、行李與移民時間一起算進去：Self-Assist 通常約 07:00 開始，一般下船則多半約 07:30 左右。",
                 tripFit: "你們回程航班時間很充裕，真正重要的是早上不要餓著、也不要趕著找吃的。",
-                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期；港口現場若行李多，也可再看要不要用推車、Grab 或 limo。",
+                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期；若行李交給 DCL 帶下船，也要把港口找行李時間算進去。抵達碼頭移民前，全員都要先完成 SGAC；港口現場若行李多，也可再看要不要用推車、Grab 或 limo。",
                 relatedSectionId: "checkin"
             },
             {
