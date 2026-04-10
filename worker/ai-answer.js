@@ -75,30 +75,28 @@ function sanitizeChunks(chunks) {
 
 function buildGroundedPrompt(query, chunks) {
   const sourceDump = chunks
-    .map((chunk, index) => {
-      return [
-        `[#${index + 1}]`,
-        `id: ${chunk.id}`,
-        `sourceType: ${chunk.sourceType}`,
-        `title: ${chunk.title}`,
-        `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
-        `sectionId: ${chunk.sectionId || 'unknown'}`,
-        `text: ${chunk.text}`
-      ].join('\n');
-    })
+    .map((chunk, index) => [
+      `[#${index + 1}]`,
+      `id: ${chunk.id}`,
+      `sourceType: ${chunk.sourceType}`,
+      `title: ${chunk.title}`,
+      `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
+      `sectionId: ${chunk.sectionId || 'unknown'}`,
+      `text: ${chunk.text}`
+    ].join('\n'))
     .join('\n\n');
 
-  return `你是「郵輪攻略站內解答助手」，只能根據提供的站內片段回答。
+  return `你是「星海攻略」站內問答整理器。你只能根據提供的 sources 回答，不可補充外部知識。
 
 規則：
-1. 只能使用下方 sources 的內容回答，不可使用任何外部知識補空白。
-2. 若問題是「先做什麼／怎麼安排」，請以建議順序回答。
-3. 若 sources 同時有總覽型內容與細節型卡片，優先根據最具體的卡片回答。
-4. schedule 只能補充順序與時段，不可蓋過 playbook、deck、show 的細節。
-5. 每一個 bullet 都必須能被至少一個 source 支撐。
-6. 若資料不足，請明確指出不足，不可幻想。
-7. 使用和使用者相同的語言作答（本題通常是繁體中文）。
-8. primarySourceType 請填最主要依據的來源類型：schedule / deck / show / playbook / static。
+1. 只能使用 sources 已經出現的資訊；如果資料不足，必須直接說明站內資料不足。
+2. answer 用繁體中文寫成 1 段精簡回答，語氣務實，不要誇大或保證。
+3. bullets 最多 4 點，每點都必須可以回溯到 sources，沒有必要就回傳空陣列。
+4. citationIds 只能填提供的 chunk id，不能發明新的 id。
+5. 若問題偏流程，可優先整理 schedule；若偏技巧、規則或服務細節，可優先整理 playbook，再視需要補 deck/show。
+6. 若 sources 只有零碎片段，請明確說目前無法完整回答，不要硬補缺漏資訊。
+7. primarySourceType 必須是 schedule / deck / show / playbook / static 其中之一。
+8. insufficientData 為 true 時，answer 與 missingReason 仍要用繁體中文說清楚缺什麼。
 
 使用者問題：
 ${query}
@@ -109,29 +107,27 @@ ${sourceDump}`;
 
 function buildRewritePrompt(query, chunks) {
   const sourceDump = chunks
-    .map((chunk, index) => {
-      return [
-        `[#${index + 1}] ${chunk.title}`,
-        `sourceType: ${chunk.sourceType}`,
-        `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
-        `text: ${chunk.text}`
-      ].join('\n');
-    })
+    .map((chunk, index) => [
+      `[#${index + 1}] ${chunk.title}`,
+      `sourceType: ${chunk.sourceType}`,
+      `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
+      `text: ${chunk.text}`
+    ].join('\n'))
     .join('\n\n');
 
-  return `你是「郵輪攻略站內搜尋改寫助手」，只能幫忙把問題改寫成更適合站內搜尋的詞，不可以直接回答問題。
+  return `你是「星海攻略」站內搜尋改寫器。你只能根據提供的 sources，把使用者原問題改寫成更適合本站本地搜尋的查詢，不可新增外部知識。
 
 規則：
-1. 只能根據下方 sources 的語彙改寫，不可加入外部世界知識。
-2. rewrittenQuery 要更像站內卡片標題或常見別名。
-3. keywords 請提供 3 到 6 個最有用的搜尋詞。
-4. alternates 請提供 2 到 4 個替代表達。
+1. rewrittenQuery 要保留原意，但改成更容易命中站內內容的查詢句。
+2. keywords 提供 3 到 6 個關鍵詞，優先用站內已出現的設施、服務、時間或規則詞。
+3. alternates 提供 2 到 4 個可替代問法，仍然要貼近原問題。
+4. 不要捏造新的活動、設施、制度或時段。
 5. confidence 只能填 high / medium / low。
 
-使用者問題：
+原問題：
 ${query}
 
-可參考的站內語彙：
+可參考的站內片段：
 ${sourceDump}`;
 }
 
@@ -208,14 +204,23 @@ function buildRewriteSchema() {
   };
 }
 
-function buildInsufficientDataPayload(message) {
+function buildInsufficientDataPayload(message, options = {}) {
   return {
-    answer: message,
-    bullets: [],
-    citations: [],
+    answer: sanitizeString(
+      message || '目前站內命中的內容不足，還不能穩定整理出完整答案。',
+      600
+    ),
+    bullets: (Array.isArray(options.bullets) ? options.bullets : [])
+      .map((item) => sanitizeString(item, 180))
+      .filter(Boolean)
+      .slice(0, 4),
+    citations: Array.isArray(options.citations) ? options.citations.slice(0, MAX_CHUNKS) : [],
     confidence: 'low',
-    primarySourceType: 'static',
-    missingReason: '目前站內沒有足夠片段可支撐更完整的回答。',
+    primarySourceType: sanitizeSourceType(options.primarySourceType || 'static'),
+    missingReason: sanitizeString(
+      options.missingReason || '目前站內只有零碎片段，還缺少足夠證據來把步驟、限制或例外情況講完整。',
+      220
+    ),
     insufficientData: true
   };
 }
@@ -227,10 +232,12 @@ function normalizeConfidence(confidence) {
 function extractKeywordCandidates(query) {
   const normalized = normalizeQuery(query).toLowerCase();
   if (!normalized) return [];
+
   const asciiTokens = normalized
     .split(/[^a-z0-9\u4e00-\u9fff]+/)
     .map((token) => token.trim())
     .filter((token) => token.length >= 2);
+
   const compactChinese = normalized.replace(/[^\u4e00-\u9fff]/g, '');
   const chineseNgrams = [];
   for (let size = Math.min(4, compactChinese.length); size >= 2; size -= 1) {
@@ -238,6 +245,7 @@ function extractKeywordCandidates(query) {
       chineseNgrams.push(compactChinese.slice(index, index + size));
     }
   }
+
   return uniqueItems([...asciiTokens, ...chineseNgrams]).slice(0, 6);
 }
 
@@ -251,18 +259,20 @@ function buildLowConfidenceFallback(query, chunks) {
     navTarget: chunk.navTarget
   }));
 
-  const bullets = topChunks.map((chunk) => {
-    const text = chunk.text || '';
-    return text.length > 90 ? `${text.slice(0, 90).trim()}…` : text;
-  }).filter(Boolean);
+  const bullets = topChunks
+    .map((chunk) => {
+      const text = chunk.text || '';
+      return text.length > 90 ? `${text.slice(0, 90).trim()}...` : text;
+    })
+    .filter(Boolean);
 
   return {
-    answer: `我先根據目前最相關的站內卡片整理重點，這題和「${query}」最接近的資料在下方引用來源。`,
+    answer: `我先根據目前最接近的站內片段整理重點，但關於「${query}」的證據還不夠完整，建議同時點開引用來源快速核對。`,
     bullets,
     citations,
     confidence: 'low',
     primarySourceType,
-    missingReason: '這次主要依據少量站內片段整理，建議點引用來源直接查看原文。',
+    missingReason: '目前召回到的內容偏片段，還不足以把完整流程、限制條件或例外情況講清楚。',
     insufficientData: false
   };
 }
@@ -270,8 +280,11 @@ function buildLowConfidenceFallback(query, chunks) {
 function buildRewriteFallback(query, chunks) {
   const keywords = uniqueItems([
     ...extractKeywordCandidates(query),
-    ...chunks.flatMap((chunk) => chunk.title.split(/[／/、\s:：()-]+/))
-  ].map((item) => sanitizeString(item, 40))).filter((item) => item.length >= 2).slice(0, 6);
+    ...chunks.flatMap((chunk) => chunk.title.split(/[\s:/()\-]+/))
+  ]
+    .map((item) => sanitizeString(item, 40))
+    .filter((item) => item.length >= 2))
+    .slice(0, 6);
 
   const alternates = uniqueItems(chunks
     .map((chunk) => sanitizeString(chunk.title, 80))
@@ -371,7 +384,19 @@ function finalizeGroundedAnswer(modelOutput, chunks, query) {
     insufficientData: Boolean(modelOutput?.insufficientData)
   };
 
-  if (!payload.answer || !payload.citations.length || payload.insufficientData) {
+  if (payload.insufficientData) {
+    return buildInsufficientDataPayload(
+      payload.answer || `目前站內還沒有足夠資料可以完整回答「${query}」。`,
+      {
+        bullets: payload.bullets,
+        citations,
+        primarySourceType,
+        missingReason: payload.missingReason
+      }
+    );
+  }
+
+  if (!payload.answer || !payload.citations.length) {
     return buildLowConfidenceFallback(query, chunks);
   }
 
@@ -436,14 +461,26 @@ export default {
       if (mode === 'query_rewrite_v1') {
         return jsonResponse(buildRewriteFallback(query, chunks));
       }
-      return jsonResponse(buildInsufficientDataPayload('問題太短，請至少輸入 6 個字以上，AI 才能根據站內資料整理答案。'));
+
+      return jsonResponse(buildInsufficientDataPayload(
+        '請把問題再具體一點，至少輸入 6 個以上有意義的字，AI 才能先用站內資料做召回。',
+        {
+          missingReason: '目前問題太短，還不足以穩定判斷你要找的是哪一段流程、設施或服務。'
+        }
+      ));
     }
 
     if ((mode === 'query_rewrite_v1' && chunks.length < MIN_REWRITE_CHUNKS) || (mode !== 'query_rewrite_v1' && chunks.length < MIN_CHUNKS)) {
       if (mode === 'query_rewrite_v1') {
         return jsonResponse(buildRewriteFallback(query, chunks));
       }
-      return jsonResponse(buildInsufficientDataPayload('目前站內命中的內容還不夠集中，建議換更具體的設施、時段或步驟再試一次。'));
+
+      return jsonResponse(buildInsufficientDataPayload(
+        '目前站內命中的證據太少，還不足以整理成穩定答案，建議把問題改得更聚焦，例如加入 Day、設施名、服務名或具體步驟。',
+        {
+          missingReason: '這次召回到的內容太少，還無法交叉比對出足夠可靠的站內答案。'
+        }
+      ));
     }
 
     try {
@@ -451,11 +488,13 @@ export default {
       if (mode === 'query_rewrite_v1') {
         return jsonResponse(finalizeRewriteOutput(modelOutput, query, chunks));
       }
+
       return jsonResponse(finalizeGroundedAnswer(modelOutput, chunks, query));
     } catch (error) {
       if (mode === 'query_rewrite_v1') {
         return jsonResponse(buildRewriteFallback(query, chunks));
       }
+
       return jsonResponse({
         error: 'Gemini request failed',
         detail: error?.message || 'Unknown error'
