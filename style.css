@@ -1639,11 +1639,51 @@ body.search-open {
     letter-spacing: 0.02em;
 }
 
+.search-ai-source-mix {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.search-ai-source-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: inherit;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
 .search-ai-summary {
     margin: 0 0 12px;
     font-size: 1.05rem;
     line-height: 1.75;
     font-weight: 700;
+}
+
+.search-ai-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.search-ai-section {
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-ai-section-title {
+    margin: 0 0 10px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
 }
 
 .search-ai-bullets {
@@ -1660,6 +1700,35 @@ body.search-open {
     color: inherit;
     opacity: 0.92;
     line-height: 1.7;
+}
+
+.search-ai-source-breakdown {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.search-ai-source-breakdown-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.search-ai-source-breakdown-item p {
+    margin: 0;
+    line-height: 1.7;
+}
+
+.search-ai-followup {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(243, 181, 0, 0.12);
+    line-height: 1.7;
+    font-weight: 700;
 }
 
 .search-ai-citations {
@@ -1713,12 +1782,27 @@ body.search-open {
 }
 
 .search-ai-card.loading .search-ai-source-hint,
+.search-ai-card.loading .search-ai-source-chip,
 .search-ai-card.info .search-ai-source-hint,
+.search-ai-card.info .search-ai-source-chip,
 .search-ai-card.error .search-ai-source-hint,
+.search-ai-card.error .search-ai-source-chip,
 .search-ai-card.loading .search-ai-rewrite-note,
 .search-ai-card.info .search-ai-rewrite-note,
 .search-ai-card.error .search-ai-rewrite-note {
     background: rgba(10, 58, 112, 0.08);
+}
+
+.search-ai-card.loading .search-ai-section,
+.search-ai-card.info .search-ai-section,
+.search-ai-card.error .search-ai-section,
+.search-ai-card.loading .search-ai-source-breakdown-item,
+.search-ai-card.info .search-ai-source-breakdown-item,
+.search-ai-card.error .search-ai-source-breakdown-item,
+.search-ai-card.loading .search-ai-followup,
+.search-ai-card.info .search-ai-followup,
+.search-ai-card.error .search-ai-followup {
+    background: rgba(10, 58, 112, 0.06);
 }
 
 .search-results {
