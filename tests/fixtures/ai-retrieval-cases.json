@@ -1,0 +1,122 @@
+[
+  {
+    "query": "Room Service 半夜怎麼點比較穩？",
+    "requiredTitleIncludes": ["Room Service 很適合儀式感"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "禮賓劇院優先入場要帶什麼？",
+    "requiredTitleIncludes": ["劇院優先入場 SOP"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["concierge"]
+  },
+  {
+    "query": "RFID 手環最後要不要還？",
+    "requiredTitleIncludes": ["RFID 手環的進階用法"],
+    "requiredFieldTypes": ["action"],
+    "expectedSourceDetails": ["official"]
+  },
+  {
+    "query": "第一天提早登船後先去 Lounge 還是 Open House？",
+    "requiredTitleIncludes": ["登船 3 小時 SOP", "Lounge 要當緩衝區"],
+    "requiredFieldTypes": ["action"],
+    "expectedSourceTypes": ["schedule", "playbook"]
+  },
+  {
+    "query": "想看的秀先排還是角色先排？",
+    "requiredTitleIncludes": ["想看的秀先在 Live Shows 點愛心，再排角色見面會"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "禮賓 Lounge 晚餐前怎麼用最省力？",
+    "requiredTitleIncludes": ["Lounge 的正確打開方式：下午茶、中轉站、偶遇角色", "禮賓每日供應與酒水時段怎麼用"],
+    "requiredFieldTypes": ["action", "tripFit"],
+    "expectedSourceDetails": ["concierge"]
+  },
+  {
+    "query": "24 小時網路方案要一上船就開嗎？",
+    "requiredTitleIncludes": ["24 小時網路方案不要太早開"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["concierge"]
+  },
+  {
+    "query": "免費飲料站值不值得先熟？",
+    "requiredTitleIncludes": ["免費飲料站比套票更值得先熟"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["official"]
+  },
+  {
+    "query": "爆米花桶跟免費汽水怎麼搭最順？",
+    "requiredTitleIncludes": ["爆米花桶加免費汽水，就是最順手的觀影組合"],
+    "requiredFieldTypes": ["action", "tripFit"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "角色排隊要多早去比較省力？",
+    "requiredTitleIncludes": ["角色排隊和空景拍照，都盡量搶早檔"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "磁吸掛勾值得帶嗎？",
+    "requiredTitleIncludes": ["磁吸掛勾很值得，它會直接提升客艙秩序感"],
+    "requiredFieldTypes": ["action", "tripFit"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "洗衣什麼時段最不打擾行程？",
+    "requiredTitleIncludes": ["洗衣時間抓在晚餐或看秀時，最不打擾主行程"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "最後一晚大型行李外放前要先留什麼？",
+    "requiredTitleIncludes": ["最後一晚先做一個『孩子晨間包』"],
+    "requiredFieldTypes": ["action"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "撤船日早餐怎麼安排比較穩？",
+    "requiredTitleIncludes": ["撤船日早餐與房務供應，要先分清楚"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "登船前接駁車要不要先打電話確認？",
+    "requiredTitleIncludes": ["住 DCL 合作飯店的話，接駁車要提早打電話確認"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "手機時間會亂跳怎麼辦？",
+    "requiredTitleIncludes": ["手機時間不要自己亂跳，進入公海後一律跟 Navigator App 對時"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "遇到限額活動時先找誰最省力？",
+    "requiredTitleIncludes": ["需要省力時，先想到的是管家，不是自己排隊"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["concierge"]
+  },
+  {
+    "query": "房內冰箱飲料喝完可以怎麼補？",
+    "requiredTitleIncludes": ["房內冰箱的軟飲與瓶水，用完就請管家補"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["concierge"]
+  },
+  {
+    "query": "App 出錯或預約消失時怎麼辦？",
+    "requiredTitleIncludes": ["App 出錯先現場問，不要直接放棄"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["community"]
+  },
+  {
+    "query": "禁帶延長線要怎麼改帶比較穩？",
+    "requiredTitleIncludes": ["禁帶電器先排雷，充電頭走輕量化"],
+    "requiredFieldTypes": ["action", "caution"],
+    "expectedSourceDetails": ["official"]
+  }
+]

@@ -1,10 +1,12 @@
-const MAX_CHUNKS = 6;
+const MAX_CHUNKS = 8;
 const MIN_CHUNKS = 2;
 const MIN_REWRITE_CHUNKS = 1;
 const MAX_QUERY_LENGTH = 500;
-const MAX_TEXT_LENGTH = 420;
+const MAX_TEXT_LENGTH = 560;
 const MIN_QUERY_SIGNAL = 6;
 const ALLOWED_SOURCE_TYPES = ['schedule', 'deck', 'show', 'playbook', 'static'];
+const ALLOWED_SOURCE_DETAIL_TYPES = ['official', 'concierge', 'community', 'general'];
+const ALLOWED_CONFIDENCE = ['high', 'medium', 'low'];
 
 function createCorsHeaders() {
   return {
@@ -58,19 +60,116 @@ function sanitizeSourceType(sourceType) {
   return ALLOWED_SOURCE_TYPES.includes(normalized) ? normalized : 'static';
 }
 
+function sanitizeSourceDetailType(sourceDetailType) {
+  const normalized = sanitizeString(sourceDetailType, 24).toLowerCase();
+  return ALLOWED_SOURCE_DETAIL_TYPES.includes(normalized) ? normalized : 'general';
+}
+
+function sanitizeConfidence(confidence) {
+  return ALLOWED_CONFIDENCE.includes(confidence) ? confidence : 'low';
+}
+
+function sanitizeTextArray(items, maxItems, maxLength) {
+  return (Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, maxLength))
+    .filter(Boolean)
+    .slice(0, maxItems);
+}
+
 function sanitizeChunks(chunks) {
   return (Array.isArray(chunks) ? chunks : [])
     .map((chunk) => ({
       id: sanitizeString(chunk?.id, 120),
+      parentId: sanitizeString(chunk?.parentId, 120),
       title: sanitizeString(chunk?.title, 160),
       locationLabel: sanitizeString(chunk?.locationLabel, 200),
       sectionId: sanitizeString(chunk?.sectionId, 80),
       sourceType: sanitizeSourceType(chunk?.sourceType),
+      sourceDetailType: sanitizeSourceDetailType(chunk?.sourceDetailType),
+      fieldType: sanitizeString(chunk?.fieldType, 40).toLowerCase(),
+      fieldLabel: sanitizeString(chunk?.fieldLabel, 80),
+      evidenceRole: sanitizeString(chunk?.evidenceRole, 40).toLowerCase(),
+      timeHint: sanitizeString(chunk?.timeHint, 160),
+      bestTimeHint: sanitizeString(chunk?.bestTimeHint, 160),
       navTarget: sanitizeNavTarget(chunk?.navTarget),
+      structuredText: sanitizeString(chunk?.structuredText, MAX_TEXT_LENGTH),
       text: sanitizeString(chunk?.text, MAX_TEXT_LENGTH)
     }))
-    .filter((chunk) => chunk.id && chunk.title && chunk.text)
+    .filter((chunk) => chunk.id && chunk.title && (chunk.structuredText || chunk.text))
     .slice(0, MAX_CHUNKS);
+}
+
+function getSourceDetailLabel(sourceDetailType) {
+  const labels = {
+    official: '官方規則',
+    concierge: '禮賓加值',
+    community: '社群實戰',
+    general: '站內整理'
+  };
+  return labels[sourceDetailType] || '站內整理';
+}
+
+function getSourceTypeLabel(sourceType) {
+  const labels = {
+    schedule: '行程',
+    deck: '甲板 / 設施',
+    show: '表演 / 場館',
+    playbook: '攻略本',
+    static: '其他資訊'
+  };
+  return labels[sourceType] || '站內內容';
+}
+
+function buildChunkPreview(chunk, maxLength = 96) {
+  const text = sanitizeString(chunk.structuredText || chunk.text, maxLength);
+  return text.length > maxLength - 1 ? `${text.slice(0, maxLength - 1).trim()}…` : text;
+}
+
+function buildSourceBreakdownFromChunks(chunks, citationIds = []) {
+  const chunkPool = citationIds.length
+    ? citationIds.map((id) => chunks.find((chunk) => chunk.id === id)).filter(Boolean)
+    : chunks;
+  const grouped = new Map();
+
+  chunkPool.forEach((chunk) => {
+    const type = sanitizeSourceDetailType(chunk.sourceDetailType);
+    if (grouped.has(type)) return;
+    grouped.set(type, {
+      type,
+      summary: sanitizeString(
+        `${chunk.title}：${chunk.fieldLabel || '重點'}是「${buildChunkPreview(chunk, 88)}」`,
+        180
+      )
+    });
+  });
+
+  return Array.from(grouped.values()).slice(0, 4);
+}
+
+function normalizeSections(sections = {}, fallbackAnswer = '', fallbackBullets = []) {
+  const safeSections = sections && typeof sections === 'object' ? sections : {};
+  const recommendedSteps = sanitizeTextArray(safeSections.recommendedSteps || fallbackBullets, 4, 180);
+  const whyThisWorks = sanitizeTextArray(safeSections.whyThisWorks, 3, 180);
+  const watchOuts = sanitizeTextArray(safeSections.watchOuts, 3, 180);
+
+  return {
+    directAnswer: sanitizeString(safeSections.directAnswer || fallbackAnswer, 600),
+    recommendedSteps,
+    whyThisWorks,
+    watchOuts
+  };
+}
+
+function normalizeSourceBreakdown(items = [], fallbackChunks = [], citationIds = []) {
+  const normalized = (Array.isArray(items) ? items : [])
+    .map((item) => ({
+      type: sanitizeSourceDetailType(item?.type || item?.sourceDetailType),
+      summary: sanitizeString(item?.summary, 180)
+    }))
+    .filter((item) => item.summary)
+    .slice(0, 4);
+
+  return normalized.length ? normalized : buildSourceBreakdownFromChunks(fallbackChunks, citationIds);
 }
 
 function buildGroundedPrompt(query, chunks) {
@@ -78,25 +177,42 @@ function buildGroundedPrompt(query, chunks) {
     .map((chunk, index) => [
       `[#${index + 1}]`,
       `id: ${chunk.id}`,
+      `parentId: ${chunk.parentId || chunk.id}`,
       `sourceType: ${chunk.sourceType}`,
+      `sourceDetailType: ${chunk.sourceDetailType}`,
       `title: ${chunk.title}`,
-      `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
+      `locationLabel: ${chunk.locationLabel || '未提供位置'}`,
       `sectionId: ${chunk.sectionId || 'unknown'}`,
-      `text: ${chunk.text}`
+      `fieldType: ${chunk.fieldType || 'parent'}`,
+      `fieldLabel: ${chunk.fieldLabel || '內容重點'}`,
+      `evidenceRole: ${chunk.evidenceRole || 'supporting'}`,
+      `timeHint: ${chunk.timeHint || '未提供'}`,
+      `bestTimeHint: ${chunk.bestTimeHint || '未提供'}`,
+      `structuredText: ${chunk.structuredText || chunk.text}`,
+      `text: ${chunk.text || chunk.structuredText}`
     ].join('\n'))
     .join('\n\n');
 
-  return `你是「星海攻略」站內問答整理器。你只能根據提供的 sources 回答，不可補充外部知識。
+  return `你是站內搜尋的語意整理助手，只能根據提供的 sources 作答，不能補外部資訊，也不能假設網站沒寫的內容。
 
-規則：
-1. 只能使用 sources 已經出現的資訊；如果資料不足，必須直接說明站內資料不足。
-2. answer 用繁體中文寫成 1 段精簡回答，語氣務實，不要誇大或保證。
-3. bullets 最多 4 點，每點都必須可以回溯到 sources，沒有必要就回傳空陣列。
-4. citationIds 只能填提供的 chunk id，不能發明新的 id。
-5. 若問題偏流程，可優先整理 schedule；若偏技巧、規則或服務細節，可優先整理 playbook，再視需要補 deck/show。
-6. 若 sources 只有零碎片段，請明確說目前無法完整回答，不要硬補缺漏資訊。
-7. primarySourceType 必須是 schedule / deck / show / playbook / static 其中之一。
-8. insufficientData 為 true 時，answer 與 missingReason 仍要用繁體中文說清楚缺什麼。
+請嚴格遵守：
+1. 全部輸出使用繁體中文，語氣自然、好懂、像熟悉攻略的旅伴。
+2. answer 先給一句直接結論，不能空泛。
+3. sections 必須依據證據整理成：
+   - directAnswer：一句最直接的回答
+   - recommendedSteps：1 到 4 點，偏 SOP / 順序 / 做法
+   - whyThisWorks：0 到 3 點，解釋為什麼這樣安排
+   - watchOuts：0 到 3 點，提醒風險、例外、限制
+4. sourceBreakdown 要明確區分證據層級：
+   - official = 官方規則
+   - concierge = 禮賓加值
+   - community = 社群實戰
+   - general = 一般站內整理
+5. citationIds 只能填 sources 內真的存在的 chunk id，不能杜撰。
+6. 若 sources 足以回答，insufficientData 必須是 false；若站內證據不夠，就設 true，並在 answer 與 missingReason 明確說缺什麼資訊。
+7. primarySourceType 只能填 schedule / deck / show / playbook / static。
+8. followUpHint 請給一句「如果還想更準，可以怎麼換問法」的建議；若已足夠完整，也可給空字串。
+9. 不要逐字重抄 sources，要整合後再回答，但所有結論都必須能被引用支持。
 
 使用者問題：
 ${query}
@@ -110,24 +226,26 @@ function buildRewritePrompt(query, chunks) {
     .map((chunk, index) => [
       `[#${index + 1}] ${chunk.title}`,
       `sourceType: ${chunk.sourceType}`,
-      `locationLabel: ${chunk.locationLabel || '未標示位置'}`,
-      `text: ${chunk.text}`
+      `sourceDetailType: ${chunk.sourceDetailType}`,
+      `fieldLabel: ${chunk.fieldLabel || '內容重點'}`,
+      `locationLabel: ${chunk.locationLabel || '未提供位置'}`,
+      `text: ${chunk.structuredText || chunk.text}`
     ].join('\n'))
     .join('\n\n');
 
-  return `你是「星海攻略」站內搜尋改寫器。你只能根據提供的 sources，把使用者原問題改寫成更適合本站本地搜尋的查詢，不可新增外部知識。
+  return `你是站內搜尋的查詢改寫助手，只能根據已命中的站內片段，把原始問題改寫成更容易在網站內找到答案的搜尋詞。
 
 規則：
-1. rewrittenQuery 要保留原意，但改成更容易命中站內內容的查詢句。
-2. keywords 提供 3 到 6 個關鍵詞，優先用站內已出現的設施、服務、時間或規則詞。
-3. alternates 提供 2 到 4 個可替代問法，仍然要貼近原問題。
-4. 不要捏造新的活動、設施、制度或時段。
-5. confidence 只能填 high / medium / low。
+1. rewrittenQuery 請保留原本意圖，但改成更容易命中站內攻略的問法。
+2. keywords 提供 3 到 6 個關鍵詞，優先保留站內實際常見名詞、別名、設施名、時段或任務詞。
+3. alternates 提供 2 到 4 個可替代搜尋角度。
+4. 不要加入 sources 以外的新資訊，也不要把問題改寫得太長。
+5. confidence 只能是 high / medium / low。
 
-原問題：
+原始問題：
 ${query}
 
-可參考的站內片段：
+已命中的線索：
 ${sourceDump}`;
 }
 
@@ -159,7 +277,7 @@ function buildGroundedSchema() {
       },
       confidence: {
         type: 'STRING',
-        enum: ['high', 'medium', 'low']
+        enum: ALLOWED_CONFIDENCE
       },
       primarySourceType: {
         type: 'STRING',
@@ -172,9 +290,61 @@ function buildGroundedSchema() {
         minItems: 0,
         maxItems: MAX_CHUNKS
       },
-      insufficientData: { type: 'BOOLEAN' }
+      insufficientData: { type: 'BOOLEAN' },
+      sections: {
+        type: 'OBJECT',
+        properties: {
+          directAnswer: { type: 'STRING' },
+          recommendedSteps: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 4
+          },
+          whyThisWorks: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 3
+          },
+          watchOuts: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 3
+          }
+        },
+        required: ['directAnswer', 'recommendedSteps', 'whyThisWorks', 'watchOuts']
+      },
+      sourceBreakdown: {
+        type: 'ARRAY',
+        items: {
+          type: 'OBJECT',
+          properties: {
+            type: {
+              type: 'STRING',
+              enum: ALLOWED_SOURCE_DETAIL_TYPES
+            },
+            summary: { type: 'STRING' }
+          },
+          required: ['type', 'summary']
+        },
+        minItems: 0,
+        maxItems: 4
+      },
+      followUpHint: { type: 'STRING' }
     },
-    required: ['answer', 'bullets', 'confidence', 'primarySourceType', 'citationIds', 'insufficientData']
+    required: [
+      'answer',
+      'bullets',
+      'confidence',
+      'primarySourceType',
+      'citationIds',
+      'insufficientData',
+      'sections',
+      'sourceBreakdown',
+      'followUpHint'
+    ]
   };
 }
 
@@ -197,7 +367,7 @@ function buildRewriteSchema() {
       },
       confidence: {
         type: 'STRING',
-        enum: ['high', 'medium', 'low']
+        enum: ALLOWED_CONFIDENCE
       }
     },
     required: ['rewrittenQuery', 'keywords', 'alternates', 'confidence']
@@ -205,28 +375,33 @@ function buildRewriteSchema() {
 }
 
 function buildInsufficientDataPayload(message, options = {}) {
+  const answer = sanitizeString(
+    message || '目前站內命中的內容還不足以整理出穩定答案，建議把問題再問得更具體一點。',
+    600
+  );
+  const bullets = sanitizeTextArray(options.bullets, 4, 180);
+  const citations = Array.isArray(options.citations) ? options.citations.slice(0, MAX_CHUNKS) : [];
+  const sections = normalizeSections(options.sections, answer, bullets);
+  const sourceBreakdown = normalizeSourceBreakdown(options.sourceBreakdown, options.chunks || [], citations.map((item) => item.id));
+
   return {
-    answer: sanitizeString(
-      message || '目前站內命中的內容不足，還不能穩定整理出完整答案。',
-      600
-    ),
-    bullets: (Array.isArray(options.bullets) ? options.bullets : [])
-      .map((item) => sanitizeString(item, 180))
-      .filter(Boolean)
-      .slice(0, 4),
-    citations: Array.isArray(options.citations) ? options.citations.slice(0, MAX_CHUNKS) : [],
+    answer,
+    bullets,
+    citations,
     confidence: 'low',
     primarySourceType: sanitizeSourceType(options.primarySourceType || 'static'),
     missingReason: sanitizeString(
-      options.missingReason || '目前站內只有零碎片段，還缺少足夠證據來把步驟、限制或例外情況講完整。',
+      options.missingReason || '目前命中的站內片段還缺少關鍵步驟、時段或限制條件，無法更精準地下結論。',
       220
     ),
-    insufficientData: true
+    insufficientData: true,
+    sections,
+    sourceBreakdown,
+    followUpHint: sanitizeString(
+      options.followUpHint || '可以改問更具體的設施、時段、對象或步驟，例如直接問「晚餐前去 Lounge 最順嗎？」',
+      160
+    )
   };
-}
-
-function normalizeConfidence(confidence) {
-  return ['high', 'medium', 'low'].includes(confidence) ? confidence : 'low';
 }
 
 function extractKeywordCandidates(query) {
@@ -250,7 +425,7 @@ function extractKeywordCandidates(query) {
 }
 
 function buildLowConfidenceFallback(query, chunks) {
-  const topChunks = chunks.slice(0, 3);
+  const topChunks = chunks.slice(0, 4);
   const primarySourceType = topChunks[0]?.sourceType || 'static';
   const citations = topChunks.map((chunk) => ({
     id: chunk.id,
@@ -258,22 +433,29 @@ function buildLowConfidenceFallback(query, chunks) {
     locationLabel: chunk.locationLabel,
     navTarget: chunk.navTarget
   }));
-
   const bullets = topChunks
-    .map((chunk) => {
-      const text = chunk.text || '';
-      return text.length > 90 ? `${text.slice(0, 90).trim()}...` : text;
-    })
-    .filter(Boolean);
+    .map((chunk) => buildChunkPreview(chunk, 100))
+    .filter(Boolean)
+    .slice(0, 4);
+  const answer = `我先根據目前命中的站內片段整理了一版方向：關於「${query}」，最相關的內容集中在 ${topChunks.map((chunk) => chunk.title).join('、')}。`;
+  const sections = normalizeSections({
+    directAnswer: answer,
+    recommendedSteps: bullets,
+    whyThisWorks: [],
+    watchOuts: []
+  }, answer, bullets);
 
   return {
-    answer: `我先根據目前最接近的站內片段整理重點，但關於「${query}」的證據還不夠完整，建議同時點開引用來源快速核對。`,
+    answer,
     bullets,
     citations,
     confidence: 'low',
     primarySourceType,
-    missingReason: '目前召回到的內容偏片段，還不足以把完整流程、限制條件或例外情況講清楚。',
-    insufficientData: false
+    missingReason: '目前可引用的證據還偏零碎，建議同時點開下方來源快速核對細節。',
+    insufficientData: false,
+    sections,
+    sourceBreakdown: buildSourceBreakdownFromChunks(topChunks, citations.map((item) => item.id)),
+    followUpHint: '若想更準，可以在問題裡補上 Day、時段、設施名或想達成的目標。'
   };
 }
 
@@ -292,7 +474,7 @@ function buildRewriteFallback(query, chunks) {
     .slice(0, 4);
 
   return {
-    rewrittenQuery: keywords.join(' '),
+    rewrittenQuery: sanitizeString(keywords.join(' '), 160),
     keywords,
     alternates,
     confidence: keywords.length >= 3 ? 'medium' : 'low'
@@ -327,7 +509,7 @@ async function callGemini(env, mode, query, chunks) {
         ],
         generationConfig: {
           temperature: 0.2,
-          maxOutputTokens: mode === 'query_rewrite_v1' ? 500 : 700,
+          maxOutputTokens: mode === 'query_rewrite_v1' ? 500 : 1100,
           responseMimeType: 'application/json',
           responseSchema: schema
         }
@@ -371,27 +553,36 @@ function finalizeGroundedAnswer(modelOutput, chunks, query) {
       ? chunkMap.get(citations[0].id)?.sourceType || 'static'
       : chunks[0]?.sourceType || 'static';
 
+  const answer = sanitizeString(modelOutput?.answer, 600);
+  const bullets = sanitizeTextArray(modelOutput?.bullets, 4, 180);
+  const sections = normalizeSections(modelOutput?.sections, answer, bullets);
+  const sourceBreakdown = normalizeSourceBreakdown(modelOutput?.sourceBreakdown, chunks, citationIds);
+  const followUpHint = sanitizeString(modelOutput?.followUpHint, 160);
   const payload = {
-    answer: sanitizeString(modelOutput?.answer, 600),
-    bullets: (Array.isArray(modelOutput?.bullets) ? modelOutput.bullets : [])
-      .map((item) => sanitizeString(item, 180))
-      .filter(Boolean)
-      .slice(0, 4),
+    answer: answer || sections.directAnswer,
+    bullets: bullets.length ? bullets : sections.recommendedSteps.slice(0, 4),
     citations,
-    confidence: normalizeConfidence(modelOutput?.confidence),
+    confidence: sanitizeConfidence(modelOutput?.confidence),
     primarySourceType,
     missingReason: sanitizeString(modelOutput?.missingReason, 220),
-    insufficientData: Boolean(modelOutput?.insufficientData)
+    insufficientData: Boolean(modelOutput?.insufficientData),
+    sections,
+    sourceBreakdown,
+    followUpHint
   };
 
   if (payload.insufficientData) {
     return buildInsufficientDataPayload(
-      payload.answer || `目前站內還沒有足夠資料可以完整回答「${query}」。`,
+      payload.answer || `目前站內資料還不足以直接回答「${query}」。`,
       {
         bullets: payload.bullets,
         citations,
         primarySourceType,
-        missingReason: payload.missingReason
+        missingReason: payload.missingReason,
+        sections,
+        sourceBreakdown,
+        followUpHint,
+        chunks
       }
     );
   }
@@ -424,7 +615,7 @@ function finalizeRewriteOutput(modelOutput, query, chunks) {
     rewrittenQuery,
     keywords,
     alternates,
-    confidence: normalizeConfidence(modelOutput?.confidence)
+    confidence: sanitizeConfidence(modelOutput?.confidence)
   };
 }
 
@@ -463,9 +654,10 @@ export default {
       }
 
       return jsonResponse(buildInsufficientDataPayload(
-        '請把問題再具體一點，至少輸入 6 個以上有意義的字，AI 才能先用站內資料做召回。',
+        '問題太短了，站內資料還抓不到足夠線索來整理 AI 解答。',
         {
-          missingReason: '目前問題太短，還不足以穩定判斷你要找的是哪一段流程、設施或服務。'
+          missingReason: '請把問題補到至少 6 個字，最好直接帶上 Day、時段、設施或想完成的步驟。',
+          chunks
         }
       ));
     }
@@ -476,9 +668,10 @@ export default {
       }
 
       return jsonResponse(buildInsufficientDataPayload(
-        '目前站內命中的證據太少，還不足以整理成穩定答案，建議把問題改得更聚焦，例如加入 Day、設施名、服務名或具體步驟。',
+        '目前命中的站內片段還不夠，無法整理成穩定答案。',
         {
-          missingReason: '這次召回到的內容太少，還無法交叉比對出足夠可靠的站內答案。'
+          missingReason: '至少需要兩個可引用的站內片段，才能把步驟、限制或時機整理得更可靠。',
+          chunks
         }
       ));
     }
