@@ -1,61 +1,104 @@
-const CACHE_NAME = 'dcl-guide-v9';
-const ASSETS_TO_CACHE = [
+const CORE_CACHE_NAME = 'dcl-guide-v10';
+const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
+const CORE_ASSETS_TO_CACHE = [
   'index.html',
   'style.css',
   'script.js',
   'data.js',
   'manifest.json',
-  'https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css'
+  '1772539078755.png',
+  'icons/icon-192.png',
+  'icons/icon-512.png'
 ];
 
-// 安裝 Service Worker 並快取核心資源
+const EXCLUDED_PATHS = new Set(['/api/ai-answer']);
+const EXCLUDED_HOSTS = new Set(['api.open-meteo.com']);
+const RUNTIME_CACHEABLE_DESTINATIONS = new Set(['document', 'style', 'script', 'image', 'font']);
+
+function isCacheableResponse(response) {
+  return Boolean(response) && (response.ok || response.type === 'opaque');
+}
+
+function shouldBypassRequest(request) {
+  if (request.method !== 'GET') {
+    return true;
+  }
+
+  const url = new URL(request.url);
+  if (!['http:', 'https:'].includes(url.protocol)) {
+    return true;
+  }
+
+  return EXCLUDED_PATHS.has(url.pathname) || EXCLUDED_HOSTS.has(url.hostname);
+}
+
+function shouldHandleRuntimeCache(request) {
+  if (shouldBypassRequest(request)) {
+    return false;
+  }
+
+  const url = new URL(request.url);
+  if (url.origin === self.location.origin) {
+    return true;
+  }
+
+  return RUNTIME_CACHEABLE_DESTINATIONS.has(request.destination);
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('Service Worker: Caching critical assets');
-      return cache.addAll(ASSETS_TO_CACHE);
+    caches.open(CORE_CACHE_NAME).then((cache) => {
+      return cache.addAll(CORE_ASSETS_TO_CACHE.map((asset) => new Request(asset, { cache: 'reload' })));
     })
   );
+
   self.skipWaiting();
 });
 
-// 激活 Service Worker 並清理舊快取
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('Service Worker: Clearing old cache');
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
+    caches.keys().then((cacheNames) => Promise.all(
+      cacheNames.map((cacheName) => {
+        if (cacheName !== CORE_CACHE_NAME && cacheName !== RUNTIME_CACHE_NAME) {
+          return caches.delete(cacheName);
+        }
+        return null;
+      })
+    ))
   );
+
   self.clients.claim();
 });
 
-// 攔截請求：Stale-while-revalidate 策略
-// 先從快取回應，同時在背景更新快取
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      const fetchPromise = fetch(event.request).then((networkResponse) => {
-        // 如果請求成功，更新快取
-        if (networkResponse && networkResponse.status === 200) {
-          const cacheCopy = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, cacheCopy);
-          });
-        }
-        return networkResponse;
-      }).catch(() => {
-        // 網路出問題時的後備邏輯（可在此處回傳離線頁面）
-      });
+  if (!shouldHandleRuntimeCache(event.request)) {
+    return;
+  }
 
-      return cachedResponse || fetchPromise;
-    })
-  );
+  event.respondWith((async () => {
+    const cachedResponse = await caches.match(event.request);
+
+    const fetchAndCache = async () => {
+      const networkResponse = await fetch(event.request);
+      if (isCacheableResponse(networkResponse)) {
+        const cache = await caches.open(RUNTIME_CACHE_NAME);
+        cache.put(event.request, networkResponse.clone());
+      }
+      return networkResponse;
+    };
+
+    if (cachedResponse) {
+      event.waitUntil(fetchAndCache().catch(() => null));
+      return cachedResponse;
+    }
+
+    try {
+      return await fetchAndCache();
+    } catch (error) {
+      if (event.request.mode === 'navigate') {
+        return caches.match('index.html');
+      }
+      throw error;
+    }
+  })());
 });

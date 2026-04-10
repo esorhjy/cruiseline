@@ -53,6 +53,9 @@
     const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
     const AI_REWRITE_MAX_ATTEMPTS = 1;
     const AI_REWRITE_MAX_RESULTS = 4;
+    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v2';
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
         documents: [],
         resultsById: new Map(),
@@ -64,7 +67,13 @@
         activeMode: 'keyword',
         lastQuery: '',
         lastResults: [],
-        lastQueryData: null
+        lastQueryData: null,
+        documentVersion: 'base'
+    };
+    const runtimeState = {
+        bubbleTimer: null,
+        countdownTimer: null,
+        scrollTicking: false
     };
 
     function buildSynonymMap(groups) {
@@ -117,6 +126,23 @@
 
     function uniqueItems(items) {
         return [...new Set(items)];
+    }
+
+    function simpleHash(text) {
+        let hash = 0;
+        const normalized = String(text || '');
+        for (let index = 0; index < normalized.length; index += 1) {
+            hash = ((hash * 31) + normalized.charCodeAt(index)) >>> 0;
+        }
+        return hash.toString(36);
+    }
+
+    function shouldPauseAmbientEffects() {
+        return document.hidden || prefersReducedMotion.matches;
+    }
+
+    function canUseCursorSparkles() {
+        return finePointerQuery.matches && !shouldPauseAmbientEffects();
     }
 
     function getSearchSignalLength(text) {
@@ -229,15 +255,36 @@
         return endpointMeta?.content?.trim() || '/api/ai-answer';
     }
 
-    // 1. 滾動進度條
+    // 1. 捲動相關 UI
     const progressBar = document.getElementById('scroll-progress');
-    if (progressBar) {
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            progressBar.style.width = scrolled + "%";
+    const backToTopBtn = document.getElementById('back-to-top');
+
+    function updateScrollUi() {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+
+        if (progressBar) {
+            const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+            progressBar.style.width = `${scrolled}%`;
+        }
+
+        if (backToTopBtn) {
+            backToTopBtn.classList.toggle('show', window.scrollY > 300);
+        }
+    }
+
+    function scheduleScrollUiUpdate() {
+        if (runtimeState.scrollTicking) return;
+        runtimeState.scrollTicking = true;
+        window.requestAnimationFrame(() => {
+            runtimeState.scrollTicking = false;
+            updateScrollUi();
         });
+    }
+
+    if (progressBar || backToTopBtn) {
+        window.addEventListener('scroll', scheduleScrollUiUpdate, { passive: true });
+        updateScrollUi();
     }
 
     // 2. 元素淡入動畫
@@ -287,16 +334,7 @@
         });
     }
 
-    // 3. 回到頂端按鈕
-    const backToTopBtn = document.getElementById('back-to-top');
     if (backToTopBtn) {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('show');
-            } else {
-                backToTopBtn.classList.remove('show');
-            }
-        });
         backToTopBtn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
@@ -310,11 +348,34 @@
     const cdSeconds = document.getElementById("cd-seconds");
     const countdownContainer = document.getElementById("countdown");
 
+    function stopCountdownTimer() {
+        if (runtimeState.countdownTimer) {
+            window.clearInterval(runtimeState.countdownTimer);
+            runtimeState.countdownTimer = null;
+        }
+    }
+
+    function syncCountdownTimer() {
+        if (!countdownContainer) return;
+        if (shouldPauseAmbientEffects()) {
+            stopCountdownTimer();
+            return;
+        }
+        if (runtimeState.countdownTimer) return;
+
+        runtimeState.countdownTimer = window.setInterval(() => {
+            if (!document.hidden) {
+                updateCountdown();
+            }
+        }, 1000);
+    }
+
     function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetDate - now;
         if (distance < 0) {
             if (countdownContainer) countdownContainer.innerHTML = "<div class='countdown-item' style='width:auto; padding: 10px 30px;'><span class='cd-num' style='font-size: 1.8rem;'>✨ 魔法已啟航！ ✨</span></div>";
+            stopCountdownTimer();
             return;
         }
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -326,8 +387,8 @@
         if (cdMinutes) cdMinutes.innerText = minutes.toString().padStart(2, '0');
         if (cdSeconds) cdSeconds.innerText = seconds.toString().padStart(2, '0');
     }
-    setInterval(updateCountdown, 1000);
     updateCountdown();
+    syncCountdownTimer();
 
     // 5. 新加坡天氣
     async function fetchSingaporeWeather() {
@@ -384,7 +445,9 @@
         document.body.appendChild(modal);
 
         modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
-        createConfetti();
+        if (!prefersReducedMotion.matches) {
+            createConfetti();
+        }
     }
 
     function createConfetti() {
@@ -417,22 +480,26 @@
 
     // 7. 游標魔法 (PC)
     let lastSparkleTime = 0;
-    document.addEventListener('mousemove', (e) => {
-        const now = Date.now();
-        if (now - lastSparkleTime < 60) return;
-        lastSparkleTime = now;
-        if (Math.random() > 0.4) {
-            const sparkle = document.createElement('i');
-            sparkle.className = 'fa-solid fa-star cursor-sparkle';
-            sparkle.style.left = e.clientX + 'px';
-            sparkle.style.top = e.clientY + 'px';
-            document.body.appendChild(sparkle);
-            setTimeout(() => sparkle.remove(), 800);
-        }
-    });
+    if (finePointerQuery.matches) {
+        document.addEventListener('mousemove', (e) => {
+            if (!canUseCursorSparkles()) return;
+            const now = Date.now();
+            if (now - lastSparkleTime < 60) return;
+            lastSparkleTime = now;
+            if (Math.random() > 0.4) {
+                const sparkle = document.createElement('i');
+                sparkle.className = 'fa-solid fa-star cursor-sparkle';
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 800);
+            }
+        });
+    }
 
     // 8. 漂浮泡泡
     function createMickeyBubble() {
+        if (shouldPauseAmbientEffects()) return;
         const bubble = document.createElement('div');
         bubble.className = 'mickey-shape mickey-bubble';
         bubble.style.left = Math.random() * 90 + 'vw';
@@ -446,7 +513,45 @@
         document.body.appendChild(bubble);
         setTimeout(() => { if (document.body.contains(bubble)) bubble.remove(); }, 12000);
     }
-    setInterval(createMickeyBubble, 6000);
+
+    function stopBubbleLoop() {
+        if (runtimeState.bubbleTimer) {
+            window.clearInterval(runtimeState.bubbleTimer);
+            runtimeState.bubbleTimer = null;
+        }
+    }
+
+    function syncBubbleLoop() {
+        if (shouldPauseAmbientEffects()) {
+            stopBubbleLoop();
+            return;
+        }
+        if (runtimeState.bubbleTimer) return;
+
+        runtimeState.bubbleTimer = window.setInterval(() => {
+            if (!document.hidden) {
+                createMickeyBubble();
+            }
+        }, 6000);
+    }
+
+    syncBubbleLoop();
+
+    function syncAmbientRuntime() {
+        updateCountdown();
+        syncCountdownTimer();
+        syncBubbleLoop();
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        syncAmbientRuntime();
+    });
+
+    if (typeof prefersReducedMotion.addEventListener === 'function') {
+        prefersReducedMotion.addEventListener('change', syncAmbientRuntime);
+    } else if (typeof prefersReducedMotion.addListener === 'function') {
+        prefersReducedMotion.addListener(syncAmbientRuntime);
+    }
 
     // 9. 動態渲染行程表資料
     function renderSchedule() {
@@ -1063,6 +1168,10 @@
                 normalizedCombined: uniqueItems([normalizedTitle, normalizedKeywords, normalizedText].filter(Boolean)).join(' ')
             };
         });
+
+        searchState.documentVersion = simpleHash(searchState.documents
+            .map(doc => `${doc.id}::${doc.normalizedCombined}`)
+            .join('||'));
     }
 
     function getSearchUnits(rawQuery) {
@@ -1918,8 +2027,16 @@
         `;
     }
 
+    function getAiContentVersion() {
+        return `${SITE_SEARCH_SCHEMA_VERSION}-${searchState.documentVersion || 'base'}`;
+    }
+
     function getAiCacheKey(query, chunks) {
-        return `cruise-ai-answer::${normalizeSearchText(query)}::${chunks.map(chunk => chunk.id).join('|')}`;
+        const chunkSignature = chunks
+            .map(chunk => `${chunk.id}:${simpleHash([chunk.title, chunk.locationLabel, chunk.sourceType, chunk.text].join('::'))}`)
+            .join('|');
+
+        return `cruise-ai-answer::${getAiContentVersion()}::${normalizeSearchText(query)}::${chunkSignature}`;
     }
 
     function readAiCache(cacheKey) {
@@ -1969,7 +2086,7 @@
             body: JSON.stringify({
                 query,
                 mode: 'grounded_qa_v1',
-                contentVersion: 'site-search-v1',
+                contentVersion: getAiContentVersion(),
                 chunks
             })
         });
@@ -1991,7 +2108,7 @@
             body: JSON.stringify({
                 query,
                 mode: 'query_rewrite_v1',
-                contentVersion: 'site-search-v1',
+                contentVersion: getAiContentVersion(),
                 chunks
             })
         });

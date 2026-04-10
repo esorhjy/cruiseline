@@ -2819,6 +2819,36 @@ footer h2 {
     to { opacity: 1; transform: translateY(0); }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.active {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .wave-divider .shape-fill,
+    #easter-egg-trigger,
+    .cursor-sparkle,
+    .mickey-bubble,
+    .confetti-particle {
+        animation: none !important;
+    }
+
+    .cursor-sparkle,
+    .mickey-bubble,
+    .confetti-particle {
+        display: none !important;
+    }
+
+    .search-result-card,
+    .search-ai-citation,
+    #back-to-top,
+    .nav-search-trigger {
+        transition: none;
+    }
+}
+
 @media (max-width: 600px) {
     .hero {
         padding: 98px 14px 84px;
