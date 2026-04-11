@@ -69,9 +69,14 @@
   * 導入 **本地語意化關鍵字搜尋**，同時索引 `cruiseSchedule`、`deckGuideData`、`showGuideData`、`playbookGuideData` 與重要靜態 section。
   * 搜尋結果支援 **自動跳轉與自動展開**，可直達對應的 Day、Deck、Playbook mission 或靜態卡片。
   * 在不破壞原搜尋的前提下，新增 **Gemini grounded AI 解答模式**，以「本地搜尋先召回 → Worker 整理命中片段」的方式提供自然語言答案。
-  * AI 檢索策略已升級為 **意圖導向 + 精準度優先 (precision-first)**，不再固定先抓 `schedule`，而是依問題類型優先挑選 `playbook`、`deck/show` 或 `schedule` 作為主證據。
-  * AI 解答嚴格限制為 **只根據站內命中的內容回答**，並附引用來源與信心提示，避免外部幻覺。
-  * 針對中文輸入法與長答案閱讀，補強 **form submit、composition 保護、單次 rewrite 回補、可捲動答案區與快取版控**，確保實際可用性。
+  * AI 檢索策略已升級為 **主體導向檢索**：
+    * 先拆出 `hard anchors + soft modifiers`
+    * 再用 `subject clusters + evidence layers` 補同主題細節卡
+    * 讓 `playbook / deck / show` 這類高精度卡片優先於廣泛總覽
+  * AI 回答模式已升級為 **預設長報告模式**，會以 `topicGroups`、`recommendedPlan`、`detailBreakdown`、`sourceComparison` 等結構整理多張卡片細節，而不是只回精簡摘要。
+  * AI 解答嚴格限制為 **只根據站內命中的內容回答**，並附引用來源、來源層級與信心提示，避免外部幻覺。
+  * 搜尋面板已升級為 **近全螢幕雙欄工作台**，讓左側 AI 長答案與右側搜尋結果卡可以並排對照閱讀。
+  * 針對中文輸入法與長答案閱讀，補強 **form submit、composition 保護、單次 rewrite 回補、可捲動答案區、fallback 報告骨架與快取版控**，確保實際可用性。
 
 ---
 
@@ -89,6 +94,8 @@
 * **模組化擴充：** 新功能優先採用獨立資料源與獨立 renderer，例如 `cruiseSchedule`、`checklistData`、`deckGuideData`、`showGuideData`、`playbookGuideData`，確保互動區塊彼此不干擾。
 * **搜尋可追溯性：** 搜尋與 AI 解答都必須回到站內原文，保留 `搜尋命中 -> 跳轉定位 -> 使用者自行核對` 的路徑，不可讓模型成為唯一資訊來源。
 * **精準度優先檢索：** 當問題屬於技巧、設施細節或規則時，AI 應優先抓取 `playbook` 與 `deck/show` 這類細節卡，而不是讓廣泛的行程總覽先蓋掉答案。
+* **主體優先、輔助降權：** 自然語言問句中的專有名詞、設施名、服務名與明確時段優先於「流程 / 注意事項 / 要不要 / 值不值得」這類輔助描述詞。
+* **長答案可掃讀：** 當 AI 已命中多張高價值卡時，優先整理成可掃讀的長清單與主題群組，不主動壓回過短答案。
 
 ### B. 設計原則：Premium & Magicial
 

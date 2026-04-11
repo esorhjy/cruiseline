@@ -43,7 +43,8 @@
     ];
     const AI_QUERY_STOP_WORDS = [
         '什麼', '怎麼', '如何', '請問', '一下', '值得', '推薦', '安排', '有沒有',
-        '可以', '是否', '會不會', '需要', '想問', '最', '先', '去', '做', '呢', '嗎'
+        '可以', '是否', '會不會', '需要', '想問', '最', '先', '去', '做', '呢', '嗎',
+        '流程', '注意事項', '要不要', '值不值得', '該不該', '比較', '順序', '先後', '限制', '規則'
     ];
     const searchSynonymMap = buildSynonymMap(SEARCH_SYNONYM_GROUPS);
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
@@ -53,7 +54,13 @@
     const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
     const AI_REWRITE_MAX_ATTEMPTS = 1;
     const AI_REWRITE_MAX_RESULTS = 4;
-    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v3';
+    const AI_REPORT_DEFAULT_MODE = 'report';
+    const AI_REPORT_MAX_RESULTS = 24;
+    const AI_REPORT_MAX_PARENTS = 10;
+    const AI_REPORT_MAX_PER_PARENT = 4;
+    const AI_REPORT_STRONG_EVIDENCE_MIN = 4;
+    const AI_RESULT_HIGHLIGHT_LIMIT = 4;
+    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v5';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
@@ -1472,7 +1479,8 @@
             theatreFocus: hasQueryHint(normalizedQuery, ['劇院', 'theatre', 'theater', '主秀', '看秀', 'remember', '提早入場']),
             roomServiceFocus: hasQueryHint(normalizedQuery, ['room service', '房務', '客房服務']),
             foodFocus: hasQueryHint(normalizedQuery, ['補給', '點心', '快餐', '餐廳', 'pizza', '披薩', '吃什麼']),
-            kidFocus: hasQueryHint(normalizedQuery, ['孩子', '小孩', '兒童', '親子', 'kids'])
+            kidFocus: hasQueryHint(normalizedQuery, ['孩子', '小孩', '兒童', '親子', 'kids']),
+            comparisonFocus: hasQueryHint(normalizedQuery, ['還是', '比較', '要不要', '先', '優先'])
         };
     }
 
@@ -1513,6 +1521,19 @@
         return labels[sourceType] || '站內內容';
     }
 
+    function getAiEntityTypeLabel(entityType) {
+        const labels = {
+            facility: '設施',
+            service: '服務',
+            schedule: '行程',
+            show: '表演',
+            playbook: '攻略',
+            mixed: '綜合整理'
+        };
+
+        return labels[entityType] || '主題';
+    }
+
     function buildAiSlots(normalizedQuery, intents = {}, highlightTerms = []) {
         const day = uniqueItems([
             ...(intents.day1Focus ? ['第一天', 'day 1', '登船日', '登船後'] : []),
@@ -1547,6 +1568,12 @@
             ...(hasQueryHint(normalizedQuery, ['踩雷', '風險', '注意', '規則', '限制', '要不要']) ? ['踩雷', '注意', '規則', '限制'] : [])
         ]).slice(0, 8);
 
+        const comparison = uniqueItems([
+            ...(intents.comparisonFocus || hasQueryHint(normalizedQuery, ['還是', '比較']) ? ['比較', '取捨'] : []),
+            ...(hasQueryHint(normalizedQuery, ['要不要', '該不該']) ? ['要不要'] : []),
+            ...(hasQueryHint(normalizedQuery, ['先', '優先']) ? ['優先順序'] : [])
+        ]).slice(0, 6);
+
         const entity = uniqueItems([
             ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
             ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge'] : []),
@@ -1563,6 +1590,7 @@
             audience,
             goal,
             risk,
+            comparison,
             entity
         };
     }
@@ -1574,8 +1602,80 @@
             ...(slots.audience || []),
             ...(slots.goal || []),
             ...(slots.risk || []),
+            ...(slots.comparison || []),
             ...(slots.entity || [])
         ]).filter(Boolean).slice(0, 18);
+    }
+
+    function buildAiAnchorProfile(normalizedQuery, intents = {}, slots = {}, highlightTerms = []) {
+        const hardAnchors = uniqueItems([
+            ...(slots.entity || []),
+            ...(slots.day || []),
+            ...(slots.timeWindow || []),
+            ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge'] : []),
+            ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀'] : []),
+            ...(intents.roomServiceFocus ? ['room service', '客房服務'] : []),
+            ...(intents.kidFocus ? ['open house', 'oceaneer', 'kids club'] : []),
+            ...(intents.foodFocus ? ['補給', '點心', '披薩', 'pizza'] : []),
+            ...highlightTerms
+        ]).filter(Boolean).slice(0, 14);
+
+        const softModifiers = uniqueItems([
+            ...(slots.goal || []),
+            ...(slots.risk || []),
+            ...(slots.comparison || []),
+            ...(slots.audience || []).filter(item => item !== '禮賓'),
+            ...(hasQueryHint(normalizedQuery, ['流程', '步驟', '怎麼做']) ? ['流程', '步驟'] : []),
+            ...(hasQueryHint(normalizedQuery, ['注意事項', '注意', '限制', '規則']) ? ['注意事項', '限制', '規則'] : []),
+            ...(hasQueryHint(normalizedQuery, ['要不要', '值不值得', '該不該']) ? ['要不要', '值不值得'] : []),
+            ...(hasQueryHint(normalizedQuery, ['比較', '還是', '先後順序']) ? ['比較', '先後順序'] : [])
+        ]).filter(Boolean).slice(0, 14);
+
+        const subjectClusters = uniqueItems([
+            ...hardAnchors,
+            ...(slots.entity || []).map(term => aiSearchDisplayMap.get(normalizeSearchText(term)) || term),
+            ...(intents.conciergeFocus ? ['Lounge', '禮賓酒廊', '優先入場'] : []),
+            ...(intents.theatreFocus ? ['劇院', '主秀', '晚秀'] : []),
+            ...(intents.roomServiceFocus ? ['Room Service', '宵夜', '早餐'] : []),
+            ...(intents.kidFocus ? ['Open House', 'Kids Club', 'Oceaneer'] : [])
+        ]).filter(Boolean).slice(0, 16);
+
+        return {
+            hardAnchors,
+            softModifiers,
+            subjectClusters
+        };
+    }
+
+    function buildAiEvidenceLayers(queryData = {}) {
+        const slots = queryData.slots || {};
+        const hardAnchors = queryData.hardAnchors || [];
+        const softModifiers = queryData.softModifiers || [];
+        return {
+            core: uniqueItems([
+                ...hardAnchors.slice(0, 8),
+                ...(slots.day || []).slice(0, 2),
+                ...(slots.timeWindow || []).slice(0, 2)
+            ]).slice(0, 12),
+            extension: uniqueItems([
+                ...(queryData.subjectClusters || []).slice(0, 8),
+                ...(slots.goal || []).slice(0, 3),
+                ...(slots.audience || []).slice(0, 3),
+                ...softModifiers.slice(0, 4)
+            ]).slice(0, 16),
+            rulesLimits: uniqueItems([
+                ...(slots.risk || []).slice(0, 4),
+                ...softModifiers.filter(item => ['注意事項', '限制', '規則', '要不要', '值不值得'].includes(item))
+            ]).slice(0, 10),
+            timingContext: uniqueItems([
+                ...(slots.day || []),
+                ...(slots.timeWindow || [])
+            ]).slice(0, 8),
+            sourceContrast: uniqueItems([
+                ...(queryData.intentProfile?.sourceDetailPriority || []),
+                ...(queryData.subjectClusters || []).slice(0, 4)
+            ]).slice(0, 8)
+        };
     }
 
     function buildAiSourceDetailPriority(queryData = {}, profileType = 'operational-detail') {
@@ -1606,6 +1706,8 @@
         const normalizedQuery = queryData.normalizedQuery || '';
         const intents = queryData.intents || {};
         const slots = queryData.slots || {};
+        const hardAnchors = queryData.hardAnchors || [];
+        const softModifiers = queryData.softModifiers || [];
         const sequenceSignal = intents.scheduleFocus && (
             intents.actionFocus
             || hasQueryHint(normalizedQuery, ['順序', '第一步', '先去', '先做', '先做什麼', '怎麼安排', '路線'])
@@ -1640,14 +1742,16 @@
         }
 
         const focusTerms = uniqueItems([
+            ...hardAnchors.slice(0, 10),
             ...(queryData.highlightTerms || []).slice(0, 6),
-            ...(queryData.slotTerms || []).slice(0, 10),
+            ...(queryData.subjectClusters || []).slice(0, 8),
             ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge', '酒廊', '劇院優先入場'] : []),
             ...(intents.roomServiceFocus ? ['room service', '房務', '客房服務', '早餐', '宵夜'] : []),
             ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀', 'remember', '提早入場', '優先入場'] : []),
             ...(intents.foodFocus ? ['補給', '點心', '快餐', '餐廳', '披薩', 'pizza', '漢堡'] : []),
             ...(intents.kidFocus ? ['孩子', '小孩', '兒童', '親子', 'open house', 'oceaneer'] : []),
-            ...(sequenceSignal ? ['第一天', '登船日', 'day 1', '順序', '先做什麼'] : [])
+            ...(sequenceSignal ? ['第一天', '登船日', 'day 1', '順序', '先做什麼'] : []),
+            ...softModifiers.slice(0, 4)
         ]).filter(Boolean).slice(0, 12);
 
         return {
@@ -1655,6 +1759,8 @@
             sourcePriority: getAiSourcePriority(type),
             sourceDetailPriority: buildAiSourceDetailPriority(queryData, type),
             focusTerms,
+            hardAnchors: hardAnchors.slice(0, 12),
+            softModifiers: softModifiers.slice(0, 12),
             prefersScheduleContext: type === 'sequence'
                 || Boolean(intents.scheduleFocus)
                 || Boolean((slots.day || []).length)
@@ -1703,12 +1809,52 @@
         };
     }
 
+    function buildAiQueryBundles(normalizedQuery, rewriteMeta = null, slots = {}, highlightTerms = []) {
+        const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
+        const anchorProfile = buildAiAnchorProfile(normalizedQuery, buildAiIntents(normalizedQuery), slots, highlightTerms);
+        const aliasSeed = uniqueItems([
+            ...(anchorProfile.hardAnchors || []),
+            ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
+            ...highlightTerms,
+            ...normalizedRewrite.keywords,
+            ...normalizedRewrite.alternates,
+            ...deriveContextualKeywords(normalizedQuery)
+        ]).slice(0, 14);
+        const taskSeed = uniqueItems([
+            ...(anchorProfile.hardAnchors || []).slice(0, 8),
+            ...(anchorProfile.softModifiers || []).slice(0, 8),
+            ...(slots.day || []),
+            ...(slots.timeWindow || []),
+            ...(slots.audience || []),
+            ...(slots.entity || []).slice(0, 4),
+            ...(slots.comparison || [])
+        ]).slice(0, 14);
+        const comparisonSeed = uniqueItems([
+            ...(slots.comparison || []),
+            ...(slots.entity || []).slice(0, 4),
+            ...normalizedRewrite.alternates
+        ]).slice(0, 10);
+
+        return {
+            precision: buildAiExpansionUnits(uniqueItems([
+                ...(anchorProfile.hardAnchors || []).slice(0, 8),
+                ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap).slice(0, 6)
+            ]).join(' ')).slice(0, 10),
+            alias: buildAiExpansionUnits(aliasSeed.join(' ')).slice(0, 12),
+            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 12),
+            comparison: buildAiExpansionUnits(comparisonSeed.join(' ')).slice(0, 10)
+        };
+    }
+
     function getAiSearchUnits(rawQuery, rewriteMeta = null) {
         const normalizedQuery = normalizeSearchText(rawQuery);
         if (!normalizedQuery) {
             return {
+                rawQuery: String(rawQuery || '').trim(),
                 normalizedQuery: '',
                 units: [],
+                queryBundles: {},
+                bundleTerms: [],
                 highlightTerms: [],
                 signalLength: 0,
                 intents: {},
@@ -1741,27 +1887,254 @@
             rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {}
         );
         const slots = buildAiSlots(normalizedQuery, intents, highlightTerms);
+        const anchorProfile = buildAiAnchorProfile(normalizedQuery, intents, slots, highlightTerms);
+        const queryBundles = buildAiQueryBundles(normalizedQuery, normalizedRewrite, slots, highlightTerms);
+        const bundleTerms = uniqueItems([
+            ...(queryBundles.precision || []),
+            ...(queryBundles.alias || []),
+            ...(queryBundles.task || []),
+            ...(queryBundles.comparison || [])
+        ]).slice(0, 24);
         const slotTerms = flattenAiSlots(slots);
         const intentProfile = buildAiIntentProfile({
             normalizedQuery,
             highlightTerms,
             intents,
             slots,
-            slotTerms
+            slotTerms,
+            bundleTerms,
+            hardAnchors: anchorProfile.hardAnchors,
+            softModifiers: anchorProfile.softModifiers,
+            subjectClusters: anchorProfile.subjectClusters
+        });
+        const evidenceLayers = buildAiEvidenceLayers({
+            normalizedQuery,
+            intents,
+            slots,
+            hardAnchors: anchorProfile.hardAnchors,
+            softModifiers: anchorProfile.softModifiers,
+            subjectClusters: anchorProfile.subjectClusters,
+            intentProfile
         });
 
         return {
+            rawQuery: String(rawQuery || '').trim(),
             normalizedQuery,
             units: units.length ? units : normalizedQuery.split(' ').filter(Boolean),
+            queryBundles,
+            bundleTerms,
             highlightTerms,
             signalLength: getSearchSignalLength(normalizedQuery),
             intents,
             slots,
             slotTerms,
+            hardAnchors: anchorProfile.hardAnchors,
+            softModifiers: anchorProfile.softModifiers,
+            subjectClusters: anchorProfile.subjectClusters,
+            evidenceLayers,
             intentProfile,
             rewriteMeta: normalizedRewrite.keywords.length || normalizedRewrite.alternates.length || normalizedRewrite.rewrittenQuery
                 ? normalizedRewrite
                 : null
+        };
+    }
+
+    function buildAiAlternativeFacet(rawQuery, entityTerms = []) {
+        const normalizedQuery = normalizeSearchText(rawQuery);
+        if (!normalizedQuery) return [];
+
+        const alternatives = [];
+        if (normalizedQuery.includes('還是')) {
+            normalizedQuery.split('還是')
+                .map(part => part.trim())
+                .filter(Boolean)
+                .forEach(part => {
+                    const matchedTerms = collectMatchingTerms(part, aiSearchDisplayMap);
+                    if (matchedTerms.length) {
+                        alternatives.push(matchedTerms[0]);
+                        return;
+                    }
+
+                    part.split(' ')
+                        .filter(unit => unit.length >= 2)
+                        .slice(-2)
+                        .forEach(unit => alternatives.push(unit));
+                });
+        }
+
+        if (normalizedQuery.includes('比較')) {
+            collectMatchingTerms(normalizedQuery, aiSearchDisplayMap)
+                .slice(0, 4)
+                .forEach(term => alternatives.push(term));
+        }
+
+        if (normalizedQuery.includes('要不要')) {
+            entityTerms
+                .map(term => normalizeSearchText(term))
+                .filter(Boolean)
+                .slice(0, 2)
+                .forEach(term => alternatives.push(term));
+        }
+
+        return uniqueItems(alternatives
+            .map(term => aiSearchDisplayMap.get(term) || searchDisplayMap.get(term) || term)
+            .filter(Boolean))
+            .slice(0, 6);
+    }
+
+    function buildAiReportFacets(queryData = {}) {
+        const slots = queryData.slots || {};
+        return {
+            goal: uniqueItems(slots.goal || []).slice(0, 8),
+            time: uniqueItems([
+                ...(slots.day || []),
+                ...(slots.timeWindow || [])
+            ]).slice(0, 8),
+            entityPlace: uniqueItems(slots.entity || []).slice(0, 10),
+            audience: uniqueItems(slots.audience || []).slice(0, 6),
+            risk: uniqueItems(slots.risk || []).slice(0, 8),
+            alternatives: buildAiAlternativeFacet(queryData.rawQuery || queryData.normalizedQuery || '', slots.entity || [])
+        };
+    }
+
+    function countActiveAiFacetNames(facets = {}) {
+        return Object.entries(facets)
+            .filter(([, values]) => Array.isArray(values) && values.length)
+            .map(([facetName]) => facetName);
+    }
+
+    function buildAiAnalysisPlanPayload(reportPlan = {}) {
+        const facets = reportPlan.facets || {};
+        return {
+            responseMode: reportPlan.responseMode === 'report' ? 'report' : 'compact',
+            intentType: reportPlan.intentType || 'operational-detail',
+            facetSummary: {
+                goal: Array.isArray(facets.goal) ? facets.goal.slice(0, 8) : [],
+                time: Array.isArray(facets.time) ? facets.time.slice(0, 8) : [],
+                entityPlace: Array.isArray(facets.entityPlace) ? facets.entityPlace.slice(0, 10) : [],
+                audience: Array.isArray(facets.audience) ? facets.audience.slice(0, 6) : [],
+                risk: Array.isArray(facets.risk) ? facets.risk.slice(0, 8) : [],
+                alternatives: Array.isArray(facets.alternatives) ? facets.alternatives.slice(0, 6) : []
+            },
+            activeFacetNames: Array.isArray(reportPlan.activeFacetNames) ? reportPlan.activeFacetNames.slice(0, 6) : [],
+            activeFacetCount: Number(reportPlan.activeFacetCount || 0),
+            triggerReasons: Array.isArray(reportPlan.triggerReasons) ? reportPlan.triggerReasons.slice(0, 6) : [],
+            isComparisonQuery: Boolean(reportPlan.isComparisonQuery),
+            hasRiskJudgment: Boolean(reportPlan.hasRiskJudgment),
+            needsSourceComparison: Boolean(reportPlan.needsSourceComparison),
+            rewriteTriggered: Boolean(reportPlan.rewriteTriggered),
+            evidenceBudget: Number(reportPlan.evidenceBudget || AI_REPORT_MAX_RESULTS),
+            maxParentCards: Number(reportPlan.maxParentCards || AI_REPORT_MAX_PARENTS),
+            hardAnchors: Array.isArray(reportPlan.hardAnchors) ? reportPlan.hardAnchors.slice(0, 14) : [],
+            softModifiers: Array.isArray(reportPlan.softModifiers) ? reportPlan.softModifiers.slice(0, 14) : [],
+            subjectClusters: Array.isArray(reportPlan.subjectClusters) ? reportPlan.subjectClusters.slice(0, 16) : [],
+            evidenceLayers: reportPlan.evidenceLayers && typeof reportPlan.evidenceLayers === 'object'
+                ? {
+                    core: Array.isArray(reportPlan.evidenceLayers.core) ? reportPlan.evidenceLayers.core.slice(0, 12) : [],
+                    extension: Array.isArray(reportPlan.evidenceLayers.extension) ? reportPlan.evidenceLayers.extension.slice(0, 16) : [],
+                    rulesLimits: Array.isArray(reportPlan.evidenceLayers.rulesLimits) ? reportPlan.evidenceLayers.rulesLimits.slice(0, 10) : [],
+                    timingContext: Array.isArray(reportPlan.evidenceLayers.timingContext) ? reportPlan.evidenceLayers.timingContext.slice(0, 8) : [],
+                    sourceContrast: Array.isArray(reportPlan.evidenceLayers.sourceContrast) ? reportPlan.evidenceLayers.sourceContrast.slice(0, 8) : []
+                }
+                : {
+                    core: [],
+                    extension: [],
+                    rulesLimits: [],
+                    timingContext: [],
+                    sourceContrast: []
+                },
+            evidenceSummary: {
+                selectedChunkCount: Number(reportPlan.selectedChunkCount || 0),
+                parentCardCount: Number(reportPlan.parentCardCount || 0),
+                sourceTypes: Array.isArray(reportPlan.sourceTypes) ? reportPlan.sourceTypes.slice(0, 6) : [],
+                sourceDetailTypes: Array.isArray(reportPlan.sourceDetailTypes) ? reportPlan.sourceDetailTypes.slice(0, 4) : []
+            }
+        };
+    }
+
+    function buildAiReportPlanner(queryData = {}, results = [], selectedResults = [], options = {}) {
+        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
+        const facets = buildAiReportFacets(queryData);
+        const activeFacetNames = countActiveAiFacetNames(facets);
+        const hardAnchors = uniqueItems(queryData.hardAnchors || []).slice(0, 14);
+        const softModifiers = uniqueItems(queryData.softModifiers || []).slice(0, 14);
+        const subjectClusters = uniqueItems(queryData.subjectClusters || hardAnchors).slice(0, 16);
+        const evidenceLayers = buildAiEvidenceLayers({
+            ...queryData,
+            intentProfile,
+            hardAnchors,
+            softModifiers,
+            subjectClusters
+        });
+        const normalizedQuery = queryData.normalizedQuery || normalizeSearchText(queryData.rawQuery || '');
+        const selectedPool = selectedResults.length ? selectedResults : results.slice(0, 6);
+        const parentIds = uniqueItems(selectedPool.map(result => result.parentId || result.id).filter(Boolean));
+        const sourceTypes = uniqueItems(selectedPool.map(result => result.sourceType).filter(Boolean));
+        const sourceDetailTypes = uniqueItems(selectedPool
+            .map(result => result.sourceDetailType || 'general')
+            .filter(type => type && type !== 'general'));
+        const strongEvidenceCount = selectedResults.filter(result => (result.score || 0) >= 18).length;
+        const comparisonSignal = normalizedQuery.includes('還是')
+            || normalizedQuery.includes('比較')
+            || /先.+還是/.test(normalizedQuery);
+        const decisionSignal = normalizedQuery.includes('要不要')
+            && (facets.alternatives.length >= 2 || parentIds.length >= 3 || sourceDetailTypes.length >= 2);
+        const rewriteTriggered = Boolean(options.rewriteTriggered);
+        const hasRiskJudgment = Boolean(facets.risk.length) || intentProfile.type === 'policy-or-tip';
+        const triggerReasons = [];
+
+        if (activeFacetNames.length >= 2) {
+            triggerReasons.push('多面向問題');
+        }
+        if (comparisonSignal || decisionSignal) {
+            triggerReasons.push('需要比較或取捨');
+        }
+        if (parentIds.length >= 3) {
+            triggerReasons.push('證據橫跨多張卡片');
+        }
+        if (sourceDetailTypes.length >= 2) {
+            triggerReasons.push('來源層級需要對照');
+        }
+        if (rewriteTriggered) {
+            triggerReasons.push('第一輪召回不足，已做受控改寫');
+        }
+        if (hasRiskJudgment && strongEvidenceCount >= AI_REPORT_STRONG_EVIDENCE_MIN) {
+            triggerReasons.push('涉及風險判斷且證據足夠');
+        }
+
+        if (!triggerReasons.length && options.defaultResponseMode === 'report') {
+            triggerReasons.push('預設詳細報告模式');
+        }
+
+        const responseMode = options.defaultResponseMode === 'report'
+            ? 'report'
+            : (triggerReasons.length ? 'report' : 'compact');
+
+        return {
+            responseMode,
+            intentType: intentProfile.type,
+            facets,
+            activeFacetNames,
+            activeFacetCount: activeFacetNames.length,
+            isComparisonQuery: comparisonSignal || decisionSignal,
+            hasRiskJudgment,
+            rewriteTriggered,
+            triggerReasons,
+            selectedChunkCount: selectedResults.length,
+            parentCardCount: parentIds.length,
+            sourceTypes,
+            sourceDetailTypes,
+            hardAnchors,
+            softModifiers,
+            subjectClusters,
+            evidenceLayers,
+            strongEvidenceCount,
+            needsSourceComparison: sourceDetailTypes.length >= 2
+                || Boolean(queryData.intents?.conciergeFocus)
+                || intentProfile.type === 'policy-or-tip'
+                || (hasRiskJudgment && sourceDetailTypes.length >= 1),
+            evidenceBudget: responseMode === 'report' ? AI_REPORT_MAX_RESULTS : 8,
+            maxParentCards: responseMode === 'report' ? AI_REPORT_MAX_PARENTS : 4
         };
     }
 
@@ -1846,9 +2219,28 @@
         const sourceDetailPriorityIndex = (intentProfile.sourceDetailPriority || []).indexOf(doc.sourceDetailType || 'general');
         const titleMatches = countMatchedUnits(doc.normalizedTitle, queryData.units);
         const keywordMatches = countMatchedUnits(doc.normalizedKeywords, queryData.units);
-        const focusTitleMatches = countMatchedTerms(doc.normalizedTitle, intentProfile.focusTerms);
-        const focusBodyMatches = countMatchedTerms(`${doc.normalizedKeywords} ${doc.normalizedText} ${doc.normalizedStructuredText || ''}`, intentProfile.focusTerms);
+        const weightedFocusTerms = uniqueItems([
+            ...(intentProfile.focusTerms || []),
+            ...((queryData.bundleTerms || []).slice(0, 10))
+        ]);
+        const hardAnchors = uniqueItems([
+            ...(queryData.hardAnchors || []),
+            ...(intentProfile.hardAnchors || [])
+        ]).slice(0, 12);
+        const softModifiers = uniqueItems([
+            ...(queryData.softModifiers || []),
+            ...(intentProfile.softModifiers || [])
+        ]).slice(0, 12);
+        const focusTitleMatches = countMatchedTerms(doc.normalizedTitle, weightedFocusTerms);
+        const focusBodyMatches = countMatchedTerms(`${doc.normalizedKeywords} ${doc.normalizedText} ${doc.normalizedStructuredText || ''}`, weightedFocusTerms);
+        const hardAnchorTitleMatches = countMatchedTerms(doc.normalizedTitle, hardAnchors);
+        const hardAnchorBodyMatches = countMatchedTerms(doc.normalizedCombined, hardAnchors);
+        const softModifierMatches = countMatchedTerms(doc.normalizedCombined, softModifiers);
         const slotMatches = countMatchedTerms(doc.normalizedCombined, queryData.slotTerms || []);
+        const precisionBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.precision || []);
+        const aliasBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.alias || []);
+        const taskBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.task || []);
+        const comparisonBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.comparison || []);
         const fieldType = doc.fieldType || 'parent';
         const roleHints = doc.evidenceRoleHints || [];
 
@@ -1886,10 +2278,50 @@
             score += 6;
         }
 
+        if (hardAnchorTitleMatches >= 2) {
+            score += 26;
+        } else if (hardAnchorTitleMatches === 1) {
+            score += 16;
+        }
+
+        if (hardAnchorBodyMatches >= 2) {
+            score += 18;
+        } else if (hardAnchorBodyMatches === 1) {
+            score += 10;
+        }
+
+        if (softModifierMatches >= 2) {
+            score += 8;
+        } else if (softModifierMatches === 1) {
+            score += 4;
+        }
+
         if (slotMatches >= 2) {
             score += 14;
         } else if (slotMatches === 1) {
             score += 8;
+        }
+
+        if (precisionBundleMatches >= 2) {
+            score += 18;
+        } else if (precisionBundleMatches === 1) {
+            score += 10;
+        }
+
+        if (taskBundleMatches >= 2) {
+            score += 14;
+        } else if (taskBundleMatches === 1) {
+            score += 7;
+        }
+
+        if (aliasBundleMatches >= 2) {
+            score += 10;
+        } else if (aliasBundleMatches === 1) {
+            score += 4;
+        }
+
+        if (comparisonBundleMatches >= 1 && (queryData.intents?.comparisonFocus || (queryData.slots?.comparison || []).length)) {
+            score += 10;
         }
 
         if (doc.aiOnly) {
@@ -2002,6 +2434,10 @@
             score += 14;
         }
 
+        if ((queryData.slots?.comparison || []).length && titleMatches >= 1) {
+            score += 10;
+        }
+
         if ((queryData.slots?.risk || []).length) {
             if (fieldType === 'caution') {
                 score += 20;
@@ -2060,6 +2496,10 @@
             score -= 6;
         }
 
+        if (hardAnchors.length && hardAnchorTitleMatches === 0 && hardAnchorBodyMatches === 0 && softModifierMatches >= 1) {
+            score -= 18;
+        }
+
         return score;
     }
 
@@ -2095,8 +2535,104 @@
         return html;
     }
 
+    function truncateSearchPreview(text, maxLength = 110) {
+        const normalized = compactSearchText(text);
+        if (!normalized) return '';
+        return normalized.length > maxLength
+            ? `${normalized.slice(0, maxLength - 1).trim()}…`
+            : normalized;
+    }
+
+    function extractStructuredSearchPairs(text = '') {
+        const normalized = compactSearchText(text);
+        if (!normalized) return [];
+
+        const pairs = [];
+        const pairPattern = /(^|\s)([^：]{1,18})：([^：]+?)(?=(?:\s+[^：]{1,18}：)|$)/g;
+        let match;
+        while ((match = pairPattern.exec(normalized)) !== null) {
+            const label = compactSearchText(match[2]);
+            const value = compactSearchText(match[3]);
+            if (!label || !value) continue;
+            pairs.push([label, value]);
+        }
+
+        return pairs;
+    }
+
+    function buildSearchResultHighlights(result, queryData = {}) {
+        const highlights = [];
+        const seen = new Set();
+        const pairs = extractStructuredSearchPairs(result.structuredText || result.text);
+        const preferredLabelsBySource = {
+            schedule: ['日期', '時段', '活動標籤', '行程重點', '重點', '時間 / 時段'],
+            deck: ['重點摘要', '最佳時機', '這趟怎麼用', '內容重點'],
+            show: ['亮點', '時機提醒', '旅程連結', '內容重點'],
+            playbook: ['適用時機', '建議做法', '這趟為什麼適合', '注意事項', '內容重點'],
+            static: ['內容重點']
+        };
+        const preferredLabels = preferredLabelsBySource[result.sourceType] || ['內容重點'];
+
+        const pushHighlight = (text) => {
+            const normalized = truncateSearchPreview(text, 180);
+            if (!normalized || seen.has(normalized)) return;
+            seen.add(normalized);
+            highlights.push(normalized);
+        };
+
+        if (result.fieldType && result.fieldType !== 'parent') {
+            pushHighlight(`${result.fieldLabel || getAiFieldLabel(result.fieldType)}：${result.text}`);
+        }
+
+        preferredLabels.forEach(label => {
+            const pair = pairs.find(([pairLabel]) => pairLabel === label);
+            if (pair) {
+                pushHighlight(`${pair[0]}：${pair[1]}`);
+            }
+        });
+
+        if (result.timeHint) {
+            pushHighlight(`時段提示：${result.timeHint}`);
+        }
+
+        if (result.bestTimeHint) {
+            pushHighlight(`最佳時機：${result.bestTimeHint}`);
+        }
+
+        pairs.forEach(([label, value]) => {
+            if (highlights.length >= AI_RESULT_HIGHLIGHT_LIMIT) return;
+            pushHighlight(`${label}：${value}`);
+        });
+
+        if (!highlights.length) {
+            pushHighlight(createPlainExcerpt(result, queryData, 240));
+        }
+
+        return highlights.slice(0, AI_RESULT_HIGHLIGHT_LIMIT);
+    }
+
+    function getSearchResultMetaChips(result) {
+        const chips = [];
+
+        if ((result.sourceDetailType || 'general') !== 'general') {
+            chips.push(getAiSourceDetailLabel(result.sourceDetailType || 'general'));
+        }
+
+        if (result.fieldType && result.fieldType !== 'parent') {
+            chips.push(getAiFieldLabel(result.fieldType));
+        }
+
+        if (result.timeHint) {
+            chips.push(result.timeHint);
+        } else if (result.bestTimeHint) {
+            chips.push(result.bestTimeHint);
+        }
+
+        return uniqueItems(chips).slice(0, 3);
+    }
+
     function createExcerpt(doc, queryData) {
-        const rawSource = [doc.title, doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+        const rawSource = [doc.title, doc.structuredText || doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
         const lowerSource = rawSource.toLowerCase();
         const searchTerms = uniqueItems([
             ...queryData.highlightTerms,
@@ -2111,14 +2647,14 @@
             }
         });
 
-        const start = matchIndex === -1 ? 0 : Math.max(matchIndex - 28, 0);
-        const end = Math.min(start + 120, rawSource.length);
+        const start = matchIndex === -1 ? 0 : Math.max(matchIndex - 42, 0);
+        const end = Math.min(start + 180, rawSource.length);
         const snippet = `${start > 0 ? '…' : ''}${rawSource.slice(start, end).trim()}${end < rawSource.length ? '…' : ''}`;
         return highlightSnippet(snippet, searchTerms);
     }
 
-    function createPlainExcerpt(doc, queryData, maxLength = 320) {
-        const rawSource = [doc.title, doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+    function createPlainExcerpt(doc, queryData, maxLength = 420) {
+        const rawSource = [doc.title, doc.structuredText || doc.text].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
         const lowerSource = rawSource.toLowerCase();
         const searchTerms = uniqueItems([
             ...queryData.highlightTerms,
@@ -2149,7 +2685,7 @@
             .map(doc => ({ ...doc, score: scoreDocument(doc, queryData) }))
             .filter(doc => doc.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 16);
+            .slice(0, 20);
 
         return { queryData, results };
     }
@@ -2164,7 +2700,7 @@
             .map(doc => ({ ...doc, score: scoreDocumentForAi(doc, queryData) }))
             .filter(doc => doc.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 24);
+            .slice(0, 48);
 
         return { queryData, results };
     }
@@ -2209,7 +2745,7 @@
 
         return Array.from(collapsed.values())
             .sort((a, b) => (b.score || 0) - (a.score || 0))
-            .slice(0, 16);
+            .slice(0, 20);
     }
 
     function scoreAiSelectionCandidate(result, role, queryData = {}, intentProfile = null) {
@@ -2242,10 +2778,29 @@
             if (sourceGroup === resolvedProfile.sourcePriority[0]) score += 14;
         }
 
+        if (role === 'core-answer') {
+            if (!result.aiOnly) score += 18;
+            if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) score += 18;
+            if (sourceGroup === resolvedProfile.sourcePriority[0]) score += 16;
+            if (countMatchedTerms(result.normalizedCombined, queryData.hardAnchors || []) >= 1) {
+                score += 18;
+            }
+        }
+
         if (role === 'sop-action') {
             if (['action', 'desc', 'tripUse', 'tripLink'].includes(fieldType)) score += 24;
             if (result.sourceType === 'playbook') score += 10;
             if (resolvedProfile.type === 'sequence' && result.sourceType === 'schedule') score += 10;
+        }
+
+        if (role === 'same-subject-detail') {
+            if (['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(fieldType)) score += 18;
+            if (countMatchedTerms(result.normalizedCombined, queryData.subjectClusters || []) >= 1) {
+                score += 12;
+            }
+            if (focusBodyMatches >= 1) {
+                score += 8;
+            }
         }
 
         if (role === 'caution-exception') {
@@ -2253,6 +2808,14 @@
             if (result.sourceDetailType === 'official') score += 12;
             if ((queryData.slots?.risk || []).length && ['caution', 'bestTime', 'timingTip'].includes(fieldType)) {
                 score += 10;
+            }
+        }
+
+        if (role === 'rules-limits') {
+            if (['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(fieldType)) score += 24;
+            if (result.sourceDetailType === 'official') score += 14;
+            if (countMatchedTerms(result.normalizedCombined, queryData.softModifiers || []) >= 1) {
+                score += 8;
             }
         }
 
@@ -2264,6 +2827,14 @@
             }
         }
 
+        if (role === 'timing-context') {
+            if (result.sourceType === 'schedule') score += 20;
+            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'desc', 'parent'].includes(fieldType)) score += 14;
+            if (countMatchedTerms(bodyText, [...(queryData.slots?.day || []), ...(queryData.slots?.timeWindow || [])]) >= 1) {
+                score += 12;
+            }
+        }
+
         if (role === 'why-this-works') {
             if (['tripFit', 'tripUse', 'tripLink'].includes(fieldType)) score += 20;
         }
@@ -2272,33 +2843,230 @@
             score += 16;
         }
 
+        if (role === 'source-compare') {
+            if (result.sourceDetailType !== 'general') score += 18;
+            if (result.sourceType === 'playbook') score += 10;
+            if (['action', 'caution', 'parent', 'desc'].includes(fieldType)) score += 8;
+        }
+
+        if (role === 'source-contrast') {
+            if (result.sourceDetailType !== 'general') score += 20;
+            if (result.sourceType === 'playbook') score += 12;
+            if (['action', 'caution', 'parent', 'desc', 'whenToUse'].includes(fieldType)) score += 10;
+        }
+
+        if (role === 'bridge-context') {
+            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'tripUse', 'tripFit', 'desc'].includes(fieldType)) {
+                score += 16;
+            }
+            if (focusBodyMatches >= 1) {
+                score += 8;
+            }
+        }
+
+        if (role === 'report-support') {
+            if (['action', 'caution', 'tripFit', 'tripUse', 'bestTime', 'timingTip', 'whenToUse', 'desc', 'summary', 'theme'].includes(fieldType)) {
+                score += 14;
+            }
+            if (focusBodyMatches >= 1) {
+                score += 8;
+            }
+        }
+
+        if (role === 'facet-goal') {
+            if (['action', 'tripUse', 'tripLink', 'tripFit', 'desc', 'parent'].includes(fieldType)) {
+                score += 22;
+            }
+            if (focusBodyMatches >= 1) {
+                score += 8;
+            }
+        }
+
+        if (role === 'facet-time') {
+            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'desc', 'parent'].includes(fieldType)) {
+                score += 22;
+            }
+            if (result.sourceType === 'schedule') {
+                score += 12;
+            }
+        }
+
+        if (role === 'facet-entity-place') {
+            if (['parent', 'summary', 'theme', 'action', 'desc'].includes(fieldType)) {
+                score += 18;
+            }
+            if (focusTitleMatches >= 1) {
+                score += 10;
+            }
+        }
+
+        if (role === 'facet-audience') {
+            if (['tripFit', 'tripUse', 'action', 'summary', 'desc'].includes(fieldType)) {
+                score += 18;
+            }
+        }
+
+        if (role === 'facet-risk') {
+            if (['caution', 'bestTime', 'timingTip', 'action'].includes(fieldType)) {
+                score += 24;
+            }
+            if (result.sourceDetailType === 'official') {
+                score += 10;
+            }
+        }
+
+        if (role === 'facet-alternatives') {
+            if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) {
+                score += 18;
+            }
+            if (focusTitleMatches >= 1) {
+                score += 8;
+            }
+        }
+
         return score;
     }
 
-    function selectAiEvidenceResults(results, queryData = {}) {
+    function getAiSelectionConfig(responseMode, intentProfile) {
+        const isReport = responseMode === 'report';
+
+        return {
+            maxResults: isReport ? AI_REPORT_MAX_RESULTS : 8,
+            maxParents: isReport ? AI_REPORT_MAX_PARENTS : 4,
+            maxPerParent: isReport ? AI_REPORT_MAX_PER_PARENT : 2,
+            maxPerSourceGroup: isReport ? 8 : 3,
+            maxSchedule: isReport ? 6 : (intentProfile.type === 'sequence' ? 3 : 2),
+            maxStatic: 1
+        };
+    }
+
+    function matchesAiEvidenceBundleCategory(result, category) {
+        const fieldType = result.fieldType || 'parent';
+        const role = result.evidenceRole || '';
+        const sourceDetailType = result.sourceDetailType || 'general';
+
+        if (category === 'core') {
+            return ['primary-answer', 'sop-action', 'core-answer'].includes(role)
+                || ['parent', 'action', 'desc'].includes(fieldType);
+        }
+
+        if (category === 'detail') {
+            return ['why-this-works', 'report-support', 'facet-goal', 'facet-entity-place', 'bridge-context', 'same-subject-detail'].includes(role)
+                || ['tripFit', 'tripUse', 'summary', 'theme', 'action', 'desc', 'parent'].includes(fieldType);
+        }
+
+        if (category === 'risk') {
+            return ['caution-exception', 'facet-risk', 'rules-limits'].includes(role)
+                || ['caution', 'bestTime', 'timingTip', 'whenToUse'].includes(fieldType);
+        }
+
+        if (category === 'context') {
+            return ['context-day', 'facet-time', 'timing-context'].includes(role)
+                || result.sourceType === 'schedule'
+                || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(fieldType);
+        }
+
+        if (category === 'compare') {
+            return ['source-compare', 'source-breakdown', 'facet-alternatives', 'source-contrast'].includes(role)
+                || sourceDetailType !== 'general';
+        }
+
+        return false;
+    }
+
+    function getAiEvidenceBundleFillConfig(reportPlan = {}) {
+        return [
+            {
+                category: 'core',
+                limit: 6,
+                role: 'core-answer',
+                filter: candidate => ['parent', 'action', 'desc'].includes(candidate.fieldType || 'parent')
+            },
+            {
+                category: 'detail',
+                limit: 8,
+                role: 'same-subject-detail',
+                filter: candidate => ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent')
+            },
+            {
+                category: 'risk',
+                limit: 4,
+                role: 'rules-limits',
+                filter: candidate => ['caution', 'bestTime', 'timingTip', 'action', 'whenToUse'].includes(candidate.fieldType || 'parent')
+            },
+            {
+                category: 'context',
+                limit: 3,
+                role: 'timing-context',
+                filter: candidate => candidate.sourceType === 'schedule'
+                    || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')
+            },
+            {
+                category: 'compare',
+                limit: 3,
+                role: 'source-contrast',
+                filter: candidate => (candidate.sourceDetailType || 'general') !== 'general'
+            }
+        ];
+    }
+
+    function getAiSiblingFieldPriority(sourceType) {
+        if (sourceType === 'playbook') {
+            return ['action', 'caution', 'tripFit', 'whenToUse', 'parent'];
+        }
+
+        if (sourceType === 'schedule') {
+            return ['desc', 'time', 'tag', 'parent'];
+        }
+
+        if (sourceType === 'deck') {
+            return ['summary', 'bestTime', 'tripUse', 'parent'];
+        }
+
+        if (sourceType === 'show') {
+            return ['theme', 'timingTip', 'tripLink', 'parent'];
+        }
+
+        return ['parent'];
+    }
+
+    function matchesAiFacetTerms(result, terms = []) {
+        return countMatchedTerms(result.normalizedCombined || '', terms) >= 1;
+    }
+
+    function selectAiEvidenceResults(results, queryData = {}, options = {}) {
+        const responseMode = options.responseMode === 'report' ? 'report' : 'compact';
+        const reportPlan = options.reportPlan || buildAiReportPlanner(queryData, results, [], options);
         const selected = [];
         const seenIds = new Set();
         const parentCounts = new Map();
         const sourceCounts = new Map();
         const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const rolePlan = intentProfile.type === 'sequence'
-            ? ['primary-answer', 'sop-action', 'context-day', 'caution-exception', 'source-breakdown']
-            : intentProfile.type === 'facility-detail'
-                ? ['primary-answer', 'context-day', 'sop-action', 'caution-exception', 'source-breakdown']
-                : ['primary-answer', 'sop-action', 'caution-exception', 'context-day', 'source-breakdown'];
+        const selectionConfig = getAiSelectionConfig(responseMode, intentProfile);
+        const hardAnchors = uniqueItems(reportPlan.hardAnchors || queryData.hardAnchors || []);
+        const softModifiers = uniqueItems(reportPlan.softModifiers || queryData.softModifiers || []);
+        const subjectClusters = uniqueItems(reportPlan.subjectClusters || queryData.subjectClusters || hardAnchors);
+        const evidenceLayers = reportPlan.evidenceLayers || queryData.evidenceLayers || {};
+        const rolePlan = responseMode === 'report'
+            ? ['core-answer', 'core-answer', 'timing-context', 'rules-limits', 'same-subject-detail', 'source-contrast']
+            : (intentProfile.type === 'sequence'
+                ? ['primary-answer', 'sop-action', 'context-day', 'caution-exception']
+                : ['primary-answer', 'sop-action', 'caution-exception', 'context-day']);
 
         const canAddResult = (result) => {
             if (!result || seenIds.has(result.id)) return false;
+            if (selected.length >= selectionConfig.maxResults) return false;
 
             const parentId = result.parentId || result.id;
             const currentParentCount = parentCounts.get(parentId) || 0;
-            if (currentParentCount >= 2) return false;
+            if (currentParentCount >= selectionConfig.maxPerParent) return false;
+            if (!parentCounts.has(parentId) && parentCounts.size >= selectionConfig.maxParents) return false;
 
             const sourceGroup = getAiSourceGroup(result.sourceType);
             const currentSourceCount = sourceCounts.get(sourceGroup) || 0;
-            if (sourceGroup === 'static' && currentSourceCount >= 1) return false;
-            if (sourceGroup === 'schedule' && intentProfile.type !== 'sequence' && currentSourceCount >= 2) return false;
-            if (currentSourceCount >= 3) return false;
+            if (sourceGroup === 'static' && currentSourceCount >= selectionConfig.maxStatic) return false;
+            if (sourceGroup === 'schedule' && currentSourceCount >= selectionConfig.maxSchedule) return false;
+            if (currentSourceCount >= selectionConfig.maxPerSourceGroup) return false;
 
             return true;
         };
@@ -2326,9 +3094,72 @@
                 .sort((a, b) => scoreAiSelectionCandidate(b, role, queryData, intentProfile) - scoreAiSelectionCandidate(a, role, queryData, intentProfile))[0];
         };
 
-        rolePlan.forEach(role => {
-            let result = pickBestForRole(role);
+        const pickCandidatesForRole = (role, extraFilter = null, limit = 1) => {
+            if (limit <= 0) return [];
+            return results
+                .filter(result => canAddResult(result) && (!extraFilter || extraFilter(result)))
+                .sort((a, b) => scoreAiSelectionCandidate(b, role, queryData, intentProfile) - scoreAiSelectionCandidate(a, role, queryData, intentProfile))
+                .slice(0, limit);
+        };
 
+        const addCandidates = (role, extraFilter = null, limit = 1) => {
+            let added = 0;
+            pickCandidatesForRole(role, extraFilter, limit).forEach(candidate => {
+                if (addResult(candidate, role)) {
+                    added += 1;
+                }
+            });
+            return added;
+        };
+
+        const matchTerms = (candidate, terms = []) => {
+            if (!terms.length) return false;
+            return matchesAiFacetTerms(candidate, terms);
+        };
+
+        rolePlan.forEach(role => {
+            if (role === 'core-answer') {
+                addCandidates(role, candidate =>
+                    matchTerms(candidate, hardAnchors)
+                    && ['parent', 'action', 'desc', 'summary', 'theme'].includes(candidate.fieldType || 'parent'),
+                1);
+                return;
+            }
+
+            if (role === 'timing-context') {
+                addCandidates(role, candidate =>
+                    (intentProfile.prefersScheduleContext || matchTerms(candidate, evidenceLayers.timingContext || reportPlan.facets?.time || []))
+                    && (candidate.sourceType === 'schedule'
+                        || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')),
+                1);
+                return;
+            }
+
+            if (role === 'rules-limits') {
+                addCandidates(role, candidate =>
+                    (intentProfile.requiresCautionChunk || matchTerms(candidate, evidenceLayers.rulesLimits || softModifiers))
+                    && ['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(candidate.fieldType || 'parent'),
+                1);
+                return;
+            }
+
+            if (role === 'same-subject-detail') {
+                addCandidates(role, candidate =>
+                    matchTerms(candidate, subjectClusters)
+                    && ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent'),
+                1);
+                return;
+            }
+
+            if (role === 'source-contrast') {
+                addCandidates(role, candidate =>
+                    reportPlan.needsSourceComparison
+                    && (candidate.sourceDetailType || 'general') !== 'general',
+                1);
+                return;
+            }
+
+            let result = pickBestForRole(role);
             if (!result && role === 'primary-answer') {
                 result = results[0] || null;
             }
@@ -2361,28 +3192,192 @@
             addResult(result, role);
         });
 
-        if (intentProfile.type === 'sequence' && !selected.some(result => result.sourceType === 'schedule')) {
-            addResult(pickBestForRole('context-day', result => result.sourceType === 'schedule'), 'context-day');
+        if (!selected.length) {
+            addResult(results[0] || null, responseMode === 'report' ? 'core-answer' : 'primary-answer');
         }
 
-        if (intentProfile.requiresActionChunk && !selected.some(result => ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent'))) {
-            addResult(pickBestForRole('sop-action', result => ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent')), 'sop-action');
+        if (intentProfile.type === 'sequence' && !selected.some(result => result.sourceType === 'schedule')) {
+            addResult(pickBestForRole('timing-context', result => result.sourceType === 'schedule'), 'timing-context');
+        }
+
+        if (!selected.some(result => ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent'))) {
+            addResult(
+                pickBestForRole('core-answer', result =>
+                    ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent')
+                ),
+                responseMode === 'report' ? 'core-answer' : 'sop-action'
+            );
         }
 
         if (intentProfile.requiresCautionChunk && !selected.some(result => ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent'))) {
-            addResult(pickBestForRole('caution-exception', result => ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent')), 'caution-exception');
+            addResult(
+                pickBestForRole('rules-limits', result =>
+                    ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent')
+                ),
+                responseMode === 'report' ? 'rules-limits' : 'caution-exception'
+            );
+        }
+
+        if (responseMode === 'report') {
+            const facetConfigs = [
+                {
+                    role: 'core-answer',
+                    terms: evidenceLayers.core || hardAnchors,
+                    filter: candidate => ['parent', 'action', 'desc', 'summary', 'theme'].includes(candidate.fieldType || 'parent')
+                },
+                {
+                    role: 'same-subject-detail',
+                    terms: evidenceLayers.extension || subjectClusters,
+                    filter: candidate => ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent')
+                },
+                {
+                    role: 'rules-limits',
+                    terms: evidenceLayers.rulesLimits || softModifiers,
+                    filter: candidate => ['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(candidate.fieldType || 'parent')
+                },
+                {
+                    role: 'timing-context',
+                    terms: evidenceLayers.timingContext || reportPlan.facets?.time || [],
+                    filter: candidate => candidate.sourceType === 'schedule'
+                        || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')
+                },
+                {
+                    role: 'source-contrast',
+                    terms: evidenceLayers.sourceContrast || [],
+                    filter: candidate => (candidate.sourceDetailType || 'general') !== 'general'
+                }
+            ];
+
+            facetConfigs.forEach(facetConfig => {
+                if (selected.length >= selectionConfig.maxResults) return;
+                if (!facetConfig.terms?.length && facetConfig.role !== 'source-contrast') return;
+                addCandidates(facetConfig.role, candidate =>
+                    (!facetConfig.terms?.length || matchTerms(candidate, facetConfig.terms))
+                    && (!facetConfig.filter || facetConfig.filter(candidate)),
+                facetConfig.role === 'same-subject-detail' ? 3 : 2);
+            });
+
+            uniqueItems(selected.map(result => result.parentId || result.id)).forEach(parentId => {
+                const siblingPool = results.filter(result => (result.parentId || result.id) === parentId);
+                const parentSourceType = siblingPool[0]?.sourceType || 'static';
+
+                getAiSiblingFieldPriority(parentSourceType).forEach(fieldType => {
+                    addResult(
+                        pickBestForRole('same-subject-detail', candidate =>
+                            (candidate.parentId || candidate.id) === parentId
+                            && (candidate.fieldType || 'parent') === fieldType
+                        ),
+                        fieldType === 'action'
+                            ? 'core-answer'
+                            : fieldType === 'caution'
+                                ? 'rules-limits'
+                                : fieldType === 'time' || fieldType === 'whenToUse' || fieldType === 'bestTime' || fieldType === 'timingTip'
+                                    ? 'timing-context'
+                                    : 'same-subject-detail'
+                    );
+                });
+            });
+
+            const bridgeTerms = uniqueItems([
+                ...subjectClusters,
+                ...(reportPlan.facets?.time || []),
+                ...(reportPlan.facets?.audience || []),
+                ...hardAnchors.slice(0, 6)
+            ]).slice(0, 18);
+
+            results
+                .filter(result => canAddResult(result) && matchTerms(result, bridgeTerms))
+                .sort((a, b) => scoreAiSelectionCandidate(b, 'bridge-context', queryData, intentProfile) - scoreAiSelectionCandidate(a, 'bridge-context', queryData, intentProfile))
+                .slice(0, 8)
+                .forEach(result => {
+                    addResult(result, ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(result.fieldType || 'parent')
+                        ? 'timing-context'
+                        : 'same-subject-detail');
+                });
+
+            if (reportPlan.needsSourceComparison) {
+                uniqueItems([
+                    ...(reportPlan.sourceDetailTypes || []),
+                    ...results
+                        .map(result => result.sourceDetailType || 'general')
+                        .filter(type => type && type !== 'general')
+                ])
+                    .slice(0, 4)
+                    .forEach(sourceDetailType => {
+                        addResult(
+                            pickBestForRole('source-contrast', candidate =>
+                                (candidate.sourceDetailType || 'general') === sourceDetailType
+                                && getAiSourceGroup(candidate.sourceType) !== 'static'
+                            ),
+                            'source-contrast'
+                        );
+                    });
+            }
+
+            getAiEvidenceBundleFillConfig(reportPlan).forEach(bundleConfig => {
+                const bundleTerms = bundleConfig.category === 'core'
+                    ? (evidenceLayers.core || hardAnchors)
+                    : bundleConfig.category === 'detail'
+                        ? (evidenceLayers.extension || subjectClusters)
+                        : bundleConfig.category === 'risk'
+                            ? (evidenceLayers.rulesLimits || softModifiers)
+                            : bundleConfig.category === 'context'
+                                ? (evidenceLayers.timingContext || reportPlan.facets?.time || [])
+                                : (evidenceLayers.sourceContrast || []);
+                while (
+                    selected.filter(result => matchesAiEvidenceBundleCategory(result, bundleConfig.category)).length < bundleConfig.limit
+                    && selected.length < selectionConfig.maxResults
+                ) {
+                    const candidate = pickBestForRole(bundleConfig.role, result =>
+                        (!bundleTerms.length || matchTerms(result, bundleTerms) || bundleConfig.category === 'compare')
+                        && (!bundleConfig.filter || bundleConfig.filter(result))
+                    );
+                    if (!candidate) break;
+                    addResult(candidate, bundleConfig.role);
+                }
+            });
         }
 
         results.forEach(result => {
-            if (selected.length >= 8) return;
-            const role = (result.evidenceRoleHints || [])[0] || 'supporting';
+            if (selected.length >= selectionConfig.maxResults) return;
+            const role = responseMode === 'report'
+                ? (matchTerms(result, subjectClusters) ? 'same-subject-detail' : ((result.evidenceRoleHints || [])[0] || 'supporting'))
+                : ((result.evidenceRoleHints || [])[0] || 'supporting');
             addResult(result, role);
         });
 
-        return selected.slice(0, 8);
+        return selected.slice(0, selectionConfig.maxResults);
     }
 
-    function getAiRetrievalStatus(queryData, results, selectedResults) {
+    function resolveAiEvidencePlan(results, queryData, options = {}) {
+        const planningOptions = {
+            ...options,
+            defaultResponseMode: options.defaultResponseMode || AI_REPORT_DEFAULT_MODE
+        };
+        const initialPlan = buildAiReportPlanner(queryData, results, results.slice(0, 6), planningOptions);
+        let selectedResults = selectAiEvidenceResults(results, queryData, {
+            ...planningOptions,
+            responseMode: initialPlan.responseMode,
+            reportPlan: initialPlan
+        });
+        let reportPlan = buildAiReportPlanner(queryData, results, selectedResults, planningOptions);
+
+        if (reportPlan.responseMode === 'report' || reportPlan.responseMode !== initialPlan.responseMode) {
+            selectedResults = selectAiEvidenceResults(results, queryData, {
+                ...planningOptions,
+                responseMode: reportPlan.responseMode,
+                reportPlan
+            });
+            reportPlan = buildAiReportPlanner(queryData, results, selectedResults, planningOptions);
+        }
+
+        return {
+            selectedResults,
+            reportPlan
+        };
+    }
+
+    function getAiRetrievalStatus(queryData, results, selectedResults, reportPlan = null) {
         if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
             return 'insufficient';
         }
@@ -2408,6 +3403,8 @@
             if (hasPrimary && hasSupportingGuide && hasActionChunk && (strongCount >= 1 || topScore >= 22)) {
                 return 'strong';
             }
+        } else if (reportPlan?.responseMode === 'report' && hasPrimary && selectedResults.length >= 4 && strongCount >= AI_REPORT_STRONG_EVIDENCE_MIN) {
+            return 'strong';
         } else if (hasPrimary && hasActionChunk && (!intentProfile.requiresCautionChunk || hasCautionChunk) && (strongCount >= 1 || topScore >= 24)) {
             return 'strong';
         }
@@ -2431,7 +3428,233 @@
 
         return Array.from(merged.values())
             .sort((a, b) => b.score - a.score)
-            .slice(0, 24);
+            .slice(0, 48);
+    }
+
+    function getAiReportSectionEntries(report = {}) {
+        return [
+            {
+                key: 'executiveSummary',
+                title: '先看結論',
+                type: 'summary',
+                items: Array.isArray(report.executiveSummary) ? report.executiveSummary : []
+            },
+            {
+                key: 'recommendedPlan',
+                title: '推薦做法',
+                type: 'list',
+                items: Array.isArray(report.recommendedPlan) ? report.recommendedPlan : []
+            },
+            {
+                key: 'detailBreakdown',
+                title: '細節拆解',
+                type: 'list',
+                items: Array.isArray(report.detailBreakdown) ? report.detailBreakdown : []
+            },
+            {
+                key: 'decisionAnalysis',
+                title: '為什麼這樣安排',
+                type: 'list',
+                items: Array.isArray(report.decisionAnalysis) ? report.decisionAnalysis : []
+            },
+            {
+                key: 'risksAndFallbacks',
+                title: '風險與備案',
+                type: 'list',
+                items: Array.isArray(report.risksAndFallbacks) ? report.risksAndFallbacks : []
+            },
+            {
+                key: 'topicGroups',
+                title: '主題清單',
+                type: 'topic-groups',
+                items: Array.isArray(report.topicGroups) ? report.topicGroups : []
+            },
+            {
+                key: 'cardHighlights',
+                title: '關鍵攻略卡',
+                type: 'card-highlights',
+                items: Array.isArray(report.cardHighlights) ? report.cardHighlights : []
+            },
+            {
+                key: 'sourceComparison',
+                title: '來源差異',
+                type: 'comparison',
+                items: Array.isArray(report.sourceComparison) ? report.sourceComparison : []
+            },
+            {
+                key: 'unansweredQuestions',
+                title: '還缺什麼',
+                type: 'list',
+                items: Array.isArray(report.unansweredQuestions) ? report.unansweredQuestions : []
+            }
+        ].filter(section => section.items.length);
+    }
+
+    function renderAiReportOutline(sectionEntries = []) {
+        if (!sectionEntries.length) return '';
+
+        return `
+            <div class="search-ai-report-outline" role="navigation" aria-label="AI 報告段落">
+                ${sectionEntries.map(section => `
+                    <button type="button" class="search-ai-report-anchor" data-ai-report-anchor="${section.key}">
+                        ${escapeHtml(section.title)}
+                    </button>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function renderAiReportSection(section, report = {}) {
+        const sectionCitationIds = report.sectionCitationIds && typeof report.sectionCitationIds === 'object'
+            ? report.sectionCitationIds
+            : {};
+        const citationCount = Array.isArray(sectionCitationIds[section.key]) ? sectionCitationIds[section.key].length : 0;
+
+        if (section.type === 'card-highlights') {
+            return `
+                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                    <div class="search-ai-report-section-header">
+                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                    </div>
+                    <div class="search-ai-card-highlights">
+                        ${section.items.map(item => `
+                            <article class="search-ai-card-highlight-item">
+                                <div class="search-ai-card-highlight-top">
+                                    <h4 class="search-ai-card-highlight-title">${escapeHtml(item?.title || '')}</h4>
+                                    <div class="search-ai-card-highlight-chips">
+                                        <span class="search-ai-source-chip">${escapeHtml(getAiAnswerSourceLabel(item?.sourceType || 'static'))}</span>
+                                        <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
+                                    </div>
+                                </div>
+                                ${item?.whyRelevant ? `<p class="search-ai-card-highlight-why">${escapeHtml(item.whyRelevant)}</p>` : ''}
+                                ${Array.isArray(item?.detailBullets) && item.detailBullets.length ? `
+                                    <ul class="search-ai-report-list">
+                                        ${item.detailBullets.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
+                                    <div class="search-ai-inline-citations">
+                                        ${item.citationIds.map(citationId => {
+                                            const citation = searchState.aiCitationsById.get(citationId);
+                                            return citation ? `
+                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
+                                                    <i class="fa-solid fa-link"></i>
+                                                    <span>${escapeHtml(citation.title)}</span>
+                                                </button>
+                                            ` : '';
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </article>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        if (section.type === 'topic-groups') {
+            return `
+                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                    <div class="search-ai-report-section-header">
+                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                    </div>
+                    <div class="search-ai-topic-groups">
+                        ${section.items.map(item => `
+                            <article class="search-ai-topic-group ${item?.groupKind === 'core' ? 'core' : 'extension'}">
+                                <div class="search-ai-topic-group-top">
+                                    <div>
+                                        <h4 class="search-ai-topic-group-title">${escapeHtml(item?.groupTitle || '')}</h4>
+                                        ${item?.summary ? `<p class="search-ai-topic-group-summary">${escapeHtml(item.summary)}</p>` : ''}
+                                    </div>
+                                    <div class="search-ai-card-highlight-chips">
+                                        <span class="search-ai-source-chip">${escapeHtml(item?.groupKind === 'core' ? '核心' : '延伸')}</span>
+                                        ${item?.entityType ? `<span class="search-ai-source-chip">${escapeHtml(getAiEntityTypeLabel(item.entityType))}</span>` : ''}
+                                        ${Array.isArray(item?.sourceMix) ? item.sourceMix
+                                            .map(source => getAiSourceDetailLabel(source || 'general'))
+                                            .filter(Boolean)
+                                            .map(sourceLabel => `<span class="search-ai-source-chip">${escapeHtml(sourceLabel)}</span>`)
+                                            .join('') : ''}
+                                    </div>
+                                </div>
+                                ${Array.isArray(item?.detailItems) && item.detailItems.length ? `
+                                    <ul class="search-ai-report-list">
+                                        ${item.detailItems.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
+                                    <div class="search-ai-inline-citations">
+                                        ${item.citationIds.map(citationId => {
+                                            const citation = searchState.aiCitationsById.get(citationId);
+                                            return citation ? `
+                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
+                                                    <i class="fa-solid fa-link"></i>
+                                                    <span>${escapeHtml(citation.title)}</span>
+                                                </button>
+                                            ` : '';
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </article>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        if (section.type === 'comparison') {
+            return `
+                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                    <div class="search-ai-report-section-header">
+                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                    </div>
+                    <div class="search-ai-source-comparison">
+                        ${section.items.map(item => `
+                            <article class="search-ai-source-comparison-item">
+                                <div class="search-ai-source-comparison-top">
+                                    <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
+                                    ${item?.stance ? `<span class="search-ai-source-comparison-stance">${escapeHtml(item.stance)}</span>` : ''}
+                                </div>
+                                <p>${escapeHtml(item?.summary || '')}</p>
+                                ${item?.confidenceNote ? `<p class="search-ai-note">${escapeHtml(item.confidenceNote)}</p>` : ''}
+                            </article>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        const listClass = section.type === 'summary'
+            ? 'search-ai-report-summary'
+            : 'search-ai-report-list';
+
+        return `
+            <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                <div class="search-ai-report-section-header">
+                    <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                    ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                </div>
+                <ul class="${listClass}">
+                    ${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                </ul>
+            </section>
+        `;
+    }
+
+    function updateSearchWorkspaceLayout() {
+        const panel = document.querySelector('#search-overlay .search-panel');
+        const panelBody = document.getElementById('search-panel-body');
+        const aiAnswer = document.getElementById('search-ai-answer');
+        const results = document.getElementById('search-results');
+        if (!panel || !panelBody || !aiAnswer || !results) return;
+
+        const workspaceActive = searchState.activeMode === 'ai' && !aiAnswer.hidden;
+        panel.classList.toggle('workspace-panel', searchState.activeMode === 'ai');
+        panelBody.classList.toggle('workspace-layout', workspaceActive);
+        aiAnswer.classList.toggle('workspace-pane', workspaceActive);
+        results.classList.toggle('workspace-pane', workspaceActive);
     }
 
     function renderAiAnswerState(state) {
@@ -2442,10 +3665,12 @@
             container.hidden = true;
             container.innerHTML = '';
             searchState.aiCitationsById = new Map();
+            updateSearchWorkspaceLayout();
             return;
         }
 
         container.hidden = false;
+        updateSearchWorkspaceLayout();
 
         if (state.type === 'loading') {
             container.innerHTML = `
@@ -2463,6 +3688,7 @@
                     ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
                 </div>
             `;
+            updateSearchWorkspaceLayout();
             return;
         }
 
@@ -2476,6 +3702,7 @@
                     ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
                 </div>
             `;
+            updateSearchWorkspaceLayout();
             return;
         }
 
@@ -2489,6 +3716,7 @@
                     ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
                 </div>
             `;
+            updateSearchWorkspaceLayout();
             return;
         }
 
@@ -2508,6 +3736,9 @@
         const whyThisWorks = Array.isArray(sections.whyThisWorks) ? sections.whyThisWorks : [];
         const watchOuts = Array.isArray(sections.watchOuts) ? sections.watchOuts : [];
         const sourceBreakdown = Array.isArray(state.sourceBreakdown) ? state.sourceBreakdown : [];
+        const report = state.report && typeof state.report === 'object' ? state.report : null;
+        const reportSections = report ? getAiReportSectionEntries(report) : [];
+        const isReportMode = Boolean(report && reportSections.length);
         const sourceMixLabels = uniqueItems(sourceBreakdown
             .map(item => getAiSourceDetailLabel(item?.type || item?.sourceDetailType || 'general'))
             .filter(Boolean));
@@ -2515,7 +3746,7 @@
         container.innerHTML = `
             <div class="search-ai-card">
                 <div class="search-ai-header">
-                    <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> AI 解答</span>
+                    <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> ${isReportMode ? 'AI 深層報告' : 'AI 解答'}</span>
                     ${confidence ? `<span class="search-ai-confidence ${confidence}">${confidenceLabel[confidence]}</span>` : ''}
                 </div>
                 ${state.primarySourceType ? `
@@ -2535,8 +3766,14 @@
                         <span>已依站內資料常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
                     </div>
                 ` : ''}
+                ${isReportMode && report?.headline ? `<h3 class="search-ai-report-headline">${escapeHtml(report.headline)}</h3>` : ''}
                 <p class="search-ai-summary">${escapeHtml(directAnswer)}</p>
-                ${recommendedSteps.length || whyThisWorks.length || watchOuts.length ? `
+                ${isReportMode ? renderAiReportOutline(reportSections) : ''}
+                ${isReportMode ? `
+                    <div class="search-ai-report-sections">
+                        ${reportSections.map(section => renderAiReportSection(section, report)).join('')}
+                    </div>
+                ` : recommendedSteps.length || whyThisWorks.length || watchOuts.length ? `
                     <div class="search-ai-sections">
                         ${recommendedSteps.length ? `
                             <section class="search-ai-section">
@@ -2576,6 +3813,8 @@
                 ` : ''}
                 ${state.insufficientData ? `
                     <p class="search-ai-note">目前命中的站內資料不足以給更完整的回答，建議換更具體的問法，或先看下方關鍵字結果。</p>
+                ` : isReportMode ? `
+                    <p class="search-ai-note">這份報告只根據目前站內命中的內容整理；跨卡片的統整結論會標示成綜合判斷，不會冒充成單一官方事實。</p>
                 ` : state.confidence === 'low' ? `
                     <p class="search-ai-note">目前這段答案是根據少量站內片段整理，建議同時點開下方引用來源快速核對。</p>
                 ` : `
@@ -2595,9 +3834,25 @@
                 ` : ''}
             </div>
         `;
+        updateSearchWorkspaceLayout();
     }
 
-    function getAiCacheKey(query, chunks) {
+    function getAiCacheKey(query, chunks, options = {}) {
+        const analysisPlan = options.analysisPlan && typeof options.analysisPlan === 'object'
+            ? options.analysisPlan
+            : null;
+        const analysisPlanSignature = analysisPlan
+            ? simpleHash(JSON.stringify({
+                responseMode: analysisPlan.responseMode,
+                intentType: analysisPlan.intentType,
+                activeFacetNames: analysisPlan.activeFacetNames || [],
+                triggerReasons: analysisPlan.triggerReasons || [],
+                evidenceBudget: analysisPlan.evidenceBudget,
+                maxParentCards: analysisPlan.maxParentCards,
+                evidenceSummary: analysisPlan.evidenceSummary || {},
+                facetSummary: analysisPlan.facetSummary || {}
+            }))
+            : 'compact';
         const chunkSignature = chunks
             .map(chunk => `${chunk.id}:${simpleHash([
                 chunk.parentId,
@@ -2612,12 +3867,16 @@
             ].join('::'))}`)
             .join('|');
 
-        return `cruise-ai-answer::${getAiContentVersion()}::${normalizeSearchText(query)}::${chunkSignature}`;
+        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
     }
 
-    function buildAnswerContext(results, queryData) {
+    function buildAnswerContext(results, queryData, options = {}) {
+        const responseMode = options.responseMode === 'report' ? 'report' : 'compact';
         return results.map(result => {
-            const preferredExcerptLength = ['action', 'caution', 'tripFit'].includes(result.fieldType || 'parent') ? 420 : 320;
+            const fieldType = result.fieldType || 'parent';
+            const preferredExcerptLength = responseMode === 'report'
+                ? (['action', 'caution', 'tripFit', 'summary', 'theme'].includes(fieldType) ? 900 : 700)
+                : (['action', 'caution', 'tripFit', 'summary', 'theme'].includes(fieldType) ? 480 : 360);
             const excerptSource = {
                 title: result.title,
                 text: result.structuredText || result.text
@@ -2638,7 +3897,7 @@
                 bestTimeHint: result.bestTimeHint || '',
                 navTarget: result.navTarget,
                 structuredText: createPlainExcerpt(excerptSource, queryData, preferredExcerptLength),
-                text: createPlainExcerpt(result, queryData, preferredExcerptLength)
+                text: createPlainExcerpt(result, queryData, Math.max(320, preferredExcerptLength - 140))
             };
         });
     }
@@ -2673,7 +3932,7 @@
         }
     }
 
-    async function askAiAnswer(query, chunks) {
+    async function askAiAnswer(query, chunks, options = {}) {
         const response = await fetch(getAiAnswerEndpoint(), {
             method: 'POST',
             headers: {
@@ -2683,6 +3942,8 @@
                 query,
                 mode: 'grounded_qa_v1',
                 contentVersion: getAiContentVersion(),
+                responseMode: options.responseMode === 'report' ? 'report' : 'compact',
+                analysisPlan: options.analysisPlan || null,
                 chunks
             })
         });
@@ -2738,8 +3999,10 @@
         }
 
         let { queryData, results } = aiSearchPayload;
-        let selectedResults = selectAiEvidenceResults(results, queryData);
-        let retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults);
+        let { selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
+            defaultResponseMode: AI_REPORT_DEFAULT_MODE
+        });
+        let retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
         let displayResults = collapseAiDisplayResults(results);
 
         searchState.lastQuery = queryData.normalizedQuery;
@@ -2797,8 +4060,11 @@
 
                     results = mergeAiRankedResults(results, secondPass.results);
                     queryData = secondPass.queryData;
-                    selectedResults = selectAiEvidenceResults(results, queryData);
-                    retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults);
+                    ({ selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
+                        defaultResponseMode: AI_REPORT_DEFAULT_MODE,
+                        rewriteTriggered: true
+                    }));
+                    retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
                     displayResults = collapseAiDisplayResults(results);
 
                     searchState.lastQuery = queryData.normalizedQuery;
@@ -2828,29 +4094,45 @@
             return;
         }
 
-        const chunks = buildAnswerContext(selectedResults, queryData);
-        const cacheKey = getAiCacheKey(rawQuery, chunks);
+        const analysisPlan = buildAiAnalysisPlanPayload(reportPlan);
+        const chunks = buildAnswerContext(selectedResults, queryData, {
+            responseMode: reportPlan.responseMode,
+            reportPlan
+        });
+        const cacheKey = getAiCacheKey(rawQuery, chunks, {
+            responseMode: reportPlan.responseMode,
+            analysisPlan
+        });
         const cachedAnswer = readAiCache(cacheKey);
         if (cachedAnswer) {
+            if (rewriteMeta && !cachedAnswer.rewriteInfo) {
+                cachedAnswer.rewriteInfo = rewriteMeta;
+            }
             renderAiAnswerState(cachedAnswer);
             return;
         }
 
         renderAiAnswerState({
             type: 'loading',
-            message: '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。',
+            message: reportPlan.responseMode === 'report'
+                ? '正在把多張卡片與不同來源的線索整理成一頁式深層報告，這一步只會讀你網站裡的資料。'
+                : '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。',
             rewriteInfo: rewriteMeta
         });
         searchState.aiPending = true;
 
         try {
-            const payload = await askAiAnswer(rawQuery, chunks);
+            const payload = await askAiAnswer(rawQuery, chunks, {
+                responseMode: reportPlan.responseMode,
+                analysisPlan
+            });
             if (!payload.primarySourceType) {
                 payload.primarySourceType = selectedResults[0]?.sourceType || '';
             }
             if (rewriteMeta) {
                 payload.rewriteInfo = rewriteMeta;
             }
+            payload.responseMode = reportPlan.responseMode;
             renderAiAnswerState(payload);
             writeAiCache(cacheKey, payload);
         } catch (error) {
@@ -2889,6 +4171,7 @@
 
         renderAiAnswerState(null);
         renderSearchResults(searchState.lastResults, searchState.lastQueryData || searchState.lastQuery);
+        updateSearchWorkspaceLayout();
     }
 
     function renderSearchResults(results, queryContext) {
@@ -2942,28 +4225,50 @@
         const groupOrder = ['行程', '甲板與表演', '攻略本', '其他資訊'];
         container.innerHTML = groupOrder
             .filter(groupLabel => groupedResults.has(groupLabel))
-            .map(groupLabel => `
-                <section class="search-group">
-                    <div class="search-group-title">
-                        <i class="${SEARCH_GROUP_ICONS[groupLabel] || 'fa-solid fa-magnifying-glass'}"></i>
-                        <span>${groupLabel}</span>
-                    </div>
-                    <div class="search-group-list">
-                        ${groupedResults.get(groupLabel).map(result => `
+            .map(groupLabel => {
+                const cards = groupedResults.get(groupLabel)
+                    .map(result => {
+                        const metaChips = getSearchResultMetaChips(result);
+                        const resultHighlights = buildSearchResultHighlights(result, resolvedQueryData);
+                        const snippet = createExcerpt(result, resolvedQueryData);
+
+                        return `
                             <button type="button" class="search-result-card" data-result-id="${result.id}">
                                 <div class="search-result-meta">
                                     <span>${getSourceLabel(result.sourceType)}</span>
                                     <span>•</span>
-                                    <span>${result.locationLabel}</span>
+                                    <span>${escapeHtml(result.locationLabel)}</span>
                                 </div>
                                 <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
                                 <div class="search-result-location">${escapeHtml(result.locationLabel)}</div>
-                                <div class="search-result-snippet">${createExcerpt(result, resolvedQueryData)}</div>
+                                ${metaChips.length ? `
+                                    <div class="search-result-chip-row">
+                                        ${metaChips.map(chip => `<span class="search-result-chip">${escapeHtml(chip)}</span>`).join('')}
+                                    </div>
+                                ` : ''}
+                                ${resultHighlights.length ? `
+                                    <ul class="search-result-highlights">
+                                        ${resultHighlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${snippet ? `<div class="search-result-snippet">${snippet}</div>` : ''}
                             </button>
-                        `).join('')}
-                    </div>
-                </section>
-            `).join('');
+                        `;
+                    })
+                    .join('');
+
+                return `
+                    <section class="search-group">
+                        <div class="search-group-title">
+                            <i class="${SEARCH_GROUP_ICONS[groupLabel] || 'fa-solid fa-magnifying-glass'}"></i>
+                            <span>${groupLabel}</span>
+                        </div>
+                        <div class="search-group-list">
+                            ${cards}
+                        </div>
+                    </section>
+                `;
+            }).join('');
     }
 
     function renderSearchResultsError(message) {
@@ -3174,10 +4479,23 @@
 
         aiAnswer.addEventListener('click', event => {
             const button = event.target.closest('.search-ai-citation');
-            if (!button) return;
+            if (button) {
+                const citation = searchState.aiCitationsById.get(button.dataset.aiCitationId);
+                navigateToSearchResult(citation);
+                return;
+            }
 
-            const citation = searchState.aiCitationsById.get(button.dataset.aiCitationId);
-            navigateToSearchResult(citation);
+            const anchor = event.target.closest('.search-ai-report-anchor');
+            if (!anchor) return;
+
+            const sectionKey = anchor.dataset.aiReportAnchor;
+            const target = aiAnswer.querySelector(`[data-ai-report-section="${sectionKey}"]`);
+            if (!target) return;
+
+            target.scrollIntoView({
+                behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
+                block: 'start'
+            });
         });
 
         document.addEventListener('keydown', event => {
