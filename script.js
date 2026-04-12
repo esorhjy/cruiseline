@@ -41,6 +41,80 @@
         ['玩水', '泳池', 'splash pad', 'toy story pool'],
         ['補給', '點心', '快餐']
     ];
+    const AI_QUERY_CAPABILITY_PROFILES = [
+        {
+            id: 'swim',
+            label: '游泳 / 玩水',
+            terms: ['游泳', '玩水', '泳池', '水區', '滑水', '滑水道', 'splash', 'pool', 'pools', 'swim', 'swimming', 'waterslide', 'water slide', 'sundeck pool'],
+            categoryFamilies: ['泳池', '場館'],
+            signalCategoryFamilies: ['泳池'],
+            preferredSourceTypes: ['deck', 'playbook', 'schedule'],
+            disallowedCategories: ['表演', '商店']
+        },
+        {
+            id: 'eat',
+            label: '吃 / 餐點',
+            terms: ['吃', '餐點', '餐廳', '補給', '吃什麼', '用餐', 'dining', 'restaurant', 'restaurants', 'food'],
+            categoryFamilies: ['餐廳', '快餐', '酒廊'],
+            signalCategoryFamilies: ['餐廳', '快餐', '酒廊'],
+            preferredSourceTypes: ['deck', 'playbook', 'schedule'],
+            disallowedCategories: ['表演']
+        },
+        {
+            id: 'drink',
+            label: '飲品 / 酒水',
+            terms: ['喝', '飲料', '酒水', '酒吧', '雞尾酒', 'wine', 'beer', 'cocktail', 'drink', 'drinks', 'bar'],
+            categoryFamilies: ['酒廊', '快餐'],
+            signalCategoryFamilies: ['酒廊'],
+            preferredSourceTypes: ['deck', 'playbook'],
+            disallowedCategories: ['表演']
+        },
+        {
+            id: 'watch-show',
+            label: '看秀 / 看表演',
+            terms: ['看秀', '看表演', '表演', '主秀', '劇院', 'show', 'shows', 'theatre', 'theater', 'cinema', 'movie'],
+            categoryFamilies: ['表演', '場館', '時間脈絡'],
+            signalCategoryFamilies: ['表演'],
+            preferredSourceTypes: ['show', 'playbook', 'deck', 'schedule'],
+            disallowedCategories: ['商店']
+        },
+        {
+            id: 'kids-play',
+            label: '親子 / 遊戲',
+            terms: ['玩', '遊戲', '活動', '親子', '孩子', '小孩', '兒童', 'kids', 'kid', 'arcade', 'open house', 'oceaneer'],
+            categoryFamilies: ['遊戲', '兒童俱樂部', '場館'],
+            signalCategoryFamilies: ['遊戲', '兒童俱樂部'],
+            preferredSourceTypes: ['deck', 'playbook', 'schedule'],
+            disallowedCategories: ['商店']
+        },
+        {
+            id: 'rest',
+            label: '休息 / 放鬆',
+            terms: ['休息', '放鬆', '休憩', 'chill', 'relax', 'lounge', 'spa', 'quiet'],
+            categoryFamilies: ['酒廊', '場館', 'Spa / 健身'],
+            signalCategoryFamilies: ['酒廊', 'Spa / 健身'],
+            preferredSourceTypes: ['deck', 'playbook'],
+            disallowedCategories: []
+        },
+        {
+            id: 'shop',
+            label: '購物',
+            terms: ['買東西', '購物', '商店', 'shop', 'shops', 'shopping'],
+            categoryFamilies: ['商店', '場館'],
+            signalCategoryFamilies: ['商店'],
+            preferredSourceTypes: ['deck', 'schedule'],
+            disallowedCategories: ['表演']
+        },
+        {
+            id: 'spa',
+            label: 'Spa / 健身',
+            terms: ['spa', '健身', 'fitness', '按摩', '美容'],
+            categoryFamilies: ['Spa / 健身', '場館', '服務'],
+            signalCategoryFamilies: ['Spa / 健身'],
+            preferredSourceTypes: ['deck', 'playbook'],
+            disallowedCategories: ['表演']
+        }
+    ];
     const AI_QUERY_STOP_WORDS = [
         '什麼', '怎麼', '如何', '請問', '一下', '值得', '推薦', '安排', '有沒有',
         '可以', '是否', '會不會', '需要', '想問', '最', '先', '去', '做', '呢', '嗎',
@@ -50,21 +124,27 @@
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
     const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
     const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
-    const aiQueryTaxonomy = normalizeAiQueryTaxonomy(window.AI_QUERY_TAXONOMY || {});
+    const aiQueryTaxonomy = normalizeAiQueryTaxonomy({
+        ...(window.AI_QUERY_TAXONOMY || {}),
+        capabilityProfiles: [
+            ...(((window.AI_QUERY_TAXONOMY || {}).capabilityProfiles) || []),
+            ...AI_QUERY_CAPABILITY_PROFILES
+        ]
+    });
     const AI_SEARCH_MIN_LENGTH = 6;
     const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
     const AI_REWRITE_MAX_ATTEMPTS = 1;
     const AI_REWRITE_MAX_RESULTS = 4;
     const AI_REPORT_DEFAULT_MODE = 'report';
-    const AI_REPORT_MAX_RESULTS = 60;
-    const AI_REPORT_MAX_PARENTS = 28;
-    const AI_REPORT_MAX_PER_PARENT = 5;
+    const AI_REPORT_MAX_RESULTS = 72;
+    const AI_REPORT_MAX_PARENTS = 32;
+    const AI_REPORT_MAX_PER_PARENT = 6;
     const AI_REPORT_STRONG_EVIDENCE_MIN = 4;
-    const AI_REPORT_RANKED_POOL_LIMIT = 140;
-    const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 20;
+    const AI_REPORT_RANKED_POOL_LIMIT = 180;
+    const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 24;
     const AI_RESULT_HIGHLIGHT_LIMIT = 4;
     const AI_INTERPRETATION_TAG_LIMIT = 6;
-    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v7';
+    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v9';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
@@ -79,7 +159,8 @@
         lastQuery: '',
         lastResults: [],
         lastQueryData: null,
-        documentVersion: 'base'
+        documentVersion: 'base',
+        aiConceptGraph: null
     };
     const runtimeState = {
         bubbleTimer: null,
@@ -1052,6 +1133,8 @@
         const rawGenericClasses = Array.isArray(rawTaxonomy.genericClasses) ? rawTaxonomy.genericClasses : [];
         const rawCategoryFamilies = Array.isArray(rawTaxonomy.categoryFamilies) ? rawTaxonomy.categoryFamilies : [];
         const rawClusterRelations = Array.isArray(rawTaxonomy.clusterRelations) ? rawTaxonomy.clusterRelations : [];
+        const rawRelatedEdges = Array.isArray(rawTaxonomy.relatedEdges) ? rawTaxonomy.relatedEdges : [];
+        const rawCapabilityProfiles = Array.isArray(rawTaxonomy.capabilityProfiles) ? rawTaxonomy.capabilityProfiles : [];
 
         const aliases = rawAliases
             .map(entry => {
@@ -1158,11 +1241,73 @@
             })
             .filter(Boolean);
 
+        const relatedEdges = rawRelatedEdges
+            .map(entry => {
+                const source = compactSearchText(entry?.source);
+                const target = compactSearchText(entry?.target);
+                const relation = compactSearchText(entry?.relation);
+                const terms = uniqueItems((Array.isArray(entry?.terms) ? entry.terms : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                return source && target
+                    ? {
+                        source,
+                        target,
+                        relation: relation || 'related',
+                        terms,
+                        normalizedSource: normalizeSearchText(source),
+                        normalizedTarget: normalizeSearchText(target)
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
+        const capabilityProfiles = rawCapabilityProfiles
+            .map(entry => {
+                const id = compactSearchText(entry?.id || entry?.label).toLowerCase();
+                const label = compactSearchText(entry?.label || entry?.id || id);
+                const terms = uniqueItems([label, id, ...(Array.isArray(entry?.terms) ? entry.terms : [])]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const categoryFamilies = uniqueItems((Array.isArray(entry?.categoryFamilies) ? entry.categoryFamilies : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const signalCategoryFamilies = uniqueItems((Array.isArray(entry?.signalCategoryFamilies) ? entry.signalCategoryFamilies : categoryFamilies)
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const preferredSourceTypes = uniqueItems((Array.isArray(entry?.preferredSourceTypes) ? entry.preferredSourceTypes : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const disallowedCategories = uniqueItems((Array.isArray(entry?.disallowedCategories) ? entry.disallowedCategories : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const normalizedTerms = uniqueItems(terms
+                    .map(term => normalizeSearchText(term))
+                    .filter(Boolean));
+                return id && normalizedTerms.length
+                    ? {
+                        id,
+                        label,
+                        terms,
+                        normalizedId: normalizeSearchText(id),
+                        normalizedLabel: normalizeSearchText(label),
+                        normalizedTerms,
+                        categoryFamilies,
+                        signalCategoryFamilies,
+                        preferredSourceTypes,
+                        disallowedCategories
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
         const aliasLookup = new Map();
         const genericClassLookup = new Map();
         const categoryLookup = new Map();
         const clusterKeyLookup = new Map();
         const clusterTriggerLookup = new Map();
+        const relatedEdgeLookup = new Map();
+        const capabilityLookup = new Map();
 
         aliases.forEach(entry => {
             entry.normalizedTerms.forEach(term => aliasLookup.set(term, entry.canonical));
@@ -1188,12 +1333,29 @@
             });
         });
 
+        relatedEdges.forEach(entry => {
+            [entry.normalizedSource, entry.normalizedTarget].filter(Boolean).forEach(term => {
+                if (!relatedEdgeLookup.has(term)) {
+                    relatedEdgeLookup.set(term, new Set());
+                }
+                relatedEdgeLookup.get(term).add(entry);
+            });
+        });
+
+        capabilityProfiles.forEach(entry => {
+            [entry.normalizedId, entry.normalizedLabel, ...entry.normalizedTerms].forEach(term => {
+                if (term) capabilityLookup.set(term, entry.id);
+            });
+        });
+
         return {
             version: compactSearchText(rawTaxonomy.version) || 'fallback',
             aliases,
             genericClasses,
             categoryFamilies,
             clusterRelations,
+            relatedEdges,
+            capabilityProfiles,
             supportedSourceTypes: uniqueItems((Array.isArray(rawTaxonomy.supportedSourceTypes) ? rawTaxonomy.supportedSourceTypes : [])
                 .map(term => compactSearchText(term))
                 .filter(Boolean)),
@@ -1201,7 +1363,9 @@
             genericClassLookup,
             categoryLookup,
             clusterKeyLookup,
-            clusterTriggerLookup
+            clusterTriggerLookup,
+            relatedEdgeLookup,
+            capabilityLookup
         };
     }
 
@@ -1230,6 +1394,20 @@
                 relatedEntities: entry.relatedEntities,
                 relatedCategories: entry.relatedCategories,
                 relatedTerms: entry.relatedTerms
+            })),
+            relatedEdges: aiQueryTaxonomy.relatedEdges.map(entry => ({
+                source: entry.source,
+                target: entry.target,
+                relation: entry.relation,
+                terms: entry.terms
+            })),
+            capabilityProfiles: aiQueryTaxonomy.capabilityProfiles.map(entry => ({
+                id: entry.id,
+                label: entry.label,
+                terms: entry.terms,
+                categoryFamilies: entry.categoryFamilies,
+                preferredSourceTypes: entry.preferredSourceTypes,
+                disallowedCategories: entry.disallowedCategories
             })),
             supportedSourceTypes: aiQueryTaxonomy.supportedSourceTypes
         };
@@ -1271,6 +1449,30 @@
     function getTaxonomyClusterEntry(key) {
         const normalized = normalizeSearchText(key);
         return aiQueryTaxonomy.clusterRelations.find(entry => entry.normalizedKey === normalized) || null;
+    }
+
+    function resolveTaxonomyCapabilityId(value) {
+        const normalized = normalizeSearchText(value);
+        if (!normalized) return '';
+        return aiQueryTaxonomy.capabilityLookup.get(normalized) || '';
+    }
+
+    function getTaxonomyCapabilityEntry(value) {
+        const capabilityId = resolveTaxonomyCapabilityId(value) || compactSearchText(value).toLowerCase();
+        if (!capabilityId) return null;
+        return aiQueryTaxonomy.capabilityProfiles.find(entry => entry.id === capabilityId) || null;
+    }
+
+    function getTaxonomyCapabilityLabel(value) {
+        return getTaxonomyCapabilityEntry(value)?.label || compactSearchText(value);
+    }
+
+    function getCapabilitySignalCategoryFamilies(capabilityEntry) {
+        if (!capabilityEntry || typeof capabilityEntry !== 'object') return [];
+        const families = Array.isArray(capabilityEntry.signalCategoryFamilies) && capabilityEntry.signalCategoryFamilies.length
+            ? capabilityEntry.signalCategoryFamilies
+            : capabilityEntry.categoryFamilies;
+        return Array.isArray(families) ? families : [];
     }
 
     function getTaxonomyClusterKeysForTerm(value) {
@@ -1315,6 +1517,308 @@
                 ...entry.relatedTerms
             ]);
         }).map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
+    }
+
+    function expandTaxonomyRelatedTerms(terms = []) {
+        const normalizedTerms = uniqueItems((Array.isArray(terms) ? terms : [])
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean));
+        const expanded = new Set();
+
+        normalizedTerms.forEach(term => {
+            const entries = aiQueryTaxonomy.relatedEdgeLookup.get(term);
+            if (!entries) return;
+            entries.forEach(entry => {
+                expanded.add(entry.source);
+                expanded.add(entry.target);
+                (entry.terms || []).forEach(item => expanded.add(item));
+            });
+        });
+
+        return uniqueItems(Array.from(expanded).map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
+    }
+
+    function inferAiCapabilityTags(config = {}) {
+        const normalized = normalizeSearchText([
+            config.title,
+            config.text,
+            config.structuredText,
+            config.locationLabel,
+            config.groupLabel,
+            ...(Array.isArray(config.keywords) ? config.keywords : []),
+            ...(Array.isArray(config.categoryFamilies) ? config.categoryFamilies : [])
+        ].filter(Boolean).join(' '));
+        const categoryFamilies = Array.isArray(config.categoryFamilies) ? config.categoryFamilies : [];
+
+        return aiQueryTaxonomy.capabilityProfiles
+            .filter(entry => {
+                const termMatch = entry.normalizedTerms.some(term => normalized.includes(term));
+                const categoryMatch = getCapabilitySignalCategoryFamilies(entry).some(label => categoryFamilies.includes(label));
+                return termMatch || categoryMatch;
+            })
+            .map(entry => entry.id)
+            .slice(0, 6);
+    }
+
+    function inferAiEntityFamilies(config = {}) {
+        const families = new Set();
+
+        if (config.sourceType === 'deck') {
+            families.add('facility');
+            families.add('deck');
+        } else if (config.sourceType === 'show') {
+            families.add('show');
+            families.add('venue');
+        } else if (config.sourceType === 'playbook') {
+            families.add((config.sourceDetailType || 'general') === 'general' ? 'playbook' : 'service');
+        } else if (config.sourceType === 'schedule') {
+            families.add('schedule');
+            families.add('timing');
+        } else {
+            families.add('static');
+        }
+
+        (Array.isArray(config.capabilityTags) ? config.capabilityTags : []).forEach(capabilityId => {
+            families.add(capabilityId);
+        });
+
+        return Array.from(families).slice(0, 6);
+    }
+
+    function inferAiAnswerIntent(normalizedQuery = '', coverageHints = []) {
+        if (coverageHints.includes('comparison') || hasQueryHint(normalizedQuery, ['比較', '還是', '要不要', '值不值得'])) {
+            return 'comparison';
+        }
+        if (coverageHints.includes('all-processes')) {
+            return 'process';
+        }
+        if (coverageHints.includes('inventory') || coverageHints.includes('all-details')) {
+            return 'inventory';
+        }
+        return 'answer';
+    }
+
+    function detectAiRequiredCapabilities(normalizedQuery = '', context = {}) {
+        const required = new Set();
+        const normalized = normalizeSearchText(normalizedQuery);
+        const seedTerms = uniqueItems([
+            ...(context.literalAnchors || []),
+            ...(context.canonicalEntities || []),
+            ...(context.expandedAliases || [])
+        ])
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean);
+
+        aiQueryTaxonomy.capabilityProfiles.forEach(entry => {
+            if (entry.normalizedTerms.some(term => normalized.includes(term))) {
+                required.add(entry.id);
+                return;
+            }
+            if (entry.normalizedTerms.some(term => seedTerms.includes(term))) {
+                required.add(entry.id);
+            }
+        });
+
+        return Array.from(required).slice(0, 4);
+    }
+
+    function detectAiDisallowedCategories(normalizedQuery = '', requiredCapabilities = []) {
+        const disallowed = new Set();
+        requiredCapabilities.forEach(capabilityId => {
+            const capability = getTaxonomyCapabilityEntry(capabilityId);
+            (capability?.disallowedCategories || []).forEach(categoryLabel => disallowed.add(categoryLabel));
+        });
+
+        if (hasQueryHint(normalizedQuery, ['不要', '排除', '扣掉'])) {
+            if (hasQueryHint(normalizedQuery, ['劇院', 'theatre', 'show', 'shows'])) {
+                disallowed.add('表演');
+            }
+            if (hasQueryHint(normalizedQuery, ['商店', 'shop', 'shopping'])) {
+                disallowed.add('商店');
+            }
+        }
+
+        return Array.from(disallowed).slice(0, 8);
+    }
+
+    function resultMatchesCapability(result, capabilityId) {
+        if (!result || !capabilityId) return false;
+        const capability = getTaxonomyCapabilityEntry(capabilityId);
+        if (!capability) return false;
+
+        if ((result.capabilityTags || []).includes(capability.id)) {
+            return true;
+        }
+
+        if ((result.categoryFamilies || []).some(label => getCapabilitySignalCategoryFamilies(capability).includes(label))) {
+            return true;
+        }
+
+        const sourceText = result.normalizedCombined || normalizeSearchText([
+            result.title,
+            result.text,
+            result.structuredText,
+            ...(result.keywords || [])
+        ].join(' '));
+
+        return capability.normalizedTerms.some(term => sourceText.includes(term));
+    }
+
+    function resultMatchesRequiredCapability(result, requiredCapabilities = []) {
+        return (Array.isArray(requiredCapabilities) ? requiredCapabilities : []).some(capabilityId =>
+            resultMatchesCapability(result, capabilityId)
+        );
+    }
+
+    function resultMatchesDisallowedCategory(result, disallowedCategories = []) {
+        return (Array.isArray(disallowedCategories) ? disallowedCategories : []).some(categoryLabel =>
+            resultMatchesCategory(result, categoryLabel)
+        );
+    }
+
+    function inferAiCategoryFamilies(config = {}) {
+        const normalized = normalizeSearchText([
+            config.title,
+            config.text,
+            config.structuredText,
+            config.locationLabel,
+            config.groupLabel,
+            ...(Array.isArray(config.keywords) ? config.keywords : [])
+        ].filter(Boolean).join(' '));
+        const categories = new Set();
+
+        aiQueryTaxonomy.categoryFamilies.forEach(entry => {
+            const matched = uniqueItems([entry.label, ...entry.terms, ...entry.keywords])
+                .map(term => normalizeSearchText(term))
+                .filter(Boolean)
+                .some(term => normalized.includes(term));
+            if (matched) {
+                categories.add(entry.label);
+            }
+        });
+
+        if (config.sourceType === 'show') {
+            categories.add('表演');
+            categories.add('場館');
+        }
+        if (config.sourceType === 'deck') {
+            categories.add('場館');
+        }
+        if (config.sourceType === 'schedule') {
+            categories.add('時間脈絡');
+        }
+        if (config.sourceType === 'playbook') {
+            categories.add('服務');
+            if ((config.sourceDetailType || 'general') === 'concierge') {
+                categories.add('酒廊');
+            }
+        }
+        if (!categories.size && config.sourceType === 'static') {
+            categories.add('場館');
+        }
+
+        return Array.from(categories).slice(0, 6);
+    }
+
+    function buildAiConceptGraph(documents = []) {
+        const relatedTermsLookup = new Map();
+        const categoryLookup = new Map();
+        const clusterLookup = new Map();
+
+        const pushLookup = (lookup, key, value) => {
+            const normalizedKey = normalizeSearchText(key);
+            const compactValue = compactSearchText(value);
+            if (!normalizedKey || !compactValue) return;
+            if (!lookup.has(normalizedKey)) {
+                lookup.set(normalizedKey, new Set());
+            }
+            lookup.get(normalizedKey).add(compactValue);
+        };
+
+        documents
+            .filter(doc => (doc.fieldType || 'parent') === 'parent')
+            .forEach(doc => {
+                const seeds = uniqueItems([
+                    doc.title,
+                    doc.groupLabel,
+                    ...(doc.keywords || []).slice(0, 6),
+                    ...(doc.categoryFamilies || []),
+                    doc.entityKey,
+                    doc.venueKey,
+                    doc.seriesKey,
+                    doc.sourceClusterKey
+                ]).filter(Boolean);
+                const relatedTerms = uniqueItems([
+                    doc.title,
+                    ...(doc.keywords || []).slice(0, 8),
+                    ...(doc.categoryFamilies || []),
+                    doc.groupLabel,
+                    doc.locationLabel,
+                    ...(doc.sourceType === 'show' ? ['表演', '劇院', '看秀'] : []),
+                    ...(doc.sourceType === 'playbook' ? ['攻略', '流程', '注意事項'] : []),
+                    ...(doc.sourceType === 'deck' ? ['設施', '場館'] : []),
+                    ...(doc.sourceType === 'schedule' ? ['時間', '時段', '行程'] : [])
+                ]).filter(Boolean);
+
+                seeds.forEach(seed => {
+                    relatedTerms.forEach(term => pushLookup(relatedTermsLookup, seed, term));
+                    (doc.categoryFamilies || []).forEach(categoryLabel => pushLookup(categoryLookup, seed, categoryLabel));
+                    [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey]
+                        .filter(Boolean)
+                        .forEach(clusterKey => pushLookup(clusterLookup, seed, clusterKey));
+                });
+            });
+
+        return {
+            relatedTermsLookup,
+            categoryLookup,
+            clusterLookup
+        };
+    }
+
+    function expandAiConceptGraph(seedTerms = []) {
+        const graph = searchState.aiConceptGraph;
+        if (!graph) {
+            return {
+                relatedTerms: [],
+                relatedCategories: [],
+                preferredClusters: []
+            };
+        }
+
+        const normalizedSeeds = uniqueItems((Array.isArray(seedTerms) ? seedTerms : [])
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean));
+        const relatedTerms = new Set();
+        const relatedCategories = new Set();
+        const preferredClusters = new Set();
+
+        normalizedSeeds.forEach(seed => {
+            (graph.relatedTermsLookup.get(seed) || new Set()).forEach(term => relatedTerms.add(term));
+            (graph.categoryLookup.get(seed) || new Set()).forEach(category => relatedCategories.add(category));
+            (graph.clusterLookup.get(seed) || new Set()).forEach(clusterKey => preferredClusters.add(clusterKey));
+        });
+
+        if (!relatedTerms.size && normalizedSeeds.length) {
+            searchState.documents
+                .filter(doc => (doc.fieldType || 'parent') === 'parent')
+                .filter(doc => normalizedSeeds.some(seed => (doc.normalizedCombined || '').includes(seed)))
+                .slice(0, 20)
+                .forEach(doc => {
+                    relatedTerms.add(doc.title);
+                    (doc.keywords || []).slice(0, 6).forEach(keyword => relatedTerms.add(keyword));
+                    (doc.categoryFamilies || []).forEach(category => relatedCategories.add(category));
+                    [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey]
+                        .filter(Boolean)
+                        .forEach(clusterKey => preferredClusters.add(clusterKey));
+                });
+        }
+
+        return {
+            relatedTerms: Array.from(relatedTerms).slice(0, 32),
+            relatedCategories: Array.from(relatedCategories).slice(0, 10),
+            preferredClusters: Array.from(preferredClusters).slice(0, 10)
+        };
     }
 
     function detectAiCoverageHints(normalizedQuery) {
@@ -1388,12 +1892,40 @@
         ]).slice(0, 12);
         const expandedAliases = uniqueItems([
             ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity]),
-            ...collectTaxonomyContextualTerms(normalizedQuery)
-        ]).slice(0, 20);
+            ...collectTaxonomyContextualTerms(normalizedQuery),
+            ...expandTaxonomyRelatedTerms([...canonicalEntities, ...genericClasses, ...categoryMatches])
+        ]).slice(0, 28);
         const expandedCategoryTerms = expandTaxonomyCategoryTerms(expandedCategories);
-        const clusterExpansions = expandTaxonomyClusterTerms(clusterKeys);
+        const conceptExpansions = expandAiConceptGraph([
+            ...literalAnchors,
+            ...canonicalEntities,
+            ...genericClasses,
+            ...expandedAliases,
+            ...expandedCategories
+        ]);
+        const clusterExpansions = uniqueItems([
+            ...expandTaxonomyClusterTerms(clusterKeys),
+            ...conceptExpansions.relatedTerms
+        ]).slice(0, 32);
         const coverageHints = detectAiCoverageHints(normalizedQuery);
         const negativeTerms = detectAiNegativeTerms(normalizedQuery);
+        const requiredCapabilities = detectAiRequiredCapabilities(normalizedQuery, {
+            literalAnchors,
+            canonicalEntities,
+            genericClasses,
+            expandedAliases,
+            expandedCategories
+        });
+        const disallowedCategories = detectAiDisallowedCategories(normalizedQuery, requiredCapabilities);
+        const breadthProfile = coverageHints.includes('all-details') || coverageHints.includes('inventory')
+            ? 'maximum-expansion'
+            : (genericClasses.length || expandedCategories.length ? 'broad-expansion' : 'guided-expansion');
+        const expansionReasons = uniqueItems([
+            ...genericClasses.map(item => `泛稱展開：${item}`),
+            ...expandedCategories.slice(0, 4).map(item => `類別補全：${item}`),
+            ...clusterKeys.slice(0, 4).map(item => `主題群組：${item}`),
+            ...requiredCapabilities.map(item => `能力條件：${getTaxonomyCapabilityLabel(item)}`)
+        ]).slice(0, 10);
 
         return {
             canonicalQuery: compactSearchText(rawQuery),
@@ -1407,6 +1939,12 @@
             clusterExpansions,
             coverageHints,
             negativeTerms,
+            requiredCapabilities,
+            disallowedCategories,
+            answerIntent: inferAiAnswerIntent(normalizedQuery, coverageHints),
+            breadthProfile,
+            expansionReasons,
+            preferredClusters: conceptExpansions.preferredClusters,
             confidence: canonicalEntities.length
                 ? 'high'
                 : (genericClasses.length || expandedCategories.length || literalAnchors.length ? 'medium' : 'low')
@@ -1447,7 +1985,20 @@
             .map(term => compactSearchText(term))
             .filter(Boolean))
             .slice(0, 6);
+        const requiredCapabilities = uniqueItems((Array.isArray(safeResult.requiredCapabilities) ? safeResult.requiredCapabilities : [])
+            .map(term => resolveTaxonomyCapabilityId(term) || compactSearchText(term).toLowerCase())
+            .filter(Boolean))
+            .slice(0, 4);
+        const disallowedCategories = uniqueItems((Array.isArray(safeResult.disallowedCategories) ? safeResult.disallowedCategories : [])
+            .map(term => resolveTaxonomyCategoryLabel(term) || compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 8);
+        const breadthProfile = compactSearchText(safeResult.breadthProfile) || 'guided-expansion';
+        const expansionReasons = sanitizeSearchTextArray(safeResult.expansionReasons, 10, 120);
         const confidence = ['high', 'medium', 'low'].includes(safeResult.confidence) ? safeResult.confidence : 'low';
+        const answerIntent = ['answer', 'inventory', 'process', 'comparison'].includes(compactSearchText(safeResult.answerIntent))
+            ? compactSearchText(safeResult.answerIntent)
+            : inferAiAnswerIntent('', coverageHints);
 
         return {
             canonicalQuery: compactSearchText(safeResult.canonicalQuery),
@@ -1461,6 +2012,12 @@
             clusterExpansions: expandTaxonomyClusterTerms(clusterKeys),
             coverageHints,
             negativeTerms,
+            requiredCapabilities,
+            disallowedCategories,
+            answerIntent,
+            breadthProfile,
+            expansionReasons,
+            preferredClusters: sanitizeSearchTextArray(safeResult.preferredClusters, 10, 80),
             confidence
         };
     }
@@ -1487,12 +2044,22 @@
             ...interpreted.expandedCategories,
             ...genericClasses.flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
             ...clusterKeys.flatMap(key => getTaxonomyClusterEntry(key)?.relatedCategories || [])
-        ]).slice(0, 12);
+        ]).slice(0, 14);
+        const conceptExpansions = expandAiConceptGraph([
+            ...fallback.literalAnchors,
+            ...interpreted.literalAnchors,
+            ...canonicalEntities,
+            ...genericClasses,
+            ...expandedCategories,
+            ...clusterKeys
+        ]);
         const expandedAliases = uniqueItems([
             ...fallback.expandedAliases,
             ...interpreted.expandedAliases,
-            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity])
-        ]).slice(0, 24);
+            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity]),
+            ...expandTaxonomyRelatedTerms([...canonicalEntities, ...genericClasses, ...expandedCategories]),
+            ...conceptExpansions.relatedTerms
+        ]).slice(0, 36);
         const coverageHints = uniqueItems([
             ...fallback.coverageHints,
             ...interpreted.coverageHints
@@ -1505,24 +2072,63 @@
             ...fallback.negativeTerms,
             ...interpreted.negativeTerms
         ]).slice(0, 6);
+        const requiredCapabilities = uniqueItems([
+            ...(fallback.requiredCapabilities || []),
+            ...(interpreted.requiredCapabilities || []),
+            ...detectAiRequiredCapabilities(normalizedQuery, {
+                literalAnchors: fallback.literalAnchors,
+                canonicalEntities,
+                genericClasses,
+                expandedAliases,
+                expandedCategories
+            })
+        ]).slice(0, 4);
+        const disallowedCategories = uniqueItems([
+            ...(fallback.disallowedCategories || []),
+            ...(interpreted.disallowedCategories || []),
+            ...detectAiDisallowedCategories(normalizedQuery, requiredCapabilities)
+        ]).slice(0, 8);
         const expandedCategoryTerms = uniqueItems([
             ...fallback.expandedCategoryTerms,
             ...interpreted.expandedCategoryTerms,
             ...expandTaxonomyCategoryTerms(expandedCategories)
-        ]).slice(0, 24);
+        ]).slice(0, 32);
         const clusterExpansions = uniqueItems([
             ...fallback.clusterExpansions,
             ...interpreted.clusterExpansions,
-            ...expandTaxonomyClusterTerms(clusterKeys)
-        ]).slice(0, 24);
+            ...expandTaxonomyClusterTerms(clusterKeys),
+            ...conceptExpansions.relatedTerms
+        ]).slice(0, 36);
         const literalAnchors = uniqueItems([
             ...fallback.literalAnchors,
             ...interpreted.literalAnchors,
             ...canonicalEntities
         ]).slice(0, 12);
+        const preferredClusters = uniqueItems([
+            ...(fallback.preferredClusters || []),
+            ...(interpreted.preferredClusters || []),
+            ...clusterKeys,
+            ...conceptExpansions.preferredClusters
+        ]).slice(0, 10);
+        const breadthProfile = interpreted.breadthProfile && interpreted.breadthProfile !== 'guided-expansion'
+            ? interpreted.breadthProfile
+            : (coverageHints.includes('all-details') || coverageHints.includes('inventory')
+                ? 'maximum-expansion'
+                : ((genericClasses.length || expandedCategories.length >= 3) ? 'broad-expansion' : fallback.breadthProfile));
+        const expansionReasons = uniqueItems([
+            ...(fallback.expansionReasons || []),
+            ...(interpreted.expansionReasons || []),
+            ...genericClasses.slice(0, 4).map(item => `泛稱展開：${item}`),
+            ...expandedCategories.slice(0, 4).map(item => `類別擴張：${item}`),
+            ...preferredClusters.slice(0, 4).map(item => `主題補強：${item}`),
+            ...requiredCapabilities.map(item => `能力條件：${getTaxonomyCapabilityLabel(item)}`)
+        ]).slice(0, 12);
         const confidence = interpreted.confidence === 'high'
             ? 'high'
             : ((canonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence);
+        const answerIntent = interpreted.answerIntent
+            || fallback.answerIntent
+            || inferAiAnswerIntent(normalizedQuery, coverageHints);
 
         return {
             canonicalQuery: interpreted.canonicalQuery || fallback.canonicalQuery,
@@ -1536,6 +2142,12 @@
             clusterExpansions,
             coverageHints,
             negativeTerms,
+            requiredCapabilities,
+            disallowedCategories,
+            answerIntent,
+            breadthProfile,
+            expansionReasons,
+            preferredClusters,
             confidence,
             usedAiInterpreter: Boolean(aiResult)
         };
@@ -1544,6 +2156,9 @@
     function resolveAiCoverageMode(interpreterResult = {}, normalizedQuery = '') {
         const hints = interpreterResult.coverageHints || [];
         if (hints.includes('all-details') || hints.includes('all-processes')) {
+            return 'exhaustive';
+        }
+        if (interpreterResult.breadthProfile === 'maximum-expansion') {
             return 'exhaustive';
         }
         if (hints.includes('inventory') && (
@@ -1556,6 +2171,39 @@
         return 'broad';
     }
 
+    function detectAiBreadthSignals(normalizedQuery = '') {
+        if (!normalizedQuery) return [];
+
+        const signalGroups = [
+            ['哪些樓層', ['哪些樓層', '哪些甲板', '哪幾層', '哪層']],
+            ['有哪些設施', ['有哪些設施', '哪些設施', '有哪些地方', '哪些地方', '各項設施']],
+            ['有哪些內容', ['有哪些內容', '有什麼內容', '有什麼可以用', '有什麼可用', '有哪些可以用']],
+            ['所有細節', ['所有細節', '全部細節', '完整細節', '完整整理', '完整清單']],
+            ['有哪些表演', ['有哪些表演', '有什麼表演', 'show', 'shows']]
+        ];
+
+        return signalGroups
+            .filter(([, terms]) => hasQueryHint(normalizedQuery, terms))
+            .map(([label]) => label)
+            .slice(0, 6);
+    }
+
+    function isAiFacilityBreadthMode(queryData = {}) {
+        const breadthSignals = Array.isArray(queryData.breadthSignals) ? queryData.breadthSignals : [];
+        if (!breadthSignals.length && !(Array.isArray(queryData.requiredCapabilities) && queryData.requiredCapabilities.length)) return false;
+
+        if (queryData.intents?.deckFocus || queryData.intents?.conciergeFocus || queryData.intents?.theatreFocus) {
+            return true;
+        }
+
+        return uniqueItems([
+            ...(queryData.mustCoverCategories || []),
+            ...(queryData.expandedCategories || []),
+            ...(queryData.genericClasses || []),
+            ...(queryData.requiredCapabilities || []).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId))
+        ]).some((label) => ['場館', '服務', '表演', '酒廊', '泳池', '甲板', '設施'].includes(label));
+    }
+
     function buildAiInterpretationTags(queryData = {}, reportPlan = null) {
         const interpreter = queryData.interpreterResult || {};
         const coverageMode = reportPlan?.coverageMode === 'exhaustive'
@@ -1565,8 +2213,11 @@
 
         return uniqueItems([
             ...(interpreter.canonicalEntities || []).slice(0, 3),
+            ...(interpreter.requiredCapabilities || []).slice(0, 2).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId)),
             ...(interpreter.expandedAliases || []).filter(term => /^[A-Za-z][A-Za-z\s]{2,}$/u.test(term)).slice(0, 1),
-            ...(interpreter.expandedCategories || []).slice(0, 3),
+            ...(interpreter.expandedCategories || []).slice(0, 2),
+            ...(interpreter.disallowedCategories || []).slice(0, 1).map(label => `排除 ${label}`),
+            ...(interpreter.breadthProfile === 'maximum-expansion' ? ['最大擴張'] : []),
             coverageMode
         ]).filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT);
     }
@@ -1700,6 +2351,24 @@
         const keywords = Array.isArray(config.keywords) ? uniqueItems(config.keywords.filter(Boolean)) : [];
         const text = joinSearchTextParts([config.text]);
         const structuredText = joinSearchTextParts([config.structuredText || text]);
+        const categoryFamilies = inferAiCategoryFamilies({
+            ...config,
+            text,
+            structuredText,
+            keywords
+        });
+        const capabilityTags = inferAiCapabilityTags({
+            ...config,
+            text,
+            structuredText,
+            keywords,
+            categoryFamilies
+        });
+        const entityFamilies = inferAiEntityFamilies({
+            ...config,
+            categoryFamilies,
+            capabilityTags
+        });
         const anchorKeys = inferCoverageAnchorKeys({
             ...config,
             text,
@@ -1724,6 +2393,10 @@
             fieldLabel: config.fieldLabel || getAiFieldLabel(config.fieldType || 'parent'),
             timeHint: compactSearchText(config.timeHint),
             bestTimeHint: compactSearchText(config.bestTimeHint),
+            categoryFamilies,
+            capabilityTags,
+            entityFamilies,
+            supportOfParentIds: Array.isArray(config.supportOfParentIds) ? uniqueItems(config.supportOfParentIds.filter(Boolean)).slice(0, 10) : [],
             evidenceRoleHints: Array.isArray(config.evidenceRoleHints) ? config.evidenceRoleHints.filter(Boolean) : [],
             entityKey: config.entityKey || anchorKeys.entityKey,
             venueKey: config.venueKey || anchorKeys.venueKey,
@@ -2072,24 +2745,74 @@
             ...buildPlaybookSearchDocuments(),
             ...buildStaticSearchDocuments()
         ];
-
-        searchState.documents = docs.map(doc => {
+        const baseDocuments = docs.map(doc => {
             const normalizedTitle = normalizeSearchText(doc.title);
             const normalizedText = normalizeSearchText(doc.text);
             const normalizedStructuredText = normalizeSearchText(doc.structuredText || doc.text);
             const normalizedKeywords = normalizeSearchText(doc.keywords.join(' '));
+            const normalizedCategories = normalizeSearchText((doc.categoryFamilies || []).join(' '));
+            const normalizedCapabilities = normalizeSearchText((doc.capabilityTags || []).join(' '));
+            const normalizedEntityFamilies = normalizeSearchText((doc.entityFamilies || []).join(' '));
             return {
                 ...doc,
                 normalizedTitle,
                 normalizedText,
                 normalizedStructuredText,
                 normalizedKeywords,
-                normalizedCombined: uniqueItems([normalizedTitle, normalizedKeywords, normalizedText, normalizedStructuredText].filter(Boolean)).join(' ')
+                normalizedCategories,
+                normalizedCapabilities,
+                normalizedEntityFamilies,
+                normalizedCombined: uniqueItems([
+                    normalizedTitle,
+                    normalizedKeywords,
+                    normalizedText,
+                    normalizedStructuredText,
+                    normalizedCategories,
+                    normalizedCapabilities,
+                    normalizedEntityFamilies
+                ].filter(Boolean)).join(' ')
             };
         });
 
+        const primaryParents = baseDocuments.filter(doc =>
+            (doc.fieldType || 'parent') === 'parent'
+            && !['schedule', 'static'].includes(doc.sourceType)
+        );
+
+        searchState.documents = baseDocuments.map(doc => {
+            const supportOfParentIds = ['schedule', 'static'].includes(doc.sourceType)
+                ? uniqueItems(primaryParents
+                    .filter(parentDoc => {
+                        const sharedAnchor = [
+                            doc.entityKey,
+                            doc.venueKey,
+                            doc.seriesKey,
+                            doc.sourceClusterKey
+                        ].filter(Boolean).some(anchor =>
+                            [parentDoc.entityKey, parentDoc.venueKey, parentDoc.seriesKey, parentDoc.sourceClusterKey].includes(anchor)
+                        );
+                        const sharedCapability = (doc.capabilityTags || []).some(capabilityId =>
+                            (parentDoc.capabilityTags || []).includes(capabilityId)
+                        );
+                        const sharedCategory = (doc.categoryFamilies || []).some(categoryLabel =>
+                            (parentDoc.categoryFamilies || []).includes(categoryLabel)
+                        );
+                        return sharedAnchor || sharedCapability || sharedCategory;
+                    })
+                    .map(parentDoc => parentDoc.parentId || parentDoc.id))
+                    .slice(0, 10)
+                : (doc.supportOfParentIds || []).slice(0, 10);
+
+            return {
+                ...doc,
+                supportOfParentIds,
+                normalizedSupportParents: normalizeSearchText(supportOfParentIds.join(' '))
+            };
+        });
+
+        searchState.aiConceptGraph = buildAiConceptGraph(searchState.documents);
         searchState.documentVersion = simpleHash(searchState.documents
-            .map(doc => `${doc.id}::${doc.normalizedCombined}`)
+            .map(doc => `${doc.id}::${doc.normalizedCombined}::${(doc.categoryFamilies || []).join(',')}::${(doc.capabilityTags || []).join(',')}::${(doc.supportOfParentIds || []).join(',')}`)
             .join('||'));
     }
 
@@ -2315,13 +3038,16 @@
         return {
             core: uniqueItems([
                 ...hardAnchors.slice(0, 8),
+                ...(queryData.requiredCapabilities || []).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId)),
                 ...(slots.day || []).slice(0, 2),
                 ...(slots.timeWindow || []).slice(0, 2)
             ]).slice(0, 12),
             extension: uniqueItems([
                 ...(queryData.subjectClusters || []).slice(0, 8),
                 ...(queryData.expandedCategories || []).slice(0, 6),
+                ...(queryData.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || []),
                 ...(queryData.clusterExpansions || []).slice(0, 6),
+                ...(queryData.preferredClusters || []).slice(0, 4),
                 ...(slots.goal || []).slice(0, 3),
                 ...(slots.audience || []).slice(0, 3),
                 ...softModifiers.slice(0, 4)
@@ -2495,6 +3221,13 @@
     function buildAiQueryBundles(normalizedQuery, rewriteMeta = null, slots = {}, highlightTerms = [], interpreter = {}) {
         const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
         const anchorProfile = buildAiAnchorProfile(normalizedQuery, buildAiIntents(normalizedQuery), slots, highlightTerms, interpreter);
+        const conceptExpansions = expandAiConceptGraph([
+            ...(interpreter.literalAnchors || []),
+            ...(interpreter.canonicalEntities || []),
+            ...(interpreter.expandedCategories || []),
+            ...(interpreter.preferredClusters || []),
+            ...highlightTerms
+        ]);
         const aliasSeed = uniqueItems([
             ...(anchorProfile.hardAnchors || []),
             ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
@@ -2502,18 +3235,30 @@
             ...normalizedRewrite.keywords,
             ...normalizedRewrite.alternates,
             ...(interpreter.expandedAliases || []),
+            ...conceptExpansions.relatedTerms,
             ...deriveContextualKeywords(normalizedQuery)
-        ]).slice(0, 14);
+        ]).slice(0, 20);
         const classSeed = uniqueItems([
             ...(interpreter.expandedCategories || []),
             ...(interpreter.expandedCategoryTerms || []),
-            ...(interpreter.genericClasses || [])
-        ]).slice(0, 18);
+            ...(interpreter.genericClasses || []),
+            ...conceptExpansions.relatedCategories
+        ]).slice(0, 20);
+        const capabilitySeed = uniqueItems([
+            ...(interpreter.requiredCapabilities || []).flatMap(capabilityId => {
+                const capability = getTaxonomyCapabilityEntry(capabilityId);
+                return capability
+                    ? [capability.label, ...capability.terms, ...(capability.categoryFamilies || [])]
+                    : [capabilityId];
+            }),
+            ...(interpreter.disallowedCategories || []).slice(0, 4)
+        ]).slice(0, 20);
         const clusterSeed = uniqueItems([
             ...(interpreter.canonicalEntities || []),
             ...(interpreter.clusterExpansions || []),
+            ...(interpreter.preferredClusters || []),
             ...(anchorProfile.subjectClusters || []).slice(0, 8)
-        ]).slice(0, 18);
+        ]).slice(0, 22);
         const taskSeed = uniqueItems([
             ...(anchorProfile.hardAnchors || []).slice(0, 8),
             ...(anchorProfile.softModifiers || []).slice(0, 8),
@@ -2530,11 +3275,12 @@
                 ...(interpreter.literalAnchors || []).slice(0, 6),
                 ...(anchorProfile.hardAnchors || []).slice(0, 8),
                 ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap).slice(0, 6)
-            ]).join(' ')).slice(0, 10),
-            alias: buildAiExpansionUnits(aliasSeed.join(' ')).slice(0, 12),
-            class: buildAiExpansionUnits(classSeed.join(' ')).slice(0, 14),
-            cluster: buildAiExpansionUnits(clusterSeed.join(' ')).slice(0, 14),
-            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 14)
+            ]).join(' ')).slice(0, 12),
+            alias: buildAiExpansionUnits(aliasSeed.join(' ')).slice(0, 18),
+            capability: buildAiExpansionUnits(capabilitySeed.join(' ')).slice(0, 18),
+            class: buildAiExpansionUnits(classSeed.join(' ')).slice(0, 18),
+            cluster: buildAiExpansionUnits(clusterSeed.join(' ')).slice(0, 18),
+            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 16)
         };
     }
 
@@ -2556,12 +3302,21 @@
                 literalAnchors: [],
                 canonicalEntities: [],
                 genericClasses: [],
+                requiredCapabilities: [],
+                disallowedCategories: [],
+                answerIntent: 'answer',
                 expandedAliases: [],
                 expandedCategories: [],
                 clusterExpansions: [],
                 coverageHints: [],
                 negativeTerms: [],
                 coverageMode: 'broad',
+                breadthProfile: 'guided-expansion',
+                expansionReasons: [],
+                preferredClusters: [],
+                mustCoverCategories: [],
+                mustCoverCapabilities: [],
+                categoryCoveragePlan: [],
                 rewriteMeta: null
             };
         }
@@ -2612,12 +3367,20 @@
         const bundleTerms = uniqueItems([
             ...(queryBundles.precision || []),
             ...(queryBundles.alias || []),
+            ...(queryBundles.capability || []),
             ...(queryBundles.class || []),
             ...(queryBundles.cluster || []),
             ...(queryBundles.task || [])
-        ]).slice(0, 30);
+        ]).slice(0, 40);
         const slotTerms = flattenAiSlots(slots);
         const coverageMode = resolveAiCoverageMode(mergedInterpreter, normalizedQuery);
+        const breadthSignals = detectAiBreadthSignals(normalizedQuery);
+        const mustCoverCategories = uniqueItems([
+            ...(mergedInterpreter.expandedCategories || []),
+            ...(mergedInterpreter.genericClasses || []).flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
+            ...(mergedInterpreter.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || [])
+        ]).slice(0, 10);
+        const mustCoverCapabilities = uniqueItems(mergedInterpreter.requiredCapabilities || []).slice(0, 4);
         const intentProfile = buildAiIntentProfile({
             normalizedQuery,
             highlightTerms,
@@ -2628,6 +3391,7 @@
             hardAnchors: anchorProfile.hardAnchors,
             softModifiers: anchorProfile.softModifiers,
             subjectClusters: anchorProfile.subjectClusters,
+            preferredClusters: mergedInterpreter.preferredClusters,
             coverageHints: mergedInterpreter.coverageHints,
             expandedCategories: mergedInterpreter.expandedCategories,
             clusterExpansions: mergedInterpreter.clusterExpansions
@@ -2642,6 +3406,13 @@
             intentProfile,
             expandedCategories: mergedInterpreter.expandedCategories,
             clusterExpansions: mergedInterpreter.clusterExpansions
+        });
+        const facilityBreadthMode = isAiFacilityBreadthMode({
+            breadthSignals,
+            intents,
+            mustCoverCategories,
+            expandedCategories: mergedInterpreter.expandedCategories,
+            genericClasses: mergedInterpreter.genericClasses
         });
 
         return {
@@ -2659,12 +3430,23 @@
             literalAnchors: mergedInterpreter.literalAnchors,
             canonicalEntities: mergedInterpreter.canonicalEntities,
             genericClasses: mergedInterpreter.genericClasses,
+            requiredCapabilities: mergedInterpreter.requiredCapabilities,
+            disallowedCategories: mergedInterpreter.disallowedCategories,
+            answerIntent: mergedInterpreter.answerIntent,
             expandedAliases: mergedInterpreter.expandedAliases,
             expandedCategories: mergedInterpreter.expandedCategories,
             clusterExpansions: mergedInterpreter.clusterExpansions,
             coverageHints: mergedInterpreter.coverageHints,
             negativeTerms: mergedInterpreter.negativeTerms,
             coverageMode,
+            breadthSignals,
+            facilityBreadthMode,
+            breadthProfile: mergedInterpreter.breadthProfile,
+            expansionReasons: mergedInterpreter.expansionReasons,
+            preferredClusters: mergedInterpreter.preferredClusters,
+            mustCoverCategories,
+            mustCoverCapabilities,
+            categoryCoveragePlan: [],
             hardAnchors: anchorProfile.hardAnchors,
             softModifiers: anchorProfile.softModifiers,
             subjectClusters: anchorProfile.subjectClusters,
@@ -2749,6 +3531,7 @@
             responseMode: reportPlan.responseMode === 'report' ? 'report' : 'compact',
             intentType: reportPlan.intentType || 'operational-detail',
             inventoryIntent: Boolean(reportPlan.inventoryIntent),
+            visibleInventoryMode: Boolean(reportPlan.visibleInventoryMode),
             coverageMode: reportPlan.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
             facetSummary: {
                 goal: Array.isArray(facets.goal) ? facets.goal.slice(0, 8) : [],
@@ -2794,10 +3577,146 @@
             literalAnchors: Array.isArray(reportPlan.literalAnchors) ? reportPlan.literalAnchors.slice(0, 12) : [],
             canonicalEntities: Array.isArray(reportPlan.canonicalEntities) ? reportPlan.canonicalEntities.slice(0, 8) : [],
             genericClasses: Array.isArray(reportPlan.genericClasses) ? reportPlan.genericClasses.slice(0, 6) : [],
+            requiredCapabilities: Array.isArray(reportPlan.requiredCapabilities) ? reportPlan.requiredCapabilities.slice(0, 4) : [],
+            disallowedCategories: Array.isArray(reportPlan.disallowedCategories) ? reportPlan.disallowedCategories.slice(0, 8) : [],
+            answerIntent: compactSearchText(reportPlan.answerIntent || 'answer'),
             expandedCategories: Array.isArray(reportPlan.expandedCategories) ? reportPlan.expandedCategories.slice(0, 8) : [],
             clusterExpansions: Array.isArray(reportPlan.clusterExpansions) ? reportPlan.clusterExpansions.slice(0, 12) : [],
-            coverageHints: Array.isArray(reportPlan.coverageHints) ? reportPlan.coverageHints.slice(0, 6) : []
+            coverageHints: Array.isArray(reportPlan.coverageHints) ? reportPlan.coverageHints.slice(0, 6) : [],
+            breadthSignals: Array.isArray(reportPlan.breadthSignals) ? reportPlan.breadthSignals.slice(0, 6) : [],
+            facilityBreadthMode: Boolean(reportPlan.facilityBreadthMode),
+            breadthProfile: compactSearchText(reportPlan.breadthProfile || 'guided-expansion'),
+            expansionReasons: Array.isArray(reportPlan.expansionReasons) ? reportPlan.expansionReasons.slice(0, 10) : [],
+            preferredClusters: Array.isArray(reportPlan.preferredClusters) ? reportPlan.preferredClusters.slice(0, 10) : [],
+            mustCoverCategories: Array.isArray(reportPlan.mustCoverCategories) ? reportPlan.mustCoverCategories.slice(0, 10) : [],
+            mustCoverCapabilities: Array.isArray(reportPlan.mustCoverCapabilities) ? reportPlan.mustCoverCapabilities.slice(0, 4) : [],
+            categoryCoveragePlan: Array.isArray(reportPlan.categoryCoveragePlan) ? reportPlan.categoryCoveragePlan.slice(0, 12).map(item => ({
+                categoryId: item.categoryId,
+                label: item.label,
+                parentCount: Number(item.parentCount || 0),
+                sourceMix: Array.isArray(item.sourceMix) ? item.sourceMix.slice(0, 4) : [],
+                detailHints: Array.isArray(item.detailHints) ? item.detailHints.slice(0, 6) : []
+            })) : []
         };
+    }
+
+    function resultMatchesCategory(result, categoryLabel) {
+        if (!result || !categoryLabel) return false;
+        const normalizedCategory = normalizeSearchText(categoryLabel);
+        if (!normalizedCategory) return false;
+        const categoryEntry = getTaxonomyCategoryEntry(categoryLabel);
+        const categoryTerms = uniqueItems([
+            categoryLabel,
+            ...(categoryEntry?.terms || []),
+            ...(categoryEntry?.keywords || []),
+            ...(result.categoryFamilies || [])
+        ])
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean);
+        return categoryTerms.some(term =>
+            (result.normalizedCategories || '').includes(term)
+            || (result.normalizedCombined || '').includes(term)
+        );
+    }
+
+    function getAiCapabilityMatchCount(result, queryData = {}) {
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+        if (!requiredCapabilities.length) return 0;
+        return requiredCapabilities.filter(capabilityId => resultMatchesCapability(result, capabilityId)).length;
+    }
+
+    function isAiCapabilityGatedQuery(queryData = {}) {
+        return Array.isArray(queryData.requiredCapabilities) && queryData.requiredCapabilities.length > 0;
+    }
+
+    function briefMatchesCapability(item, capabilityId) {
+        if (!item || !capabilityId) return false;
+        const capability = getTaxonomyCapabilityEntry(capabilityId);
+        if (!capability) return false;
+
+        if ((item.capabilityTags || []).includes(capability.id)) {
+            return true;
+        }
+
+        if ((item.categoryFamilies || []).some(label => getCapabilitySignalCategoryFamilies(capability).includes(label))) {
+            return true;
+        }
+
+        if ((item.entityFamilies || []).includes(capability.id)) {
+            return true;
+        }
+
+        const sourceText = normalizeSearchText([
+            item.title,
+            item.groupLabel,
+            ...(item.detailBullets || [])
+        ].join(' '));
+
+        return capability.normalizedTerms.some(term => sourceText.includes(term));
+    }
+
+    function classifyAiPrimarySuitability(result, queryData = {}) {
+        if (!result) return 'reject';
+        if (!isAiCapabilityGatedQuery(queryData)) {
+            return result.sourceType === 'schedule' || result.sourceType === 'static' ? 'support' : 'primary';
+        }
+
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+        const capabilityMatchCount = getAiCapabilityMatchCount(result, queryData);
+        const satisfiesRequiredCapabilities = requiredCapabilities.length
+            ? requiredCapabilities.every(capabilityId => resultMatchesCapability(result, capabilityId))
+            : capabilityMatchCount >= 1;
+        const disallowedMatch = resultMatchesDisallowedCategory(result, queryData.disallowedCategories || []);
+
+        if (satisfiesRequiredCapabilities) {
+            if (['deck', 'show', 'playbook'].includes(result.sourceType)) {
+                return 'primary';
+            }
+            return 'support';
+        }
+
+        if ((result.supportOfParentIds || []).length || result.sourceType === 'schedule') {
+            return 'support';
+        }
+
+        if (disallowedMatch) {
+            return 'reject';
+        }
+
+        return 'reject';
+    }
+
+    function buildAiCategoryCoveragePlan(results = [], queryData = {}, reportPlan = {}) {
+        const requiredCategories = uniqueItems([
+            ...(queryData.mustCoverCategories || []),
+            ...(queryData.expandedCategories || []).slice(0, 8),
+            ...(queryData.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || []),
+            ...(reportPlan.inventoryIntent ? ['場館', '服務'] : []),
+            ...(queryData.intents?.theatreFocus ? ['表演', '場館', '服務', '時間脈絡'] : []),
+            ...(queryData.intents?.conciergeFocus ? ['服務', '酒廊', '表演'] : []),
+            ...(queryData.intents?.foodFocus ? ['餐廳', '快餐', '酒廊'] : []),
+            ...(queryData.intents?.kidFocus ? ['兒童俱樂部', '遊戲', '場館'] : []),
+            ...(queryData.intents?.roomServiceFocus ? ['服務', '餐廳', '時間脈絡'] : [])
+        ]).slice(0, 10);
+        const plan = requiredCategories.map(label => {
+            const matchedResults = results.filter(result => resultMatchesCategory(result, label));
+            const matchedParents = uniqueItems(matchedResults.map(result => result.parentId || result.id).filter(Boolean));
+            return {
+                categoryId: getTaxonomyCategoryEntry(label)?.id || toCoverageAnchorKey(label, label),
+                label,
+                parentCount: matchedParents.length,
+                sourceMix: uniqueItems(matchedResults.map(result => result.sourceDetailType || 'general')).slice(0, 4),
+                preferredParentIds: matchedParents.slice(0, 8),
+                detailHints: uniqueItems(matchedResults.flatMap(result => [
+                    result.title,
+                    result.timeHint,
+                    result.bestTimeHint,
+                    ...(result.categoryFamilies || [])
+                ].filter(Boolean))).slice(0, 6)
+            };
+        });
+
+        return plan.filter(item => item.label);
     }
 
     function buildAiReportPlanner(queryData = {}, results = [], selectedResults = [], options = {}) {
@@ -2807,6 +3726,8 @@
         const hardAnchors = uniqueItems(queryData.hardAnchors || []).slice(0, 14);
         const softModifiers = uniqueItems(queryData.softModifiers || []).slice(0, 14);
         const subjectClusters = uniqueItems(queryData.subjectClusters || hardAnchors).slice(0, 16);
+        const preferredClusters = uniqueItems(queryData.preferredClusters || []).slice(0, 10);
+        const mustCoverCategories = uniqueItems(queryData.mustCoverCategories || []).slice(0, 10);
         const evidenceLayers = buildAiEvidenceLayers({
             ...queryData,
             intentProfile,
@@ -2830,6 +3751,9 @@
         const rewriteTriggered = Boolean(options.rewriteTriggered);
         const hasRiskJudgment = Boolean(facets.risk.length) || intentProfile.type === 'policy-or-tip';
         const inventoryIntent = Boolean(intentProfile.inventoryIntent);
+        const breadthSignals = uniqueItems(queryData.breadthSignals || []).slice(0, 6);
+        const facilityBreadthMode = Boolean(queryData.facilityBreadthMode);
+        const visibleInventoryMode = inventoryIntent && facilityBreadthMode;
         const triggerReasons = [];
 
         if (activeFacetNames.length >= 2) {
@@ -2853,6 +3777,9 @@
         if (inventoryIntent) {
             triggerReasons.push('需要完整盤點同主題卡片');
         }
+        if (visibleInventoryMode) {
+            triggerReasons.push('需要優先覆蓋右欄可見設施卡');
+        }
 
         if (!triggerReasons.length && options.defaultResponseMode === 'report') {
             triggerReasons.push('預設詳細報告模式');
@@ -2861,11 +3788,16 @@
         const responseMode = options.defaultResponseMode === 'report'
             ? 'report'
             : (triggerReasons.length ? 'report' : 'compact');
+        const categoryCoveragePlan = buildAiCategoryCoveragePlan(selectedPool.length ? selectedPool : results.slice(0, 24), queryData, {
+            inventoryIntent,
+            intents: queryData.intents || {}
+        });
 
         return {
             responseMode,
             intentType: intentProfile.type,
             inventoryIntent,
+            visibleInventoryMode,
             coverageMode: responseMode === 'report'
                 ? (queryData.coverageMode === 'exhaustive' ? 'exhaustive' : 'broad')
                 : 'broad',
@@ -2883,9 +3815,20 @@
             literalAnchors: Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors.slice(0, 12) : [],
             canonicalEntities: Array.isArray(queryData.canonicalEntities) ? queryData.canonicalEntities.slice(0, 8) : [],
             genericClasses: Array.isArray(queryData.genericClasses) ? queryData.genericClasses.slice(0, 6) : [],
+            requiredCapabilities: Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities.slice(0, 4) : [],
+            disallowedCategories: Array.isArray(queryData.disallowedCategories) ? queryData.disallowedCategories.slice(0, 8) : [],
+            answerIntent: queryData.answerIntent || 'answer',
             expandedCategories: Array.isArray(queryData.expandedCategories) ? queryData.expandedCategories.slice(0, 8) : [],
             clusterExpansions: Array.isArray(queryData.clusterExpansions) ? queryData.clusterExpansions.slice(0, 12) : [],
             coverageHints: Array.isArray(queryData.coverageHints) ? queryData.coverageHints.slice(0, 6) : [],
+            breadthSignals,
+            facilityBreadthMode,
+            breadthProfile: queryData.breadthProfile || 'guided-expansion',
+            expansionReasons: Array.isArray(queryData.expansionReasons) ? queryData.expansionReasons.slice(0, 10) : [],
+            preferredClusters,
+            mustCoverCategories,
+            mustCoverCapabilities: Array.isArray(queryData.mustCoverCapabilities) ? queryData.mustCoverCapabilities.slice(0, 4) : [],
+            categoryCoveragePlan,
             hardAnchors,
             softModifiers,
             subjectClusters,
@@ -3001,11 +3944,15 @@
         const slotMatches = countMatchedTerms(doc.normalizedCombined, queryData.slotTerms || []);
         const precisionBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.precision || []);
         const aliasBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.alias || []);
+        const capabilityBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.capability || []);
         const classBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.class || []);
         const clusterBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.cluster || []);
         const taskBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.task || []);
         const fieldType = doc.fieldType || 'parent';
         const roleHints = doc.evidenceRoleHints || [];
+        const capabilityMatchCount = getAiCapabilityMatchCount(doc, queryData);
+        const capabilityGated = isAiCapabilityGatedQuery(queryData);
+        const disallowedCategoryMatch = resultMatchesDisallowedCategory(doc, queryData.disallowedCategories || []);
 
         if (sourcePriorityIndex === 0) {
             score += 18;
@@ -3083,6 +4030,12 @@
             score += 4;
         }
 
+        if (capabilityBundleMatches >= 2) {
+            score += 18;
+        } else if (capabilityBundleMatches === 1) {
+            score += 10;
+        }
+
         if (classBundleMatches >= 2) {
             score += 10;
         } else if (classBundleMatches === 1) {
@@ -3095,10 +4048,41 @@
             score += 6;
         }
 
+        if ((queryData.mustCoverCategories || []).some(categoryLabel => resultMatchesCategory(doc, categoryLabel))) {
+            score += 14;
+        }
+
+        if ((queryData.preferredClusters || []).some(clusterKey => [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey].includes(clusterKey))) {
+            score += 10;
+        }
+
         if (doc.aiOnly) {
             score += 6;
         } else if (fieldType === 'parent') {
             score += 4;
+        }
+
+        if (capabilityGated) {
+            if (capabilityMatchCount >= 1) {
+                score += 48 + (capabilityMatchCount * 12);
+                if (doc.sourceType === 'deck') {
+                    score += 16;
+                } else if (doc.sourceType === 'playbook') {
+                    score += 12;
+                } else if (doc.sourceType === 'show') {
+                    score += 8;
+                }
+            } else {
+                score -= doc.sourceType === 'schedule' ? 22 : 84;
+            }
+
+            if (disallowedCategoryMatch && capabilityMatchCount === 0) {
+                score -= 70;
+            }
+
+            if (doc.sourceType === 'schedule' && (doc.supportOfParentIds || []).length) {
+                score += 8;
+            }
         }
 
         if (fieldType === 'action' || fieldType === 'desc') {
@@ -3193,6 +4177,10 @@
             if (fieldType === 'tripFit' || fieldType === 'tripUse' || fieldType === 'action') {
                 score += 10;
             }
+        }
+
+        if (capabilityGated && !capabilityMatchCount && classifyAiPrimarySuitability(doc, queryData) === 'reject') {
+            score = Math.max(score - 120, 0);
         }
 
         if ((queryData.slots?.goal || []).includes('避排隊')) {
@@ -3470,11 +4458,19 @@
             return { queryData, results: [] };
         }
 
-        const results = searchState.documents
+        const rankedResults = searchState.documents
             .map(doc => ({ ...doc, score: scoreDocumentForAi(doc, queryData) }))
             .filter(doc => doc.score > 0)
             .sort((a, b) => b.score - a.score)
             .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
+
+        const results = isAiCapabilityGatedQuery(queryData)
+            ? [
+                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'primary'),
+                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'support'),
+                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'reject')
+            ].slice(0, AI_REPORT_RANKED_POOL_LIMIT)
+            : rankedResults;
 
         return { queryData, results };
     }
@@ -3499,7 +4495,7 @@
         }
     }
 
-    function collapseAiDisplayResults(results = []) {
+    function collapseAiDisplayResults(results = [], queryData = null) {
         const collapsed = new Map();
 
         results.forEach(result => {
@@ -3518,7 +4514,15 @@
         });
 
         return Array.from(collapsed.values())
-            .sort((a, b) => (b.score || 0) - (a.score || 0))
+            .sort((a, b) => {
+                const suitabilityA = queryData ? classifyAiPrimarySuitability(a, queryData) : 'primary';
+                const suitabilityB = queryData ? classifyAiPrimarySuitability(b, queryData) : 'primary';
+                const order = { primary: 0, support: 1, reject: 2 };
+                if ((order[suitabilityA] ?? 9) !== (order[suitabilityB] ?? 9)) {
+                    return (order[suitabilityA] ?? 9) - (order[suitabilityB] ?? 9);
+                }
+                return (b.score || 0) - (a.score || 0);
+            })
             .slice(0, 20);
     }
 
@@ -4164,8 +5168,8 @@
 
     function getAiCoverageParentPriority(result) {
         if (!result) return 0;
-        if (result.sourceType === 'playbook') return 5;
-        if (result.sourceType === 'deck') return 4;
+        if (result.sourceType === 'deck') return 5;
+        if (result.sourceType === 'playbook') return 4;
         if (result.sourceType === 'show') return 3;
         if (result.sourceType === 'schedule') return 2;
         if (result.sourceType === 'static') return 1;
@@ -4177,6 +5181,9 @@
         const fieldType = result.fieldType || 'parent';
         if (reportPlan.needsSourceComparison && (result.sourceDetailType || 'general') !== 'general' && ['parent', 'action', 'caution', 'desc', 'whenToUse'].includes(fieldType)) {
             return 'source-contrast';
+        }
+        if (isAiCapabilityGatedQuery(queryData) && result.sourceType === 'schedule') {
+            return 'timing-context';
         }
         if (result.sourceType === 'schedule' || ['time', 'whenToUse', 'bestTime', 'timingTip'].includes(fieldType)) {
             return 'timing-context';
@@ -4200,6 +5207,8 @@
         const fieldType = result.fieldType || 'parent';
         const parentId = result.parentId || result.id;
         const sourceGroup = getAiSourceGroup(result.sourceType);
+        const suitability = classifyAiPrimarySuitability(result, queryData);
+        const capabilityMatchCount = getAiCapabilityMatchCount(result, queryData);
         let score = scoreAiSelectionCandidate(result, role, queryData, intentProfile);
 
         if (displayParentIds.has(parentId)) score += 24;
@@ -4210,10 +5219,30 @@
         if (getAiCoverageParentPriority(result) >= 4) score += 12;
         if (countMatchedTerms(result.normalizedTitle || '', queryData.hardAnchors || []) >= 1) score += 12;
         if (countMatchedTerms(result.normalizedCombined || '', queryData.subjectClusters || []) >= 1) score += 8;
+        if ((reportPlan.mustCoverCategories || []).some(categoryLabel => resultMatchesCategory(result, categoryLabel))) {
+            score += 14;
+        }
+        if ((reportPlan.preferredClusters || []).some(clusterKey => [result.sourceClusterKey, result.venueKey, result.seriesKey, result.entityKey].includes(clusterKey))) {
+            score += 12;
+        }
+
+        if (isAiCapabilityGatedQuery(queryData)) {
+            if (capabilityMatchCount >= 1) {
+                score += 44 + (capabilityMatchCount * 10);
+            } else if (suitability === 'support') {
+                score -= 14;
+            } else {
+                score -= 96;
+            }
+        }
 
         if (reportPlan.inventoryIntent) {
-            if (sourceGroup === 'schedule' && !['time', 'desc', 'whenToUse'].includes(fieldType)) {
-                score -= 12;
+            if (sourceGroup === 'schedule') {
+                if (['time', 'desc', 'whenToUse', 'parent'].includes(fieldType)) {
+                    score -= 4;
+                } else {
+                    score -= 12;
+                }
             }
             if (result.sourceType === 'static') {
                 score -= 20;
@@ -4227,19 +5256,29 @@
         return score;
     }
 
-    function shouldAssimilateVisibleAiResult(result, reportPlan = {}) {
+    function shouldAssimilateVisibleAiResult(result, reportPlan = {}, queryData = {}) {
         if (!result) return false;
         if (result.sourceType === 'static') return false;
+        if (isAiCapabilityGatedQuery(queryData) && classifyAiPrimarySuitability(result, queryData) === 'reject') {
+            return false;
+        }
         if (result.sourceType === 'schedule') {
+            if (reportPlan.visibleInventoryMode || queryData.facilityBreadthMode) {
+                return false;
+            }
             return reportPlan.intentType === 'sequence' || Boolean((reportPlan.facets?.time || []).length);
         }
         return ['playbook', 'deck', 'show'].includes(result.sourceType);
     }
 
-    function isCoveragePrimaryParent(result, reportPlan = {}) {
+    function isCoveragePrimaryParent(result, reportPlan = {}, queryData = {}) {
         if (!result) return false;
         if (!['playbook', 'deck', 'show'].includes(result.sourceType)) return false;
+        if (isAiCapabilityGatedQuery(queryData) && classifyAiPrimarySuitability(result, queryData) !== 'primary') {
+            return false;
+        }
         if (result.sourceType === 'show') return true;
+        if (reportPlan.visibleInventoryMode && result.sourceType === 'deck') return true;
         if (reportPlan.inventoryIntent) return true;
         return getAiCoverageParentPriority(result) >= 4;
     }
@@ -4259,14 +5298,103 @@
             .filter(Boolean));
     }
 
-    function collectAiMustRenderParentIds(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
-        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+    function matchesAiCoverageAnchorValues(result, anchorValues = []) {
+        if (!result || !Array.isArray(anchorValues) || !anchorValues.length) return false;
+        return [
+            result.entityKey,
+            result.venueKey,
+            result.seriesKey,
+            result.sourceClusterKey
+        ].some(anchor => anchor && anchorValues.includes(anchor));
+    }
+
+    function isAiRelevantScheduleSupportResult(result, queryData = {}, reportPlan = {}, anchorValues = []) {
+        if (!result || result.sourceType !== 'schedule') return false;
+
+        const fieldType = result.fieldType || 'parent';
+        const hardMatches = countMatchedTerms(
+            result.normalizedCombined || '',
+            reportPlan.hardAnchors || queryData.hardAnchors || []
+        );
+        const clusterMatches = countMatchedTerms(
+            result.normalizedCombined || '',
+            reportPlan.subjectClusters || queryData.subjectClusters || []
+        );
+        const categoryMatch = (reportPlan.mustCoverCategories || []).some(categoryLabel =>
+            resultMatchesCategory(result, categoryLabel)
+        );
+        const breadthMode = reportPlan.visibleInventoryMode || reportPlan.inventoryIntent || queryData.facilityBreadthMode;
+
+        if (matchesAiCoverageAnchorValues(result, anchorValues)) return true;
+        if (hardMatches >= 1 || clusterMatches >= 1) return true;
+        if (categoryMatch) return true;
+        if (!breadthMode) return false;
+
+        return ['parent', 'desc', 'time', 'tag'].includes(fieldType)
+            && Boolean(result.timeHint || result.bestTimeHint || result.locationLabel);
+    }
+
+    function getAiSupportCoveragePriority(result, queryData = {}, reportPlan = {}, anchorValues = []) {
+        if (!result) return 0;
+        const fieldType = result.fieldType || 'parent';
+        let score = scoreAiCoverageCandidate(result, queryData, reportPlan);
+
+        if (result.sourceType === 'schedule') {
+            score += 18;
+            if (matchesAiCoverageAnchorValues(result, anchorValues)) {
+                score += 24;
+            }
+            if (fieldType === 'parent') {
+                score += 14;
+            } else if (fieldType === 'desc') {
+                score += 12;
+            } else if (fieldType === 'time' || fieldType === 'tag') {
+                score += 8;
+            }
+            if (result.timeHint) {
+                score += 8;
+            }
+        } else if (result.sourceType === 'static') {
+            score -= 10;
+        }
+
+        return score;
+    }
+
+    function getAiVisibleCoveragePriority(result, queryData = {}, reportPlan = {}) {
+        if (!result) return 0;
+        let score = scoreAiCoverageCandidate(result, queryData, reportPlan);
+        const fieldType = result.fieldType || 'parent';
+
+        if (reportPlan.visibleInventoryMode || queryData.facilityBreadthMode) {
+            if (result.sourceType === 'deck') score += 42;
+            if (result.sourceType === 'show') score += 36;
+            if (result.sourceType === 'playbook') score += (result.sourceDetailType || 'general') !== 'general' ? 22 : 12;
+            if (result.sourceType === 'schedule') score -= 40;
+        }
+
+        if (fieldType === 'parent') score += 14;
+        if (['summary', 'theme', 'desc', 'action'].includes(fieldType)) score += 8;
+        return score;
+    }
+
+    function collectAiVisibleCoverageParentIds(displayResults = [], queryData = {}, reportPlan = {}) {
         const visibleCandidates = (Array.isArray(displayResults) ? displayResults : [])
             .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan));
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
+            .sort((a, b) => getAiVisibleCoveragePriority(b, queryData, reportPlan) - getAiVisibleCoveragePriority(a, queryData, reportPlan));
+
+        return uniqueItems(visibleCandidates.map(result => result.parentId || result.id))
+            .slice(0, reportPlan.visibleInventoryMode ? 16 : AI_REPORT_MAX_PARENTS);
+    }
+
+    function collectAiDerivedCoverageParentIds(results = [], visibleParentIds = [], queryData = {}, reportPlan = {}, selectedResults = []) {
+        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+        const visibleSet = new Set(visibleParentIds || []);
+        const visibleCandidates = pool.filter(result => visibleSet.has(result.parentId || result.id));
         const seedResults = uniqueItems([
             ...collectAiCoverageParentIds(selectedResults),
-            ...collectAiCoverageParentIds(visibleCandidates)
+            ...visibleParentIds
         ]).map(parentId => pool.find(result => (result.parentId || result.id) === parentId))
             .filter(Boolean);
         const anchorValues = collectAiCoverageAnchorValues([...seedResults, ...selectedResults, ...visibleCandidates]);
@@ -4279,12 +5407,13 @@
             parentIds.push(parentId);
         };
 
-        collectAiCoverageParentIds(selectedResults).forEach(pushParent);
-        collectAiCoverageParentIds(visibleCandidates).forEach(pushParent);
+        collectAiCoverageParentIds(selectedResults).forEach(parentId => {
+            if (!visibleSet.has(parentId)) pushParent(parentId);
+        });
 
         pool
             .filter(result => {
-                if (!isCoveragePrimaryParent(result, reportPlan)) return false;
+                if (!isCoveragePrimaryParent(result, reportPlan, queryData)) return false;
                 if (anchorValues.length && [
                     result.entityKey,
                     result.venueKey,
@@ -4297,38 +5426,125 @@
                 return countMatchedTerms(result.normalizedCombined || '', reportPlan.subjectClusters || queryData.subjectClusters || []) >= 1;
             })
             .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
-            .forEach(result => pushParent(result.parentId || result.id));
+            .forEach(result => {
+                const parentId = result.parentId || result.id;
+                if (visibleSet.has(parentId)) return;
+                pushParent(parentId);
+            });
 
         return parentIds.slice(0, AI_REPORT_MAX_PARENTS);
     }
 
-    function buildAiCoverageContract(answerCoverageResults = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
-        const mustRenderParentIds = collectAiMustRenderParentIds(answerCoverageResults, displayResults, queryData, reportPlan, selectedResults);
-        const preferredParentIds = uniqueItems((Array.isArray(answerCoverageResults) ? answerCoverageResults : [])
-            .filter(result => result.sourceType === 'schedule' || result.sourceType === 'static')
-            .map(result => result.parentId || result.id))
-            .filter(parentId => !mustRenderParentIds.includes(parentId))
-            .slice(0, AI_REPORT_MAX_PARENTS);
+    function collectAiSupportCoverageParentIds(results = [], requiredParentIds = [], queryData = {}, reportPlan = {}, selectedResults = [], displayResults = []) {
+        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+        const requiredSet = new Set(requiredParentIds || []);
+        const visibleCandidates = (Array.isArray(displayResults) ? displayResults : [])
+            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT);
+        const referenceResults = uniqueItems([
+            ...collectAiCoverageParentIds(selectedResults),
+            ...Array.from(requiredSet)
+        ])
+            .map(parentId => pool.find(result => (result.parentId || result.id) === parentId))
+            .filter(Boolean);
+        const anchorValues = collectAiCoverageAnchorValues([
+            ...referenceResults,
+            ...(Array.isArray(selectedResults) ? selectedResults : []),
+            ...visibleCandidates
+        ]);
+
+        const prioritizedScheduleParentIds = uniqueItems(
+            pool
+                .filter(result => {
+                    const parentId = result.parentId || result.id;
+                    if (!parentId || requiredSet.has(parentId)) return false;
+                    return isAiRelevantScheduleSupportResult(result, queryData, reportPlan, anchorValues);
+                })
+                .sort((a, b) =>
+                    getAiSupportCoveragePriority(b, queryData, reportPlan, anchorValues)
+                    - getAiSupportCoveragePriority(a, queryData, reportPlan, anchorValues)
+                )
+                .map(result => result.parentId || result.id)
+        ).slice(0, Math.min(12, AI_REPORT_MAX_PARENTS));
+
+        const staticSupportParentIds = uniqueItems(
+            pool
+                .filter(result => {
+                    const parentId = result.parentId || result.id;
+                    return result.sourceType === 'static' && parentId && !requiredSet.has(parentId);
+                })
+                .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
+                .map(result => result.parentId || result.id)
+        ).slice(0, 4);
+
+        return uniqueItems([
+            ...prioritizedScheduleParentIds,
+            ...staticSupportParentIds
+        ]).slice(0, AI_REPORT_MAX_PARENTS);
+    }
+
+    function buildAiCoverageContract(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
+        const visibleParentIds = collectAiVisibleCoverageParentIds(displayResults, queryData, reportPlan);
+        const mustRenderDerivedParentIds = collectAiDerivedCoverageParentIds(results, visibleParentIds, queryData, reportPlan, selectedResults);
+        const mustRenderParentIds = uniqueItems([
+            ...visibleParentIds,
+            ...mustRenderDerivedParentIds
+        ]).slice(0, AI_REPORT_MAX_PARENTS);
+        const preferredSupportParentIds = collectAiSupportCoverageParentIds(
+            results,
+            mustRenderParentIds,
+            queryData,
+            reportPlan,
+            selectedResults,
+            displayResults
+        );
         const targetCoverageCount = mustRenderParentIds.length;
         const minimumCoverageRatio = mustRenderParentIds.length === 0 ? 0 : 1;
+        const targetVisibleCoverageCount = visibleParentIds.length;
+        const minimumVisibleCoverageRatio = visibleParentIds.length === 0 ? 0 : 1;
 
         return {
-            mode: reportPlan.inventoryIntent ? 'inventory' : 'standard',
+            mode: reportPlan.visibleInventoryMode
+                ? 'visible-inventory'
+                : (reportPlan.inventoryIntent ? 'inventory' : 'standard'),
             targetCoverageCount,
             minimumCoverageRatio,
             mustRenderParentIds,
-            preferredParentIds,
-            relevantSourceTypes: uniqueItems((Array.isArray(answerCoverageResults) ? answerCoverageResults : [])
+            preferredParentIds: preferredSupportParentIds,
+            visibleParentIds,
+            eligibleVisibleParentIds: visibleParentIds,
+            mustRenderVisibleParentIds: visibleParentIds,
+            mustRenderDerivedParentIds,
+            preferredSupportParentIds,
+            targetVisibleCoverageCount,
+            minimumVisibleCoverageRatio,
+            mustCoverCategories: Array.isArray(reportPlan.mustCoverCategories) ? reportPlan.mustCoverCategories.slice(0, 10) : [],
+            preferredClusters: Array.isArray(reportPlan.preferredClusters) ? reportPlan.preferredClusters.slice(0, 10) : [],
+            relevantSourceTypes: uniqueItems((Array.isArray(results) ? results : [])
                 .map(result => result.sourceType)
                 .filter(sourceType => ['show', 'playbook', 'deck', 'schedule'].includes(sourceType))),
-            coverageReason: reportPlan.inventoryIntent
-                ? '完整盤點題會優先覆蓋右側可見結果與同主題 sibling cards'
-                : '依主題契合度優先覆蓋高價值 parent cards'
+            coverageReason: reportPlan.visibleInventoryMode
+                ? '右側可見高價值卡會直接變成左側必須覆蓋的可見結果契約'
+                : reportPlan.inventoryIntent
+                    ? '完整盤點題會優先覆蓋右側可見結果與同主題 sibling cards'
+                    : '依主題契合度優先覆蓋高價值 parent cards'
         };
     }
 
+    function getAiCoverageTierForParent(parentId = '', coverageContract = null) {
+        if (!parentId) return 'support';
+        if (coverageContract?.mustRenderVisibleParentIds?.includes(parentId)) return 'visible';
+        if (coverageContract?.mustRenderDerivedParentIds?.includes(parentId)) return 'derived';
+        if (coverageContract?.preferredSupportParentIds?.includes(parentId)) return 'support';
+        return 'support';
+    }
+
     function orderAiParentBriefsForCoverage(parentBriefs = [], coverageContract = null) {
-        const orderMap = new Map((coverageContract?.mustRenderParentIds || []).map((parentId, index) => [parentId, index]));
+        const orderedParentIds = uniqueItems([
+            ...(coverageContract?.mustRenderVisibleParentIds || []),
+            ...(coverageContract?.mustRenderDerivedParentIds || []),
+            ...(coverageContract?.preferredSupportParentIds || [])
+        ]);
+        const orderMap = new Map(orderedParentIds.map((parentId, index) => [parentId, index]));
         return [...(Array.isArray(parentBriefs) ? parentBriefs : [])].sort((a, b) => {
             const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
             const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
@@ -4345,10 +5561,11 @@
         const selected = [];
         const seenIds = new Set();
         const parentCounts = new Map();
-        const mustRenderParentIds = collectAiMustRenderParentIds(pool, displayResults, queryData, reportPlan, selectedResults);
+        const coverageContract = buildAiCoverageContract(pool, displayResults, queryData, reportPlan, selectedResults);
+        const mustRenderParentIds = coverageContract.mustRenderParentIds || [];
         const visibleParents = new Set(displayResults
             .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan))
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
             .map(result => result.parentId || result.id));
 
         const sortedPool = [...pool].sort((a, b) =>
@@ -4398,6 +5615,10 @@
             addParentBundle(parentId, role);
         });
 
+        (coverageContract.preferredSupportParentIds || []).forEach(parentId => {
+            addParentBundle(parentId, 'timing-context');
+        });
+
         uniqueItems(selectedResults.map(result => result.parentId || result.id)).forEach(parentId => {
             addParentBundle(parentId, 'core-answer');
         });
@@ -4410,7 +5631,7 @@
 
         displayResults
             .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan))
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
             .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents) - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents))
             .forEach(result => {
                 addParentBundle(result.parentId || result.id, 'same-subject-detail');
@@ -4431,12 +5652,52 @@
                 .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
         });
 
+        (reportPlan.mustCoverCategories || []).forEach(categoryLabel => {
+            sortedPool
+                .filter(result => canAdd(result) && resultMatchesCategory(result, categoryLabel))
+                .slice(0, 4)
+                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
+        });
+
+        (reportPlan.preferredClusters || []).forEach(clusterKey => {
+            sortedPool
+                .filter(result => canAdd(result) && [result.sourceClusterKey, result.entityKey, result.venueKey, result.seriesKey].includes(clusterKey))
+                .slice(0, 3)
+                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
+        });
+
         sortedPool.forEach(result => {
             if (selected.length >= maxResults) return;
             addResult(result, inferAiCoverageEvidenceRole(result, queryData, reportPlan));
         });
 
         return selected.slice(0, maxResults);
+    }
+
+    function buildAiParentBriefResults(answerCoverageResults = [], rankedResults = [], coverageContract = null, queryData = {}, reportPlan = {}) {
+        const merged = new Map((Array.isArray(answerCoverageResults) ? answerCoverageResults : []).map(result => [result.id, result]));
+        const requiredParentIds = uniqueItems([
+            ...(coverageContract?.mustRenderVisibleParentIds || []),
+            ...(coverageContract?.mustRenderDerivedParentIds || []),
+            ...(coverageContract?.preferredSupportParentIds || [])
+        ]);
+        const rankedPool = Array.isArray(rankedResults) ? rankedResults.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+
+        requiredParentIds.forEach(parentId => {
+            rankedPool
+                .filter(result => (result.parentId || result.id) === parentId)
+                .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
+                .slice(0, AI_REPORT_MAX_PER_PARENT)
+                .forEach(result => {
+                    if (!merged.has(result.id)) {
+                        merged.set(result.id, result);
+                    }
+                });
+        });
+
+        return Array.from(merged.values())
+            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
+            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
     }
 
     function getAiParentBriefDetailLines(result, queryData = {}) {
@@ -4456,10 +5717,20 @@
             lines.push(`${result.fieldLabel || getAiFieldLabel(result.fieldType || 'parent')}：${truncateSearchPreview(result.text || result.structuredText, 220)}`);
         }
 
+        if (result.sourceType === 'schedule') {
+            if (result.locationLabel) {
+                lines.push(`相關位置：${compactSearchText(result.locationLabel)}`);
+            }
+            const scheduleSummary = truncateSearchPreview(result.structuredText || result.text, 220);
+            if (scheduleSummary) {
+                lines.push(`行程摘要：${scheduleSummary}`);
+            }
+        }
+
         return uniqueItems(lines.filter(Boolean)).slice(0, (result.fieldType || 'parent') === 'parent' ? 4 : 3);
     }
 
-    function buildAiParentBriefs(results = [], queryData = {}, reportPlan = {}) {
+    function buildAiParentBriefs(results = [], queryData = {}, reportPlan = {}, coverageContract = null) {
         const grouped = new Map();
         const orderedResults = [...results].sort((a, b) =>
             scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan)
@@ -4485,7 +5756,12 @@
                     venueKey: result.venueKey || '',
                     seriesKey: result.seriesKey || '',
                     sourceClusterKey: result.sourceClusterKey || '',
+                    capabilityTags: Array.isArray(result.capabilityTags) ? result.capabilityTags.slice(0, 6) : [],
+                    entityFamilies: Array.isArray(result.entityFamilies) ? result.entityFamilies.slice(0, 6) : [],
+                    supportOfParentIds: Array.isArray(result.supportOfParentIds) ? result.supportOfParentIds.slice(0, 8) : [],
                     renderPriority: getAiCoverageParentPriority(result),
+                    coverageTier: getAiCoverageTierForParent(parentId, coverageContract),
+                    categoryFamilies: Array.isArray(result.categoryFamilies) ? result.categoryFamilies.slice(0, 6) : [],
                     sourceLabels,
                     detailBullets: [],
                     citationIds: []
@@ -4498,6 +5774,26 @@
                     target.sourceLabels.push(label);
                 }
             });
+            (result.categoryFamilies || []).forEach(categoryLabel => {
+                if (!target.categoryFamilies.includes(categoryLabel) && target.categoryFamilies.length < 6) {
+                    target.categoryFamilies.push(categoryLabel);
+                }
+            });
+            (result.capabilityTags || []).forEach(capabilityId => {
+                if (!target.capabilityTags.includes(capabilityId) && target.capabilityTags.length < 6) {
+                    target.capabilityTags.push(capabilityId);
+                }
+            });
+            (result.entityFamilies || []).forEach(entityFamily => {
+                if (!target.entityFamilies.includes(entityFamily) && target.entityFamilies.length < 6) {
+                    target.entityFamilies.push(entityFamily);
+                }
+            });
+            (result.supportOfParentIds || []).forEach(relatedParentId => {
+                if (!target.supportOfParentIds.includes(relatedParentId) && target.supportOfParentIds.length < 8) {
+                    target.supportOfParentIds.push(relatedParentId);
+                }
+            });
             getAiParentBriefDetailLines(result, queryData).forEach(line => {
                 if (target.detailBullets.length < 10 && !target.detailBullets.includes(line)) {
                     target.detailBullets.push(line);
@@ -4508,28 +5804,117 @@
             }
         });
 
+        const orderedParentIds = uniqueItems([
+            ...(coverageContract?.mustRenderVisibleParentIds || []),
+            ...(coverageContract?.mustRenderDerivedParentIds || []),
+            ...(coverageContract?.preferredSupportParentIds || [])
+        ]);
+        const orderMap = new Map(orderedParentIds.map((parentId, index) => [parentId, index]));
+
         return Array.from(grouped.values())
             .filter(item => item.title && item.detailBullets.length)
-            .sort((a, b) => (b.renderPriority || 0) - (a.renderPriority || 0))
+            .sort((a, b) => {
+                const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
+                const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
+                if (orderA !== orderB) return orderA - orderB;
+                return (b.renderPriority || 0) - (a.renderPriority || 0);
+            })
             .slice(0, AI_REPORT_MAX_PARENTS);
     }
 
-    function buildAiCoverageStats(results = [], queryData = {}, reportPlan = {}) {
+    function buildAiCoverageStats(results = [], queryData = {}, reportPlan = {}, coverageContract = null) {
         const sourceCounts = {};
         results.forEach(result => {
             const key = result.sourceDetailType || 'general';
             sourceCounts[key] = (sourceCounts[key] || 0) + 1;
         });
 
+        const selectedParentIds = uniqueItems(results.map(result => result.parentId || result.id));
+        const visibleParentIds = coverageContract?.mustRenderVisibleParentIds || [];
+        const visibleRenderedCount = selectedParentIds.filter(parentId => visibleParentIds.includes(parentId)).length;
+
         return {
-            selectedParentCount: uniqueItems(results.map(result => result.parentId || result.id)).length,
+            selectedParentCount: selectedParentIds.length,
             selectedChunkCount: results.length,
+            targetParentCount: coverageContract?.targetCoverageCount || 0,
+            visibleTargetCount: visibleParentIds.length,
+            visibleRenderedCount,
+            visibleBackfilledCount: 0,
+            visibleCoverageRatio: visibleParentIds.length
+                ? Number((Math.min(1, visibleRenderedCount / visibleParentIds.length)).toFixed(2))
+                : 0,
             sourceCounts,
             primarySubject: (reportPlan.hardAnchors || [])[0]
                 || (reportPlan.subjectClusters || [])[0]
                 || (queryData.highlightTerms || [])[0]
                 || queryData.rawQuery
                 || ''
+        };
+    }
+
+    function buildAiEntityCoverageSets(parentBriefs = [], queryData = {}, coverageContract = null) {
+        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
+        const primary = [];
+        const support = [];
+        const primaryIds = new Set();
+        const visibleIds = new Set(coverageContract?.mustRenderVisibleParentIds || []);
+        const derivedIds = new Set(coverageContract?.mustRenderDerivedParentIds || []);
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+
+        safeBriefs.forEach(item => {
+            const capabilityMatched = !isAiCapabilityGatedQuery(queryData)
+                || requiredCapabilities.every(capabilityId => briefMatchesCapability(item, capabilityId));
+            const isPrimaryCandidate = capabilityMatched
+                && item.sourceType !== 'schedule'
+                && item.sourceType !== 'static'
+                && (visibleIds.has(item.parentId)
+                    || derivedIds.has(item.parentId)
+                    || item.coverageTier !== 'support');
+
+            if (isPrimaryCandidate) {
+                primary.push(item);
+                primaryIds.add(item.parentId);
+            }
+        });
+
+        safeBriefs.forEach(item => {
+            if (primaryIds.has(item.parentId)) return;
+            if (item.sourceType === 'schedule' || item.sourceType === 'static' || item.coverageTier === 'support') {
+                support.push(item);
+                return;
+            }
+            if ((item.supportOfParentIds || []).some(parentId => primaryIds.has(parentId))) {
+                support.push(item);
+            }
+        });
+
+        return {
+            primaryEntityParents: primary.slice(0, AI_REPORT_MAX_PARENTS),
+            supportEntityParents: support.slice(0, AI_REPORT_MAX_PARENTS)
+        };
+    }
+
+    function buildAiCapabilityCoveragePlan(parentBriefs = [], queryData = {}) {
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+        const coverage = requiredCapabilities.map(capabilityId => {
+            const capability = getTaxonomyCapabilityEntry(capabilityId);
+            const matchedParents = (Array.isArray(parentBriefs) ? parentBriefs : [])
+                .filter(item => briefMatchesCapability(item, capabilityId))
+                .map(item => item.parentId);
+
+            return {
+                capabilityId,
+                label: capability?.label || capabilityId,
+                matchedParentIds: uniqueItems(matchedParents).slice(0, 10),
+                categoryFamilies: (capability?.categoryFamilies || []).slice(0, 6),
+                disallowedCategories: (capability?.disallowedCategories || []).slice(0, 6)
+            };
+        });
+
+        return {
+            requiredCapabilities,
+            disallowedCategories: Array.isArray(queryData.disallowedCategories) ? queryData.disallowedCategories.slice(0, 8) : [],
+            items: coverage
         };
     }
 
@@ -4608,6 +5993,12 @@
                 items: Array.isArray(report.fullCardInventory) ? report.fullCardInventory : []
             },
             {
+                key: 'topicAppendix',
+                title: '深入附錄',
+                type: 'topic-appendix',
+                items: Array.isArray(report.topicAppendix) ? report.topicAppendix : []
+            },
+            {
                 key: 'detailBreakdown',
                 title: '細節拆解',
                 type: 'list',
@@ -4662,6 +6053,10 @@
         const targetParentCount = Number(coverageSummary.targetParentCount || 0);
         const renderedParentCount = Number(coverageSummary.renderedParentCount || 0);
         const backfilledParentCount = Number(coverageSummary.backfilledParentCount || 0);
+        const visibleTargetCount = Number(coverageSummary.visibleTargetCount || 0);
+        const visibleRenderedCount = Number(coverageSummary.visibleRenderedCount || 0);
+        const visibleBackfilledCount = Number(coverageSummary.visibleBackfilledCount || 0);
+        const visibleCoverageRatio = Number(coverageSummary.visibleCoverageRatio || 0);
         const coverageRatio = Number(coverageSummary.coverageRatio || 0);
         const primarySubject = compactSearchText(coverageSummary.primarySubject || '');
         const sourceCounts = coverageSummary.sourceCounts && typeof coverageSummary.sourceCounts === 'object'
@@ -4680,7 +6075,10 @@
                     <strong>${renderedParentCount || selectedParentCount || 0}</strong>
                     <span>張卡片已整理進回答</span>
                     ${(targetParentCount || selectedParentCount) ? `<span class="search-ai-coverage-divider">/</span><span>目標 ${targetParentCount || selectedParentCount} 張</span>` : ''}
+                    ${visibleTargetCount ? `<span class="search-ai-coverage-divider">/</span><span>可見卡 ${visibleRenderedCount}/${visibleTargetCount}</span>` : ''}
+                    ${visibleBackfilledCount ? `<span class="search-ai-coverage-divider">/</span><span>可見補齊 ${visibleBackfilledCount} 張</span>` : ''}
                     ${backfilledParentCount ? `<span class="search-ai-coverage-divider">/</span><span>補齊 ${backfilledParentCount} 張</span>` : ''}
+                    ${visibleCoverageRatio ? `<span class="search-ai-coverage-divider">/</span><span>可見覆蓋 ${Math.round(visibleCoverageRatio * 100)}%</span>` : ''}
                     ${coverageRatio ? `<span class="search-ai-coverage-divider">/</span><span>覆蓋率 ${Math.round(coverageRatio * 100)}%</span>` : ''}
                     ${primarySubject ? `<span class="search-ai-coverage-divider">/</span><span>主題：${escapeHtml(primarySubject)}</span>` : ''}
                 </div>
@@ -4729,7 +6127,9 @@
 
         if (section.type === 'full-card-inventory') {
             const groupedItems = section.items.reduce((groups, item) => {
-                const label = getAiInventorySectionLabel(item?.cardType || 'mixed');
+                const label = Array.isArray(item?.categoryFamilies) && item.categoryFamilies.length
+                    ? item.categoryFamilies[0]
+                    : getAiInventorySectionLabel(item?.cardType || 'mixed');
                 if (!groups.has(label)) groups.set(label, []);
                 groups.get(label).push(item);
                 return groups;
@@ -4757,7 +6157,15 @@
                                             </div>
                                             <div class="search-ai-card-highlight-chips">
                                                 ${item?.cardType ? `<span class="search-ai-source-chip">${escapeHtml(getAiEntityTypeLabel(item.cardType) || item.cardType)}</span>` : ''}
-                                                ${item?.renderOrigin === 'backfill' ? `<span class="search-ai-source-chip">補齊卡片</span>` : ''}
+                                                ${item?.coverageTier === 'visible' ? `<span class="search-ai-source-chip">右欄可見卡</span>` : ''}
+                                                ${item?.coverageTier === 'derived' ? `<span class="search-ai-source-chip subtle">主題延伸卡</span>` : ''}
+                                                ${item?.coverageTier === 'support' ? `<span class="search-ai-source-chip subtle">支援脈絡卡</span>` : ''}
+                                                ${String(item?.renderOrigin || '').endsWith('backfill') ? `<span class="search-ai-source-chip">補齊卡片</span>` : ''}
+                                                ${Array.isArray(item?.categoryFamilies) ? item.categoryFamilies
+                                                    .filter(Boolean)
+                                                    .slice(0, 3)
+                                                    .map(label => `<span class="search-ai-source-chip subtle">${escapeHtml(label)}</span>`)
+                                                    .join('') : ''}
                                                 ${Array.isArray(item?.sourceLabels) ? item.sourceLabels
                                                     .filter(Boolean)
                                                     .slice(0, 4)
@@ -4786,6 +6194,55 @@
                                     </article>
                                 `).join('')}
                             </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
+
+        if (section.type === 'topic-appendix') {
+            return `
+                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                    <div class="search-ai-report-section-header">
+                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                    </div>
+                    <div class="search-ai-topic-groups">
+                        ${section.items.map(item => `
+                            <article class="search-ai-topic-group extension">
+                                <div class="search-ai-topic-group-top">
+                                    <div>
+                                        <h4 class="search-ai-topic-group-title">${escapeHtml(item?.groupTitle || '')}</h4>
+                                        ${item?.summary ? `<p class="search-ai-topic-group-summary">${escapeHtml(item.summary)}</p>` : ''}
+                                    </div>
+                                    <div class="search-ai-card-highlight-chips">
+                                        ${item?.categoryId ? `<span class="search-ai-source-chip subtle">${escapeHtml(item.categoryId)}</span>` : ''}
+                                        ${Array.isArray(item?.sourceMix) ? item.sourceMix
+                                            .map(source => getAiSourceDetailLabel(source || 'general'))
+                                            .filter(Boolean)
+                                            .map(sourceLabel => `<span class="search-ai-source-chip">${escapeHtml(sourceLabel)}</span>`)
+                                            .join('') : ''}
+                                    </div>
+                                </div>
+                                ${Array.isArray(item?.detailItems) && item.detailItems.length ? `
+                                    <ul class="search-ai-report-list dense">
+                                        ${item.detailItems.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
+                                    <div class="search-ai-inline-citations">
+                                        ${item.citationIds.map(citationId => {
+                                            const citation = searchState.aiCitationsById.get(citationId);
+                                            return citation ? `
+                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
+                                                    <i class="fa-solid fa-link"></i>
+                                                    <span>${escapeHtml(citation.title)}</span>
+                                                </button>
+                                            ` : '';
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </article>
                         `).join('')}
                     </div>
                 </section>
@@ -5287,10 +6744,21 @@
                 inventoryIntent: Boolean(options.inventoryIntent),
                 coverageMode: options.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
                 answerCoveragePool: options.answerCoveragePool || null,
+                visibleCoverageContract: options.visibleCoverageContract || null,
                 coverageContract: options.coverageContract || null,
                 mustRenderParents: options.mustRenderParents || null,
+                mustRenderVisibleParents: options.mustRenderVisibleParents || null,
+                mustRenderDerivedParents: options.mustRenderDerivedParents || null,
                 preferredRenderParents: options.preferredRenderParents || null,
+                preferredSupportParents: options.preferredSupportParents || null,
                 parentBriefs: options.parentBriefs || null,
+                parentDossiers: options.parentDossiers || options.parentBriefs || null,
+                primaryEntityParents: options.primaryEntityParents || null,
+                supportEntityParents: options.supportEntityParents || null,
+                capabilityCoveragePlan: options.capabilityCoveragePlan || null,
+                categoryCoveragePlan: options.categoryCoveragePlan || null,
+                categoryDossiers: options.categoryDossiers || null,
+                answerDepthMode: options.answerDepthMode === 'exhaustive' ? 'exhaustive' : 'broad',
                 coverageStats: options.coverageStats || null,
                 chunks
             })
@@ -5312,7 +6780,7 @@
             },
             body: JSON.stringify({
                 query,
-                mode: 'query_interpretation_v1',
+                mode: 'query_interpretation_v3',
                 responseLocale: 'zh-Hant',
                 contentVersion: getAiContentVersion(),
                 taxonomy: getSerializableAiQueryTaxonomy()
@@ -5384,7 +6852,7 @@
             defaultResponseMode: AI_REPORT_DEFAULT_MODE
         });
         let retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
-        let displayResults = collapseAiDisplayResults(results);
+        let displayResults = collapseAiDisplayResults(results, queryData);
 
         searchState.lastQuery = queryData.normalizedQuery;
         searchState.lastQueryData = queryData;
@@ -5446,7 +6914,7 @@
                         rewriteTriggered: true
                     }));
                     retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
-                    displayResults = collapseAiDisplayResults(results);
+                    displayResults = collapseAiDisplayResults(results, queryData);
 
                     searchState.lastQuery = queryData.normalizedQuery;
                     searchState.lastQueryData = queryData;
@@ -5478,55 +6946,98 @@
         const answerCoverageResults = reportPlan.responseMode === 'report'
             ? buildAiAnswerCoveragePool(results, displayResults, queryData, reportPlan, selectedResults)
             : selectedResults;
-        const coverageStats = buildAiCoverageStats(answerCoverageResults, queryData, reportPlan);
-        const coverageContract = buildAiCoverageContract(answerCoverageResults, displayResults, queryData, reportPlan, selectedResults);
+        const coverageContract = buildAiCoverageContract(results, displayResults, queryData, reportPlan, selectedResults);
+        const parentBriefResults = buildAiParentBriefResults(answerCoverageResults, results, coverageContract, queryData, reportPlan);
+        const coverageStats = buildAiCoverageStats(parentBriefResults, queryData, reportPlan, coverageContract);
         const parentBriefs = orderAiParentBriefsForCoverage(
-            buildAiParentBriefs(answerCoverageResults, queryData, reportPlan),
+            buildAiParentBriefs(parentBriefResults, queryData, reportPlan, coverageContract),
             coverageContract
         );
+        const { primaryEntityParents, supportEntityParents } = buildAiEntityCoverageSets(parentBriefs, queryData, coverageContract);
+        const capabilityCoveragePlan = buildAiCapabilityCoveragePlan(parentBriefs, queryData);
         const answerCoveragePool = parentBriefs.map(item => ({
             parentId: item.parentId,
             title: item.title,
             cardType: item.cardType,
+            sourceType: item.sourceType || '',
             groupLabel: item.groupLabel,
             sourceLabels: item.sourceLabels,
             citationIds: item.citationIds,
+            categoryFamilies: item.categoryFamilies || [],
             entityKey: item.entityKey || '',
             venueKey: item.venueKey || '',
             seriesKey: item.seriesKey || '',
             sourceClusterKey: item.sourceClusterKey || '',
+            capabilityTags: item.capabilityTags || [],
+            entityFamilies: item.entityFamilies || [],
+            supportOfParentIds: item.supportOfParentIds || [],
+            coverageTier: item.coverageTier || 'support',
             renderPriority: item.renderPriority || 0
         }));
-        const mustRenderParents = parentBriefs
-            .filter(item => coverageContract.mustRenderParentIds.includes(item.parentId))
+        const mustRenderVisibleParents = parentBriefs
+            .filter(item => coverageContract.mustRenderVisibleParentIds.includes(item.parentId))
             .map(item => ({
                 parentId: item.parentId,
                 title: item.title,
                 cardType: item.cardType,
+                sourceType: item.sourceType || '',
                 groupLabel: item.groupLabel,
                 sourceLabels: item.sourceLabels,
+                categoryFamilies: item.categoryFamilies || [],
+                capabilityTags: item.capabilityTags || [],
+                entityFamilies: item.entityFamilies || [],
+                supportOfParentIds: item.supportOfParentIds || [],
                 detailBullets: item.detailBullets,
                 citationIds: item.citationIds,
                 venueKey: item.venueKey || '',
                 seriesKey: item.seriesKey || '',
                 sourceClusterKey: item.sourceClusterKey || '',
-                renderPriority: item.renderPriority || 0
+                renderPriority: item.renderPriority || 0,
+                coverageTier: item.coverageTier || 'visible'
             }));
-        const preferredRenderParents = parentBriefs
-            .filter(item => coverageContract.preferredParentIds.includes(item.parentId))
+        const mustRenderDerivedParents = parentBriefs
+            .filter(item => coverageContract.mustRenderDerivedParentIds.includes(item.parentId))
             .map(item => ({
                 parentId: item.parentId,
                 title: item.title,
                 cardType: item.cardType,
+                sourceType: item.sourceType || '',
                 groupLabel: item.groupLabel,
                 sourceLabels: item.sourceLabels,
+                categoryFamilies: item.categoryFamilies || [],
+                capabilityTags: item.capabilityTags || [],
+                entityFamilies: item.entityFamilies || [],
+                supportOfParentIds: item.supportOfParentIds || [],
                 detailBullets: item.detailBullets,
                 citationIds: item.citationIds,
                 venueKey: item.venueKey || '',
                 seriesKey: item.seriesKey || '',
                 sourceClusterKey: item.sourceClusterKey || '',
-                renderPriority: item.renderPriority || 0
+                renderPriority: item.renderPriority || 0,
+                coverageTier: item.coverageTier || 'derived'
             }));
+        const preferredSupportParents = parentBriefs
+            .filter(item => coverageContract.preferredSupportParentIds.includes(item.parentId))
+            .map(item => ({
+                parentId: item.parentId,
+                title: item.title,
+                cardType: item.cardType,
+                sourceType: item.sourceType || '',
+                groupLabel: item.groupLabel,
+                sourceLabels: item.sourceLabels,
+                categoryFamilies: item.categoryFamilies || [],
+                capabilityTags: item.capabilityTags || [],
+                entityFamilies: item.entityFamilies || [],
+                supportOfParentIds: item.supportOfParentIds || [],
+                detailBullets: item.detailBullets,
+                citationIds: item.citationIds,
+                venueKey: item.venueKey || '',
+                seriesKey: item.seriesKey || '',
+                sourceClusterKey: item.sourceClusterKey || '',
+                renderPriority: item.renderPriority || 0,
+                coverageTier: item.coverageTier || 'support'
+            }));
+        const categoryCoveragePlan = buildAiCategoryCoveragePlan(answerCoverageResults, queryData, reportPlan);
         const analysisPlan = buildAiAnalysisPlanPayload({
             ...reportPlan,
             selectedChunkCount: answerCoverageResults.length,
@@ -5538,9 +7049,20 @@
             literalAnchors: queryData.literalAnchors || [],
             canonicalEntities: queryData.canonicalEntities || [],
             genericClasses: queryData.genericClasses || [],
+            requiredCapabilities: queryData.requiredCapabilities || [],
+            disallowedCategories: queryData.disallowedCategories || [],
+            answerIntent: queryData.answerIntent || 'answer',
             expandedCategories: queryData.expandedCategories || [],
             clusterExpansions: queryData.clusterExpansions || [],
-            coverageHints: queryData.coverageHints || []
+            coverageHints: queryData.coverageHints || [],
+            breadthSignals: queryData.breadthSignals || [],
+            facilityBreadthMode: Boolean(queryData.facilityBreadthMode),
+            breadthProfile: queryData.breadthProfile || 'guided-expansion',
+            expansionReasons: queryData.expansionReasons || [],
+            preferredClusters: reportPlan.preferredClusters || queryData.preferredClusters || [],
+            mustCoverCategories: reportPlan.mustCoverCategories || queryData.mustCoverCategories || [],
+            mustCoverCapabilities: queryData.mustCoverCapabilities || [],
+            categoryCoveragePlan
         });
         const interpretationTags = buildAiInterpretationTags(queryData, reportPlan);
         const chunks = buildAnswerContext(answerCoverageResults, queryData, {
@@ -5583,10 +7105,27 @@
                 inventoryIntent: reportPlan.inventoryIntent,
                 coverageMode: reportPlan.coverageMode,
                 answerCoveragePool,
+                visibleCoverageContract: {
+                    visibleParentIds: coverageContract.visibleParentIds || [],
+                    eligibleVisibleParentIds: coverageContract.eligibleVisibleParentIds || [],
+                    targetVisibleCoverageCount: coverageContract.targetVisibleCoverageCount || 0,
+                    minimumVisibleCoverageRatio: coverageContract.minimumVisibleCoverageRatio || 0,
+                    coverageReason: coverageContract.coverageReason || ''
+                },
                 coverageContract,
-                mustRenderParents,
-                preferredRenderParents,
+                mustRenderParents: [...mustRenderVisibleParents, ...mustRenderDerivedParents],
+                mustRenderVisibleParents,
+                mustRenderDerivedParents,
+                preferredRenderParents: preferredSupportParents,
+                preferredSupportParents,
                 parentBriefs,
+                parentDossiers: parentBriefs,
+                primaryEntityParents,
+                supportEntityParents,
+                capabilityCoveragePlan,
+                categoryCoveragePlan,
+                categoryDossiers: categoryCoveragePlan,
+                answerDepthMode: reportPlan.coverageMode === 'exhaustive' ? 'exhaustive' : 'broad',
                 coverageStats
             });
             if (!payload.primarySourceType) {
@@ -5858,7 +7397,7 @@
                     return;
                 }
                 const { queryData, results } = aiSearchPayload;
-                const displayResults = collapseAiDisplayResults(results);
+                const displayResults = collapseAiDisplayResults(results, queryData);
                 searchState.lastQuery = queryData.normalizedQuery;
                 searchState.lastQueryData = queryData;
                 searchState.lastResults = displayResults;
@@ -5976,6 +7515,70 @@
         renderSearchResults([], '');
     }
 
-    initializeSearch();
+    function runAiCoverageSimulation(rawQuery, options = {}) {
+        if (!searchState.documents.length) {
+            prepareSearchDocuments();
+        }
+
+        const rewriteMeta = options.rewriteMeta || null;
+        const interpreterResult = options.interpreterResult || null;
+        const { queryData, results } = getAiRankedSearchResults(rawQuery, rewriteMeta, interpreterResult);
+        const displayResults = collapseAiDisplayResults(results, queryData);
+        const { selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
+            defaultResponseMode: options.defaultResponseMode || 'report',
+            rewriteTriggered: Boolean(options.rewriteTriggered)
+        });
+        const answerCoverageResults = reportPlan.responseMode === 'report'
+            ? buildAiAnswerCoveragePool(results, displayResults, queryData, reportPlan, selectedResults)
+            : selectedResults;
+        const coverageContract = buildAiCoverageContract(results, displayResults, queryData, reportPlan, selectedResults);
+        const parentBriefResults = buildAiParentBriefResults(answerCoverageResults, results, coverageContract, queryData, reportPlan);
+        const parentBriefs = orderAiParentBriefsForCoverage(
+            buildAiParentBriefs(parentBriefResults, queryData, reportPlan, coverageContract),
+            coverageContract
+        );
+        const entityCoverage = buildAiEntityCoverageSets(parentBriefs, queryData, coverageContract);
+        const capabilityCoveragePlan = buildAiCapabilityCoveragePlan(parentBriefs, queryData);
+        const chunks = buildAnswerContext(answerCoverageResults, queryData, {
+            responseMode: reportPlan.responseMode,
+            reportPlan
+        });
+
+        return {
+            queryData,
+            results,
+            displayResults,
+            selectedResults,
+            reportPlan,
+            answerCoverageResults,
+            coverageContract,
+            parentBriefResults,
+            parentBriefs,
+            primaryEntityParents: entityCoverage.primaryEntityParents,
+            supportEntityParents: entityCoverage.supportEntityParents,
+            capabilityCoveragePlan,
+            chunks
+        };
+    }
+
+    if (window.__AI_SEARCH_TEST_HOOKS__ && typeof window.__AI_SEARCH_TEST_HOOKS__ === 'object') {
+        Object.assign(window.__AI_SEARCH_TEST_HOOKS__, {
+            prepareSearchDocuments,
+            getAiRankedSearchResults,
+            collapseAiDisplayResults,
+            resolveAiEvidencePlan,
+            buildAiAnswerCoveragePool,
+            buildAiCoverageContract,
+            buildAiParentBriefResults,
+            buildAiParentBriefs,
+            buildAnswerContext,
+            runAiCoverageSimulation,
+            getSearchDocuments: () => searchState.documents.slice()
+        });
+    }
+
+    if (!window.__AI_SEARCH_SKIP_BOOTSTRAP__) {
+        initializeSearch();
+    }
 
 });
