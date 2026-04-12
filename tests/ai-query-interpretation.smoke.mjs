@@ -1,14 +1,20 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import vm from 'node:vm';
 
 async function loadWorker() {
   const workerPath = path.resolve('worker', 'ai-answer.js');
   const source = fs.readFileSync(workerPath, 'utf8');
-  const patchedSource = source.replace('export default {', 'const workerDefault = {') + '\nexport default workerDefault;';
-  const moduleUrl = `data:text/javascript;base64,${Buffer.from(patchedSource).toString('base64')}`;
-  return import(moduleUrl);
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-worker-smoke-'));
+  const tempPath = path.join(tempDir, 'ai-answer.test.mjs');
+  fs.writeFileSync(tempPath, source, 'utf8');
+  const moduleUrl = `${pathToFileURL(tempPath).href}?t=${Date.now()}`;
+  const module = await import(moduleUrl);
+  fs.rmSync(tempDir, { recursive: true, force: true });
+  return module.default;
 }
 
 function loadTaxonomy() {
@@ -42,8 +48,9 @@ async function invokeWorker(worker, body, options = {}) {
   }
 }
 
-const { default: worker } = await loadWorker();
+const worker = await loadWorker();
 const taxonomy = loadTaxonomy();
+const swimQuery = '有哪些設施可以游泳';
 
 const interpretationFetch = async () => new Response(JSON.stringify({
   candidates: [
@@ -52,14 +59,19 @@ const interpretationFetch = async () => new Response(JSON.stringify({
         parts: [
           {
             text: JSON.stringify({
-              canonicalQuery: 'concierge 有哪些服務',
-              literalAnchors: ['concierge', '服務'],
-              canonicalEntities: ['concierge'],
-              genericClasses: ['服務'],
-              expandedAliases: ['concierge', '禮賓', 'concierge lounge', 'lounge'],
-              expandedCategories: ['服務', '酒廊', '表演'],
-              clusterExpansions: ['concierge-service', 'priority seating', 'Royal Meet & Greet'],
-              coverageHints: ['inventory'],
+              canonicalQuery: swimQuery,
+              literalAnchors: ['設施', '游泳'],
+              canonicalEntities: ['設施'],
+              genericClasses: ['設施'],
+              requiredCapabilities: ['swim'],
+              expandedAliases: ['pool', 'splash', 'slide'],
+              expandedCategories: ['泳池', '水區'],
+              clusterExpansions: ['pool deck', 'water play'],
+              coverageHints: ['inventory', 'all-details'],
+              disallowedCategories: ['劇院', '表演'],
+              answerIntent: 'inventory',
+              breadthProfile: 'maximum-expansion',
+              expansionReasons: ['capability:swim', 'expand:泳池'],
               negativeTerms: [],
               confidence: 'high'
             })
@@ -76,8 +88,8 @@ const interpretationFetch = async () => new Response(JSON.stringify({
 });
 
 const interpreted = await invokeWorker(worker, {
-  query: 'concierge 有哪些服務',
-  mode: 'query_interpretation_v1',
+  query: swimQuery,
+  mode: 'query_interpretation_v3',
   responseLocale: 'zh-Hant',
   taxonomy
 }, {
@@ -88,15 +100,15 @@ const interpreted = await invokeWorker(worker, {
 });
 
 assert.equal(interpreted.response.status, 200);
-assert(Array.isArray(interpreted.payload.canonicalEntities), 'canonicalEntities should exist');
-assert(interpreted.payload.canonicalEntities.includes('禮賓'), 'concierge should normalize to 禮賓');
-assert(interpreted.payload.expandedAliases.includes('lounge'), 'expandedAliases should keep lounge');
-assert(interpreted.payload.coverageHints.includes('inventory'), 'inventory hint should be preserved');
-assert.equal(interpreted.payload.confidence, 'high');
+assert(interpreted.payload.requiredCapabilities.includes('swim'));
+assert(interpreted.payload.disallowedCategories.includes('劇院'));
+assert.equal(interpreted.payload.answerIntent, 'inventory');
+assert.equal(interpreted.payload.breadthProfile, 'maximum-expansion');
+assert(interpreted.payload.expandedCategories.includes('泳池'));
 
 const fallback = await invokeWorker(worker, {
-  query: '各項設施有哪些',
-  mode: 'query_interpretation_v1',
+  query: swimQuery,
+  mode: 'query_interpretation_v3',
   responseLocale: 'zh-Hant',
   taxonomy
 }, {
@@ -104,8 +116,23 @@ const fallback = await invokeWorker(worker, {
 });
 
 assert.equal(fallback.response.status, 200);
-assert(Array.isArray(fallback.payload.expandedCategories), 'fallback expandedCategories should exist');
-assert(fallback.payload.expandedCategories.includes('場館'), '設施 should broaden to 場館');
-assert(fallback.payload.expandedCategories.includes('服務'), '設施 should broaden to 服務');
-assert(fallback.payload.expandedCategories.includes('表演'), '設施 should broaden to 表演');
-assert(Array.isArray(fallback.payload.clusterExpansions), 'fallback clusterExpansions should exist');
+assert(Array.isArray(fallback.payload.requiredCapabilities));
+assert(fallback.payload.requiredCapabilities.includes('swim'));
+assert(Array.isArray(fallback.payload.disallowedCategories));
+assert(fallback.payload.disallowedCategories.length >= 1);
+assert.equal(typeof fallback.payload.answerIntent, 'string');
+assert(['inventory', 'answer', 'comparison'].includes(fallback.payload.answerIntent));
+
+const bilingual = await invokeWorker(worker, {
+  query: 'concierge 有哪些服務',
+  mode: 'query_interpretation_v3',
+  responseLocale: 'zh-Hant',
+  taxonomy
+}, {
+  env: {}
+});
+
+assert.equal(bilingual.response.status, 200);
+assert(Array.isArray(bilingual.payload.canonicalEntities));
+assert(bilingual.payload.canonicalEntities.length >= 1);
+assert(Array.isArray(bilingual.payload.expandedAliases));

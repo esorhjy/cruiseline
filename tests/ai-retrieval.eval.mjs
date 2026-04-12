@@ -71,6 +71,15 @@ const SOFT_MODIFIER_TERMS = [
   '規則',
   '幾點',
   '會不會'
+  ,
+  {
+    query: '哪些樓層有禮賓設施，有哪些內容？',
+    requiredTitleIncludes: ['Concierge Lounge', 'Concierge Sundeck & Pool', 'Deck 19'],
+    requiredFieldTypes: ['summary', 'tripUse'],
+    expectedSourceTypes: ['deck', 'playbook'],
+    expectedSourceDetails: ['concierge'],
+    minSelected: 6
+  }
 ];
 
 function queryUnits(query) {

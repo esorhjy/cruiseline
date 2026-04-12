@@ -1,570 +1,416 @@
-# 星海攻略搜尋與 AI 解答規格 (Search Rules)
+# 星海攻略搜尋與 AI 解答規則手冊 (Search Rules)
 
-本文件描述目前網站中的 `搜尋` 與 `AI 解答` 功能，重點是把「實際已上線的搜尋規則」寫清楚，方便之後維護時直接對照。
+本文件描述目前網站內建搜尋與 AI 解答層的實作規則。重點不是介紹產品願景，而是回答這三件事：
 
-本文件回答 4 件事：
+1. 自然語言問題目前怎麼被理解？
+2. 站內資料目前怎麼被召回、篩選、驗收？
+3. AI 長答案目前必須遵守哪些 coverage 與來源規則？
 
-1. 搜尋現在會索引哪些內容？
-2. AI 目前怎麼理解自然語言問句？
-3. AI 會怎麼挑證據卡、整理長答案、處理來源差異？
-4. 未來新增資料或調整規則時，哪些地方一定要同步更新？
+補充：若維護的是內容投放規則，而不是搜尋 / AI 邏輯，請改看 [CONTENT_RULES.md](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/CONTENT_RULES.md)。
 
 ---
 
-## 1. 功能定位
+## 1. 目前搜尋架構總覽
 
-目前網站的搜尋分成兩層：
+目前 AI 搜尋採用的是混合架構，不是「模型自由亂搜」：
 
-| 模式 | 位置 | 任務定位 | 是否使用雲端模型 |
-| :--- | :--- | :--- | :---: |
-| 關鍵字搜尋 | 搜尋浮層 `Quick Find` | 直接查找站內卡片與片段並跳轉 | 否 |
-| AI 解答 | 同一個搜尋浮層內 | 先做站內召回，再由 Worker 依命中證據整理成長答案 | 是 |
+1. `AI Query Planner`
+2. `Local Retrieval Executor`
+3. `Coverage Judge + Gap Fill`
+4. `AI Report Writer`
+5. `Deterministic Post-process / Backfill`
+
+對應實作檔案：
+
+- [script.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/script.js)
+- [worker/ai-answer.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/worker/ai-answer.js)
+- [ai-query-taxonomy.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/ai-query-taxonomy.js)
 
 核心原則：
 
-- **本地搜尋必須保留，不能被 AI 取代。**
-- **AI 只能根據本站已命中的內容回答，不能外查。**
-- **AI 回答必須附引用來源，並可點回原區塊。**
-- **AI 預設以較完整的報告模式回答；短答只作相容或 fallback。**
+- AI 先做語意規劃，不直接自由搜尋。
+- 站內搜尋仍由本地索引執行，確保可控、可追溯、可離線。
+- 生成前後都要做 coverage 驗收，不接受「右欄有、左欄沒寫到」。
+- 設施 / 甲板 / 表演 / 攻略是主體優先，行程只作為支援層。
 
 ---
 
-## 2. 可搜尋的資料來源
+## 2. Query Understanding：`query_interpretation_v3`
 
-### A. 動態資料層
+每次 AI 搜尋都會先跑 `query_interpretation_v3`。它只負責產生搜尋規劃 JSON，不直接回答問題。
 
-主要來自 [data.js](./data.js)：
+### 固定輸出欄位
 
-- `cruiseSchedule`
-- `deckGuideData`
-- `showGuideData`
-- `playbookGuideData`
+- `canonicalQuery`
+- `literalAnchors`
+- `canonicalEntities`
+- `genericClasses`
+- `requiredCapabilities`
+- `expandedAliases`
+- `expandedCategories`
+- `disallowedCategories`
+- `coverageHints`
+- `answerIntent`
+- `breadthProfile`
+- `negativeTerms`
+- `confidence`
 
-這四組資料經過 [script.js](./script.js) 建立搜尋索引後，可提供：
+### 解讀原則
 
-- 每日行程事件
-- 甲板與設施導覽
-- 表演資訊
-- Playbook 攻略卡
+- `literalAnchors`
+  - 使用者原句中的明確專有名詞、時段、樓層、Day 等硬條件
+- `canonicalEntities`
+  - 主要主體，例如 `禮賓`、`劇院`、`Room Service`
+- `genericClasses`
+  - 泛稱類別，例如 `設施`、`服務`、`表演`
+- `requiredCapabilities`
+  - 問句中真正的能力條件，例如：
+    - `swim`
+    - `eat`
+    - `drink`
+    - `watch-show`
+    - `kids-play`
+    - `rest`
+    - `shop`
+    - `spa`
+- `disallowedCategories`
+  - 這題不該擴張到的類別，例如游泳題要排除 `劇院 / 表演 / 商店`
+- `coverageHints`
+  - `流程 / 注意事項 / 所有細節 / 值不值得 / 要不要`
+  - 這些詞只影響回答展開方式，不可縮窄檢索到單一欄位
 
-### B. 靜態區塊層
+### Guardrails
 
-來自 [index.html](./index.html) 的靜態 section：
+本地規則仍保留，但角色改成 guardrails：
 
-- `#overview`
-- `#timeline`
-- `#checkin`
-- `#facilities`
-- `#entertainment`
-- `#tips`
-- `#local-info`
-
-這些區塊在載入時由 DOM 掃描成靜態搜尋文件。
+- 明確專有名詞優先
+- 時間與 Day 優先
+- 否定詞與比較詞優先
+- AI 可擴張主體與類別，但不可覆蓋明確時段或否定限制
 
 ---
 
-## 3. AI 專用索引單位
+## 3. Taxonomy 與 Capability Graph
 
-AI 解答不再只吃「整張卡片摘要」，而是使用較細的 `parent + field chunks` 結構。
+[ai-query-taxonomy.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/ai-query-taxonomy.js) 現在不只是 alias 表，而是搜尋規劃的合法擴張邊界。
 
-### A. Playbook chunking
+### 目前至少包含
 
-每張攻略卡除了 `parent` 卡外，還會拆成：
+- `entity aliases`
+- `generic classes`
+- `category families`
+- `cluster relations`
+- `capabilityProfiles`
 
-- `whenToUse`
-- `action`
-- `tripFit`
-- `caution`
+### Capability Profiles 的作用
 
-這是目前 AI 深層召回最重要的資料來源。
+Capability 不等於一般關鍵字，而是問句的硬條件。
 
-### B. Schedule chunking
+例：
 
-行程卡會拆出：
+- `有哪些設施可以游泳`
+  - 主體：`設施`
+  - 必要能力：`swim`
+  - 可擴張 family：`pool / splash / slide / sundeck pool`
+  - 排除 family：`theatre / show / shop`
 
-- `time`
-- `tag`
-- `desc`
+### 泛稱擴張規則
 
-### C. Deck / Show chunking
+- `設施 / 地方 / 項目 / 體驗`
+  - 預設可展到 `場館 + 服務 + 表演`
+- `吃 / 餐點 / 補給`
+  - 展到正式餐廳、快餐、自助、Lounge 補給、劇院前小食
+- `玩 / 遊戲 / 活動`
+  - 展到 kids club、arcade、水區、互動活動、秀場體驗
+- `禮賓`
+  - 展到 lounge、priority entry、meet & greet、concierge support、sundeck、spa/fitness support
+- `劇院 / 表演`
+  - 展到 theatre facility、shows、timing tips、entry SOP、queue / seating cautions
 
-甲板與表演卡會拆出高價值欄位，例如：
+注意：
 
-- `summary`
-- `bestTime`
-- `tripUse`
-- `theme`
-- `timingTip`
-- `tripLink`
+- 泛稱可以廣擴張
+- 但一旦有 `requiredCapabilities`，擴張必須受 capability 約束
 
-### D. 每筆 AI 文件會保留的關鍵欄位
+---
 
-AI 檢索與 Worker chunk 會保留這些資訊：
+## 4. 搜尋文件與索引原則
 
-- `id`
+站內資料仍然來自 [data.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/data.js)，但搜尋層會把它轉成可檢索文件。
+
+### 目前搜尋文件的重要欄位
+
 - `parentId`
-- `title`
 - `sourceType`
 - `sourceDetailType`
 - `fieldType`
-- `fieldLabel`
 - `structuredText`
-- `text`
-- `timeHint`
-- `bestTimeHint`
-- `locationLabel`
-- `navTarget`
-- `evidenceRole`
+- `entityFamilies`
+- `capabilityTags`
+- `supportOfParentIds`
 
-其中 `sourceDetailType` 對 Playbook 特別重要，目前會明確區分：
+### 來源優先序
 
-- `official`
-- `concierge`
-- `community`
-- `general`
+一般來說：
 
----
+1. `deck / facility / show / playbook`
+2. `service / static detail`
+3. `schedule`
 
-## 4. 搜尋 UI 與互動邏輯
+說明：
 
-### 搜尋浮層
-
-搜尋入口位於導覽列 `搜尋` 按鈕，浮層掛載於 [index.html](./index.html) 的 `#search-overlay`。
-
-目前 UI 已升級為近全螢幕工作台：
-
-- 桌機：`width: min(1440px, 94vw)`、`height: calc(100vh - 32px)`
-- 桌機優先雙欄：
-  - 左欄：AI 長答案
-  - 右欄：搜尋結果卡片清單
-- 手機：改為單欄堆疊，但保留長答案區與結果列表
-
-### 搜尋面板互動原則
-
-- 搜尋列與 AI 操作區固定在上方
-- AI 答案區與結果清單都可各自捲動
-- 中文輸入法組字期間不可誤送出
-- 按 `Enter` 與按 AI 按鈕必須走同一條 submit 流程
-- 引用點擊後必須能正確跳到對應卡片
-
-### 結果卡顯示方式
-
-右欄結果卡現在不是只有短 snippet，而是高資訊密度摘要：
-
-- 顯示較長 snippet
-- 優先使用 `structuredText`
-- 可直接顯示 2 到 4 個重點
-- 顯示 `sourceDetailType`、`fieldType`、`timeHint / bestTimeHint`
+- 設施 / 甲板 / 表演 / 攻略卡是主體層
+- `schedule` 現在屬於支援層
+- 行程只能掛在已命中的主體 parent 之下，不可反客為主
 
 ---
 
-## 5. 本地關鍵字搜尋規則
+## 5. Retrieval：四段式流程
 
-關鍵字搜尋是純前端、本地、無 AI 的第一層搜尋。
+### 第一段：Planner
+
+AI 先產生搜尋規劃：
+
+- 主體是什麼
+- 需要什麼 capability
+- 可以擴張到哪些 family
+- 應排除哪些 family
+- 使用者要的是短答、清單、流程、比較，還是完整報告
+
+### 第二段：Executor
+
+本地搜尋固定使用 5 束 query bundles：
+
+- `precision`
+- `alias`
+- `capability`
+- `class`
+- `task`
+
+排序邏輯：
+
+1. 先保 `precision`
+2. 再保 `alias`
+3. 再用 `capability + class` 擴張
+4. 最後用 `task` 決定 evidence role 與回答區段
+
+### 第三段：Coverage Judge
+
+這一層不是寫答案，而是檢查結果夠不夠準。
+
+例：
+
+- 若題目是 `游泳`
+- primary results 至少要命中泳池、水區、滑水、sundeck pool
+- 若前排結果被 `劇院 / 表演 / 電影院 / 商店` 污染，就視為 coverage fail，必須補搜或重排
+
+### 第四段：Gap Fill
+
+只補缺少的 family 或 support evidence，不做無上限擴張。
+
+要補的通常是：
+
+- 缺少重要 capability family
+- 缺少重要 source family
+- 缺少已命中的主體之下的 support schedule / SOP / caution
+
+---
+
+## 6. Primary / Support Coverage Plan
+
+目前左右欄都必須從同一份 coverage plan 派生。
+
+### Primary Entity Parents
+
+真正直接回答問題的卡：
+
+- 設施
+- 甲板
+- 表演
+- 攻略主卡
+
+條件：
+
+- 必須符合主體
+- 若有 `requiredCapabilities`，必須同時符合 capability
+
+### Support Entity Parents
+
+與 primary entity 有明確關聯的支援卡：
+
+- 行程時段
+- SOP
+- 補給
+- 限制 / 注意事項
+- 背景脈絡
 
 規則：
 
-- 先做字串正規化：小寫、全半形統一、去標點、壓縮空白
-- 支援手工同義詞字典
-- 以 `title / keywords / text` 做加權排序
-- 命中後顯示原文摘錄，不做 AI 生成
-
-### 別名維護位置
-
-主要維護點在 [script.js](./script.js)：
-
-- `SEARCH_SYNONYM_GROUPS`
-- `AI_QUERY_EXTRA_SYNONYM_GROUPS`
-
-### 什麼時候要補同義詞
-
-若未來新增內容時出現以下情況，就應補 synonym：
-
-- 中英文名稱並存
-- 官方名稱與社群口語差很多
-- 使用者高機率會用口語搜尋，但資料中使用正式名稱
+- support 只能附著在已命中的 primary entity 之下
+- support 不可取代 primary 成為答案主體
 
 ---
 
-## 6. AI 查詢理解規則
+## 7. 可見結果 Coverage 契約
 
-AI 解答不是直接把原句丟給模型，而是先在前端做 query understanding。
+目前左欄不可以只依賴模型自由選卡，還必須對齊右欄已顯示的高價值卡片。
 
-### A. `hard anchors + soft modifiers`
+### 前端會建立
 
-目前查詢理解的核心規則是：
+- `visibleCoverageContract`
+- `mustRenderVisibleParents`
+- `mustRenderDerivedParents`
+- `preferredSupportParents`
 
-- `hard anchors`
-  - 專有名詞、主體詞、明確地點、服務名、Day / 時段
-  - 例如 `Room Service`、`Open House`、`Lounge`、`Day 1`
-- `soft modifiers`
-  - 輔助描述詞、限制詞、問題形式
-  - 例如 `注意事項`、`流程`、`要不要`、`值不值得`、`比較`
+### 規則
 
-排序原則：
+- 右欄前 N 張、且與主題相符的高價值卡
+  - `deck / facility / show / playbook / service`
+  - 必須進入左欄 coverage 契約
+- inventory / breadth 題下
+  - 左欄目標是 100% 覆蓋可見主卡
+- 若模型漏寫
+  - deterministic backfill 必須把卡補回來
 
-- **先保住 hard anchors 命中**
-- **soft modifiers 只做 rerank，不主導排除**
-- 如果一張卡只命中輔助描述詞、完全沒命中主體，會被降權
+換句話說：
 
-### B. `subjectClusters`
-
-除了 hard anchors，前端還會產生 `subjectClusters`，把同主題的相關詞彙併成一組，作為後續：
-
-- sibling expansion
-- bridge expansion
-- same-subject detail 補抓
-
-### C. 問題 facet 拆解
-
-AI 目前會把問句拆成這些 facet：
-
-- `goal`
-- `time`
-- `entityPlace`
-- `audience`
-- `risk`
-- `alternatives`
-
-### D. evidence layers
-
-前端還會額外產生 AI 證據規劃層：
-
-- `core`
-- `extension`
-- `rulesLimits`
-- `timingContext`
-- `sourceContrast`
-
-這些 layer 不是給使用者看的，而是給證據卡選取與 Worker prompt 使用。
+- 右欄是參考來源
+- 但其中的高價值相關卡，對左欄來說不是建議，而是硬性 coverage 目標
 
 ---
 
-## 7. AI 檢索流程
+## 8. AI 長答案骨架
 
-### A. 第一輪本地召回
+AI 長答案目前固定採：
 
-前端會先跑多組 query bundles，再合併排序結果。目標不是只抓「字面最高分」，而是先抓主體卡，再補同主題細節卡。
+1. `executiveSummary`
+2. `fullCardInventory`
+3. `topicAppendix`
+4. `sourceComparison`
+5. `unansweredQuestions`
 
-### B. 單次 rewrite 回補
+### `fullCardInventory`
 
-若第一輪召回不足，但仍有可用 seed evidence，前端會：
+主體層，按 `expandedCategories` 或 `capabilityTags` 分組。
 
-1. 取最多 `4` 張 rewrite seed 結果
-2. 呼叫 Worker `query_rewrite_v1`
-3. 只重跑 **一次** 本地搜尋
+每張卡至少應整理：
 
-限制：
+- 位置 / 樓層
+- 開放時段
+- 能做什麼
+- 注意事項
+- 來源差異
 
-- rewrite 最多一次
-- 不允許無限重試
-- 不允許外部網路搜尋
+### `topicAppendix`
 
-### C. 預設回答模式
+附錄層，專門承接：
 
-目前 AI 搜尋預設模式是：
+- 流程
+- 例外
+- 比較
+- 社群心得
+- 行程串接
 
-- `report` 為主
-- `compact` 僅作相容、fallback 或資料不足時使用
+### `sourceComparison`
 
-目前主要配置：
-
-- 預設模式：`report`
-- `AI_REPORT_MAX_RESULTS = 24`
-- `AI_REPORT_MAX_PARENTS = 10`
-- `AI_REPORT_MAX_PER_PARENT = 4`
-
----
-
-## 8. 證據卡選取規則
-
-AI 現在不是固定抓前幾張高分卡，而是依角色與層次補齊證據。
-
-### A. report mode 的主要 evidence roles
-
-目前 report mode 會優先補這些角色：
-
-- `core-answer`
-- `same-subject-detail`
-- `rules-limits`
-- `timing-context`
-- `source-contrast`
-
-### B. sibling expansion
-
-命中 parent card 後，會優先補同 parent 的高價值欄位。
-
-例如：
-
-- `playbook`：`action + caution + whenToUse + tripFit`
-- `schedule`：`time + desc`
-- `deck/show`：`summary + bestTime + tripUse / timingTip / tripLink`
-
-### C. bridge expansion
-
-若問題跨多張卡，還會補抓：
-
-- 同一 `entity`
-- 同一 `day / time`
-- 同一 `navTarget`
-- 同一 `sourceDetailType`
-
-### D. 精準度優先原則
-
-- `playbook / deck / show` 這類細節卡優先於廣泛 schedule 總覽
-- `schedule` 主要提供順序、時段與上下文
-- 若問題是技巧、限制、服務細節，廣泛總覽卡不能蓋過高精度攻略卡
-
----
-
-## 9. Worker 模式與請求合約
-
-目前 Worker 主要支援兩種模式：
-
-- `grounded_qa_v1`
-- `query_rewrite_v1`
-
-### A. `grounded_qa_v1`
-
-前端送給 Worker 的重要資料：
-
-- `query`
-- `chunks`
-- `responseMode`
-- `analysisPlan`
-
-其中 `analysisPlan` 目前至少包含：
-
-- `responseMode`
-- `intentType`
-- `activeFacetNames`
-- `triggerReasons`
-- `hardAnchors`
-- `softModifiers`
-- `subjectClusters`
-- `facetSummary`
-- `evidenceLayers`
-- `evidenceSummary`
-
-### B. `query_rewrite_v1`
-
-用途是把自然語言問句整理成較適合本站搜尋的 query，不直接回答問題。
-
----
-
-## 10. AI 回答輸出規格
-
-### A. Top-level 相容欄位
-
-目前回傳會保留這些欄位：
-
-- `answer`
-- `bullets`
-- `citations`
-- `confidence`
-- `primarySourceType`
-- `missingReason`
-- `insufficientData`
-- `sections`
-- `sourceBreakdown`
-- `followUpHint`
-
-### B. `sections`
-
-`sections` 目前主要包含：
-
-- `directAnswer`
-- `recommendedSteps`
-- `whyThisWorks`
-- `watchOuts`
-
-### C. `report`
-
-在 `report` 模式下，AI 會另外回傳結構化長報告，主要欄位包含：
-
-- `headline`
-- `executiveSummary`
-- `recommendedPlan`
-- `detailBreakdown`
-- `decisionAnalysis`
-- `risksAndFallbacks`
-- `topicGroups`
-- `cardHighlights`
-- `sourceComparison`
-- `unansweredQuestions`
-- `sectionCitationIds`
-
-### D. `topicGroups`
-
-`topicGroups` 是目前長答案的主顯示結構，不是附屬資訊。
-
-每組至少包含：
-
-- `groupTitle`
-- `groupKind`
-  - `core`
-  - `extension`
-- `entityType`
-  - `facility`
-  - `service`
-  - `schedule`
-  - `show`
-  - `playbook`
-  - `mixed`
-- `summary`
-- `detailItems`
-- `sourceMix`
-- `citationIds`
-
-原則：
-
-- `topicGroups` 優先負責展開大量細節
-- `cardHighlights` 保留向下相容與 fallback 用途
-
-### E. `sourceComparison`
-
-若證據涉及不同來源層級，必須分開呈現：
+來源必須分開：
 
 - `official`
 - `concierge`
 - `community`
 - `general`
 
-不可把不同來源混成單一「好像都是同一個規則」的敘述。
+不可混寫成單一事實。
 
 ---
 
-## 11. AI 回答風格與內容規則
+## 9. Deterministic Post-process
 
-目前 AI 長答案的處理原則是：
+模型輸出後，不能直接原樣顯示，還要再做 deterministic 驗收。
 
-- 先給核心結論
-- 再給可執行的清單
-- 再補同主題的大量細節摘要
-- 盡量把已命中的同主題卡片細節都盤出來
-- 不再主動壓成過短摘要
+### 必做檢查
 
-具體要求：
+- primary entity coverage 是否足夠
+- visible coverage 是否足夠
+- capability coverage 是否足夠
+- support evidence 是否有掛回 primary entity
+- source difference 是否被混寫
 
-- 優先用列表整理
-- 同主題卡盡量合併整理，不只摘一句
-- 若有足夠證據，應該展開較長的細節清單
-- 非單一卡直接陳述的結論，應標成 `綜合判斷` 或等價概念
+### 若不足，必須補齊
 
----
+- 缺 primary entity
+  - 補 inventory item
+- 缺 visible card
+  - 補 `visible-backfill`
+- 缺 derived card
+  - 補 `derived-backfill`
+- 缺 category coverage
+  - 補 appendix
+- 缺 support context
+  - 補支援 bullets
 
-## 12. Fallback 與穩定性規則
+因此，現在的 AI 長答案是：
 
-如果模型輸出不完整，Worker 不會直接放空白，而會自動補：
+- 模型生成
+- 加上 deterministic 補齊
 
-- `executiveSummary`
-- `recommendedPlan`
-- `detailBreakdown`
-- `decisionAnalysis`
-- `risksAndFallbacks`
-- `topicGroups`
-- `cardHighlights`
-- `sourceComparison`
-
-也就是說，即使模型漏掉部分結構，前端仍應該收到一份可讀的長報告骨架。
+而不是完全相信模型第一版輸出。
 
 ---
 
-## 13. 相關檔案位置
+## 10. 調整搜尋品質時，優先檢查什麼
 
-### 前端
+### A. 問題太散、命中太廣
 
-- [index.html](./index.html)
-  - 搜尋浮層結構
-- [script.js](./script.js)
-  - 搜尋索引建立
-  - query understanding
-  - evidence selection
-  - AI 搜尋流程
-- [style.css](./style.css)
-  - 搜尋工作台樣式
-  - 長答案區塊樣式
-  - `topicGroups` 顯示樣式
+優先檢查：
 
-### Worker / 測試
+- `requiredCapabilities` 是否有被正確抽出
+- `disallowedCategories` 是否太弱
+- `capabilityProfiles` 是否缺對應家族
+- `primaryEntityParents` 是否被非 capability family 污染
 
-- [worker/ai-answer.js](./worker/ai-answer.js)
-  - Worker 主邏輯
-  - prompt / schema / fallback / normalization
-- [tests/ai-answer.smoke.mjs](./tests/ai-answer.smoke.mjs)
-  - AI Worker smoke checks
-- [tests/ai-retrieval.eval.mjs](./tests/ai-retrieval.eval.mjs)
-  - 檢索規則 baseline
-- [tests/fixtures/ai-retrieval-cases.json](./tests/fixtures/ai-retrieval-cases.json)
-  - retrieval 測試題庫
+### B. 右欄有、左欄沒寫
 
----
+優先檢查：
 
-## 14. 後續維護規則
+- `visibleCoverageContract`
+- `mustRenderVisibleParents`
+- deterministic backfill 是否有補齊
 
-若未來新增內容或規則變動，以下情況必須同步更新搜尋規格：
+### C. 行程卡消失或過多
 
-1. 新增全新資料來源類型
-2. 新增新的靜態 section
-3. 新增新的 `sourceDetailType`
-4. 新增常用別名或高頻口語稱呼
-5. 調整 evidence roles、report schema 或 fallback 規則
-6. 調整 AI 預設回答模式
+優先檢查：
 
-具體維護點：
+- `schedule` 是否正確落在 support layer
+- `supportOfParentIds` 是否有建立
+- schedule 是否反客為主搶走 primary inventory
 
-- 前端檢索規則：更新 [script.js](./script.js)
-- Worker 合約：更新 [worker/ai-answer.js](./worker/ai-answer.js)
-- 文件：同步更新本檔
-- 測試：同步更新 smoke / retrieval eval
+### D. AI 長答案太短
+
+優先檢查：
+
+- `fullCardInventory` 是否有被壓縮
+- `topicAppendix` 是否不足
+- `coverageHints` 是否觸發 `exhaustive`
+- post-process 是否提早接受 coverage 不足的模型輸出
 
 ---
 
-## 15. 測試清單
+## 11. 文件維護邊界
 
-### 關鍵字搜尋
+若未來要改搜尋 / AI 解答，優先看這幾個檔案：
 
-- `禮賓`
-- `Baymax`
-- `Room Service`
-- `Deck 17`
-- `爆米花`
-- `SGAC`
+- 搜尋規劃與 retrieval：
+  - [script.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/script.js)
+- AI interpreter 與 report writer：
+  - [worker/ai-answer.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/worker/ai-answer.js)
+- taxonomy / concept graph / capability profiles：
+  - [ai-query-taxonomy.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/ai-query-taxonomy.js)
+- 檢索與 coverage 驗收測試：
+  - [tests/ai-query-interpretation.smoke.mjs](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/tests/ai-query-interpretation.smoke.mjs)
+  - [tests/ai-answer.smoke.mjs](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/tests/ai-answer.smoke.mjs)
+  - [tests/ai-retrieval.eval.mjs](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/tests/ai-retrieval.eval.mjs)
+  - [tests/ai-visible-coverage.eval.mjs](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/tests/ai-visible-coverage.eval.mjs)
+  - [tests/ai-capability-gating.eval.mjs](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/tests/ai-capability-gating.eval.mjs)
 
-### AI 解答
-
-- `第一天提早登船後最值得先做什麼？`
-- `第一天提早登船後先去 Lounge 還是 Open House？`
-- `禮賓有什麼特殊服務？`
-- `禮賓怎麼提早進劇院？`
-- `Room Service 半夜要怎麼點比較穩？`
-- `Deck 17 有哪些適合孩子的補給？`
-- `Baymax 電影院有字幕嗎？`
-
-### Query relaxation 驗收
-
-- `Lounge 注意事項`
-  - 不能只命中 `caution`
-  - 也要把 Lounge 主題卡與相關內容帶進來
-- `Open House 流程`
-  - 不能只回單一卡流程
-- `Room Service 要不要點`
-  - 要同時抓到操作、時段、社群心得與限制
-
-### Long report 驗收
-
-- 回答應包含 `topicGroups`
-- 長答案可順暢捲動
-- 右欄搜尋結果卡不被擠掉
-- citation 點擊仍可正確跳轉
-
-### 自動化驗證
-
-- `node tests/ai-answer.smoke.mjs`
-- `node tests/ai-retrieval.eval.mjs`
-
----
-
-## 16. 一句話維護原則
-
-**搜尋負責先把主體抓準、把同主題細節補齊；AI 只負責根據已命中的站內證據整理成可追溯的長答案。**
+若改的是內容本身，而不是搜尋規則，請優先更新 [CONTENT_RULES.md](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/CONTENT_RULES.md) 與 [data.js](/G:/我的雲端硬碟/10-個人生活資料/2027迪士尼郵輪/data.js)。

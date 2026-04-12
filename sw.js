@@ -1,4 +1,4 @@
-const CORE_CACHE_NAME = 'dcl-guide-v10';
+const CORE_CACHE_NAME = 'dcl-guide-v11';
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const CORE_ASSETS_TO_CACHE = [
   'index.html',
@@ -15,6 +15,11 @@ const CORE_ASSETS_TO_CACHE = [
 const EXCLUDED_PATHS = new Set(['/api/ai-answer']);
 const EXCLUDED_HOSTS = new Set(['api.open-meteo.com']);
 const RUNTIME_CACHEABLE_DESTINATIONS = new Set(['document', 'style', 'script', 'image', 'font']);
+const CORE_ASSET_PATHS = new Set(
+  CORE_ASSETS_TO_CACHE
+    .map((asset) => new URL(asset, self.location.origin).pathname)
+    .concat(['/', '/index.html'])
+);
 
 function isCacheableResponse(response) {
   return Boolean(response) && (response.ok || response.type === 'opaque');
@@ -46,6 +51,60 @@ function shouldHandleRuntimeCache(request) {
   return RUNTIME_CACHEABLE_DESTINATIONS.has(request.destination);
 }
 
+function isCoreAssetRequest(request) {
+  const url = new URL(request.url);
+  return url.origin === self.location.origin && (
+    request.mode === 'navigate'
+    || CORE_ASSET_PATHS.has(url.pathname)
+  );
+}
+
+async function networkFirstFromCache(request, cacheName, fallbackKey = null) {
+  const cache = await caches.open(cacheName);
+
+  try {
+    const networkResponse = await fetch(request);
+    if (isCacheableResponse(networkResponse)) {
+      await cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    if (fallbackKey) {
+      const fallbackResponse = await cache.match(fallbackKey);
+      if (fallbackResponse) {
+        return fallbackResponse;
+      }
+    }
+
+    throw error;
+  }
+}
+
+async function staleWhileRevalidateFromCache(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  const cachedResponse = await cache.match(request);
+
+  const fetchAndCache = async () => {
+    const networkResponse = await fetch(request);
+    if (isCacheableResponse(networkResponse)) {
+      await cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  };
+
+  if (cachedResponse) {
+    fetchAndCache().catch(() => null);
+    return cachedResponse;
+  }
+
+  return fetchAndCache();
+}
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CORE_CACHE_NAME).then((cache) => {
@@ -58,17 +117,25 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => Promise.all(
-      cacheNames.map((cacheName) => {
-        if (cacheName !== CORE_CACHE_NAME && cacheName !== RUNTIME_CACHE_NAME) {
-          return caches.delete(cacheName);
-        }
-        return null;
-      })
-    ))
-  );
+    (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CORE_CACHE_NAME && cacheName !== RUNTIME_CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+          return null;
+        })
+      );
 
-  self.clients.claim();
+      await self.clients.claim();
+
+      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      await Promise.all(
+        clients.map((client) => client.navigate(client.url).catch(() => null))
+      );
+    })()
+  );
 });
 
 self.addEventListener('fetch', (event) => {
@@ -77,27 +144,23 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith((async () => {
-    const cachedResponse = await caches.match(event.request);
-
-    const fetchAndCache = async () => {
-      const networkResponse = await fetch(event.request);
-      if (isCacheableResponse(networkResponse)) {
-        const cache = await caches.open(RUNTIME_CACHE_NAME);
-        cache.put(event.request, networkResponse.clone());
-      }
-      return networkResponse;
-    };
-
-    if (cachedResponse) {
-      event.waitUntil(fetchAndCache().catch(() => null));
-      return cachedResponse;
-    }
-
     try {
-      return await fetchAndCache();
+      if (isCoreAssetRequest(event.request)) {
+        return await networkFirstFromCache(
+          event.request,
+          CORE_CACHE_NAME,
+          event.request.mode === 'navigate' ? 'index.html' : null
+        );
+      }
+
+      return await staleWhileRevalidateFromCache(event.request, RUNTIME_CACHE_NAME);
     } catch (error) {
       if (event.request.mode === 'navigate') {
-        return caches.match('index.html');
+        const coreCache = await caches.open(CORE_CACHE_NAME);
+        const fallbackResponse = await coreCache.match('index.html');
+        if (fallbackResponse) {
+          return fallbackResponse;
+        }
       }
       throw error;
     }

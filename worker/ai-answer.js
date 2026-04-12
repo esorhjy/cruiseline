@@ -1,4 +1,4 @@
-const MAX_CHUNKS = 72;
+const MAX_CHUNKS = 96;
 const COMPACT_MAX_CHUNKS = 8;
 const REWRITE_MAX_CHUNKS = 4;
 const MIN_CHUNKS = 2;
@@ -6,8 +6,8 @@ const MIN_REWRITE_CHUNKS = 1;
 const MAX_QUERY_LENGTH = 500;
 const MAX_TEXT_LENGTH = 2200;
 const MIN_QUERY_SIGNAL = 6;
-const MAX_PARENT_BRIEFS = 28;
-const MAX_FULL_CARD_INVENTORY = 28;
+const MAX_PARENT_BRIEFS = 32;
+const MAX_FULL_CARD_INVENTORY = 32;
 const ALLOWED_SOURCE_TYPES = ['schedule', 'deck', 'show', 'playbook', 'static'];
 const ALLOWED_SOURCE_DETAIL_TYPES = ['official', 'concierge', 'community', 'general'];
 const ALLOWED_CONFIDENCE = ['high', 'medium', 'low'];
@@ -16,6 +16,7 @@ const REPORT_SECTION_KEYS = [
   'executiveSummary',
   'recommendedPlan',
   'fullCardInventory',
+  'topicAppendix',
   'detailBreakdown',
   'decisionAnalysis',
   'risksAndFallbacks',
@@ -97,6 +98,12 @@ function clampNumber(value, min, max, fallback) {
   return Math.min(Math.max(Math.round(numeric), min), max);
 }
 
+function clampFraction(value, fallback = 0) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return fallback;
+  return Math.min(Math.max(Number(numeric.toFixed(2)), 0), 1);
+}
+
 function sanitizeTextArray(items, maxItems, maxLength) {
   return (Array.isArray(items) ? items : [])
     .map((item) => sanitizeString(item, maxLength))
@@ -139,7 +146,7 @@ function sanitizeAnalysisPlan(plan, responseMode = 'compact') {
     ? safePlan.evidenceLayers
     : {};
 
-  const fallbackReport = {
+  return {
     responseMode: sanitizeResponseMode(safePlan.responseMode || responseMode),
     intentType: sanitizeString(safePlan.intentType, 40).toLowerCase() || 'operational-detail',
     activeFacetNames: sanitizeTextArray(safePlan.activeFacetNames, 6, 40),
@@ -174,21 +181,25 @@ function sanitizeAnalysisPlan(plan, responseMode = 'compact') {
       parentCardCount: clampNumber(evidenceSummary.parentCardCount, 0, 10, 0),
       sourceTypes: sanitizeTextArray(evidenceSummary.sourceTypes, 6, 32).map(sanitizeSourceType),
       sourceDetailTypes: sanitizeTextArray(evidenceSummary.sourceDetailTypes, 4, 32).map(sanitizeSourceDetailType)
-    }
+    },
+    literalAnchors: sanitizeTextArray(safePlan.literalAnchors, 12, 80),
+    canonicalEntities: sanitizeTextArray(safePlan.canonicalEntities, 10, 80),
+    genericClasses: sanitizeTextArray(safePlan.genericClasses, 8, 80),
+    requiredCapabilities: sanitizeTextArray(safePlan.requiredCapabilities, 6, 40),
+    disallowedCategories: sanitizeTextArray(safePlan.disallowedCategories, 10, 80),
+    answerIntent: sanitizeString(safePlan.answerIntent, 40).toLowerCase() || 'answer',
+    expandedCategories: sanitizeTextArray(safePlan.expandedCategories, 12, 80),
+    clusterExpansions: sanitizeTextArray(safePlan.clusterExpansions, 16, 80),
+    coverageHints: sanitizeTextArray(safePlan.coverageHints, 8, 32),
+    breadthSignals: sanitizeTextArray(safePlan.breadthSignals, 8, 60),
+    facilityBreadthMode: Boolean(safePlan.facilityBreadthMode),
+    breadthProfile: sanitizeString(safePlan.breadthProfile, 40) || 'guided-expansion',
+    expansionReasons: sanitizeTextArray(safePlan.expansionReasons, 10, 120),
+    preferredClusters: sanitizeTextArray(safePlan.preferredClusters, 12, 80),
+    mustCoverCategories: sanitizeTextArray(safePlan.mustCoverCategories, 12, 80),
+    mustCoverCapabilities: sanitizeTextArray(safePlan.mustCoverCapabilities, 6, 40),
+    categoryCoveragePlan: sanitizeCategoryDossiers(safePlan.categoryCoveragePlan || [])
   };
-
-  fallbackReport.executiveSummary = sanitizeTextArray([directAnswer, ...(sections.whyThisWorks || [])], 4, 240);
-  fallbackReport.recommendedPlan = sanitizeTextArray(sections.recommendedSteps, 12, 240);
-  fallbackReport.detailBreakdown = sanitizeTextArray(
-    chunks.slice(0, 12).map((chunk) => `${chunk.title}：${buildChunkPreview(chunk, 180)}`),
-    20,
-    260
-  );
-  fallbackReport.decisionAnalysis = sanitizeTextArray(sections.whyThisWorks, 8, 240);
-  fallbackReport.risksAndFallbacks = sanitizeTextArray(sections.watchOuts, 10, 240);
-  fallbackReport.topicGroups = topicGroups;
-
-  return fallbackReport;
 }
 
 function getSourceDetailLabel(sourceDetailType) {
@@ -699,7 +710,12 @@ function sanitizeAnalysisPlanOverride(plan, responseMode = 'compact') {
     responseMode: sanitizeResponseMode(safePlan.responseMode || responseMode),
     intentType: sanitizeString(safePlan.intentType, 40).toLowerCase() || 'operational-detail',
     inventoryIntent: Boolean(safePlan.inventoryIntent),
+    visibleInventoryMode: Boolean(safePlan.visibleInventoryMode),
     coverageMode: sanitizeString(safePlan.coverageMode, 24).toLowerCase() === 'exhaustive' ? 'exhaustive' : 'standard',
+    breadthProfile: sanitizeString(safePlan.breadthProfile, 40) || 'guided-expansion',
+    breadthSignals: sanitizeTextArray(safePlan.breadthSignals, 6, 60),
+    facilityBreadthMode: Boolean(safePlan.facilityBreadthMode),
+    expansionReasons: sanitizeTextArray(safePlan.expansionReasons, 12, 120),
     activeFacetNames: sanitizeTextArray(safePlan.activeFacetNames, 6, 40),
     activeFacetCount: clampNumber(safePlan.activeFacetCount, 0, 6, 0),
     triggerReasons: sanitizeTextArray(safePlan.triggerReasons, 8, 80),
@@ -737,7 +753,25 @@ function sanitizeAnalysisPlanOverride(plan, responseMode = 'compact') {
       parentCardCount: clampNumber(evidenceSummary.parentCardCount, 0, MAX_PARENT_BRIEFS, 0),
       sourceTypes: sanitizeTextArray(evidenceSummary.sourceTypes, 6, 32).map(sanitizeSourceType),
       sourceDetailTypes: sanitizeTextArray(evidenceSummary.sourceDetailTypes, 4, 32).map(sanitizeSourceDetailType)
-    }
+    },
+    literalAnchors: sanitizeTextArray(safePlan.literalAnchors, 12, 80),
+    canonicalEntities: sanitizeTextArray(safePlan.canonicalEntities, 10, 80),
+    genericClasses: sanitizeTextArray(safePlan.genericClasses, 8, 80),
+    expandedCategories: sanitizeTextArray(safePlan.expandedCategories, 12, 80),
+    clusterExpansions: sanitizeTextArray(safePlan.clusterExpansions, 16, 80),
+    coverageHints: sanitizeTextArray(safePlan.coverageHints, 8, 32),
+    preferredClusters: sanitizeTextArray(safePlan.preferredClusters, 10, 80),
+    mustCoverCategories: sanitizeTextArray(safePlan.mustCoverCategories, 12, 80),
+    categoryCoveragePlan: (Array.isArray(safePlan.categoryCoveragePlan) ? safePlan.categoryCoveragePlan : [])
+      .map((item) => ({
+        categoryId: sanitizeString(item?.categoryId, 80),
+        label: sanitizeString(item?.label, 80),
+        parentCount: clampNumber(item?.parentCount, 0, MAX_PARENT_BRIEFS, 0),
+        sourceMix: sanitizeTextArray(item?.sourceMix, 4, 24).map(sanitizeSourceDetailType),
+        detailHints: sanitizeTextArray(item?.detailHints, 8, 120)
+      }))
+      .filter((item) => item.categoryId || item.label)
+      .slice(0, 16)
   };
 }
 
@@ -808,6 +842,7 @@ function buildDefaultSectionCitationIdsOverride(citationIds = []) {
     executiveSummary: ids.slice(0, 3),
     recommendedPlan: ids.slice(0, 12),
     fullCardInventory: ids.slice(0, 18),
+    topicAppendix: ids.slice(0, 18),
     detailBreakdown: ids.slice(0, 12),
     decisionAnalysis: ids.slice(0, 8),
     risksAndFallbacks: ids.slice(0, 8),
@@ -1254,7 +1289,11 @@ function sanitizeCoverageStats(stats = {}) {
     selectedChunkCount: clampNumber(safeStats.selectedChunkCount, 0, MAX_CHUNKS, 0),
     targetParentCount: clampNumber(safeStats.targetParentCount, 0, MAX_PARENT_BRIEFS, 0),
     backfilledParentCount: clampNumber(safeStats.backfilledParentCount, 0, MAX_PARENT_BRIEFS, 0),
-    coverageRatio: clampNumber(safeStats.coverageRatio, 0, 1, 0),
+    visibleTargetCount: clampNumber(safeStats.visibleTargetCount, 0, MAX_PARENT_BRIEFS, 0),
+    visibleRenderedCount: clampNumber(safeStats.visibleRenderedCount, 0, MAX_PARENT_BRIEFS, 0),
+    visibleBackfilledCount: clampNumber(safeStats.visibleBackfilledCount, 0, MAX_PARENT_BRIEFS, 0),
+    visibleCoverageRatio: clampFraction(safeStats.visibleCoverageRatio, 0),
+    coverageRatio: clampFraction(safeStats.coverageRatio, 0),
     sourceCounts,
     primarySubject: sanitizeString(safeStats.primarySubject, 120)
   };
@@ -1263,11 +1302,20 @@ function sanitizeCoverageStats(stats = {}) {
 function sanitizeCoverageContract(contract = {}) {
   const safeContract = contract && typeof contract === 'object' ? contract : {};
   return {
-    mode: safeContract.mode === 'inventory' ? 'inventory' : 'standard',
+    mode: ['inventory', 'visible-inventory'].includes(safeContract.mode) ? safeContract.mode : 'standard',
     targetCoverageCount: clampNumber(safeContract.targetCoverageCount, 0, MAX_PARENT_BRIEFS, 0),
     minimumCoverageRatio: clampNumber(safeContract.minimumCoverageRatio, 0, 1, 0),
     mustRenderParentIds: sanitizeTextArray(safeContract.mustRenderParentIds, MAX_PARENT_BRIEFS, 120),
     preferredParentIds: sanitizeTextArray(safeContract.preferredParentIds, MAX_PARENT_BRIEFS, 120),
+    visibleParentIds: sanitizeTextArray(safeContract.visibleParentIds, MAX_PARENT_BRIEFS, 120),
+    eligibleVisibleParentIds: sanitizeTextArray(safeContract.eligibleVisibleParentIds, MAX_PARENT_BRIEFS, 120),
+    mustRenderVisibleParentIds: sanitizeTextArray(safeContract.mustRenderVisibleParentIds, MAX_PARENT_BRIEFS, 120),
+    mustRenderDerivedParentIds: sanitizeTextArray(safeContract.mustRenderDerivedParentIds, MAX_PARENT_BRIEFS, 120),
+    preferredSupportParentIds: sanitizeTextArray(safeContract.preferredSupportParentIds, MAX_PARENT_BRIEFS, 120),
+    targetVisibleCoverageCount: clampNumber(safeContract.targetVisibleCoverageCount, 0, MAX_PARENT_BRIEFS, 0),
+    minimumVisibleCoverageRatio: clampNumber(safeContract.minimumVisibleCoverageRatio, 0, 1, 0),
+    mustCoverCategories: sanitizeTextArray(safeContract.mustCoverCategories, 12, 80),
+    preferredClusters: sanitizeTextArray(safeContract.preferredClusters, 12, 80),
     relevantSourceTypes: sanitizeTextArray(safeContract.relevantSourceTypes, 6, 24).map(sanitizeSourceType),
     coverageReason: sanitizeString(safeContract.coverageReason, 180)
   };
@@ -1280,12 +1328,18 @@ function sanitizeParentBriefs(parentBriefs = [], validIds = []) {
       parentId: sanitizeString(item?.parentId, 120),
       title: sanitizeString(item?.title, 160),
       cardType: sanitizeString(item?.cardType, 24).toLowerCase() || 'mixed',
+      sourceType: sanitizeSourceType(item?.sourceType),
       groupLabel: sanitizeString(item?.groupLabel, 120),
       sourceLabels: sanitizeTextArray(item?.sourceLabels, 5, 60),
+      categoryFamilies: sanitizeTextArray(item?.categoryFamilies, 6, 60),
+      capabilityTags: sanitizeTextArray(item?.capabilityTags, 6, 40),
+      entityFamilies: sanitizeTextArray(item?.entityFamilies, 6, 60),
+      supportOfParentIds: sanitizeTextArray(item?.supportOfParentIds, 8, 120),
       detailBullets: sanitizeTextArray(item?.detailBullets, 10, 260),
       venueKey: sanitizeString(item?.venueKey, 120),
       seriesKey: sanitizeString(item?.seriesKey, 120),
       sourceClusterKey: sanitizeString(item?.sourceClusterKey, 120),
+      coverageTier: ['visible', 'derived', 'support'].includes(item?.coverageTier) ? item.coverageTier : 'support',
       renderPriority: clampNumber(item?.renderPriority, 0, MAX_PARENT_BRIEFS, 0),
       citationIds: uniqueItems((Array.isArray(item?.citationIds) ? item.citationIds : [])
         .map((citationId) => sanitizeString(citationId, 120))
@@ -1294,6 +1348,38 @@ function sanitizeParentBriefs(parentBriefs = [], validIds = []) {
     }))
     .filter((item) => item.parentId && item.title && item.detailBullets.length)
     .slice(0, MAX_PARENT_BRIEFS);
+}
+
+function sanitizeCategoryDossiers(categoryDossiers = []) {
+  return (Array.isArray(categoryDossiers) ? categoryDossiers : [])
+    .map((item) => ({
+      categoryId: sanitizeString(item?.categoryId, 80),
+      label: sanitizeString(item?.label, 80),
+      parentCount: clampNumber(item?.parentCount, 0, MAX_PARENT_BRIEFS, 0),
+      sourceMix: sanitizeTextArray(item?.sourceMix, 4, 24).map(sanitizeSourceDetailType),
+      detailHints: sanitizeTextArray(item?.detailHints, 8, 120),
+      preferredParentIds: sanitizeTextArray(item?.preferredParentIds, 8, 120)
+    }))
+    .filter((item) => item.categoryId || item.label)
+    .slice(0, 16);
+}
+
+function sanitizeCapabilityCoveragePlan(plan = {}) {
+  const safePlan = plan && typeof plan === 'object' ? plan : {};
+  return {
+    requiredCapabilities: sanitizeTextArray(safePlan.requiredCapabilities, 6, 40),
+    disallowedCategories: sanitizeTextArray(safePlan.disallowedCategories, 10, 80),
+    items: (Array.isArray(safePlan.items) ? safePlan.items : [])
+      .map((item) => ({
+        capabilityId: sanitizeString(item?.capabilityId, 40),
+        label: sanitizeString(item?.label, 80),
+        matchedParentIds: sanitizeTextArray(item?.matchedParentIds, 12, 120),
+        categoryFamilies: sanitizeTextArray(item?.categoryFamilies, 8, 80),
+        disallowedCategories: sanitizeTextArray(item?.disallowedCategories, 8, 80)
+      }))
+      .filter((item) => item.capabilityId || item.label)
+      .slice(0, 8)
+  };
 }
 
 function buildParentBriefLineFromChunk(chunk) {
@@ -1406,6 +1492,49 @@ function buildCoverageOutlineV4(parentBriefs = [], analysisPlan = {}, chunks = [
   };
 }
 
+function inferSourceMixFromParentBriefs(parentBriefs = []) {
+  const sourceMix = new Set();
+  (Array.isArray(parentBriefs) ? parentBriefs : []).forEach((item) => {
+    (item.sourceLabels || []).forEach((label) => {
+      const normalized = sanitizeString(label, 60);
+      if (normalized.includes('官方')) sourceMix.add('official');
+      if (normalized.includes('禮賓')) sourceMix.add('concierge');
+      if (normalized.includes('社群')) sourceMix.add('community');
+    });
+  });
+  return Array.from(sourceMix).slice(0, 4);
+}
+
+function buildTopicAppendixFromCategoryDossiers(categoryDossiers = [], parentBriefs = [], citationIds = []) {
+  const safeDossiers = sanitizeCategoryDossiers(categoryDossiers);
+  const safeBriefs = sanitizeParentBriefs(parentBriefs, citationIds.length ? citationIds : parentBriefs.flatMap((item) => item.citationIds || []));
+
+  return safeDossiers.map((dossier) => {
+    const matchedBriefs = safeBriefs.filter((item) =>
+      (item.categoryFamilies || []).includes(dossier.label)
+      || dossier.preferredParentIds.includes(item.parentId)
+    );
+    const detailItems = uniqueItems([
+      ...matchedBriefs.flatMap((item) => (item.detailBullets || []).slice(0, 4).map((detail) => `${item.title}：${detail}`)),
+      ...dossier.detailHints.map((hint) => `${dossier.label || dossier.categoryId}：${hint}`)
+    ]).slice(0, 12);
+    const appendixCitationIds = uniqueItems(matchedBriefs.flatMap((item) => item.citationIds || [])).slice(0, MAX_CHUNKS);
+    return {
+      groupTitle: sanitizeString(dossier.label || dossier.categoryId || '延伸附錄', 120),
+      categoryId: sanitizeString(dossier.categoryId || dossier.label, 80),
+      summary: sanitizeString(
+        `${dossier.label || dossier.categoryId || '這組主題'}整理 ${matchedBriefs.length || dossier.parentCount || 0} 張相關卡片，補充流程、限制、時段與細節。`,
+        220
+      ),
+      detailItems,
+      sourceMix: dossier.sourceMix.length ? dossier.sourceMix : inferSourceMixFromParentBriefs(matchedBriefs),
+      citationIds: appendixCitationIds
+    };
+  })
+    .filter((item) => item.groupTitle && item.detailItems.length)
+    .slice(0, 16);
+}
+
 function sanitizeInventoryItemsV3(items = [], citationIds = [], defaultRenderOrigin = 'model') {
   const allowedIds = citationIds.length ? new Set(citationIds) : null;
   return (Array.isArray(items) ? items : [])
@@ -1415,12 +1544,16 @@ function sanitizeInventoryItemsV3(items = [], citationIds = [], defaultRenderOri
       cardType: sanitizeString(item?.cardType, 24).toLowerCase() || 'mixed',
       groupLabel: sanitizeString(item?.groupLabel, 120),
       sourceLabels: sanitizeTextArray(item?.sourceLabels, 5, 60),
+      categoryFamilies: sanitizeTextArray(item?.categoryFamilies, 6, 60),
       detailBullets: sanitizeTextArray(item?.detailBullets, 10, 260),
       citationIds: uniqueItems((Array.isArray(item?.citationIds) ? item.citationIds : [])
         .map((citationId) => sanitizeString(citationId, 120))
         .filter((citationId) => !allowedIds || allowedIds.has(citationId)))
         .slice(0, MAX_CHUNKS),
-      renderOrigin: item?.renderOrigin === 'backfill' ? 'backfill' : defaultRenderOrigin
+      coverageTier: ['visible', 'derived', 'support'].includes(item?.coverageTier) ? item.coverageTier : 'support',
+      renderOrigin: ['visible-backfill', 'derived-backfill', 'support-backfill', 'backfill', 'model'].includes(item?.renderOrigin)
+        ? item.renderOrigin
+        : defaultRenderOrigin
     }))
     .filter((item) => item.parentId && item.title && item.detailBullets.length)
     .slice(0, MAX_FULL_CARD_INVENTORY);
@@ -1433,9 +1566,17 @@ function buildFullCardInventoryCoverageV3(parentBriefs = [], citationIds = [], o
     cardType: item.cardType || 'mixed',
     groupLabel: item.groupLabel,
     sourceLabels: item.sourceLabels,
+    categoryFamilies: item.categoryFamilies,
     detailBullets: item.detailBullets,
     citationIds: item.citationIds.slice(0, MAX_CHUNKS),
-    renderOrigin: options.renderOrigin === 'model' ? 'model' : 'backfill'
+    coverageTier: item.coverageTier || 'support',
+    renderOrigin: options.renderOrigin || (
+      item.coverageTier === 'visible'
+        ? 'visible-backfill'
+        : item.coverageTier === 'derived'
+          ? 'derived-backfill'
+          : 'support-backfill'
+    )
   }))
     .filter((item) => item.title && item.detailBullets.length)
     .slice(0, MAX_FULL_CARD_INVENTORY);
@@ -1444,9 +1585,15 @@ function buildFullCardInventoryCoverageV3(parentBriefs = [], citationIds = [], o
 function mergeCoverageInventoryV3(fullCardInventory = [], parentBriefs = [], coverageContract = null, citationIds = []) {
   const safeContract = sanitizeCoverageContract(coverageContract);
   const baseInventory = sanitizeInventoryItemsV3(fullCardInventory, citationIds, 'model');
-  const backfillInventory = buildFullCardInventoryCoverageV3(parentBriefs, citationIds, { renderOrigin: 'backfill' });
+  const backfillInventory = buildFullCardInventoryCoverageV3(parentBriefs, citationIds);
   const briefMap = new Map(backfillInventory.map((item) => [item.parentId, item]));
-  const orderedParentIds = uniqueItems([...safeContract.mustRenderParentIds, ...safeContract.preferredParentIds]);
+  const orderedParentIds = uniqueItems([
+    ...safeContract.mustRenderVisibleParentIds,
+    ...safeContract.mustRenderDerivedParentIds,
+    ...safeContract.preferredSupportParentIds,
+    ...safeContract.mustRenderParentIds,
+    ...safeContract.preferredParentIds
+  ]);
   const seenParentIds = new Set(baseInventory.map((item) => item.parentId));
   const mergedInventory = [...baseInventory];
 
@@ -1465,6 +1612,10 @@ function mergeCoverageInventoryV3(fullCardInventory = [], parentBriefs = [], cov
       const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
       const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
       if (orderA !== orderB) return orderA - orderB;
+      if (a.coverageTier !== b.coverageTier) {
+        const tierOrder = { visible: 0, derived: 1, support: 2 };
+        return (tierOrder[a.coverageTier] ?? 9) - (tierOrder[b.coverageTier] ?? 9);
+      }
       if (a.renderOrigin !== b.renderOrigin) return a.renderOrigin === 'model' ? -1 : 1;
       return a.title.localeCompare(b.title, 'zh-Hant');
     })
@@ -1476,16 +1627,29 @@ function buildCoverageSummaryFromInventoryV4(fullCardInventory = [], chunks = []
   const safeCoverageContract = sanitizeCoverageContract(coverageContract);
   const derivedSourceCounts = {};
   const renderedParentIds = uniqueItems(fullCardInventory.map((item) => sanitizeString(item?.parentId, 120)).filter(Boolean));
+  const visibleTargetIds = uniqueItems([
+    ...safeCoverageContract.mustRenderVisibleParentIds,
+    ...safeCoverageContract.visibleParentIds
+  ]);
+  const renderedVisibleIds = renderedParentIds.filter((parentId) => visibleTargetIds.includes(parentId));
   const targetParentCount = safeCoverageStats.targetParentCount
     || safeCoverageContract.targetCoverageCount
     || safeCoverageContract.mustRenderParentIds.length
     || safeCoverageStats.selectedParentCount
     || uniqueItems(chunks.map((chunk) => sanitizeString(chunk?.parentId || chunk?.id, 120))).length;
   const backfilledParentCount = safeCoverageStats.backfilledParentCount
-    || fullCardInventory.filter((item) => item?.renderOrigin === 'backfill').length;
+    || fullCardInventory.filter((item) => String(item?.renderOrigin || '').endsWith('backfill')).length;
   const coverageRatio = targetParentCount
     ? Number((Math.min(1, renderedParentIds.length / Math.max(targetParentCount, 1))).toFixed(2))
     : (safeCoverageStats.coverageRatio || 0);
+  const visibleTargetCount = safeCoverageStats.visibleTargetCount
+    || safeCoverageContract.targetVisibleCoverageCount
+    || visibleTargetIds.length;
+  const visibleBackfilledCount = safeCoverageStats.visibleBackfilledCount
+    || fullCardInventory.filter((item) => item?.renderOrigin === 'visible-backfill').length;
+  const visibleCoverageRatio = visibleTargetCount
+    ? Number((Math.min(1, renderedVisibleIds.length / Math.max(visibleTargetCount, 1))).toFixed(2))
+    : (safeCoverageStats.visibleCoverageRatio || 0);
 
   chunks.forEach((chunk) => {
     const key = sanitizeSourceDetailType(chunk?.sourceDetailType);
@@ -1498,12 +1662,36 @@ function buildCoverageSummaryFromInventoryV4(fullCardInventory = [], chunks = []
     targetParentCount: clampNumber(targetParentCount, 0, MAX_PARENT_BRIEFS, 0),
     renderedParentCount: clampNumber(renderedParentIds.length, 0, MAX_FULL_CARD_INVENTORY, 0),
     backfilledParentCount: clampNumber(backfilledParentCount, 0, MAX_PARENT_BRIEFS, 0),
-    coverageRatio: clampNumber(coverageRatio, 0, 1, 0),
+    visibleTargetCount: clampNumber(visibleTargetCount, 0, MAX_PARENT_BRIEFS, 0),
+    visibleRenderedCount: clampNumber(renderedVisibleIds.length, 0, MAX_FULL_CARD_INVENTORY, 0),
+    visibleBackfilledCount: clampNumber(visibleBackfilledCount, 0, MAX_PARENT_BRIEFS, 0),
+    visibleCoverageRatio: clampFraction(visibleCoverageRatio, 0),
+    coverageRatio: clampFraction(coverageRatio, 0),
     sourceCounts: Object.keys(safeCoverageStats.sourceCounts || {}).length
       ? safeCoverageStats.sourceCounts
       : derivedSourceCounts,
     primarySubject: safeCoverageStats.primarySubject
       || sanitizeString(fullCardInventory[0]?.title || chunks[0]?.title, 120)
+  };
+}
+
+function buildCapabilityCoverageSummary(fullCardInventory = [], capabilityCoveragePlan = null) {
+  const safePlan = sanitizeCapabilityCoveragePlan(capabilityCoveragePlan);
+  const renderedParentIds = uniqueItems((Array.isArray(fullCardInventory) ? fullCardInventory : [])
+    .map((item) => sanitizeString(item?.parentId, 120))
+    .filter(Boolean));
+  const items = safePlan.items.map((item) => ({
+    capabilityId: item.capabilityId,
+    label: item.label || item.capabilityId,
+    matchedParentCount: item.matchedParentIds.filter((parentId) => renderedParentIds.includes(parentId)).length,
+    targetParentCount: item.matchedParentIds.length,
+    categoryFamilies: item.categoryFamilies,
+    disallowedCategories: item.disallowedCategories
+  }));
+  return {
+    requiredCapabilities: safePlan.requiredCapabilities,
+    disallowedCategories: safePlan.disallowedCategories,
+    items
   };
 }
 
@@ -1545,6 +1733,7 @@ function buildFallbackReportCoverageV3({
   missingReason = '',
   chunks = [],
   parentBriefs = [],
+  categoryDossiers = [],
   coverageStats = null,
   coverageContract = null
 } = {}) {
@@ -1553,9 +1742,14 @@ function buildFallbackReportCoverageV3({
   const cardHighlights = buildCardHighlightsFromChunks(chunks, citationIds);
   const fallbackParentBriefs = sanitizeParentBriefs(parentBriefs, chunks.map((chunk) => chunk.id));
   const derivedParentBriefs = fallbackParentBriefs.length ? fallbackParentBriefs : deriveParentBriefsFromChunks(chunks);
+  const safeCategoryDossiers = sanitizeCategoryDossiers(categoryDossiers);
   const fullCardInventory = mergeCoverageInventoryV3([], derivedParentBriefs, coverageContract, citationIds);
+  const topicAppendix = buildTopicAppendixFromCategoryDossiers(safeCategoryDossiers, derivedParentBriefs, citationIds);
   const derivedInventoryDetails = fullCardInventory.flatMap((item) =>
     (item.detailBullets || []).slice(0, 3).map((detail) => `${item.title}：${detail}`)
+  );
+  const derivedAppendixDetails = topicAppendix.flatMap((group) =>
+    (group.detailItems || []).slice(0, 3).map((detail) => `${group.groupTitle}：${detail}`)
   );
   const derivedGroupDetails = topicGroups.flatMap((group) =>
     (group.detailItems || []).map((item) => `${group.groupTitle}：${item}`)
@@ -1573,13 +1767,14 @@ function buildFallbackReportCoverageV3({
       240
     ),
     recommendedPlan: sanitizeTextArray(
-      [...(sections.recommendedSteps || []), ...derivedInventoryDetails, ...derivedGroupDetails],
+      [...(sections.recommendedSteps || []), ...derivedInventoryDetails, ...derivedAppendixDetails, ...derivedGroupDetails],
       16,
       240
     ),
     fullCardInventory,
+    topicAppendix,
     detailBreakdown: sanitizeTextArray(
-      [...(sections.detailBreakdown || []), ...derivedInventoryDetails, ...derivedGroupDetails],
+      [...(sections.detailBreakdown || []), ...derivedInventoryDetails, ...derivedAppendixDetails, ...derivedGroupDetails],
       24,
       260
     ),
@@ -1599,7 +1794,8 @@ function buildFallbackReportCoverageV3({
     unansweredQuestions: sanitizeTextArray([missingReason, followUpHint].filter(Boolean), 6, 180),
     sectionCitationIds: {
       ...buildDefaultSectionCitationIds(citationIds),
-      fullCardInventory: uniqueItems(fullCardInventory.flatMap((item) => item.citationIds || [])).slice(0, MAX_CHUNKS)
+      fullCardInventory: uniqueItems(fullCardInventory.flatMap((item) => item.citationIds || [])).slice(0, MAX_CHUNKS),
+      topicAppendix: uniqueItems(topicAppendix.flatMap((item) => item.citationIds || [])).slice(0, MAX_CHUNKS)
     }
   };
 }
@@ -1609,6 +1805,7 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
   const safeCoverageContract = sanitizeCoverageContract(options.coverageContract || null);
   const fallbackParentBriefs = sanitizeParentBriefs(options.parentBriefs, chunks.map((chunk) => chunk.id));
   const derivedParentBriefs = fallbackParentBriefs.length ? fallbackParentBriefs : deriveParentBriefsFromChunks(chunks);
+  const safeCategoryDossiers = sanitizeCategoryDossiers(options.categoryDossiers || []);
   const modelInventory = sanitizeInventoryItemsV3(safeReport.fullCardInventory || [], citationIds, 'model');
   const mergedInventory = mergeCoverageInventoryV3(modelInventory, derivedParentBriefs, safeCoverageContract, citationIds);
   const normalized = {
@@ -1619,9 +1816,29 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
       safeReport.coverageSummary || options.coverageStats || null,
       safeCoverageContract
     ),
+    capabilityCoverageSummary: buildCapabilityCoverageSummary(
+      mergedInventory,
+      safeReport.capabilityCoverageSummary || options.capabilityCoveragePlan || null
+    ),
     executiveSummary: sanitizeTextArray(safeReport.executiveSummary, 4, 240),
     recommendedPlan: sanitizeTextArray(safeReport.recommendedPlan, 16, 240),
     fullCardInventory: mergedInventory,
+    topicAppendix: (Array.isArray(safeReport.topicAppendix) ? safeReport.topicAppendix : [])
+      .map((item) => ({
+        groupTitle: sanitizeString(item?.groupTitle, 160),
+        categoryId: sanitizeString(item?.categoryId, 80),
+        summary: sanitizeString(item?.summary, 220),
+        detailItems: sanitizeTextArray(item?.detailItems, 14, 260),
+        sourceMix: uniqueItems((Array.isArray(item?.sourceMix) ? item.sourceMix : [])
+          .map((sourceDetailType) => sanitizeSourceDetailType(sourceDetailType)))
+          .slice(0, 4),
+        citationIds: uniqueItems((Array.isArray(item?.citationIds) ? item.citationIds : [])
+          .map((citationId) => sanitizeString(citationId, 120))
+          .filter((citationId) => citationIds.includes(citationId)))
+          .slice(0, MAX_CHUNKS)
+      }))
+      .filter((item) => item.groupTitle && item.detailItems.length)
+      .slice(0, 16),
     detailBreakdown: sanitizeTextArray(safeReport.detailBreakdown, 24, 260),
     decisionAnalysis: sanitizeTextArray(safeReport.decisionAnalysis, 10, 240),
     risksAndFallbacks: sanitizeTextArray(safeReport.risksAndFallbacks, 12, 240),
@@ -1678,6 +1895,9 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
   if (!normalized.cardHighlights.length) {
     normalized.cardHighlights = buildCardHighlightsFromChunks(chunks, citationIds);
   }
+  if (!normalized.topicAppendix.length) {
+    normalized.topicAppendix = buildTopicAppendixFromCategoryDossiers(safeCategoryDossiers, derivedParentBriefs, citationIds);
+  }
   if (!normalized.fullCardInventory.length) {
     normalized.fullCardInventory = mergeCoverageInventoryV3([], derivedParentBriefs, safeCoverageContract, citationIds);
   } else {
@@ -1702,6 +1922,9 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
   const derivedInventoryDetails = normalized.fullCardInventory.flatMap((item) =>
     (item.detailBullets || []).slice(0, 3).map((detail) => `${item.title}：${detail}`)
   );
+  const derivedAppendixDetails = normalized.topicAppendix.flatMap((item) =>
+    (item.detailItems || []).slice(0, 3).map((detail) => `${item.groupTitle}：${detail}`)
+  );
   const derivedRiskItems = chunks
     .filter((chunk) => ['caution', 'bestTime', 'timingTip', 'whenToUse'].includes(chunk.fieldType))
     .map((chunk) => `${sanitizeString(chunk.title, 120)}：${buildChunkPreview(chunk, 180)}`);
@@ -1715,14 +1938,14 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
   }
   if (!normalized.recommendedPlan.length) {
     normalized.recommendedPlan = sanitizeTextArray(
-      [...(sections.recommendedSteps || []), ...derivedCorePlan, ...derivedInventoryDetails, ...derivedGroupDetails],
+      [...(sections.recommendedSteps || []), ...derivedCorePlan, ...derivedInventoryDetails, ...derivedAppendixDetails, ...derivedGroupDetails],
       16,
       240
     );
   }
   if (!normalized.detailBreakdown.length) {
     normalized.detailBreakdown = sanitizeTextArray(
-      [...(sections.detailBreakdown || []), ...derivedInventoryDetails, ...derivedGroupDetails],
+      [...(sections.detailBreakdown || []), ...derivedInventoryDetails, ...derivedAppendixDetails, ...derivedGroupDetails],
       24,
       260
     );
@@ -1752,10 +1975,16 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
       normalized.fullCardInventory.flatMap((item) => item.citationIds || [])
     ).slice(0, MAX_CHUNKS);
   }
+  if (!Array.isArray(normalized.sectionCitationIds.topicAppendix) || !normalized.sectionCitationIds.topicAppendix.length) {
+    normalized.sectionCitationIds.topicAppendix = uniqueItems(
+      normalized.topicAppendix.flatMap((item) => item.citationIds || [])
+    ).slice(0, MAX_CHUNKS);
+  }
 
   const hasCoreContent = normalized.executiveSummary.length
     || normalized.recommendedPlan.length
     || normalized.fullCardInventory.length
+    || normalized.topicAppendix.length
     || normalized.detailBreakdown.length
     || normalized.decisionAnalysis.length
     || normalized.risksAndFallbacks.length
@@ -1772,6 +2001,7 @@ function normalizeReportObjectCoverageV3(report, citationIds, chunks, answer, se
       missingReason,
       chunks,
       parentBriefs: derivedParentBriefs,
+      categoryDossiers: safeCategoryDossiers,
       coverageStats: options.coverageStats || null,
       coverageContract: safeCoverageContract
     });
@@ -1827,7 +2057,7 @@ function buildCoverageSummaryFromInventoryV3(fullCardInventory = [], chunks = []
     targetParentCount: clampNumber(targetParentCount, 0, MAX_PARENT_BRIEFS, 0),
     renderedParentCount: clampNumber(renderedParentIds.length, 0, MAX_FULL_CARD_INVENTORY, 0),
     backfilledParentCount: clampNumber(backfilledParentCount, 0, MAX_PARENT_BRIEFS, 0),
-    coverageRatio: clampNumber(coverageRatio, 0, 1, 0),
+    coverageRatio: clampFraction(coverageRatio, 0),
     sourceCounts: Object.keys(safeCoverageStats.sourceCounts || {}).length
       ? safeCoverageStats.sourceCounts
       : derivedSourceCounts,
@@ -2213,9 +2443,17 @@ function buildAnalysisPlanSummary(analysisPlan) {
     `intentType: ${analysisPlan.intentType || 'operational-detail'}`,
     `inventoryIntent: ${analysisPlan.inventoryIntent ? 'true' : 'false'}`,
     `coverageMode: ${analysisPlan.coverageMode || 'standard'}`,
+    `breadthProfile: ${analysisPlan.breadthProfile || 'guided-expansion'}`,
+    `answerIntent: ${analysisPlan.answerIntent || 'answer'}`,
     `hardAnchors: ${(analysisPlan.hardAnchors || []).join(', ') || 'none'}`,
     `softModifiers: ${(analysisPlan.softModifiers || []).join(', ') || 'none'}`,
     `subjectClusters: ${(analysisPlan.subjectClusters || []).join(', ') || 'none'}`,
+    `requiredCapabilities: ${(analysisPlan.requiredCapabilities || []).join(', ') || 'none'}`,
+    `disallowedCategories: ${(analysisPlan.disallowedCategories || []).join(', ') || 'none'}`,
+    `preferredClusters: ${(analysisPlan.preferredClusters || []).join(', ') || 'none'}`,
+    `mustCoverCategories: ${(analysisPlan.mustCoverCategories || []).join(', ') || 'none'}`,
+    `mustCoverCapabilities: ${(analysisPlan.mustCoverCapabilities || []).join(', ') || 'none'}`,
+    `expansionReasons: ${(analysisPlan.expansionReasons || []).join(', ') || 'none'}`,
     `activeFacetNames: ${(analysisPlan.activeFacetNames || []).join(', ') || 'none'}`,
     `triggerReasons: ${(analysisPlan.triggerReasons || []).join(', ') || 'none'}`,
     `isComparisonQuery: ${analysisPlan.isComparisonQuery ? 'true' : 'false'}`,
@@ -2329,7 +2567,11 @@ function buildGroundedCoveragePromptV4(query, chunks, responseMode = 'compact', 
 
   const coverageSummary = sanitizeCoverageStats(options.coverageStats);
   const coverageContract = sanitizeCoverageContract(options.coverageContract);
-  const parentBriefs = sanitizeParentBriefs(options.parentBriefs, chunks.map((chunk) => chunk.id));
+  const parentBriefs = sanitizeParentBriefs(options.parentDossiers || options.parentBriefs, chunks.map((chunk) => chunk.id));
+  const primaryEntityParents = sanitizeParentBriefs(options.primaryEntityParents, chunks.map((chunk) => chunk.id));
+  const supportEntityParents = sanitizeParentBriefs(options.supportEntityParents, chunks.map((chunk) => chunk.id));
+  const capabilityCoveragePlan = sanitizeCapabilityCoveragePlan(options.capabilityCoveragePlan);
+  const categoryDossiers = sanitizeCategoryDossiers(options.categoryDossiers || options.categoryCoveragePlan);
   const coverageOutline = buildCoverageOutline(parentBriefs, analysisPlan, chunks, coverageContract);
   const parentBriefDump = parentBriefs.length
     ? parentBriefs.map((item, index) => [
@@ -2339,8 +2581,53 @@ function buildGroundedCoveragePromptV4(query, chunks, responseMode = 'compact', 
       `cardType: ${item.cardType}`,
       `groupLabel: ${item.groupLabel || 'none'}`,
       `sourceLabels: ${(item.sourceLabels || []).join(', ') || 'none'}`,
+      `categoryFamilies: ${(item.categoryFamilies || []).join(', ') || 'none'}`,
       `detailBullets: ${(item.detailBullets || []).join(' | ') || 'none'}`,
       `citationIds: ${(item.citationIds || []).join(', ') || 'none'}`
+    ].join('\n')).join('\n\n')
+    : 'none';
+  const categoryDossierDump = categoryDossiers.length
+    ? categoryDossiers.map((item, index) => [
+      `[category-dossier ${index + 1}]`,
+      `categoryId: ${item.categoryId || 'none'}`,
+      `label: ${item.label || 'none'}`,
+      `parentCount: ${item.parentCount || 0}`,
+      `sourceMix: ${(item.sourceMix || []).join(', ') || 'none'}`,
+      `detailHints: ${(item.detailHints || []).join(' | ') || 'none'}`,
+      `preferredParentIds: ${(item.preferredParentIds || []).join(', ') || 'none'}`
+    ].join('\n')).join('\n\n')
+    : 'none';
+  const primaryEntityDump = primaryEntityParents.length
+    ? primaryEntityParents.map((item, index) => [
+      `[primary-entity ${index + 1}]`,
+      `parentId: ${item.parentId}`,
+      `title: ${item.title}`,
+      `sourceType: ${item.sourceType || 'unknown'}`,
+      `cardType: ${item.cardType}`,
+      `categoryFamilies: ${(item.categoryFamilies || []).join(', ') || 'none'}`,
+      `capabilityTags: ${(item.capabilityTags || []).join(', ') || 'none'}`,
+      `detailBullets: ${(item.detailBullets || []).join(' | ') || 'none'}`
+    ].join('\n')).join('\n\n')
+    : 'none';
+  const supportEntityDump = supportEntityParents.length
+    ? supportEntityParents.map((item, index) => [
+      `[support-entity ${index + 1}]`,
+      `parentId: ${item.parentId}`,
+      `title: ${item.title}`,
+      `sourceType: ${item.sourceType || 'unknown'}`,
+      `cardType: ${item.cardType}`,
+      `supportOfParentIds: ${(item.supportOfParentIds || []).join(', ') || 'none'}`,
+      `detailBullets: ${(item.detailBullets || []).join(' | ') || 'none'}`
+    ].join('\n')).join('\n\n')
+    : 'none';
+  const capabilityCoverageDump = capabilityCoveragePlan.items.length
+    ? capabilityCoveragePlan.items.map((item, index) => [
+      `[capability ${index + 1}]`,
+      `capabilityId: ${item.capabilityId}`,
+      `label: ${item.label || item.capabilityId}`,
+      `matchedParentIds: ${(item.matchedParentIds || []).join(', ') || 'none'}`,
+      `categoryFamilies: ${(item.categoryFamilies || []).join(', ') || 'none'}`,
+      `disallowedCategories: ${(item.disallowedCategories || []).join(', ') || 'none'}`
     ].join('\n')).join('\n\n')
     : 'none';
 
@@ -2351,24 +2638,30 @@ Use only the provided evidence. Do not invent facts.
 This is coverage-first mode:
 1. Hard anchors are the subject. Soft modifiers are organizing hints only.
 2. Prefer coverage over brevity. If multiple parent cards are relevant, include them instead of over-compressing.
-3. Write a rich answer with many bullets and enough detail. When evidence is rich, aim for roughly 2500-5000 Traditional Chinese characters.
+3. Write a rich answer with many bullets and enough detail. When evidence is rich, aim for roughly 3000-6500 Traditional Chinese characters.
 4. After the core answer, produce a fullCardInventory section that covers as many relevant parent cards as possible.
-5. fullCardInventory is the primary inventory layer. topicGroups is the analysis layer.
+5. fullCardInventory is the primary inventory layer. topicAppendix is the deep appendix layer. topicGroups is the shorter analysis layer.
 6. Include floor / deck, timing, services, activities, food, SOP, cautions, community tips, concierge add-ons, and official constraints whenever evidence supports them.
 7. If a statement is synthesized across multiple cards rather than stated by one card, explicitly label it as 綜合判斷.
 8. Keep official / concierge / community / general differences separated inside sourceComparison.
-9. Use the coverage outline, coverage contract, and parent briefs as a must-cover checklist. If a parent brief is inside mustRenderParentIds, it should appear in fullCardInventory unless evidence is clearly too weak.
-10. For venue-based theatre questions, list each relevant show or theatre support card separately instead of collapsing them into one vague sentence.
+9. Use the coverage outline, coverage contract, and parent briefs as a must-cover checklist. If a parent brief is inside mustRenderVisibleParentIds, it must appear in fullCardInventory. If it is inside mustRenderDerivedParentIds, it should appear unless evidence is clearly too weak.
+10. If preferredSupportParentIds include relevant schedule segments, keep those schedule details in the answer as supporting context instead of dropping them. Facilities / decks / playbooks stay first, but matched schedule evidence should still be summarized clearly.
+11. Use category dossiers to make sure the answer includes broad category coverage, not just many cards from one narrow slice.
+12. For venue-based theatre questions, list each relevant show or theatre support card separately instead of collapsing them into one vague sentence.
+13. primaryEntityParents are the main answer body. supportEntityParents are attached context only.
+14. If requiredCapabilities exist, stay inside that capability family for the primary answer body. Do not let unrelated venue or show cards replace the main subject.
+15. Schedule or support cards may add timing context, but they must stay attached to matching primary entities instead of becoming the dominant inventory.
 
 Required report object:
 - headline
 - coverageSummary
 - executiveSummary: 2-4 bullets
-- recommendedPlan: 6-12 bullets
-- fullCardInventory: 8-20 items when evidence is rich
-- detailBreakdown: 8-24 bullets
+- recommendedPlan: 6-14 bullets
+- fullCardInventory: 8-24 items when evidence is rich
+- topicAppendix: 4-16 groups when evidence is rich
+- detailBreakdown: 10-28 bullets
 - decisionAnalysis: 4-8 bullets
-- risksAndFallbacks: 4-10 bullets
+- risksAndFallbacks: 4-12 bullets
 - topicGroups: 6-20 groups when evidence is rich
 - sourceComparison: 2-6 items when sources differ
 - unansweredQuestions: only if there is a real gap
@@ -2379,8 +2672,17 @@ For each fullCardInventory item return:
 - title
 - cardType
 - groupLabel
+- categoryFamilies
 - sourceLabels
 - detailBullets: 4-10 bullets
+- citationIds
+
+For each topicAppendix item return:
+- groupTitle
+- categoryId
+- summary
+- detailItems: 4-14 bullets
+- sourceMix
 - citationIds
 
 For each topicGroups item return:
@@ -2407,6 +2709,8 @@ coverage summary:
 - selectedParentCount: ${coverageSummary.selectedParentCount || 0}
 - selectedChunkCount: ${coverageSummary.selectedChunkCount || 0}
 - targetParentCount: ${coverageSummary.targetParentCount || 0}
+- visibleTargetCount: ${coverageSummary.visibleTargetCount || 0}
+- visibleRenderedCount: ${coverageSummary.visibleRenderedCount || 0}
 - primarySubject: ${coverageSummary.primarySubject || 'none'}
 - sourceCounts: ${Object.entries(coverageSummary.sourceCounts || {}).map(([key, value]) => `${key}:${value}`).join(', ') || 'none'}
 
@@ -2415,7 +2719,14 @@ coverage contract:
 - targetCoverageCount: ${coverageContract.targetCoverageCount || 0}
 - minimumCoverageRatio: ${coverageContract.minimumCoverageRatio || 0}
 - mustRenderParentIds: ${(coverageContract.mustRenderParentIds || []).join(', ') || 'none'}
+- mustRenderVisibleParentIds: ${(coverageContract.mustRenderVisibleParentIds || []).join(', ') || 'none'}
+- mustRenderDerivedParentIds: ${(coverageContract.mustRenderDerivedParentIds || []).join(', ') || 'none'}
+- preferredSupportParentIds: ${(coverageContract.preferredSupportParentIds || []).join(', ') || 'none'}
+- targetVisibleCoverageCount: ${coverageContract.targetVisibleCoverageCount || 0}
+- minimumVisibleCoverageRatio: ${coverageContract.minimumVisibleCoverageRatio || 0}
 - preferredParentIds: ${(coverageContract.preferredParentIds || []).join(', ') || 'none'}
+- mustCoverCategories: ${(coverageContract.mustCoverCategories || []).join(', ') || 'none'}
+- preferredClusters: ${(coverageContract.preferredClusters || []).join(', ') || 'none'}
 - relevantSourceTypes: ${(coverageContract.relevantSourceTypes || []).join(', ') || 'none'}
 - coverageReason: ${coverageContract.coverageReason || 'none'}
 
@@ -2427,6 +2738,18 @@ ${(coverageOutline.inventoryNotes || []).map((item) => `  - ${item}`).join('\n')
 
 parent briefs:
 ${parentBriefDump}
+
+primary entity parents:
+${primaryEntityDump}
+
+support entity parents:
+${supportEntityDump}
+
+capability coverage plan:
+${capabilityCoverageDump}
+
+category dossiers:
+${categoryDossierDump}
 
 ${reportInstructions}
 
@@ -2887,6 +3210,10 @@ function buildGroundedSchemaV2() {
               targetParentCount: { type: 'NUMBER' },
               renderedParentCount: { type: 'NUMBER' },
               backfilledParentCount: { type: 'NUMBER' },
+              visibleTargetCount: { type: 'NUMBER' },
+              visibleRenderedCount: { type: 'NUMBER' },
+              visibleBackfilledCount: { type: 'NUMBER' },
+              visibleCoverageRatio: { type: 'NUMBER' },
               coverageRatio: { type: 'NUMBER' },
               sourceCounts: { type: 'OBJECT' },
               primarySubject: { type: 'STRING' }
@@ -2919,6 +3246,12 @@ function buildGroundedSchemaV2() {
                   minItems: 0,
                   maxItems: 5
                 },
+                categoryFamilies: {
+                  type: 'ARRAY',
+                  items: { type: 'STRING' },
+                  minItems: 0,
+                  maxItems: 6
+                },
                 detailBullets: {
                   type: 'ARRAY',
                   items: { type: 'STRING' },
@@ -2926,15 +3259,49 @@ function buildGroundedSchemaV2() {
                   maxItems: 10
                 },
                 citationIds: citationIdArray,
+                coverageTier: {
+                  type: 'STRING',
+                  enum: ['visible', 'derived', 'support']
+                },
                 renderOrigin: {
                   type: 'STRING',
-                  enum: ['model', 'backfill']
+                  enum: ['model', 'backfill', 'visible-backfill', 'derived-backfill', 'support-backfill']
                 }
               },
               required: ['parentId', 'title', 'cardType', 'groupLabel', 'sourceLabels', 'detailBullets', 'citationIds']
             },
             minItems: 0,
             maxItems: MAX_FULL_CARD_INVENTORY
+          },
+          topicAppendix: {
+            type: 'ARRAY',
+            items: {
+              type: 'OBJECT',
+              properties: {
+                groupTitle: { type: 'STRING' },
+                categoryId: { type: 'STRING' },
+                summary: { type: 'STRING' },
+                detailItems: {
+                  type: 'ARRAY',
+                  items: { type: 'STRING' },
+                  minItems: 0,
+                  maxItems: 14
+                },
+                sourceMix: {
+                  type: 'ARRAY',
+                  items: {
+                    type: 'STRING',
+                    enum: ALLOWED_SOURCE_DETAIL_TYPES
+                  },
+                  minItems: 0,
+                  maxItems: 4
+                },
+                citationIds: citationIdArray
+              },
+              required: ['groupTitle', 'categoryId', 'summary', 'detailItems', 'sourceMix', 'citationIds']
+            },
+            minItems: 0,
+            maxItems: 16
           },
           detailBreakdown: {
             type: 'ARRAY',
@@ -3049,6 +3416,7 @@ function buildGroundedSchemaV2() {
               executiveSummary: citationIdArray,
               recommendedPlan: citationIdArray,
               fullCardInventory: citationIdArray,
+              topicAppendix: citationIdArray,
               detailBreakdown: citationIdArray,
               decisionAnalysis: citationIdArray,
               risksAndFallbacks: citationIdArray,
@@ -3262,6 +3630,26 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
       }))
       .filter((entry) => entry.key && entry.triggers.length)
       .slice(0, 16),
+    relatedEdges: (Array.isArray(safeTaxonomy.relatedEdges) ? safeTaxonomy.relatedEdges : [])
+      .map((entry) => ({
+        source: sanitizeString(entry?.source, 80),
+        target: sanitizeString(entry?.target, 80),
+        relation: sanitizeString(entry?.relation, 60),
+        terms: sanitizeTerms(entry?.terms, 12, 80)
+      }))
+      .filter((entry) => entry.source && entry.target)
+      .slice(0, 24),
+    capabilityProfiles: (Array.isArray(safeTaxonomy.capabilityProfiles) ? safeTaxonomy.capabilityProfiles : [])
+      .map((entry) => ({
+        id: sanitizeString(entry?.id || entry?.label, 40),
+        label: sanitizeString(entry?.label || entry?.id, 80),
+        terms: sanitizeTerms([entry?.label, entry?.id, ...(Array.isArray(entry?.terms) ? entry.terms : [])], 20, 80),
+        categoryFamilies: sanitizeTerms(entry?.categoryFamilies, 10, 80),
+        preferredSourceTypes: sanitizeTerms(entry?.preferredSourceTypes, 6, 24).map(sanitizeSourceType),
+        disallowedCategories: sanitizeTerms(entry?.disallowedCategories, 10, 80)
+      }))
+      .filter((entry) => entry.id && entry.terms.length)
+      .slice(0, 16),
     supportedSourceTypes: sanitizeTerms(safeTaxonomy.supportedSourceTypes, 6, 24).map(sanitizeSourceType)
   };
 }
@@ -3323,6 +3711,21 @@ function findCategoryFamilyByLabel(taxonomy, label) {
   ) || null;
 }
 
+function findCapabilityProfileById(taxonomy, capabilityId) {
+  const normalizedCapabilityId = normalizeComparableQueryText(capabilityId);
+  return (taxonomy.capabilityProfiles || []).find((entry) =>
+    normalizeComparableQueryText(entry.id) === normalizedCapabilityId
+      || normalizeComparableQueryText(entry.label) === normalizedCapabilityId
+  ) || null;
+}
+
+function detectCapabilityProfilesForQuery(taxonomy, normalizedQuery) {
+  return uniqueItems((taxonomy.capabilityProfiles || [])
+    .filter((entry) => entry.terms.some((term) => queryIncludesTerm(normalizedQuery, term)))
+    .map((entry) => entry.id))
+    .slice(0, 6);
+}
+
 function findClusterRelationByKey(taxonomy, key) {
   const normalizedKey = normalizeComparableQueryText(key);
   return taxonomy.clusterRelations.find((entry) =>
@@ -3364,6 +3767,20 @@ function expandClusterTermsFromKeys(taxonomy, clusterKeys = []) {
   }).map((item) => sanitizeString(item, 80)).filter(Boolean)).slice(0, 24);
 }
 
+function expandRelatedEdgeTerms(taxonomy, terms = []) {
+  const normalizedTerms = uniqueItems((Array.isArray(terms) ? terms : [])
+    .map((item) => normalizeComparableQueryText(item))
+    .filter(Boolean));
+  return uniqueItems((taxonomy.relatedEdges || []).flatMap((entry) => {
+    const source = normalizeComparableQueryText(entry.source);
+    const target = normalizeComparableQueryText(entry.target);
+    if (!normalizedTerms.includes(source) && !normalizedTerms.includes(target)) {
+      return [];
+    }
+    return [entry.source, entry.target, ...(entry.terms || [])];
+  }).map((item) => sanitizeString(item, 80)).filter(Boolean)).slice(0, 24);
+}
+
 function buildQueryInterpretationFallback(query, taxonomyInput = null) {
   const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
   const normalizedQuery = normalizeComparableQueryText(query);
@@ -3391,22 +3808,43 @@ function buildQueryInterpretationFallback(query, taxonomyInput = null) {
     ...clusterKeys.flatMap((item) => findClusterRelationByKey(taxonomy, item)?.relatedCategories || [])
   ]).slice(0, 12);
   const expandedAliases = uniqueItems([
-    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item])
-  ]).slice(0, 20);
+    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item]),
+    ...expandRelatedEdgeTerms(taxonomy, [...canonicalEntities, ...genericClasses, ...expandedCategories])
+  ]).slice(0, 24);
   const coverageHints = detectCoverageHintsForQuery(normalizedQuery);
+  const requiredCapabilities = detectCapabilityProfilesForQuery(taxonomy, normalizedQuery);
+  const disallowedCategories = uniqueItems(requiredCapabilities.flatMap((capabilityId) =>
+    findCapabilityProfileById(taxonomy, capabilityId)?.disallowedCategories || []
+  )).slice(0, 10);
   const negativeTerms = detectNegativeTermsForQuery(normalizedQuery);
+  const breadthProfile = coverageHints.includes('all-details') || coverageHints.includes('inventory')
+    ? 'maximum-expansion'
+    : (genericClasses.length || expandedCategories.length ? 'broad-expansion' : 'guided-expansion');
+  const answerIntent = coverageHints.includes('comparison')
+    ? 'comparison'
+    : ((coverageHints.includes('inventory') || coverageHints.includes('all-details') || !canonicalEntities.length) ? 'inventory' : 'answer');
+  const expansionReasons = uniqueItems([
+    ...genericClasses.slice(0, 4).map((item) => `泛稱展開：${item}`),
+    ...expandedCategories.slice(0, 4).map((item) => `類別補全：${item}`),
+    ...clusterKeys.slice(0, 4).map((item) => `主題群組：${item}`)
+  ]).slice(0, 10);
 
   return {
     canonicalQuery: sanitizeString(query, 160),
     literalAnchors,
     canonicalEntities,
     genericClasses,
+    requiredCapabilities,
     expandedAliases,
     expandedCategories,
     expandedCategoryTerms: expandCategoryTermsFromLabels(taxonomy, expandedCategories),
     clusterKeys,
     clusterExpansions: expandClusterTermsFromKeys(taxonomy, clusterKeys),
     coverageHints,
+    disallowedCategories,
+    answerIntent,
+    breadthProfile,
+    expansionReasons,
     negativeTerms,
     confidence: canonicalEntities.length
       ? 'high'
@@ -3437,6 +3875,12 @@ function buildQueryInterpretationSchema() {
         minItems: 0,
         maxItems: 8
       },
+      requiredCapabilities: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 6
+      },
       expandedAliases: {
         type: 'ARRAY',
         items: { type: 'STRING' },
@@ -3464,6 +3908,20 @@ function buildQueryInterpretationSchema() {
         minItems: 0,
         maxItems: 6
       },
+      disallowedCategories: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 10
+      },
+      answerIntent: { type: 'STRING' },
+      breadthProfile: { type: 'STRING' },
+      expansionReasons: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 10
+      },
       negativeTerms: {
         type: 'ARRAY',
         items: { type: 'STRING' },
@@ -3480,10 +3938,15 @@ function buildQueryInterpretationSchema() {
       'literalAnchors',
       'canonicalEntities',
       'genericClasses',
+      'requiredCapabilities',
       'expandedAliases',
       'expandedCategories',
       'clusterExpansions',
       'coverageHints',
+      'disallowedCategories',
+      'answerIntent',
+      'breadthProfile',
+      'expansionReasons',
       'negativeTerms',
       'confidence'
     ]
@@ -3501,6 +3964,9 @@ function buildQueryInterpretationPrompt(query, taxonomyInput = null) {
   const clusterDump = taxonomy.clusterRelations
     .map((entry) => `- ${entry.key}: triggers=${entry.triggers.join(' / ')} | related=${[...entry.relatedEntities, ...entry.relatedCategories, ...entry.relatedTerms].join(' / ')}`)
     .join('\n');
+  const relatedEdgeDump = (taxonomy.relatedEdges || [])
+    .map((entry) => `- ${entry.source} -> ${entry.target}: ${entry.relation || 'related'} | ${entry.terms.join(' / ')}`)
+    .join('\n');
 
   return `你是站內搜尋的查詢解譯助手，任務是把自然語言問題轉成可檢索的語意輪廓，不直接回答問題。
 
@@ -3513,8 +3979,10 @@ function buildQueryInterpretationPrompt(query, taxonomyInput = null) {
 6. expandedCategories 要補泛稱展開後的重要類別，但不能亂加太多無關分類。
 7. clusterExpansions 要補同主題常一起檢索的群組詞。
 8. coverageHints 只能用：all-details / all-processes / inventory / risks / comparison。
-9. negativeTerms 只保留明確排除詞，例如「不要」「不是」「排除」。
-10. confidence 只能是 high / medium / low。
+9. breadthProfile 只能描述展開力度，例如 guided-expansion / broad-expansion / maximum-expansion。
+10. expansionReasons 要用簡短片語說明為什麼要擴張，例如「泛稱展開：設施」「同主題群：劇院體驗群」。
+11. negativeTerms 只保留明確排除詞，例如「不要」「不是」「排除」。
+12. confidence 只能是 high / medium / low。
 
 taxonomy aliases:
 ${aliasDump || '- 無'}
@@ -3525,7 +3993,76 @@ ${classDump || '- 無'}
 taxonomy clusters:
 ${clusterDump || '- 無'}
 
+taxonomy related edges:
+${relatedEdgeDump || '- 無'}
+
 使用者問題：
+${query}`;
+}
+
+function buildQueryInterpretationPromptV3(query, taxonomyInput = null) {
+  const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
+  const aliasDump = taxonomy.aliases
+    .map((entry) => `- ${entry.canonical}: ${entry.terms.join(' / ')}`)
+    .join('\n');
+  const classDump = taxonomy.genericClasses
+    .map((entry) => `- ${entry.canonical}: ${entry.terms.join(' / ')} -> ${entry.expandsTo.join(' / ')}`)
+    .join('\n');
+  const clusterDump = taxonomy.clusterRelations
+    .map((entry) => `- ${entry.key}: triggers=${entry.triggers.join(' / ')} | related=${[...entry.relatedEntities, ...entry.relatedCategories, ...entry.relatedTerms].join(' / ')}`)
+    .join('\n');
+  const relatedEdgeDump = (taxonomy.relatedEdges || [])
+    .map((entry) => `- ${entry.source} -> ${entry.target}: ${entry.relation || 'related'} | ${entry.terms.join(' / ')}`)
+    .join('\n');
+  const capabilityDump = (taxonomy.capabilityProfiles || [])
+    .map((entry) => `- ${entry.id}: ${entry.terms.join(' / ')} | categories=${entry.categoryFamilies.join(' / ') || 'none'} | disallow=${entry.disallowedCategories.join(' / ') || 'none'}`)
+    .join('\n');
+
+  return `You are a query planner for a cruise guide website.
+Return JSON only. Do not answer the user question.
+
+Extract and normalize:
+- canonicalQuery
+- literalAnchors
+- canonicalEntities
+- genericClasses
+- requiredCapabilities
+- expandedAliases
+- expandedCategories
+- clusterExpansions
+- coverageHints
+- disallowedCategories
+- answerIntent
+- breadthProfile
+- expansionReasons
+- negativeTerms
+- confidence
+
+Rules:
+1. Keep explicit entities, time, negation, and comparison grounded in the query.
+2. Treat words like process, details, notes, worth-it, and should-I as coverage hints, not as hard search filters.
+3. If the query asks what facilities can do something, convert that something into requiredCapabilities.
+4. If a capability implies exclusions, list them in disallowedCategories.
+5. Use the taxonomy only as the allowed expansion boundary.
+6. answerIntent should be one of: answer, inventory, comparison.
+7. breadthProfile should be one of: guided-expansion, broad-expansion, maximum-expansion.
+
+taxonomy aliases:
+${aliasDump || '- none'}
+
+taxonomy generic classes:
+${classDump || '- none'}
+
+taxonomy clusters:
+${clusterDump || '- none'}
+
+taxonomy related edges:
+${relatedEdgeDump || '- none'}
+
+taxonomy capability profiles:
+${capabilityDump || '- none'}
+
+query:
 ${query}`;
 }
 
@@ -3565,18 +4102,39 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
   const expandedAliases = uniqueItems([
     ...fallback.expandedAliases,
     ...sanitizeInterpretationArray(safeOutput.expandedAliases, 20, 80),
-    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item])
-  ]).slice(0, 24);
+    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item]),
+    ...expandRelatedEdgeTerms(taxonomy, [...canonicalEntities, ...genericClasses, ...expandedCategories])
+  ]).slice(0, 28);
   const coverageHints = uniqueItems([
     ...fallback.coverageHints,
     ...sanitizeInterpretationArray(safeOutput.coverageHints, 6, 24)
       .map((item) => normalizeComparableQueryText(item))
       .filter((item) => ['all-details', 'all-processes', 'inventory', 'risks', 'comparison'].includes(item))
   ]).slice(0, 6);
+  const requiredCapabilities = uniqueItems([
+    ...fallback.requiredCapabilities,
+    ...sanitizeInterpretationArray(safeOutput.requiredCapabilities, 6, 40)
+      .map((item) => findCapabilityProfileById(taxonomy, item)?.id || sanitizeString(item, 40))
+  ]).slice(0, 6);
+  const disallowedCategories = uniqueItems([
+    ...fallback.disallowedCategories,
+    ...sanitizeInterpretationArray(safeOutput.disallowedCategories, 10, 80),
+    ...requiredCapabilities.flatMap((capabilityId) => findCapabilityProfileById(taxonomy, capabilityId)?.disallowedCategories || [])
+  ]).slice(0, 10);
   const negativeTerms = uniqueItems([
     ...fallback.negativeTerms,
     ...sanitizeInterpretationArray(safeOutput.negativeTerms, 6, 60)
   ]).slice(0, 6);
+  const breadthProfile = sanitizeString(safeOutput?.breadthProfile, 40)
+    || (coverageHints.includes('all-details') || coverageHints.includes('inventory')
+      ? 'maximum-expansion'
+      : (genericClasses.length || expandedCategories.length ? 'broad-expansion' : 'guided-expansion'));
+  const expansionReasons = uniqueItems([
+    ...sanitizeInterpretationArray(safeOutput?.expansionReasons, 10, 120),
+    ...genericClasses.slice(0, 4).map((item) => `泛稱展開：${item}`),
+    ...expandedCategories.slice(0, 4).map((item) => `類別補全：${item}`),
+    ...clusterKeys.slice(0, 4).map((item) => `主題群組：${item}`)
+  ]).slice(0, 10);
 
   return {
     canonicalQuery: sanitizeString(safeOutput.canonicalQuery || fallback.canonicalQuery || query, 160),
@@ -3586,6 +4144,7 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
     ]).slice(0, 12),
     canonicalEntities,
     genericClasses,
+    requiredCapabilities,
     expandedAliases,
     expandedCategories,
     clusterExpansions: uniqueItems([
@@ -3594,6 +4153,10 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
       ...expandClusterTermsFromKeys(taxonomy, clusterKeys)
     ]).slice(0, 24),
     coverageHints,
+    disallowedCategories,
+    answerIntent: sanitizeString(safeOutput?.answerIntent, 24).toLowerCase() || fallback.answerIntent || 'answer',
+    breadthProfile,
+    expansionReasons,
     negativeTerms,
     confidence: safeOutput?.confidence === 'high'
       ? 'high'
@@ -3631,14 +4194,14 @@ async function callGemini(env, mode, query, chunks, options = {}) {
 
   const model = String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
   const isRewriteMode = mode === 'query_rewrite_v1';
-  const isInterpreterMode = mode === 'query_interpretation_v1';
+  const isInterpreterMode = mode === 'query_interpretation_v1' || mode === 'query_interpretation_v2' || mode === 'query_interpretation_v3';
   const schema = isRewriteMode
     ? buildRewriteSchema()
     : (isInterpreterMode ? buildQueryInterpretationSchema() : buildGroundedSchemaV2());
   const prompt = isRewriteMode
     ? buildRewritePrompt(query, chunks)
     : (isInterpreterMode
-      ? buildQueryInterpretationPrompt(query, options.taxonomy || null)
+      ? buildQueryInterpretationPromptV3(query, options.taxonomy || null)
       : buildGroundedCoveragePromptV4(query, chunks, options.responseMode || 'compact', options.analysisPlan || null, options));
 
   const response = await fetch(
@@ -3657,7 +4220,13 @@ async function callGemini(env, mode, query, chunks, options = {}) {
         ],
         generationConfig: {
           temperature: isRewriteMode ? 0.2 : (isInterpreterMode ? 0.15 : 0.12),
-          maxOutputTokens: isRewriteMode ? 500 : (isInterpreterMode ? 900 : (options.responseMode === 'report' ? 6200 : 1400)),
+          maxOutputTokens: isRewriteMode
+            ? 500
+            : (isInterpreterMode
+              ? 1400
+              : (options.responseMode === 'report'
+                ? (options.answerDepthMode === 'exhaustive' ? 7800 : 6800)
+                : 1600)),
           responseMimeType: 'application/json',
           responseSchema: schema
         }
@@ -3757,6 +4326,10 @@ function finalizeGroundedAnswer(modelOutput, chunks, query, responseMode = 'comp
       payload.missingReason,
       {
         parentBriefs: options.parentBriefs || [],
+        primaryEntityParents: options.primaryEntityParents || [],
+        supportEntityParents: options.supportEntityParents || [],
+        capabilityCoveragePlan: options.capabilityCoveragePlan || null,
+        categoryDossiers: options.categoryDossiers || [],
         coverageStats: options.coverageStats || null,
         coverageContract: options.coverageContract || null
       }
@@ -3768,6 +4341,10 @@ function finalizeGroundedAnswer(modelOutput, chunks, query, responseMode = 'comp
   } else if (!payload.bullets.length && payload.report?.fullCardInventory?.length) {
     payload.bullets = payload.report.fullCardInventory
       .flatMap((item) => item.detailBullets || [])
+      .slice(0, 12);
+  } else if (!payload.bullets.length && payload.report?.topicAppendix?.length) {
+    payload.bullets = payload.report.topicAppendix
+      .flatMap((item) => item.detailItems || [])
       .slice(0, 12);
   } else if (!payload.bullets.length && payload.report?.topicGroups?.length) {
     payload.bullets = payload.report.topicGroups
@@ -3831,8 +4408,10 @@ export default {
     const query = normalizeQuery(body?.query).slice(0, MAX_QUERY_LENGTH);
     const mode = body?.mode === 'query_rewrite_v1'
       ? 'query_rewrite_v1'
-      : (body?.mode === 'query_interpretation_v1' ? 'query_interpretation_v1' : 'grounded_qa_v1');
-    const responseMode = mode === 'query_rewrite_v1' || mode === 'query_interpretation_v1'
+      : ((body?.mode === 'query_interpretation_v1' || body?.mode === 'query_interpretation_v2' || body?.mode === 'query_interpretation_v3')
+        ? 'query_interpretation_v3'
+        : 'grounded_qa_v1');
+    const responseMode = mode === 'query_rewrite_v1' || mode === 'query_interpretation_v3'
       ? 'compact'
       : sanitizeResponseMode(body?.responseMode);
     const taxonomy = sanitizeQueryTaxonomy(body?.taxonomy);
@@ -3844,19 +4423,30 @@ export default {
         : (responseMode === 'report' ? MAX_CHUNKS : COMPACT_MAX_CHUNKS)
     );
     const mustRenderParents = sanitizeParentBriefs(body?.mustRenderParents, chunks.map((chunk) => chunk.id));
+    const mustRenderVisibleParents = sanitizeParentBriefs(body?.mustRenderVisibleParents, chunks.map((chunk) => chunk.id))
+      .map((item) => ({ ...item, coverageTier: 'visible' }));
+    const mustRenderDerivedParents = sanitizeParentBriefs(body?.mustRenderDerivedParents, chunks.map((chunk) => chunk.id))
+      .map((item) => ({ ...item, coverageTier: 'derived' }));
     const preferredRenderParents = sanitizeParentBriefs(body?.preferredRenderParents, chunks.map((chunk) => chunk.id));
-    const requestedParentBriefs = sanitizeParentBriefs(body?.parentBriefs, chunks.map((chunk) => chunk.id));
+    const preferredSupportParents = sanitizeParentBriefs(body?.preferredSupportParents, chunks.map((chunk) => chunk.id))
+      .map((item) => ({ ...item, coverageTier: 'support' }));
+    const requestedParentBriefs = sanitizeParentBriefs(body?.parentDossiers || body?.parentBriefs, chunks.map((chunk) => chunk.id));
     const parentBriefMap = new Map();
-    [...mustRenderParents, ...requestedParentBriefs, ...preferredRenderParents].forEach((item) => {
+    [...mustRenderVisibleParents, ...mustRenderDerivedParents, ...mustRenderParents, ...requestedParentBriefs, ...preferredRenderParents, ...preferredSupportParents].forEach((item) => {
       if (item?.parentId && !parentBriefMap.has(item.parentId)) {
         parentBriefMap.set(item.parentId, item);
       }
     });
     const parentBriefs = Array.from(parentBriefMap.values()).slice(0, MAX_PARENT_BRIEFS);
+    const categoryDossiers = sanitizeCategoryDossiers(body?.categoryDossiers || body?.categoryCoveragePlan);
+    const primaryEntityParents = sanitizeParentBriefs(body?.primaryEntityParents, chunks.map((chunk) => chunk.id));
+    const supportEntityParents = sanitizeParentBriefs(body?.supportEntityParents, chunks.map((chunk) => chunk.id));
+    const capabilityCoveragePlan = sanitizeCapabilityCoveragePlan(body?.capabilityCoveragePlan);
     const coverageContract = sanitizeCoverageContract(body?.coverageContract);
     const coverageStats = sanitizeCoverageStats(body?.coverageStats);
+    const answerDepthMode = sanitizeString(body?.answerDepthMode, 24) === 'exhaustive' ? 'exhaustive' : 'broad';
 
-    if (mode === 'query_interpretation_v1') {
+    if (mode === 'query_interpretation_v3') {
       if (getQuerySignalLength(query) < 2) {
         return jsonResponse(buildQueryInterpretationFallback(query, taxonomy));
       }
@@ -3907,6 +4497,13 @@ export default {
         analysisPlan,
         taxonomy,
         parentBriefs,
+        parentDossiers: parentBriefs,
+        primaryEntityParents,
+        supportEntityParents,
+        capabilityCoveragePlan,
+        categoryCoveragePlan: categoryDossiers,
+        categoryDossiers,
+        answerDepthMode,
         coverageStats,
         coverageContract
       });
@@ -3916,6 +4513,11 @@ export default {
 
       return jsonResponse(finalizeGroundedAnswer(modelOutput, chunks, query, responseMode, {
         parentBriefs,
+        categoryDossiers,
+        primaryEntityParents,
+        supportEntityParents,
+        capabilityCoveragePlan,
+        answerDepthMode,
         coverageStats,
         coverageContract
       }));

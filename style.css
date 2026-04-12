@@ -1885,6 +1885,11 @@ body.search-open {
     letter-spacing: 0.02em;
 }
 
+.search-ai-source-chip.subtle {
+    background: rgba(255, 255, 255, 0.08);
+    opacity: 0.88;
+}
+
 .search-ai-card-highlights {
     display: grid;
     gap: 12px;

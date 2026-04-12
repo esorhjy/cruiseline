@@ -581,8 +581,22 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registered!'))
+                const hadController = Boolean(navigator.serviceWorker.controller);
+                let hasReloadedForUpdate = false;
+
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!hadController || hasReloadedForUpdate) {
+                        return;
+                    }
+                    hasReloadedForUpdate = true;
+                    window.location.reload();
+                });
+
+                navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+                    .then(reg => {
+                        reg.update().catch(() => null);
+                        console.log('Service Worker registered!');
+                    })
                     .catch(err => console.log('Service Worker registration failed: ', err));
             });
         }
