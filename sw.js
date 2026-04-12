@@ -4,6 +4,7 @@ const CORE_ASSETS_TO_CACHE = [
   'index.html',
   'style.css',
   'script.js',
+  'ai-query-taxonomy.js',
   'data.js',
   'manifest.json',
   '1772539078755.png',

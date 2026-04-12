@@ -50,6 +50,7 @@
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
     const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
     const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
+    const aiQueryTaxonomy = normalizeAiQueryTaxonomy(window.AI_QUERY_TAXONOMY || {});
     const AI_SEARCH_MIN_LENGTH = 6;
     const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
     const AI_REWRITE_MAX_ATTEMPTS = 1;
@@ -62,7 +63,8 @@
     const AI_REPORT_RANKED_POOL_LIMIT = 140;
     const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 20;
     const AI_RESULT_HIGHLIGHT_LIMIT = 4;
-    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v6';
+    const AI_INTERPRETATION_TAG_LIMIT = 6;
+    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v7';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
@@ -1001,7 +1003,7 @@
 
     function deriveContextualKeywords(text) {
         const normalized = normalizeSearchText(text);
-        const keywords = [];
+        const keywords = collectTaxonomyContextualTerms(normalized);
 
         if (!normalized) return keywords;
 
@@ -1036,6 +1038,537 @@
         return stripHtmlTags(String(value || ''))
             .replace(/\s+/g, ' ')
             .trim();
+    }
+
+    function sanitizeSearchTextArray(items = [], maxItems = 8, maxLength = 80) {
+        return uniqueItems((Array.isArray(items) ? items : [])
+            .map(item => compactSearchText(item).slice(0, maxLength))
+            .filter(Boolean))
+            .slice(0, maxItems);
+    }
+
+    function normalizeAiQueryTaxonomy(rawTaxonomy = {}) {
+        const rawAliases = Array.isArray(rawTaxonomy.aliases) ? rawTaxonomy.aliases : [];
+        const rawGenericClasses = Array.isArray(rawTaxonomy.genericClasses) ? rawTaxonomy.genericClasses : [];
+        const rawCategoryFamilies = Array.isArray(rawTaxonomy.categoryFamilies) ? rawTaxonomy.categoryFamilies : [];
+        const rawClusterRelations = Array.isArray(rawTaxonomy.clusterRelations) ? rawTaxonomy.clusterRelations : [];
+
+        const aliases = rawAliases
+            .map(entry => {
+                const canonical = compactSearchText(entry?.canonical);
+                const terms = uniqueItems([canonical, ...(Array.isArray(entry?.terms) ? entry.terms : [])]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const normalizedTerms = uniqueItems(terms
+                    .map(term => normalizeSearchText(term))
+                    .filter(Boolean));
+                return canonical && normalizedTerms.length
+                    ? {
+                        canonical,
+                        terms,
+                        normalizedCanonical: normalizeSearchText(canonical),
+                        normalizedTerms
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
+        const genericClasses = rawGenericClasses
+            .map(entry => {
+                const canonical = compactSearchText(entry?.canonical);
+                const terms = uniqueItems([canonical, ...(Array.isArray(entry?.terms) ? entry.terms : [])]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const expandsTo = uniqueItems((Array.isArray(entry?.expandsTo) ? entry.expandsTo : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const normalizedTerms = uniqueItems(terms
+                    .map(term => normalizeSearchText(term))
+                    .filter(Boolean));
+                return canonical && normalizedTerms.length
+                    ? {
+                        canonical,
+                        terms,
+                        expandsTo,
+                        normalizedCanonical: normalizeSearchText(canonical),
+                        normalizedTerms
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
+        const categoryFamilies = rawCategoryFamilies
+            .map(entry => {
+                const id = compactSearchText(entry?.id) || compactSearchText(entry?.label);
+                const label = compactSearchText(entry?.label) || compactSearchText(entry?.id);
+                const terms = uniqueItems([label, id, ...(Array.isArray(entry?.terms) ? entry.terms : [])]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const keywords = uniqueItems([...(Array.isArray(entry?.keywords) ? entry.keywords : []), ...terms]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const normalizedTerms = uniqueItems(terms
+                    .map(term => normalizeSearchText(term))
+                    .filter(Boolean));
+                return label && normalizedTerms.length
+                    ? {
+                        id: id || label,
+                        label,
+                        terms,
+                        keywords,
+                        normalizedId: normalizeSearchText(id || label),
+                        normalizedLabel: normalizeSearchText(label),
+                        normalizedTerms
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
+        const clusterRelations = rawClusterRelations
+            .map(entry => {
+                const key = compactSearchText(entry?.key) || compactSearchText(entry?.label);
+                const label = compactSearchText(entry?.label) || compactSearchText(entry?.key);
+                const triggers = uniqueItems([label, ...(Array.isArray(entry?.triggers) ? entry.triggers : [])]
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const relatedEntities = uniqueItems((Array.isArray(entry?.relatedEntities) ? entry.relatedEntities : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const relatedCategories = uniqueItems((Array.isArray(entry?.relatedCategories) ? entry.relatedCategories : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const relatedTerms = uniqueItems((Array.isArray(entry?.relatedTerms) ? entry.relatedTerms : [])
+                    .map(term => compactSearchText(term))
+                    .filter(Boolean));
+                const normalizedTriggers = uniqueItems(triggers
+                    .map(term => normalizeSearchText(term))
+                    .filter(Boolean));
+                return key && normalizedTriggers.length
+                    ? {
+                        key,
+                        label: label || key,
+                        triggers,
+                        normalizedKey: normalizeSearchText(key),
+                        normalizedTriggers,
+                        relatedEntities,
+                        relatedCategories,
+                        relatedTerms
+                    }
+                    : null;
+            })
+            .filter(Boolean);
+
+        const aliasLookup = new Map();
+        const genericClassLookup = new Map();
+        const categoryLookup = new Map();
+        const clusterKeyLookup = new Map();
+        const clusterTriggerLookup = new Map();
+
+        aliases.forEach(entry => {
+            entry.normalizedTerms.forEach(term => aliasLookup.set(term, entry.canonical));
+        });
+
+        genericClasses.forEach(entry => {
+            entry.normalizedTerms.forEach(term => genericClassLookup.set(term, entry.canonical));
+        });
+
+        categoryFamilies.forEach(entry => {
+            [entry.normalizedId, entry.normalizedLabel, ...entry.normalizedTerms].forEach(term => {
+                if (term) categoryLookup.set(term, entry.label);
+            });
+        });
+
+        clusterRelations.forEach(entry => {
+            clusterKeyLookup.set(entry.normalizedKey, entry);
+            entry.normalizedTriggers.forEach(term => {
+                if (!clusterTriggerLookup.has(term)) {
+                    clusterTriggerLookup.set(term, new Set());
+                }
+                clusterTriggerLookup.get(term).add(entry.key);
+            });
+        });
+
+        return {
+            version: compactSearchText(rawTaxonomy.version) || 'fallback',
+            aliases,
+            genericClasses,
+            categoryFamilies,
+            clusterRelations,
+            supportedSourceTypes: uniqueItems((Array.isArray(rawTaxonomy.supportedSourceTypes) ? rawTaxonomy.supportedSourceTypes : [])
+                .map(term => compactSearchText(term))
+                .filter(Boolean)),
+            aliasLookup,
+            genericClassLookup,
+            categoryLookup,
+            clusterKeyLookup,
+            clusterTriggerLookup
+        };
+    }
+
+    function getSerializableAiQueryTaxonomy() {
+        return {
+            version: aiQueryTaxonomy.version,
+            aliases: aiQueryTaxonomy.aliases.map(entry => ({
+                canonical: entry.canonical,
+                terms: entry.terms
+            })),
+            genericClasses: aiQueryTaxonomy.genericClasses.map(entry => ({
+                canonical: entry.canonical,
+                terms: entry.terms,
+                expandsTo: entry.expandsTo
+            })),
+            categoryFamilies: aiQueryTaxonomy.categoryFamilies.map(entry => ({
+                id: entry.id,
+                label: entry.label,
+                terms: entry.terms,
+                keywords: entry.keywords
+            })),
+            clusterRelations: aiQueryTaxonomy.clusterRelations.map(entry => ({
+                key: entry.key,
+                label: entry.label,
+                triggers: entry.triggers,
+                relatedEntities: entry.relatedEntities,
+                relatedCategories: entry.relatedCategories,
+                relatedTerms: entry.relatedTerms
+            })),
+            supportedSourceTypes: aiQueryTaxonomy.supportedSourceTypes
+        };
+    }
+
+    function resolveTaxonomyEntityName(value) {
+        const normalized = normalizeSearchText(value);
+        if (!normalized) return '';
+        return aiQueryTaxonomy.aliasLookup.get(normalized) || '';
+    }
+
+    function resolveTaxonomyGenericClassName(value) {
+        const normalized = normalizeSearchText(value);
+        if (!normalized) return '';
+        return aiQueryTaxonomy.genericClassLookup.get(normalized) || '';
+    }
+
+    function resolveTaxonomyCategoryLabel(value) {
+        const normalized = normalizeSearchText(value);
+        if (!normalized) return '';
+        return aiQueryTaxonomy.categoryLookup.get(normalized) || '';
+    }
+
+    function getTaxonomyEntityEntry(canonical) {
+        const normalized = normalizeSearchText(canonical);
+        return aiQueryTaxonomy.aliases.find(entry => entry.normalizedCanonical === normalized) || null;
+    }
+
+    function getTaxonomyGenericClassEntry(canonical) {
+        const normalized = normalizeSearchText(canonical);
+        return aiQueryTaxonomy.genericClasses.find(entry => entry.normalizedCanonical === normalized) || null;
+    }
+
+    function getTaxonomyCategoryEntry(label) {
+        const normalized = normalizeSearchText(label);
+        return aiQueryTaxonomy.categoryFamilies.find(entry => entry.normalizedLabel === normalized || entry.normalizedId === normalized) || null;
+    }
+
+    function getTaxonomyClusterEntry(key) {
+        const normalized = normalizeSearchText(key);
+        return aiQueryTaxonomy.clusterRelations.find(entry => entry.normalizedKey === normalized) || null;
+    }
+
+    function getTaxonomyClusterKeysForTerm(value) {
+        const normalized = normalizeSearchText(value);
+        if (!normalized) return [];
+        const matched = new Set();
+
+        if (aiQueryTaxonomy.clusterTriggerLookup.has(normalized)) {
+            aiQueryTaxonomy.clusterTriggerLookup.get(normalized).forEach(key => matched.add(key));
+        }
+
+        aiQueryTaxonomy.clusterRelations.forEach(entry => {
+            const relatedTerms = uniqueItems([
+                ...entry.relatedEntities,
+                ...entry.relatedCategories,
+                ...entry.relatedTerms
+            ]).map(term => normalizeSearchText(term)).filter(Boolean);
+            if (relatedTerms.includes(normalized)) {
+                matched.add(entry.key);
+            }
+        });
+
+        return Array.from(matched);
+    }
+
+    function expandTaxonomyCategoryTerms(labels = []) {
+        return uniqueItems(labels.flatMap(label => {
+            const entry = getTaxonomyCategoryEntry(label);
+            if (!entry) return compactSearchText(label) ? [compactSearchText(label)] : [];
+            return uniqueItems([entry.label, ...entry.terms, ...entry.keywords]);
+        }).map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
+    }
+
+    function expandTaxonomyClusterTerms(clusterKeys = []) {
+        return uniqueItems(clusterKeys.flatMap(key => {
+            const entry = getTaxonomyClusterEntry(key);
+            if (!entry) return [];
+            return uniqueItems([
+                entry.label,
+                ...entry.relatedEntities,
+                ...entry.relatedCategories,
+                ...entry.relatedTerms
+            ]);
+        }).map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
+    }
+
+    function detectAiCoverageHints(normalizedQuery) {
+        return uniqueItems([
+            ...(hasQueryHint(normalizedQuery, ['全部', '所有', '細節', '完整', '完整整理']) ? ['all-details'] : []),
+            ...(hasQueryHint(normalizedQuery, ['流程', '步驟', '怎麼做', '所有流程']) ? ['all-processes'] : []),
+            ...(hasQueryHint(normalizedQuery, ['哪些', '有哪些', '有什麼', '清單', '盤點', '各項', '總表']) ? ['inventory'] : []),
+            ...(hasQueryHint(normalizedQuery, ['注意事項', '風險', '限制', '規則']) ? ['risks'] : []),
+            ...(hasQueryHint(normalizedQuery, ['比較', '還是', '要不要', '值不值得']) ? ['comparison'] : [])
+        ]);
+    }
+
+    function detectAiNegativeTerms(normalizedQuery) {
+        return uniqueItems([
+            ...(hasQueryHint(normalizedQuery, ['不要', '不用', '不是']) ? ['不要', '不是'] : []),
+            ...(hasQueryHint(normalizedQuery, ['排除', '扣掉']) ? ['排除'] : [])
+        ]);
+    }
+
+    function collectTaxonomyContextualTerms(normalizedQuery) {
+        const terms = [];
+
+        aiQueryTaxonomy.aliases.forEach(entry => {
+            if (entry.normalizedTerms.some(term => normalizedQuery.includes(term))) {
+                terms.push(...entry.terms);
+            }
+        });
+
+        aiQueryTaxonomy.categoryFamilies.forEach(entry => {
+            if (entry.normalizedTerms.some(term => normalizedQuery.includes(term))) {
+                terms.push(...entry.keywords);
+            }
+        });
+
+        aiQueryTaxonomy.clusterRelations.forEach(entry => {
+            if (entry.normalizedTriggers.some(term => normalizedQuery.includes(term))) {
+                terms.push(...entry.relatedEntities, ...entry.relatedTerms);
+            }
+        });
+
+        return uniqueItems(terms.map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
+    }
+
+    function buildFallbackQueryInterpretation(rawQuery) {
+        const normalizedQuery = normalizeSearchText(rawQuery);
+        const literalAnchors = uniqueItems([
+            ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
+            ...collectMatchingTerms(normalizedQuery, searchDisplayMap)
+        ]).slice(0, 12);
+        const canonicalEntities = uniqueItems(aiQueryTaxonomy.aliases
+            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
+            .map(entry => entry.canonical))
+            .slice(0, 10);
+        const genericClasses = uniqueItems(aiQueryTaxonomy.genericClasses
+            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
+            .map(entry => entry.canonical))
+            .slice(0, 8);
+        const categoryMatches = uniqueItems(aiQueryTaxonomy.categoryFamilies
+            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
+            .map(entry => entry.label))
+            .slice(0, 10);
+        const clusterKeys = uniqueItems([
+            ...canonicalEntities.flatMap(entity => getTaxonomyClusterKeysForTerm(entity)),
+            ...literalAnchors.flatMap(term => getTaxonomyClusterKeysForTerm(term)),
+            ...categoryMatches.flatMap(label => getTaxonomyClusterKeysForTerm(label))
+        ]).slice(0, 8);
+        const expandedCategories = uniqueItems([
+            ...genericClasses.flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
+            ...categoryMatches,
+            ...clusterKeys.flatMap(key => getTaxonomyClusterEntry(key)?.relatedCategories || [])
+        ]).slice(0, 12);
+        const expandedAliases = uniqueItems([
+            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity]),
+            ...collectTaxonomyContextualTerms(normalizedQuery)
+        ]).slice(0, 20);
+        const expandedCategoryTerms = expandTaxonomyCategoryTerms(expandedCategories);
+        const clusterExpansions = expandTaxonomyClusterTerms(clusterKeys);
+        const coverageHints = detectAiCoverageHints(normalizedQuery);
+        const negativeTerms = detectAiNegativeTerms(normalizedQuery);
+
+        return {
+            canonicalQuery: compactSearchText(rawQuery),
+            literalAnchors,
+            canonicalEntities,
+            genericClasses,
+            expandedAliases,
+            expandedCategories,
+            expandedCategoryTerms,
+            clusterKeys,
+            clusterExpansions,
+            coverageHints,
+            negativeTerms,
+            confidence: canonicalEntities.length
+                ? 'high'
+                : (genericClasses.length || expandedCategories.length || literalAnchors.length ? 'medium' : 'low')
+        };
+    }
+
+    function sanitizeAiInterpreterResult(result = {}) {
+        const safeResult = result && typeof result === 'object' ? result : {};
+        const canonicalEntities = uniqueItems((Array.isArray(safeResult.canonicalEntities) ? safeResult.canonicalEntities : [])
+            .map(term => resolveTaxonomyEntityName(term) || compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 10);
+        const genericClasses = uniqueItems((Array.isArray(safeResult.genericClasses) ? safeResult.genericClasses : [])
+            .map(term => resolveTaxonomyGenericClassName(term) || compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 8);
+        const expandedCategories = uniqueItems((Array.isArray(safeResult.expandedCategories) ? safeResult.expandedCategories : [])
+            .map(term => resolveTaxonomyCategoryLabel(term) || compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 12);
+        const clusterKeys = uniqueItems((Array.isArray(safeResult.clusterExpansions) ? safeResult.clusterExpansions : [])
+            .flatMap(term => {
+                const normalized = normalizeSearchText(term);
+                const directCluster = getTaxonomyClusterEntry(term);
+                if (directCluster) return [directCluster.key];
+                return normalized ? getTaxonomyClusterKeysForTerm(normalized) : [];
+            }))
+            .slice(0, 8);
+        const expandedAliases = uniqueItems((Array.isArray(safeResult.expandedAliases) ? safeResult.expandedAliases : [])
+            .map(term => compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 20);
+        const coverageHints = uniqueItems((Array.isArray(safeResult.coverageHints) ? safeResult.coverageHints : [])
+            .map(term => normalizeSearchText(term))
+            .filter(term => ['all-details', 'all-processes', 'inventory', 'risks', 'comparison'].includes(term)))
+            .slice(0, 8);
+        const negativeTerms = uniqueItems((Array.isArray(safeResult.negativeTerms) ? safeResult.negativeTerms : [])
+            .map(term => compactSearchText(term))
+            .filter(Boolean))
+            .slice(0, 6);
+        const confidence = ['high', 'medium', 'low'].includes(safeResult.confidence) ? safeResult.confidence : 'low';
+
+        return {
+            canonicalQuery: compactSearchText(safeResult.canonicalQuery),
+            literalAnchors: sanitizeSearchTextArray(safeResult.literalAnchors, 12, 80),
+            canonicalEntities,
+            genericClasses,
+            expandedAliases,
+            expandedCategories,
+            expandedCategoryTerms: expandTaxonomyCategoryTerms(expandedCategories),
+            clusterKeys,
+            clusterExpansions: expandTaxonomyClusterTerms(clusterKeys),
+            coverageHints,
+            negativeTerms,
+            confidence
+        };
+    }
+
+    function mergeAiInterpreterResult(rawQuery, aiResult = null) {
+        const fallback = buildFallbackQueryInterpretation(rawQuery);
+        const interpreted = sanitizeAiInterpreterResult(aiResult);
+        const canonicalEntities = uniqueItems([
+            ...fallback.canonicalEntities,
+            ...interpreted.canonicalEntities
+        ]).slice(0, 10);
+        const genericClasses = uniqueItems([
+            ...fallback.genericClasses,
+            ...interpreted.genericClasses
+        ]).slice(0, 8);
+        const clusterKeys = uniqueItems([
+            ...fallback.clusterKeys,
+            ...interpreted.clusterKeys,
+            ...canonicalEntities.flatMap(entity => getTaxonomyClusterKeysForTerm(entity)),
+            ...genericClasses.flatMap(className => getTaxonomyClusterKeysForTerm(className))
+        ]).slice(0, 8);
+        const expandedCategories = uniqueItems([
+            ...fallback.expandedCategories,
+            ...interpreted.expandedCategories,
+            ...genericClasses.flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
+            ...clusterKeys.flatMap(key => getTaxonomyClusterEntry(key)?.relatedCategories || [])
+        ]).slice(0, 12);
+        const expandedAliases = uniqueItems([
+            ...fallback.expandedAliases,
+            ...interpreted.expandedAliases,
+            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity])
+        ]).slice(0, 24);
+        const coverageHints = uniqueItems([
+            ...fallback.coverageHints,
+            ...interpreted.coverageHints
+        ]).slice(0, 8);
+        const normalizedQuery = normalizeSearchText(rawQuery);
+        if (!coverageHints.includes('inventory') && (genericClasses.length || hasQueryHint(normalizedQuery, ['各項', '設施', '有什麼', '有哪些', '哪些']))) {
+            coverageHints.push('inventory');
+        }
+        const negativeTerms = uniqueItems([
+            ...fallback.negativeTerms,
+            ...interpreted.negativeTerms
+        ]).slice(0, 6);
+        const expandedCategoryTerms = uniqueItems([
+            ...fallback.expandedCategoryTerms,
+            ...interpreted.expandedCategoryTerms,
+            ...expandTaxonomyCategoryTerms(expandedCategories)
+        ]).slice(0, 24);
+        const clusterExpansions = uniqueItems([
+            ...fallback.clusterExpansions,
+            ...interpreted.clusterExpansions,
+            ...expandTaxonomyClusterTerms(clusterKeys)
+        ]).slice(0, 24);
+        const literalAnchors = uniqueItems([
+            ...fallback.literalAnchors,
+            ...interpreted.literalAnchors,
+            ...canonicalEntities
+        ]).slice(0, 12);
+        const confidence = interpreted.confidence === 'high'
+            ? 'high'
+            : ((canonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence);
+
+        return {
+            canonicalQuery: interpreted.canonicalQuery || fallback.canonicalQuery,
+            literalAnchors,
+            canonicalEntities,
+            genericClasses,
+            expandedAliases,
+            expandedCategories,
+            expandedCategoryTerms,
+            clusterKeys,
+            clusterExpansions,
+            coverageHints,
+            negativeTerms,
+            confidence,
+            usedAiInterpreter: Boolean(aiResult)
+        };
+    }
+
+    function resolveAiCoverageMode(interpreterResult = {}, normalizedQuery = '') {
+        const hints = interpreterResult.coverageHints || [];
+        if (hints.includes('all-details') || hints.includes('all-processes')) {
+            return 'exhaustive';
+        }
+        if (hints.includes('inventory') && (
+            !interpreterResult.canonicalEntities?.length
+            || interpreterResult.genericClasses?.length
+            || hasQueryHint(normalizedQuery, ['全部', '所有', '完整', '細節', '清單', '各項'])
+        )) {
+            return 'exhaustive';
+        }
+        return 'broad';
+    }
+
+    function buildAiInterpretationTags(queryData = {}, reportPlan = null) {
+        const interpreter = queryData.interpreterResult || {};
+        const coverageMode = reportPlan?.coverageMode === 'exhaustive'
+            || queryData.coverageMode === 'exhaustive'
+            ? '完整盤點'
+            : '廣泛展開';
+
+        return uniqueItems([
+            ...(interpreter.canonicalEntities || []).slice(0, 3),
+            ...(interpreter.expandedAliases || []).filter(term => /^[A-Za-z][A-Za-z\s]{2,}$/u.test(term)).slice(0, 1),
+            ...(interpreter.expandedCategories || []).slice(0, 3),
+            coverageMode
+        ]).filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT);
     }
 
     function joinSearchTextParts(parts = []) {
@@ -1646,7 +2179,7 @@
         return labels[entityType] || '主題';
     }
 
-    function buildAiSlots(normalizedQuery, intents = {}, highlightTerms = []) {
+    function buildAiSlots(normalizedQuery, intents = {}, highlightTerms = [], interpreter = {}) {
         const day = uniqueItems([
             ...(intents.day1Focus ? ['第一天', 'day 1', '登船日', '登船後'] : []),
             ...(intents.day2Focus ? ['第二天', 'day 2'] : []),
@@ -1671,28 +2204,34 @@
             ...(hasQueryHint(normalizedQuery, ['先做什麼', '先去', '順序', '安排', '路線']) ? ['順序', '先做什麼', '安排'] : []),
             ...(hasQueryHint(normalizedQuery, ['省力', '省時', '最順', '方便', '輕鬆']) ? ['省力', '省時', '最順'] : []),
             ...(hasQueryHint(normalizedQuery, ['避排隊', '排隊', '不用排隊']) ? ['避排隊', '排隊'] : []),
-            ...(hasQueryHint(normalizedQuery, ['帶什麼', '要帶', '準備什麼']) ? ['要帶什麼', '準備'] : [])
+            ...(hasQueryHint(normalizedQuery, ['帶什麼', '要帶', '準備什麼']) ? ['要帶什麼', '準備'] : []),
+            ...((interpreter.coverageHints || []).includes('all-processes') ? ['流程', '步驟'] : [])
         ]).slice(0, 8);
 
         const risk = uniqueItems([
             ...(hasQueryHint(normalizedQuery, ['來不及', '晚到', '錯過', '壓線', '趕不上']) ? ['來不及', '晚到', '錯過', '壓線'] : []),
             ...(hasQueryHint(normalizedQuery, ['排隊', '等太久', '卡住']) ? ['排隊', '等太久', '卡住'] : []),
-            ...(hasQueryHint(normalizedQuery, ['踩雷', '風險', '注意', '規則', '限制', '要不要']) ? ['踩雷', '注意', '規則', '限制'] : [])
+            ...(hasQueryHint(normalizedQuery, ['踩雷', '風險', '注意', '規則', '限制', '要不要']) ? ['踩雷', '注意', '規則', '限制'] : []),
+            ...((interpreter.coverageHints || []).includes('risks') ? ['注意事項', '規則', '限制'] : [])
         ]).slice(0, 8);
 
         const comparison = uniqueItems([
             ...(intents.comparisonFocus || hasQueryHint(normalizedQuery, ['還是', '比較']) ? ['比較', '取捨'] : []),
             ...(hasQueryHint(normalizedQuery, ['要不要', '該不該']) ? ['要不要'] : []),
-            ...(hasQueryHint(normalizedQuery, ['先', '優先']) ? ['優先順序'] : [])
+            ...(hasQueryHint(normalizedQuery, ['先', '優先']) ? ['優先順序'] : []),
+            ...((interpreter.coverageHints || []).includes('comparison') ? ['比較', '取捨'] : [])
         ]).slice(0, 6);
 
         const entity = uniqueItems([
             ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
+            ...(interpreter.literalAnchors || []),
+            ...(interpreter.canonicalEntities || []),
             ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge'] : []),
             ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀'] : []),
             ...(intents.roomServiceFocus ? ['room service', '客房服務', '房務'] : []),
             ...(intents.foodFocus ? ['補給', '披薩', '點心', '飲料'] : []),
             ...(intents.kidFocus ? ['open house', 'oceaneer', 'kids club', '孩子'] : []),
+            ...(interpreter.expandedAliases || []).slice(0, 8),
             ...highlightTerms
         ]).filter(Boolean).slice(0, 10);
 
@@ -1719,8 +2258,10 @@
         ]).filter(Boolean).slice(0, 18);
     }
 
-    function buildAiAnchorProfile(normalizedQuery, intents = {}, slots = {}, highlightTerms = []) {
+    function buildAiAnchorProfile(normalizedQuery, intents = {}, slots = {}, highlightTerms = [], interpreter = {}) {
         const hardAnchors = uniqueItems([
+            ...(interpreter.literalAnchors || []),
+            ...(interpreter.canonicalEntities || []),
             ...(slots.entity || []),
             ...(slots.day || []),
             ...(slots.timeWindow || []),
@@ -1737,6 +2278,11 @@
             ...(slots.risk || []),
             ...(slots.comparison || []),
             ...(slots.audience || []).filter(item => item !== '禮賓'),
+            ...((interpreter.coverageHints || []).includes('all-details') ? ['所有細節', '完整整理'] : []),
+            ...((interpreter.coverageHints || []).includes('all-processes') ? ['流程', '步驟'] : []),
+            ...((interpreter.coverageHints || []).includes('inventory') ? ['完整盤點', '清單'] : []),
+            ...((interpreter.coverageHints || []).includes('risks') ? ['注意事項', '限制', '規則'] : []),
+            ...((interpreter.coverageHints || []).includes('comparison') ? ['比較', '先後順序'] : []),
             ...(hasQueryHint(normalizedQuery, ['流程', '步驟', '怎麼做']) ? ['流程', '步驟'] : []),
             ...(hasQueryHint(normalizedQuery, ['注意事項', '注意', '限制', '規則']) ? ['注意事項', '限制', '規則'] : []),
             ...(hasQueryHint(normalizedQuery, ['要不要', '值不值得', '該不該']) ? ['要不要', '值不值得'] : []),
@@ -1745,6 +2291,9 @@
 
         const subjectClusters = uniqueItems([
             ...hardAnchors,
+            ...(interpreter.expandedAliases || []),
+            ...(interpreter.expandedCategoryTerms || []),
+            ...(interpreter.clusterExpansions || []),
             ...(slots.entity || []).map(term => aiSearchDisplayMap.get(normalizeSearchText(term)) || term),
             ...(intents.conciergeFocus ? ['Lounge', '禮賓酒廊', '優先入場'] : []),
             ...(intents.theatreFocus ? ['劇院', '主秀', '晚秀'] : []),
@@ -1771,6 +2320,8 @@
             ]).slice(0, 12),
             extension: uniqueItems([
                 ...(queryData.subjectClusters || []).slice(0, 8),
+                ...(queryData.expandedCategories || []).slice(0, 6),
+                ...(queryData.clusterExpansions || []).slice(0, 6),
                 ...(slots.goal || []).slice(0, 3),
                 ...(slots.audience || []).slice(0, 3),
                 ...softModifiers.slice(0, 4)
@@ -1820,7 +2371,13 @@
         const slots = queryData.slots || {};
         const hardAnchors = queryData.hardAnchors || [];
         const softModifiers = queryData.softModifiers || [];
-        const inventorySignal = hasQueryHint(normalizedQuery, [
+        const coverageHints = Array.isArray(queryData.coverageHints) ? queryData.coverageHints : [];
+        const genericClasses = Array.isArray(queryData.genericClasses) ? queryData.genericClasses : [];
+        const expandedCategories = Array.isArray(queryData.expandedCategories) ? queryData.expandedCategories : [];
+        const inventorySignal = coverageHints.includes('inventory')
+            || coverageHints.includes('all-details')
+            || coverageHints.includes('all-processes')
+            || hasQueryHint(normalizedQuery, [
             '哪些', '有哪些', '有什麼', '可享受', '包含', '服務', '設施', '活動', '餐點', '攻略',
             '內容', '細節', '整理', '完整', '總表', '清單'
         ]) || (
@@ -1834,12 +2391,16 @@
         );
         const facilitySignal = intents.deckFocus
             || intents.theatreFocus
+            || genericClasses.includes('設施')
+            || expandedCategories.some(item => ['場館', '表演', '餐廳', '快餐', '商店', '遊戲', '泳池', '兒童俱樂部', '酒廊'].includes(item))
             || hasQueryHint(normalizedQuery, [
                 '哪個設施', '什麼設施', '哪一層', '在哪裡', '哪裡', '電影院', '劇院', '字幕',
                 '泳池', '酒廊', '餐廳', '披薩', 'baymax', 'deck'
             ]);
         const operationalSignal = intents.conciergeFocus
             || intents.roomServiceFocus
+            || genericClasses.includes('服務')
+            || expandedCategories.some(item => ['服務', '禮賓服務'].includes(item))
             || hasQueryHint(normalizedQuery, [
                 '特殊服務', '怎麼用', '怎麼做', '技巧', '攻略', '優先入場', '提早進', '怎麼點'
             ]);
@@ -1864,6 +2425,8 @@
             ...hardAnchors.slice(0, 10),
             ...(queryData.highlightTerms || []).slice(0, 6),
             ...(queryData.subjectClusters || []).slice(0, 8),
+            ...(queryData.expandedCategories || []).slice(0, 4),
+            ...(queryData.clusterExpansions || []).slice(0, 6),
             ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge', '酒廊', '劇院優先入場'] : []),
             ...(intents.roomServiceFocus ? ['room service', '房務', '客房服務', '早餐', '宵夜'] : []),
             ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀', 'remember', '提早入場', '優先入場'] : []),
@@ -1929,17 +2492,28 @@
         };
     }
 
-    function buildAiQueryBundles(normalizedQuery, rewriteMeta = null, slots = {}, highlightTerms = []) {
+    function buildAiQueryBundles(normalizedQuery, rewriteMeta = null, slots = {}, highlightTerms = [], interpreter = {}) {
         const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
-        const anchorProfile = buildAiAnchorProfile(normalizedQuery, buildAiIntents(normalizedQuery), slots, highlightTerms);
+        const anchorProfile = buildAiAnchorProfile(normalizedQuery, buildAiIntents(normalizedQuery), slots, highlightTerms, interpreter);
         const aliasSeed = uniqueItems([
             ...(anchorProfile.hardAnchors || []),
             ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
             ...highlightTerms,
             ...normalizedRewrite.keywords,
             ...normalizedRewrite.alternates,
+            ...(interpreter.expandedAliases || []),
             ...deriveContextualKeywords(normalizedQuery)
         ]).slice(0, 14);
+        const classSeed = uniqueItems([
+            ...(interpreter.expandedCategories || []),
+            ...(interpreter.expandedCategoryTerms || []),
+            ...(interpreter.genericClasses || [])
+        ]).slice(0, 18);
+        const clusterSeed = uniqueItems([
+            ...(interpreter.canonicalEntities || []),
+            ...(interpreter.clusterExpansions || []),
+            ...(anchorProfile.subjectClusters || []).slice(0, 8)
+        ]).slice(0, 18);
         const taskSeed = uniqueItems([
             ...(anchorProfile.hardAnchors || []).slice(0, 8),
             ...(anchorProfile.softModifiers || []).slice(0, 8),
@@ -1947,26 +2521,24 @@
             ...(slots.timeWindow || []),
             ...(slots.audience || []),
             ...(slots.entity || []).slice(0, 4),
-            ...(slots.comparison || [])
-        ]).slice(0, 14);
-        const comparisonSeed = uniqueItems([
             ...(slots.comparison || []),
-            ...(slots.entity || []).slice(0, 4),
-            ...normalizedRewrite.alternates
-        ]).slice(0, 10);
+            ...(interpreter.coverageHints || [])
+        ]).slice(0, 16);
 
         return {
             precision: buildAiExpansionUnits(uniqueItems([
+                ...(interpreter.literalAnchors || []).slice(0, 6),
                 ...(anchorProfile.hardAnchors || []).slice(0, 8),
                 ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap).slice(0, 6)
             ]).join(' ')).slice(0, 10),
             alias: buildAiExpansionUnits(aliasSeed.join(' ')).slice(0, 12),
-            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 12),
-            comparison: buildAiExpansionUnits(comparisonSeed.join(' ')).slice(0, 10)
+            class: buildAiExpansionUnits(classSeed.join(' ')).slice(0, 14),
+            cluster: buildAiExpansionUnits(clusterSeed.join(' ')).slice(0, 14),
+            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 14)
         };
     }
 
-    function getAiSearchUnits(rawQuery, rewriteMeta = null) {
+    function getAiSearchUnits(rawQuery, rewriteMeta = null, interpreterResult = null) {
         const normalizedQuery = normalizeSearchText(rawQuery);
         if (!normalizedQuery) {
             return {
@@ -1980,6 +2552,16 @@
                 intents: {},
                 slots: {},
                 slotTerms: [],
+                interpreterResult: null,
+                literalAnchors: [],
+                canonicalEntities: [],
+                genericClasses: [],
+                expandedAliases: [],
+                expandedCategories: [],
+                clusterExpansions: [],
+                coverageHints: [],
+                negativeTerms: [],
+                coverageMode: 'broad',
                 rewriteMeta: null
             };
         }
@@ -1993,29 +2575,49 @@
 
         const baseUnits = buildAiExpansionUnits(normalizedQuery);
         const rewriteUnits = buildAiExpansionUnits(rewriteSeed);
+        const mergedInterpreter = mergeAiInterpreterResult(rawQuery, interpreterResult);
+        const interpreterUnits = buildAiExpansionUnits(uniqueItems([
+            ...(mergedInterpreter.literalAnchors || []),
+            ...(mergedInterpreter.canonicalEntities || []),
+            ...(mergedInterpreter.expandedAliases || []),
+            ...(mergedInterpreter.expandedCategoryTerms || []).slice(0, 12),
+            ...(mergedInterpreter.clusterExpansions || []).slice(0, 12)
+        ]).join(' '));
         const units = uniqueItems([
             ...baseUnits,
-            ...rewriteUnits
-        ]).slice(0, 18);
+            ...rewriteUnits,
+            ...interpreterUnits
+        ]).slice(0, 24);
 
         const highlightTerms = uniqueItems(
-            units.map(unit => aiSearchDisplayMap.get(unit) || searchDisplayMap.get(unit) || unit)
+            [
+                ...units.map(unit => aiSearchDisplayMap.get(unit) || searchDisplayMap.get(unit) || unit),
+                ...(mergedInterpreter.canonicalEntities || []),
+                ...(mergedInterpreter.expandedCategories || []).slice(0, 4)
+            ]
         );
 
         const intents = mergeAiIntents(
             buildAiIntents(normalizedQuery),
-            rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {}
+            rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {},
+            buildAiIntents(uniqueItems([
+                ...(mergedInterpreter.canonicalEntities || []),
+                ...(mergedInterpreter.expandedAliases || []).slice(0, 8),
+                ...(mergedInterpreter.clusterExpansions || []).slice(0, 8)
+            ]).join(' '))
         );
-        const slots = buildAiSlots(normalizedQuery, intents, highlightTerms);
-        const anchorProfile = buildAiAnchorProfile(normalizedQuery, intents, slots, highlightTerms);
-        const queryBundles = buildAiQueryBundles(normalizedQuery, normalizedRewrite, slots, highlightTerms);
+        const slots = buildAiSlots(normalizedQuery, intents, highlightTerms, mergedInterpreter);
+        const anchorProfile = buildAiAnchorProfile(normalizedQuery, intents, slots, highlightTerms, mergedInterpreter);
+        const queryBundles = buildAiQueryBundles(normalizedQuery, normalizedRewrite, slots, highlightTerms, mergedInterpreter);
         const bundleTerms = uniqueItems([
             ...(queryBundles.precision || []),
             ...(queryBundles.alias || []),
-            ...(queryBundles.task || []),
-            ...(queryBundles.comparison || [])
-        ]).slice(0, 24);
+            ...(queryBundles.class || []),
+            ...(queryBundles.cluster || []),
+            ...(queryBundles.task || [])
+        ]).slice(0, 30);
         const slotTerms = flattenAiSlots(slots);
+        const coverageMode = resolveAiCoverageMode(mergedInterpreter, normalizedQuery);
         const intentProfile = buildAiIntentProfile({
             normalizedQuery,
             highlightTerms,
@@ -2025,7 +2627,10 @@
             bundleTerms,
             hardAnchors: anchorProfile.hardAnchors,
             softModifiers: anchorProfile.softModifiers,
-            subjectClusters: anchorProfile.subjectClusters
+            subjectClusters: anchorProfile.subjectClusters,
+            coverageHints: mergedInterpreter.coverageHints,
+            expandedCategories: mergedInterpreter.expandedCategories,
+            clusterExpansions: mergedInterpreter.clusterExpansions
         });
         const evidenceLayers = buildAiEvidenceLayers({
             normalizedQuery,
@@ -2034,7 +2639,9 @@
             hardAnchors: anchorProfile.hardAnchors,
             softModifiers: anchorProfile.softModifiers,
             subjectClusters: anchorProfile.subjectClusters,
-            intentProfile
+            intentProfile,
+            expandedCategories: mergedInterpreter.expandedCategories,
+            clusterExpansions: mergedInterpreter.clusterExpansions
         });
 
         return {
@@ -2048,6 +2655,16 @@
             intents,
             slots,
             slotTerms,
+            interpreterResult: mergedInterpreter,
+            literalAnchors: mergedInterpreter.literalAnchors,
+            canonicalEntities: mergedInterpreter.canonicalEntities,
+            genericClasses: mergedInterpreter.genericClasses,
+            expandedAliases: mergedInterpreter.expandedAliases,
+            expandedCategories: mergedInterpreter.expandedCategories,
+            clusterExpansions: mergedInterpreter.clusterExpansions,
+            coverageHints: mergedInterpreter.coverageHints,
+            negativeTerms: mergedInterpreter.negativeTerms,
+            coverageMode,
             hardAnchors: anchorProfile.hardAnchors,
             softModifiers: anchorProfile.softModifiers,
             subjectClusters: anchorProfile.subjectClusters,
@@ -2110,7 +2727,10 @@
                 ...(slots.day || []),
                 ...(slots.timeWindow || [])
             ]).slice(0, 8),
-            entityPlace: uniqueItems(slots.entity || []).slice(0, 10),
+            entityPlace: uniqueItems([
+                ...(slots.entity || []),
+                ...(queryData.canonicalEntities || [])
+            ]).slice(0, 10),
             audience: uniqueItems(slots.audience || []).slice(0, 6),
             risk: uniqueItems(slots.risk || []).slice(0, 8),
             alternatives: buildAiAlternativeFacet(queryData.rawQuery || queryData.normalizedQuery || '', slots.entity || [])
@@ -2170,7 +2790,13 @@
                 parentCardCount: Number(reportPlan.parentCardCount || 0),
                 sourceTypes: Array.isArray(reportPlan.sourceTypes) ? reportPlan.sourceTypes.slice(0, 6) : [],
                 sourceDetailTypes: Array.isArray(reportPlan.sourceDetailTypes) ? reportPlan.sourceDetailTypes.slice(0, 4) : []
-            }
+            },
+            literalAnchors: Array.isArray(reportPlan.literalAnchors) ? reportPlan.literalAnchors.slice(0, 12) : [],
+            canonicalEntities: Array.isArray(reportPlan.canonicalEntities) ? reportPlan.canonicalEntities.slice(0, 8) : [],
+            genericClasses: Array.isArray(reportPlan.genericClasses) ? reportPlan.genericClasses.slice(0, 6) : [],
+            expandedCategories: Array.isArray(reportPlan.expandedCategories) ? reportPlan.expandedCategories.slice(0, 8) : [],
+            clusterExpansions: Array.isArray(reportPlan.clusterExpansions) ? reportPlan.clusterExpansions.slice(0, 12) : [],
+            coverageHints: Array.isArray(reportPlan.coverageHints) ? reportPlan.coverageHints.slice(0, 6) : []
         };
     }
 
@@ -2240,7 +2866,9 @@
             responseMode,
             intentType: intentProfile.type,
             inventoryIntent,
-            coverageMode: responseMode === 'report' ? 'exhaustive' : 'standard',
+            coverageMode: responseMode === 'report'
+                ? (queryData.coverageMode === 'exhaustive' ? 'exhaustive' : 'broad')
+                : 'broad',
             facets,
             activeFacetNames,
             activeFacetCount: activeFacetNames.length,
@@ -2252,6 +2880,12 @@
             parentCardCount: parentIds.length,
             sourceTypes,
             sourceDetailTypes,
+            literalAnchors: Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors.slice(0, 12) : [],
+            canonicalEntities: Array.isArray(queryData.canonicalEntities) ? queryData.canonicalEntities.slice(0, 8) : [],
+            genericClasses: Array.isArray(queryData.genericClasses) ? queryData.genericClasses.slice(0, 6) : [],
+            expandedCategories: Array.isArray(queryData.expandedCategories) ? queryData.expandedCategories.slice(0, 8) : [],
+            clusterExpansions: Array.isArray(queryData.clusterExpansions) ? queryData.clusterExpansions.slice(0, 12) : [],
+            coverageHints: Array.isArray(queryData.coverageHints) ? queryData.coverageHints.slice(0, 6) : [],
             hardAnchors,
             softModifiers,
             subjectClusters,
@@ -2367,8 +3001,9 @@
         const slotMatches = countMatchedTerms(doc.normalizedCombined, queryData.slotTerms || []);
         const precisionBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.precision || []);
         const aliasBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.alias || []);
+        const classBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.class || []);
+        const clusterBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.cluster || []);
         const taskBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.task || []);
-        const comparisonBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.comparison || []);
         const fieldType = doc.fieldType || 'parent';
         const roleHints = doc.evidenceRoleHints || [];
 
@@ -2448,8 +3083,16 @@
             score += 4;
         }
 
-        if (comparisonBundleMatches >= 1 && (queryData.intents?.comparisonFocus || (queryData.slots?.comparison || []).length)) {
+        if (classBundleMatches >= 2) {
             score += 10;
+        } else if (classBundleMatches === 1) {
+            score += 4;
+        }
+
+        if (clusterBundleMatches >= 2) {
+            score += 12;
+        } else if (clusterBundleMatches === 1) {
+            score += 6;
         }
 
         if (doc.aiOnly) {
@@ -2625,7 +3268,7 @@
         }
 
         if (hardAnchors.length && hardAnchorTitleMatches === 0 && hardAnchorBodyMatches === 0 && softModifierMatches >= 1) {
-            score -= 18;
+            score -= 10;
         }
 
         return score;
@@ -2764,7 +3407,10 @@
         const lowerSource = rawSource.toLowerCase();
         const searchTerms = uniqueItems([
             ...queryData.highlightTerms,
-            ...queryData.units.map(unit => searchDisplayMap.get(unit) || unit)
+            ...queryData.units.map(unit => searchDisplayMap.get(unit) || unit),
+            ...(queryData.canonicalEntities || []),
+            ...(queryData.expandedCategories || []).slice(0, 4),
+            ...(queryData.clusterExpansions || []).slice(0, 6)
         ]).filter(Boolean);
 
         let matchIndex = -1;
@@ -2818,8 +3464,8 @@
         return { queryData, results };
     }
 
-    function getAiRankedSearchResults(query, rewriteMeta = null) {
-        const queryData = getAiSearchUnits(query, rewriteMeta);
+    function getAiRankedSearchResults(query, rewriteMeta = null, interpreterResult = null) {
+        const queryData = getAiSearchUnits(query, rewriteMeta, interpreterResult);
         if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
             return { queryData, results: [] };
         }
@@ -2833,9 +3479,9 @@
         return { queryData, results };
     }
 
-    function safeGetAiRankedSearchResults(query, rewriteMeta = null) {
+    function safeGetAiRankedSearchResults(query, rewriteMeta = null, interpreterResult = null) {
         try {
-            const payload = getAiRankedSearchResults(query, rewriteMeta);
+            const payload = getAiRankedSearchResults(query, rewriteMeta, interpreterResult);
             return {
                 ok: true,
                 queryData: payload.queryData,
@@ -2846,7 +3492,7 @@
             console.error('AI local retrieval failed:', error);
             return {
                 ok: false,
-                queryData: getAiSearchUnits(query),
+                queryData: getAiSearchUnits(query, rewriteMeta, interpreterResult),
                 results: [],
                 error
             };
@@ -4378,6 +5024,7 @@
         const sourceMixLabels = uniqueItems(sourceBreakdown
             .map(item => getAiSourceDetailLabel(item?.type || item?.sourceDetailType || 'general'))
             .filter(Boolean));
+        const interpretationTags = Array.isArray(state.interpretationTags) ? state.interpretationTags.filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT) : [];
 
         container.innerHTML = `
             <div class="search-ai-card">
@@ -4394,6 +5041,14 @@
                 ${sourceMixLabels.length ? `
                     <div class="search-ai-source-mix">
                         ${sourceMixLabels.map(label => `<span class="search-ai-source-chip">${escapeHtml(label)}</span>`).join('')}
+                    </div>
+                ` : ''}
+                ${interpretationTags.length ? `
+                    <div class="search-ai-interpretation">
+                        <span class="search-ai-interpretation-label">AI 理解為</span>
+                        <div class="search-ai-interpretation-tags">
+                            ${interpretationTags.map(tag => `<span class="search-ai-interpretation-chip">${escapeHtml(tag)}</span>`).join('')}
+                        </div>
                     </div>
                 ` : ''}
                 ${state.rewriteInfo?.hintTerms?.length ? `
@@ -4478,6 +5133,9 @@
         const analysisPlan = options.analysisPlan && typeof options.analysisPlan === 'object'
             ? options.analysisPlan
             : null;
+        const interpreterResult = options.interpreterResult && typeof options.interpreterResult === 'object'
+            ? options.interpreterResult
+            : null;
         const parentBriefs = Array.isArray(options.parentBriefs) ? options.parentBriefs : [];
         const coverageContract = options.coverageContract && typeof options.coverageContract === 'object'
             ? options.coverageContract
@@ -4499,6 +5157,16 @@
                 facetSummary: analysisPlan.facetSummary || {}
             }))
             : 'compact';
+        const interpreterSignature = interpreterResult
+            ? simpleHash(JSON.stringify({
+                canonicalEntities: interpreterResult.canonicalEntities || [],
+                genericClasses: interpreterResult.genericClasses || [],
+                expandedCategories: interpreterResult.expandedCategories || [],
+                clusterExpansions: interpreterResult.clusterExpansions || [],
+                coverageHints: interpreterResult.coverageHints || [],
+                confidence: interpreterResult.confidence || 'low'
+            }))
+            : 'no-interpreter';
         const parentBriefSignature = parentBriefs.length
             ? simpleHash(JSON.stringify(parentBriefs.map(item => ({
                 parentId: item.parentId,
@@ -4534,7 +5202,7 @@
             ].join('::'))}`)
             .join('|');
 
-        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${parentBriefSignature}::${coverageSignature}::${coverageContractSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
+        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${interpreterSignature}::${parentBriefSignature}::${coverageSignature}::${coverageContractSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
     }
 
     function buildAnswerContext(results, queryData, options = {}) {
@@ -4636,6 +5304,29 @@
         return payload;
     }
 
+    async function askAiQueryInterpretation(query) {
+        const response = await fetch(getAiAnswerEndpoint(), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query,
+                mode: 'query_interpretation_v1',
+                responseLocale: 'zh-Hant',
+                contentVersion: getAiContentVersion(),
+                taxonomy: getSerializableAiQueryTaxonomy()
+            })
+        });
+
+        const payload = await response.json().catch(() => null);
+        if (!response.ok || !payload) {
+            throw new Error(payload?.error || 'AI 問句解讀服務暫時無法使用。');
+        }
+
+        return sanitizeAiInterpreterResult(payload);
+    }
+
     async function askAiRewrite(query, chunks) {
         const response = await fetch(getAiAnswerEndpoint(), {
             method: 'POST',
@@ -4664,9 +5355,19 @@
         if (searchState.aiPending) return;
 
         const rawQuery = input.value.trim();
+        let interpreterResult = null;
         let rewriteMeta = null;
         let rewriteAttempts = 0;
-        let aiSearchPayload = safeGetAiRankedSearchResults(rawQuery);
+
+        if (rawQuery && getSearchSignalLength(rawQuery) >= AI_SEARCH_MIN_LENGTH && navigator.onLine) {
+            try {
+                interpreterResult = await askAiQueryInterpretation(rawQuery);
+            } catch (error) {
+                console.warn('AI query interpretation fallback:', error);
+            }
+        }
+
+        let aiSearchPayload = safeGetAiRankedSearchResults(rawQuery, null, interpreterResult);
 
         if (!aiSearchPayload.ok) {
             renderAiAnswerState({
@@ -4733,7 +5434,7 @@
                     rewriteMeta = await askAiRewrite(rawQuery, rewriteChunks);
                     rewriteAttempts += 1;
 
-                    const secondPass = safeGetAiRankedSearchResults(rawQuery, rewriteMeta);
+                    const secondPass = safeGetAiRankedSearchResults(rawQuery, rewriteMeta, interpreterResult);
                     if (!secondPass.ok) {
                         throw secondPass.error || new Error('AI rewrite retrieval failed');
                     }
@@ -4833,8 +5534,15 @@
             sourceTypes: uniqueItems(answerCoverageResults.map(result => result.sourceType).filter(Boolean)),
             sourceDetailTypes: uniqueItems(answerCoverageResults
                 .map(result => result.sourceDetailType || 'general')
-                .filter(type => type && type !== 'general'))
+                .filter(type => type && type !== 'general')),
+            literalAnchors: queryData.literalAnchors || [],
+            canonicalEntities: queryData.canonicalEntities || [],
+            genericClasses: queryData.genericClasses || [],
+            expandedCategories: queryData.expandedCategories || [],
+            clusterExpansions: queryData.clusterExpansions || [],
+            coverageHints: queryData.coverageHints || []
         });
+        const interpretationTags = buildAiInterpretationTags(queryData, reportPlan);
         const chunks = buildAnswerContext(answerCoverageResults, queryData, {
             responseMode: reportPlan.responseMode,
             reportPlan
@@ -4842,6 +5550,7 @@
         const cacheKey = getAiCacheKey(rawQuery, chunks, {
             responseMode: reportPlan.responseMode,
             analysisPlan,
+            interpreterResult: queryData.interpreterResult,
             parentBriefs,
             coverageStats,
             coverageContract
@@ -4850,6 +5559,9 @@
         if (cachedAnswer) {
             if (rewriteMeta && !cachedAnswer.rewriteInfo) {
                 cachedAnswer.rewriteInfo = rewriteMeta;
+            }
+            if (!cachedAnswer.interpretationTags?.length) {
+                cachedAnswer.interpretationTags = interpretationTags;
             }
             renderAiAnswerState(cachedAnswer);
             return;
@@ -4884,6 +5596,7 @@
                 payload.rewriteInfo = rewriteMeta;
             }
             payload.responseMode = reportPlan.responseMode;
+            payload.interpretationTags = interpretationTags;
             renderAiAnswerState(payload);
             writeAiCache(cacheKey, payload);
         } catch (error) {

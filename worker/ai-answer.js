@@ -3218,6 +3218,389 @@ function buildLowConfidenceFallback(query, chunks, options = {}) {
   };
 }
 
+function sanitizeQueryTaxonomy(taxonomy = {}) {
+  const safeTaxonomy = taxonomy && typeof taxonomy === 'object' ? taxonomy : {};
+  const sanitizeTerms = (items, maxItems = 16, maxLength = 80) => uniqueItems((Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, maxLength))
+    .filter(Boolean))
+    .slice(0, maxItems);
+
+  return {
+    version: sanitizeString(safeTaxonomy.version, 40) || 'fallback',
+    aliases: (Array.isArray(safeTaxonomy.aliases) ? safeTaxonomy.aliases : [])
+      .map((entry) => ({
+        canonical: sanitizeString(entry?.canonical, 80),
+        terms: sanitizeTerms([entry?.canonical, ...(Array.isArray(entry?.terms) ? entry.terms : [])], 16, 80)
+      }))
+      .filter((entry) => entry.canonical && entry.terms.length)
+      .slice(0, 24),
+    genericClasses: (Array.isArray(safeTaxonomy.genericClasses) ? safeTaxonomy.genericClasses : [])
+      .map((entry) => ({
+        canonical: sanitizeString(entry?.canonical, 80),
+        terms: sanitizeTerms([entry?.canonical, ...(Array.isArray(entry?.terms) ? entry.terms : [])], 12, 80),
+        expandsTo: sanitizeTerms(entry?.expandsTo, 10, 80)
+      }))
+      .filter((entry) => entry.canonical && entry.terms.length)
+      .slice(0, 16),
+    categoryFamilies: (Array.isArray(safeTaxonomy.categoryFamilies) ? safeTaxonomy.categoryFamilies : [])
+      .map((entry) => ({
+        id: sanitizeString(entry?.id || entry?.label, 60),
+        label: sanitizeString(entry?.label || entry?.id, 80),
+        terms: sanitizeTerms([entry?.label, entry?.id, ...(Array.isArray(entry?.terms) ? entry.terms : [])], 16, 80),
+        keywords: sanitizeTerms([...(Array.isArray(entry?.keywords) ? entry.keywords : []), ...(Array.isArray(entry?.terms) ? entry.terms : [])], 20, 80)
+      }))
+      .filter((entry) => entry.label && entry.terms.length)
+      .slice(0, 16),
+    clusterRelations: (Array.isArray(safeTaxonomy.clusterRelations) ? safeTaxonomy.clusterRelations : [])
+      .map((entry) => ({
+        key: sanitizeString(entry?.key || entry?.label, 60),
+        label: sanitizeString(entry?.label || entry?.key, 80),
+        triggers: sanitizeTerms([entry?.label, ...(Array.isArray(entry?.triggers) ? entry.triggers : [])], 16, 80),
+        relatedEntities: sanitizeTerms(entry?.relatedEntities, 10, 80),
+        relatedCategories: sanitizeTerms(entry?.relatedCategories, 10, 80),
+        relatedTerms: sanitizeTerms(entry?.relatedTerms, 16, 80)
+      }))
+      .filter((entry) => entry.key && entry.triggers.length)
+      .slice(0, 16),
+    supportedSourceTypes: sanitizeTerms(safeTaxonomy.supportedSourceTypes, 6, 24).map(sanitizeSourceType)
+  };
+}
+
+function normalizeComparableQueryText(text) {
+  return normalizeQuery(text)
+    .toLowerCase()
+    .replace(/[\u3000]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function queryIncludesTerm(normalizedQuery, term) {
+  const normalizedTerm = normalizeComparableQueryText(term);
+  return Boolean(normalizedTerm) && normalizedQuery.includes(normalizedTerm);
+}
+
+function sanitizeInterpretationArray(items, maxItems = 12, maxLength = 80) {
+  return uniqueItems((Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, maxLength))
+    .filter(Boolean))
+    .slice(0, maxItems);
+}
+
+function detectCoverageHintsForQuery(normalizedQuery) {
+  return uniqueItems([
+    ...(queryIncludesTerm(normalizedQuery, '全部') || queryIncludesTerm(normalizedQuery, '所有') || queryIncludesTerm(normalizedQuery, '細節') || queryIncludesTerm(normalizedQuery, '完整')
+      ? ['all-details']
+      : []),
+    ...(queryIncludesTerm(normalizedQuery, '流程') || queryIncludesTerm(normalizedQuery, '步驟') || queryIncludesTerm(normalizedQuery, '怎麼做')
+      ? ['all-processes']
+      : []),
+    ...(queryIncludesTerm(normalizedQuery, '哪些') || queryIncludesTerm(normalizedQuery, '有哪些') || queryIncludesTerm(normalizedQuery, '有什麼') || queryIncludesTerm(normalizedQuery, '清單') || queryIncludesTerm(normalizedQuery, '盤點') || queryIncludesTerm(normalizedQuery, '各項')
+      ? ['inventory']
+      : []),
+    ...(queryIncludesTerm(normalizedQuery, '注意事項') || queryIncludesTerm(normalizedQuery, '風險') || queryIncludesTerm(normalizedQuery, '限制') || queryIncludesTerm(normalizedQuery, '規則')
+      ? ['risks']
+      : []),
+    ...(queryIncludesTerm(normalizedQuery, '比較') || queryIncludesTerm(normalizedQuery, '還是') || queryIncludesTerm(normalizedQuery, '要不要') || queryIncludesTerm(normalizedQuery, '值不值得')
+      ? ['comparison']
+      : [])
+  ]);
+}
+
+function detectNegativeTermsForQuery(normalizedQuery) {
+  return uniqueItems([
+    ...(queryIncludesTerm(normalizedQuery, '不要') || queryIncludesTerm(normalizedQuery, '不用') ? ['不要'] : []),
+    ...(queryIncludesTerm(normalizedQuery, '不是') ? ['不是'] : []),
+    ...(queryIncludesTerm(normalizedQuery, '排除') || queryIncludesTerm(normalizedQuery, '扣掉') ? ['排除'] : [])
+  ]);
+}
+
+function findCategoryFamilyByLabel(taxonomy, label) {
+  const normalizedLabel = normalizeComparableQueryText(label);
+  return taxonomy.categoryFamilies.find((entry) =>
+    entry.terms.some((term) => normalizeComparableQueryText(term) === normalizedLabel)
+      || normalizeComparableQueryText(entry.label) === normalizedLabel
+      || normalizeComparableQueryText(entry.id) === normalizedLabel
+  ) || null;
+}
+
+function findClusterRelationByKey(taxonomy, key) {
+  const normalizedKey = normalizeComparableQueryText(key);
+  return taxonomy.clusterRelations.find((entry) =>
+    normalizeComparableQueryText(entry.key) === normalizedKey
+      || normalizeComparableQueryText(entry.label) === normalizedKey
+  ) || null;
+}
+
+function getClusterKeysForQueryTerm(taxonomy, term) {
+  const normalizedTerm = normalizeComparableQueryText(term);
+  if (!normalizedTerm) return [];
+
+  return taxonomy.clusterRelations
+    .filter((entry) => {
+      const relatedTerms = [
+        ...entry.triggers,
+        ...entry.relatedEntities,
+        ...entry.relatedCategories,
+        ...entry.relatedTerms
+      ];
+      return relatedTerms.some((candidate) => normalizeComparableQueryText(candidate) === normalizedTerm);
+    })
+    .map((entry) => entry.key);
+}
+
+function expandCategoryTermsFromLabels(taxonomy, labels = []) {
+  return uniqueItems(labels.flatMap((label) => {
+    const entry = findCategoryFamilyByLabel(taxonomy, label);
+    if (!entry) return [sanitizeString(label, 80)];
+    return [entry.label, ...entry.terms, ...entry.keywords];
+  }).map((item) => sanitizeString(item, 80)).filter(Boolean)).slice(0, 24);
+}
+
+function expandClusterTermsFromKeys(taxonomy, clusterKeys = []) {
+  return uniqueItems(clusterKeys.flatMap((key) => {
+    const entry = findClusterRelationByKey(taxonomy, key);
+    if (!entry) return [];
+    return [entry.label, ...entry.relatedEntities, ...entry.relatedCategories, ...entry.relatedTerms];
+  }).map((item) => sanitizeString(item, 80)).filter(Boolean)).slice(0, 24);
+}
+
+function buildQueryInterpretationFallback(query, taxonomyInput = null) {
+  const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
+  const normalizedQuery = normalizeComparableQueryText(query);
+  const literalAnchors = sanitizeInterpretationArray(extractKeywordCandidates(query), 12, 60);
+  const canonicalEntities = uniqueItems(taxonomy.aliases
+    .filter((entry) => entry.terms.some((term) => queryIncludesTerm(normalizedQuery, term)))
+    .map((entry) => entry.canonical))
+    .slice(0, 10);
+  const genericClasses = uniqueItems(taxonomy.genericClasses
+    .filter((entry) => entry.terms.some((term) => queryIncludesTerm(normalizedQuery, term)))
+    .map((entry) => entry.canonical))
+    .slice(0, 8);
+  const categoryMatches = uniqueItems(taxonomy.categoryFamilies
+    .filter((entry) => entry.terms.some((term) => queryIncludesTerm(normalizedQuery, term)))
+    .map((entry) => entry.label))
+    .slice(0, 10);
+  const clusterKeys = uniqueItems([
+    ...canonicalEntities.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item)),
+    ...literalAnchors.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item)),
+    ...categoryMatches.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item))
+  ]).slice(0, 8);
+  const expandedCategories = uniqueItems([
+    ...genericClasses.flatMap((item) => taxonomy.genericClasses.find((entry) => entry.canonical === item)?.expandsTo || []),
+    ...categoryMatches,
+    ...clusterKeys.flatMap((item) => findClusterRelationByKey(taxonomy, item)?.relatedCategories || [])
+  ]).slice(0, 12);
+  const expandedAliases = uniqueItems([
+    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item])
+  ]).slice(0, 20);
+  const coverageHints = detectCoverageHintsForQuery(normalizedQuery);
+  const negativeTerms = detectNegativeTermsForQuery(normalizedQuery);
+
+  return {
+    canonicalQuery: sanitizeString(query, 160),
+    literalAnchors,
+    canonicalEntities,
+    genericClasses,
+    expandedAliases,
+    expandedCategories,
+    expandedCategoryTerms: expandCategoryTermsFromLabels(taxonomy, expandedCategories),
+    clusterKeys,
+    clusterExpansions: expandClusterTermsFromKeys(taxonomy, clusterKeys),
+    coverageHints,
+    negativeTerms,
+    confidence: canonicalEntities.length
+      ? 'high'
+      : (genericClasses.length || expandedCategories.length || literalAnchors.length ? 'medium' : 'low')
+  };
+}
+
+function buildQueryInterpretationSchema() {
+  return {
+    type: 'OBJECT',
+    properties: {
+      canonicalQuery: { type: 'STRING' },
+      literalAnchors: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 12
+      },
+      canonicalEntities: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 10
+      },
+      genericClasses: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 8
+      },
+      expandedAliases: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 20
+      },
+      expandedCategories: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 12
+      },
+      clusterExpansions: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 16
+      },
+      coverageHints: {
+        type: 'ARRAY',
+        items: {
+          type: 'STRING',
+          enum: ['all-details', 'all-processes', 'inventory', 'risks', 'comparison']
+        },
+        minItems: 0,
+        maxItems: 6
+      },
+      negativeTerms: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 6
+      },
+      confidence: {
+        type: 'STRING',
+        enum: ALLOWED_CONFIDENCE
+      }
+    },
+    required: [
+      'canonicalQuery',
+      'literalAnchors',
+      'canonicalEntities',
+      'genericClasses',
+      'expandedAliases',
+      'expandedCategories',
+      'clusterExpansions',
+      'coverageHints',
+      'negativeTerms',
+      'confidence'
+    ]
+  };
+}
+
+function buildQueryInterpretationPrompt(query, taxonomyInput = null) {
+  const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
+  const aliasDump = taxonomy.aliases
+    .map((entry) => `- ${entry.canonical}: ${entry.terms.join(' / ')}`)
+    .join('\n');
+  const classDump = taxonomy.genericClasses
+    .map((entry) => `- ${entry.canonical}: ${entry.terms.join(' / ')} -> ${entry.expandsTo.join(' / ')}`)
+    .join('\n');
+  const clusterDump = taxonomy.clusterRelations
+    .map((entry) => `- ${entry.key}: triggers=${entry.triggers.join(' / ')} | related=${[...entry.relatedEntities, ...entry.relatedCategories, ...entry.relatedTerms].join(' / ')}`)
+    .join('\n');
+
+  return `你是站內搜尋的查詢解譯助手，任務是把自然語言問題轉成可檢索的語意輪廓，不直接回答問題。
+
+請嚴格遵守：
+1. 全部輸出使用繁體中文。
+2. 只根據使用者原句與提供的 taxonomy 做理解，不可捏造網站沒有的專有名詞。
+3. canonicalEntities 要優先抽出主題主體，例如「禮賓」「劇院」「Room Service」。
+4. genericClasses 要抽出泛稱概念，例如「設施」「服務」「表演」。
+5. expandedAliases 要補中英別名與常見寫法。
+6. expandedCategories 要補泛稱展開後的重要類別，但不能亂加太多無關分類。
+7. clusterExpansions 要補同主題常一起檢索的群組詞。
+8. coverageHints 只能用：all-details / all-processes / inventory / risks / comparison。
+9. negativeTerms 只保留明確排除詞，例如「不要」「不是」「排除」。
+10. confidence 只能是 high / medium / low。
+
+taxonomy aliases:
+${aliasDump || '- 無'}
+
+taxonomy generic classes:
+${classDump || '- 無'}
+
+taxonomy clusters:
+${clusterDump || '- 無'}
+
+使用者問題：
+${query}`;
+}
+
+function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
+  const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
+  const fallback = buildQueryInterpretationFallback(query, taxonomy);
+  const safeOutput = modelOutput && typeof modelOutput === 'object' ? modelOutput : {};
+  const canonicalEntities = uniqueItems([
+    ...fallback.canonicalEntities,
+    ...sanitizeInterpretationArray(safeOutput.canonicalEntities, 10, 80)
+      .map((item) => taxonomy.aliases.find((entry) =>
+        entry.terms.some((term) => normalizeComparableQueryText(term) === normalizeComparableQueryText(item))
+      )?.canonical || sanitizeString(item, 80))
+  ]).slice(0, 10);
+  const genericClasses = uniqueItems([
+    ...fallback.genericClasses,
+    ...sanitizeInterpretationArray(safeOutput.genericClasses, 8, 80)
+      .map((item) => taxonomy.genericClasses.find((entry) =>
+        entry.terms.some((term) => normalizeComparableQueryText(term) === normalizeComparableQueryText(item))
+      )?.canonical || sanitizeString(item, 80))
+  ]).slice(0, 8);
+  const expandedCategories = uniqueItems([
+    ...fallback.expandedCategories,
+    ...sanitizeInterpretationArray(safeOutput.expandedCategories, 12, 80)
+      .map((item) => findCategoryFamilyByLabel(taxonomy, item)?.label || sanitizeString(item, 80)),
+    ...genericClasses.flatMap((item) => taxonomy.genericClasses.find((entry) => entry.canonical === item)?.expandsTo || [])
+  ]).slice(0, 12);
+  const clusterKeys = uniqueItems([
+    ...fallback.clusterKeys,
+    ...sanitizeInterpretationArray(safeOutput.clusterExpansions, 16, 80).flatMap((item) => {
+      const direct = findClusterRelationByKey(taxonomy, item);
+      if (direct) return [direct.key];
+      return getClusterKeysForQueryTerm(taxonomy, item);
+    }),
+    ...canonicalEntities.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item))
+  ]).slice(0, 8);
+  const expandedAliases = uniqueItems([
+    ...fallback.expandedAliases,
+    ...sanitizeInterpretationArray(safeOutput.expandedAliases, 20, 80),
+    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item])
+  ]).slice(0, 24);
+  const coverageHints = uniqueItems([
+    ...fallback.coverageHints,
+    ...sanitizeInterpretationArray(safeOutput.coverageHints, 6, 24)
+      .map((item) => normalizeComparableQueryText(item))
+      .filter((item) => ['all-details', 'all-processes', 'inventory', 'risks', 'comparison'].includes(item))
+  ]).slice(0, 6);
+  const negativeTerms = uniqueItems([
+    ...fallback.negativeTerms,
+    ...sanitizeInterpretationArray(safeOutput.negativeTerms, 6, 60)
+  ]).slice(0, 6);
+
+  return {
+    canonicalQuery: sanitizeString(safeOutput.canonicalQuery || fallback.canonicalQuery || query, 160),
+    literalAnchors: uniqueItems([
+      ...fallback.literalAnchors,
+      ...sanitizeInterpretationArray(safeOutput.literalAnchors, 12, 60)
+    ]).slice(0, 12),
+    canonicalEntities,
+    genericClasses,
+    expandedAliases,
+    expandedCategories,
+    clusterExpansions: uniqueItems([
+      ...fallback.clusterExpansions,
+      ...sanitizeInterpretationArray(safeOutput.clusterExpansions, 16, 80),
+      ...expandClusterTermsFromKeys(taxonomy, clusterKeys)
+    ]).slice(0, 24),
+    coverageHints,
+    negativeTerms,
+    confidence: safeOutput?.confidence === 'high'
+      ? 'high'
+      : ((canonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence)
+  };
+}
+
 function buildRewriteFallback(query, chunks) {
   const keywords = uniqueItems([
     ...extractKeywordCandidates(query),
@@ -3247,10 +3630,16 @@ async function callGemini(env, mode, query, chunks, options = {}) {
   }
 
   const model = String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
-  const schema = mode === 'query_rewrite_v1' ? buildRewriteSchema() : buildGroundedSchemaV2();
-  const prompt = mode === 'query_rewrite_v1'
+  const isRewriteMode = mode === 'query_rewrite_v1';
+  const isInterpreterMode = mode === 'query_interpretation_v1';
+  const schema = isRewriteMode
+    ? buildRewriteSchema()
+    : (isInterpreterMode ? buildQueryInterpretationSchema() : buildGroundedSchemaV2());
+  const prompt = isRewriteMode
     ? buildRewritePrompt(query, chunks)
-    : buildGroundedCoveragePromptV4(query, chunks, options.responseMode || 'compact', options.analysisPlan || null, options);
+    : (isInterpreterMode
+      ? buildQueryInterpretationPrompt(query, options.taxonomy || null)
+      : buildGroundedCoveragePromptV4(query, chunks, options.responseMode || 'compact', options.analysisPlan || null, options));
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
@@ -3267,8 +3656,8 @@ async function callGemini(env, mode, query, chunks, options = {}) {
           }
         ],
         generationConfig: {
-          temperature: mode === 'query_rewrite_v1' ? 0.2 : 0.12,
-      maxOutputTokens: mode === 'query_rewrite_v1' ? 500 : (options.responseMode === 'report' ? 6200 : 1400),
+          temperature: isRewriteMode ? 0.2 : (isInterpreterMode ? 0.15 : 0.12),
+          maxOutputTokens: isRewriteMode ? 500 : (isInterpreterMode ? 900 : (options.responseMode === 'report' ? 6200 : 1400)),
           responseMimeType: 'application/json',
           responseSchema: schema
         }
@@ -3440,10 +3829,13 @@ export default {
     }
 
     const query = normalizeQuery(body?.query).slice(0, MAX_QUERY_LENGTH);
-    const mode = body?.mode === 'query_rewrite_v1' ? 'query_rewrite_v1' : 'grounded_qa_v1';
-    const responseMode = mode === 'query_rewrite_v1'
+    const mode = body?.mode === 'query_rewrite_v1'
+      ? 'query_rewrite_v1'
+      : (body?.mode === 'query_interpretation_v1' ? 'query_interpretation_v1' : 'grounded_qa_v1');
+    const responseMode = mode === 'query_rewrite_v1' || mode === 'query_interpretation_v1'
       ? 'compact'
       : sanitizeResponseMode(body?.responseMode);
+    const taxonomy = sanitizeQueryTaxonomy(body?.taxonomy);
     const analysisPlan = sanitizeAnalysisPlan(body?.analysisPlan, responseMode);
     const chunks = sanitizeChunks(
       body?.chunks,
@@ -3463,6 +3855,21 @@ export default {
     const parentBriefs = Array.from(parentBriefMap.values()).slice(0, MAX_PARENT_BRIEFS);
     const coverageContract = sanitizeCoverageContract(body?.coverageContract);
     const coverageStats = sanitizeCoverageStats(body?.coverageStats);
+
+    if (mode === 'query_interpretation_v1') {
+      if (getQuerySignalLength(query) < 2) {
+        return jsonResponse(buildQueryInterpretationFallback(query, taxonomy));
+      }
+
+      try {
+        const modelOutput = await callGemini(env, mode, query, [], {
+          taxonomy
+        });
+        return jsonResponse(finalizeQueryInterpretation(modelOutput, query, taxonomy));
+      } catch {
+        return jsonResponse(buildQueryInterpretationFallback(query, taxonomy));
+      }
+    }
 
     if (getQuerySignalLength(query) < MIN_QUERY_SIGNAL) {
       if (mode === 'query_rewrite_v1') {
@@ -3498,6 +3905,7 @@ export default {
       const modelOutput = await callGemini(env, mode, query, chunks, {
         responseMode,
         analysisPlan,
+        taxonomy,
         parentBriefs,
         coverageStats,
         coverageContract
