@@ -1685,6 +1685,41 @@ body.search-open {
     font-weight: 700;
 }
 
+.search-ai-coverage-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(243, 181, 0, 0.12);
+    border: 1px solid rgba(243, 181, 0, 0.2);
+}
+
+.search-ai-coverage-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.65;
+    font-weight: 700;
+}
+
+.search-ai-coverage-summary strong {
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.search-ai-coverage-divider {
+    opacity: 0.65;
+}
+
+.search-ai-coverage-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .search-ai-report-headline {
     margin: 0 0 10px;
     font-size: 1.26rem;
@@ -1818,6 +1853,20 @@ body.search-open {
     gap: 12px;
 }
 
+.search-ai-full-card-inventory {
+    display: grid;
+    gap: 14px;
+}
+
+.search-ai-full-card-group {
+    display: grid;
+    gap: 12px;
+}
+
+.search-ai-report-section-header.compact {
+    margin-bottom: 0;
+}
+
 .search-ai-topic-groups {
     display: grid;
     gap: 14px;
@@ -1867,6 +1916,11 @@ body.search-open {
     background: rgba(255, 255, 255, 0.08);
 }
 
+.search-ai-card-highlight-item.inventory {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .search-ai-card-highlight-top {
     display: flex;
     justify-content: space-between;
@@ -1898,6 +1952,10 @@ body.search-open {
 .search-ai-inline-citations {
     display: flex;
     flex-wrap: wrap;
+    gap: 8px;
+}
+
+.search-ai-report-list.dense {
     gap: 8px;
 }
 

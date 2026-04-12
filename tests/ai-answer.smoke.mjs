@@ -231,6 +231,21 @@ const reportFetch = async () => new Response(JSON.stringify({
                   '再進 Open House，讓孩子熟悉環境與動線。',
                   '如果孩子狀態還好，再安排水區或第二輪自由活動。'
                 ],
+                fullCardInventory: [
+                  {
+                    parentId: 'chunk-a',
+                    title: '登船 3 小時 SOP',
+                    cardType: 'playbook',
+                    groupLabel: '攻略本',
+                    sourceLabels: ['攻略本', '社群實戰'],
+                    detailBullets: [
+                      '先午餐，再把 Lounge 當短暫同步與補給點。',
+                      '之後再銜接 Open House，比較不會在第一圈就亂掉節奏。'
+                    ],
+                    citationIds: ['chunk-a'],
+                    renderOrigin: 'model'
+                  }
+                ],
                 detailBreakdown: [
                   'Lounge 在這裡比較像節奏緩衝站，不是第一站主秀。',
                   'Open House 放在補給後進行，孩子通常比較願意配合。'
@@ -341,6 +356,82 @@ const report = await invokeWorker(worker, {
       sourceDetailTypes: ['community', 'concierge']
     }
   },
+  coverageContract: {
+    mode: 'inventory',
+    targetCoverageCount: 3,
+    minimumCoverageRatio: 1,
+    mustRenderParentIds: ['chunk-a', 'chunk-b', 'chunk-c'],
+    preferredParentIds: [],
+    relevantSourceTypes: ['playbook', 'schedule'],
+    coverageReason: '測試模型只回部分 inventory items 時，normalizer 會補齊其餘 parent cards。'
+  },
+  parentBriefs: [
+    {
+      parentId: 'chunk-a',
+      title: '登船 3 小時 SOP',
+      cardType: 'playbook',
+      groupLabel: '攻略本',
+      sourceLabels: ['攻略本', '社群實戰'],
+      detailBullets: ['先午餐，再 Lounge，再 Open House。'],
+      citationIds: ['chunk-a'],
+      sourceClusterKey: 'boarding-flow',
+      renderPriority: 5
+    },
+    {
+      parentId: 'chunk-b',
+      title: 'Lounge 當緩衝區',
+      cardType: 'service',
+      groupLabel: '攻略本',
+      sourceLabels: ['攻略本', '禮賓加值'],
+      detailBullets: ['先補水、降噪，再重新同步接下來要跑的點。'],
+      citationIds: ['chunk-b'],
+      sourceClusterKey: 'concierge-service',
+      renderPriority: 5
+    },
+    {
+      parentId: 'chunk-c',
+      title: '第一天下午節奏',
+      cardType: 'schedule',
+      groupLabel: '行程',
+      sourceLabels: ['行程', '站內整理'],
+      detailBullets: ['第一圈先保留最重要的點，不要一開始就滿船亂衝。'],
+      citationIds: ['chunk-c'],
+      sourceClusterKey: 'boarding-flow',
+      renderPriority: 2
+    }
+  ],
+  mustRenderParents: [
+    {
+      parentId: 'chunk-a',
+      title: '登船 3 小時 SOP',
+      cardType: 'playbook',
+      groupLabel: '攻略本',
+      sourceLabels: ['攻略本', '社群實戰'],
+      detailBullets: ['先午餐，再 Lounge，再 Open House。'],
+      citationIds: ['chunk-a'],
+      renderPriority: 5
+    },
+    {
+      parentId: 'chunk-b',
+      title: 'Lounge 當緩衝區',
+      cardType: 'service',
+      groupLabel: '攻略本',
+      sourceLabels: ['攻略本', '禮賓加值'],
+      detailBullets: ['先補水、降噪，再重新同步接下來要跑的點。'],
+      citationIds: ['chunk-b'],
+      renderPriority: 5
+    },
+    {
+      parentId: 'chunk-c',
+      title: '第一天下午節奏',
+      cardType: 'schedule',
+      groupLabel: '行程',
+      sourceLabels: ['行程', '站內整理'],
+      detailBullets: ['第一圈先保留最重要的點，不要一開始就滿船亂衝。'],
+      citationIds: ['chunk-c'],
+      renderPriority: 2
+    }
+  ],
   chunks: [
     buildChunk('chunk-a', '登船 3 小時 SOP', '接駁車下車後先跟著指引前進，午餐後再去 Lounge、Open House 和水區。'),
     buildChunk('chunk-b', 'Lounge 當緩衝區', '把 Lounge 當作 15 到 20 分鐘的補水、降噪與重新同步中轉站。', {
@@ -369,7 +460,25 @@ assert.equal(report.response.status, 200);
 assert.equal(report.payload.insufficientData, false);
 assert.equal(typeof report.payload.report, 'object');
 assertReadable(report.payload.report.headline, 'report headline');
+assert.equal(typeof report.payload.report.coverageSummary, 'object', 'report should include coverageSummary');
+assert(report.payload.report.coverageSummary.selectedParentCount >= 1, 'coverageSummary should include selectedParentCount');
+assert(report.payload.report.coverageSummary.targetParentCount >= 3, 'coverageSummary should include targetParentCount');
+assert(report.payload.report.coverageSummary.renderedParentCount >= 1, 'coverageSummary should include renderedParentCount');
+assert(report.payload.report.coverageSummary.backfilledParentCount >= 1, 'coverageSummary should include backfilledParentCount');
+assert(report.payload.report.coverageSummary.coverageRatio >= 1, 'report coverageSummary should reflect full must-render coverage');
 assert(Array.isArray(report.payload.report.recommendedPlan) && report.payload.report.recommendedPlan.length >= 3, 'report should include recommendedPlan');
+assert(Array.isArray(report.payload.report.fullCardInventory) && report.payload.report.fullCardInventory.length >= 3, 'report should include fullCardInventory');
+assertReadable(report.payload.report.fullCardInventory[0].title, 'report fullCardInventory title');
+assert(Array.isArray(report.payload.report.fullCardInventory[0].detailBullets) && report.payload.report.fullCardInventory[0].detailBullets.length >= 1, 'report fullCardInventory should include detailBullets');
+assert(report.payload.report.fullCardInventory.some((item) => item.renderOrigin === 'backfill'), 'report fullCardInventory should include backfilled items');
+assert.deepEqual(
+  ['chunk-a', 'chunk-b', 'chunk-c'],
+  report.payload.report.fullCardInventory
+    .map((item) => item.parentId)
+    .filter((parentId) => ['chunk-a', 'chunk-b', 'chunk-c'].includes(parentId))
+    .sort(),
+  'report fullCardInventory should include every mustRender parent'
+);
 assert(Array.isArray(report.payload.report.detailBreakdown) && report.payload.report.detailBreakdown.length >= 2, 'report should include detailBreakdown');
 assert(Array.isArray(report.payload.report.risksAndFallbacks) && report.payload.report.risksAndFallbacks.length >= 2, 'report should include risksAndFallbacks');
 assert(Array.isArray(report.payload.report.sourceComparison) && report.payload.report.sourceComparison.length >= 2, 'report should include sourceComparison');

@@ -55,12 +55,14 @@
     const AI_REWRITE_MAX_ATTEMPTS = 1;
     const AI_REWRITE_MAX_RESULTS = 4;
     const AI_REPORT_DEFAULT_MODE = 'report';
-    const AI_REPORT_MAX_RESULTS = 24;
-    const AI_REPORT_MAX_PARENTS = 10;
-    const AI_REPORT_MAX_PER_PARENT = 4;
+    const AI_REPORT_MAX_RESULTS = 60;
+    const AI_REPORT_MAX_PARENTS = 28;
+    const AI_REPORT_MAX_PER_PARENT = 5;
     const AI_REPORT_STRONG_EVIDENCE_MIN = 4;
+    const AI_REPORT_RANKED_POOL_LIMIT = 140;
+    const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 20;
     const AI_RESULT_HIGHLIGHT_LIMIT = 4;
-    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v5';
+    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v6';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
@@ -1085,11 +1087,92 @@
         return labels[sourceDetailType] || '站內整理';
     }
 
+    function toCoverageAnchorKey(value, fallback = '') {
+        const normalized = normalizeSearchText(value || '');
+        if (!normalized) return fallback;
+        return normalized
+            .replace(/[^a-z0-9\u4e00-\u9fff\s-]/g, ' ')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .slice(0, 80) || fallback;
+    }
+
+    function inferCoverageAnchorKeys(config = {}) {
+        const normalized = normalizeSearchText([
+            config.title,
+            config.text,
+            config.structuredText,
+            Array.isArray(config.keywords) ? config.keywords.join(' ') : '',
+            config.locationLabel,
+            config.groupLabel
+        ].filter(Boolean).join(' '));
+        const hasTheatre = hasQueryHint(normalized, ['walt disney theatre', '劇院', 'theatre', 'theater', '主秀', '看秀']);
+        const hasLounge = hasQueryHint(normalized, ['concierge lounge', '禮賓酒廊', 'lounge', 'concierge', '酒廊']);
+        const hasRoomService = hasQueryHint(normalized, ['room service', '客房服務', '房務']);
+        const hasOpenHouse = hasQueryHint(normalized, ['open house', 'oceaneer', 'kids club', '兒童俱樂部']);
+
+        let entityKey = '';
+        let venueKey = '';
+        let seriesKey = '';
+        let sourceClusterKey = '';
+
+        if (hasTheatre) {
+            entityKey = 'walt-disney-theatre';
+            venueKey = 'walt-disney-theatre';
+            sourceClusterKey = 'theatre-experience';
+        } else if (hasLounge) {
+            entityKey = 'concierge-lounge';
+            venueKey = 'concierge-lounge';
+            sourceClusterKey = 'concierge-service';
+        } else if (hasRoomService) {
+            entityKey = 'room-service';
+            sourceClusterKey = 'room-service';
+        } else if (hasOpenHouse) {
+            entityKey = 'open-house';
+            sourceClusterKey = 'kids-club';
+        }
+
+        if (config.sourceType === 'show') {
+            seriesKey = config.seriesKey || (venueKey ? `${venueKey}-shows` : toCoverageAnchorKey(config.groupLabel || config.locationLabel || config.title, 'show-series'));
+        } else if (config.sourceType === 'playbook' && venueKey === 'walt-disney-theatre') {
+            seriesKey = config.seriesKey || 'walt-disney-theatre-support';
+        } else if (config.sourceType === 'deck' && venueKey === 'walt-disney-theatre') {
+            seriesKey = config.seriesKey || 'walt-disney-theatre-venue';
+        }
+
+        if (!entityKey) {
+            entityKey = config.entityKey || toCoverageAnchorKey(config.title || config.groupLabel || config.locationLabel, toCoverageAnchorKey(config.sourceType || 'topic', 'topic'));
+        }
+        if (!venueKey) {
+            venueKey = config.venueKey || '';
+        }
+        if (!seriesKey) {
+            seriesKey = config.seriesKey || '';
+        }
+        if (!sourceClusterKey) {
+            sourceClusterKey = config.sourceClusterKey || venueKey || entityKey || toCoverageAnchorKey(config.groupLabel || config.title, 'topic-cluster');
+        }
+
+        return {
+            entityKey,
+            venueKey,
+            seriesKey,
+            sourceClusterKey
+        };
+    }
+
     function createSearchDocumentBase(config) {
         const id = config.id;
         const keywords = Array.isArray(config.keywords) ? uniqueItems(config.keywords.filter(Boolean)) : [];
         const text = joinSearchTextParts([config.text]);
         const structuredText = joinSearchTextParts([config.structuredText || text]);
+        const anchorKeys = inferCoverageAnchorKeys({
+            ...config,
+            text,
+            structuredText,
+            keywords
+        });
 
         return {
             id,
@@ -1109,6 +1192,10 @@
             timeHint: compactSearchText(config.timeHint),
             bestTimeHint: compactSearchText(config.bestTimeHint),
             evidenceRoleHints: Array.isArray(config.evidenceRoleHints) ? config.evidenceRoleHints.filter(Boolean) : [],
+            entityKey: config.entityKey || anchorKeys.entityKey,
+            venueKey: config.venueKey || anchorKeys.venueKey,
+            seriesKey: config.seriesKey || anchorKeys.seriesKey,
+            sourceClusterKey: config.sourceClusterKey || anchorKeys.sourceClusterKey,
             aiOnly: Boolean(config.aiOnly)
         };
     }
@@ -1203,6 +1290,8 @@
             deck.facilities.flatMap((facility, facilityIndex) => {
                 const facilityId = getDeckFacilityId(deck.id, facilityIndex);
                 const locationLabel = `${deck.label} · ${deck.title}`;
+                const normalizedFacility = normalizeSearchText([facility.name, facility.summary, facility.tripUse, deck.title, deck.theme].join(' '));
+                const isTheatreFacility = hasQueryHint(normalizedFacility, ['walt disney theatre', '劇院', 'theatre', '主秀']);
                 const navTarget = {
                     type: 'deck',
                     tabId: deck.id,
@@ -1228,6 +1317,10 @@
                     navTarget,
                     fieldType: 'parent',
                     bestTimeHint: facility.bestTime,
+                    entityKey: isTheatreFacility ? 'walt-disney-theatre' : '',
+                    venueKey: isTheatreFacility ? 'walt-disney-theatre' : '',
+                    seriesKey: isTheatreFacility ? 'walt-disney-theatre-venue' : '',
+                    sourceClusterKey: isTheatreFacility ? 'theatre-experience' : '',
                     evidenceRoleHints: ['primary-answer']
                 });
 
@@ -1257,6 +1350,8 @@
             category.shows.flatMap((show, showIndex) => {
                 const showId = getShowItemId(category.id, showIndex);
                 const locationLabel = `表演精華 · ${category.title}`;
+                const normalizedShow = normalizeSearchText([show.name, show.location, show.theme, category.title, category.intro].join(' '));
+                const isTheatreShow = hasQueryHint(normalizedShow, ['walt disney theatre', '劇院', 'theatre', '主秀']);
                 const navTarget = {
                     type: 'show',
                     tabId: 'shows',
@@ -1282,6 +1377,10 @@
                     navTarget,
                     fieldType: 'parent',
                     bestTimeHint: show.timingTip,
+                    entityKey: isTheatreShow ? 'walt-disney-theatre' : '',
+                    venueKey: isTheatreShow ? 'walt-disney-theatre' : '',
+                    seriesKey: isTheatreShow ? 'walt-disney-theatre-shows' : '',
+                    sourceClusterKey: isTheatreShow ? 'theatre-experience' : '',
                     evidenceRoleHints: ['primary-answer']
                 });
 
@@ -1311,6 +1410,9 @@
             mission.items.map((item, itemIndex) => {
                 const itemId = getPlaybookItemId(mission.id, itemIndex);
                 const locationLabel = `攻略本 · ${mission.label}`;
+                const normalizedPlaybook = normalizeSearchText([item.title, item.whenToUse, item.action, item.tripFit, item.caution, mission.label].join(' '));
+                const isTheatrePlaybook = hasQueryHint(normalizedPlaybook, ['walt disney theatre', '劇院', 'theatre', '主秀', '優先入場', '看秀']);
+                const isLoungePlaybook = hasQueryHint(normalizedPlaybook, ['lounge', 'concierge', '禮賓', '酒廊']);
                 const navTarget = {
                     type: 'playbook',
                     missionId: mission.id,
@@ -1338,6 +1440,16 @@
                     navTarget,
                     fieldType: 'parent',
                     timeHint: item.whenToUse,
+                    entityKey: isTheatrePlaybook
+                        ? 'walt-disney-theatre'
+                        : (isLoungePlaybook ? 'concierge-lounge' : ''),
+                    venueKey: isTheatrePlaybook
+                        ? 'walt-disney-theatre'
+                        : (isLoungePlaybook ? 'concierge-lounge' : ''),
+                    seriesKey: isTheatrePlaybook ? 'walt-disney-theatre-support' : '',
+                    sourceClusterKey: isTheatrePlaybook
+                        ? 'theatre-experience'
+                        : (isLoungePlaybook ? 'concierge-service' : ''),
                     evidenceRoleHints: ['primary-answer']
                 });
 
@@ -1708,6 +1820,13 @@
         const slots = queryData.slots || {};
         const hardAnchors = queryData.hardAnchors || [];
         const softModifiers = queryData.softModifiers || [];
+        const inventorySignal = hasQueryHint(normalizedQuery, [
+            '哪些', '有哪些', '有什麼', '可享受', '包含', '服務', '設施', '活動', '餐點', '攻略',
+            '內容', '細節', '整理', '完整', '總表', '清單'
+        ]) || (
+            (intents.conciergeFocus || intents.roomServiceFocus || intents.deckFocus || intents.foodFocus || intents.kidFocus)
+            && hasQueryHint(normalizedQuery, ['什麼', '哪些', '有哪些', '有什麼'])
+        );
         const sequenceSignal = intents.scheduleFocus && (
             intents.actionFocus
             || hasQueryHint(normalizedQuery, ['順序', '第一步', '先去', '先做', '先做什麼', '怎麼安排', '路線'])
@@ -1761,12 +1880,13 @@
             focusTerms,
             hardAnchors: hardAnchors.slice(0, 12),
             softModifiers: softModifiers.slice(0, 12),
+            inventoryIntent: inventorySignal,
             prefersScheduleContext: type === 'sequence'
                 || Boolean(intents.scheduleFocus)
                 || Boolean((slots.day || []).length)
                 || Boolean((slots.timeWindow || []).length),
-            requiresDetailSupport: type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
-            requiresActionChunk: type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
+            requiresDetailSupport: inventorySignal || type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
+            requiresActionChunk: inventorySignal || type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
             requiresCautionChunk: type === 'operational-detail' || type === 'policy-or-tip' || Boolean((slots.risk || []).length)
         };
     }
@@ -2008,6 +2128,8 @@
         return {
             responseMode: reportPlan.responseMode === 'report' ? 'report' : 'compact',
             intentType: reportPlan.intentType || 'operational-detail',
+            inventoryIntent: Boolean(reportPlan.inventoryIntent),
+            coverageMode: reportPlan.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
             facetSummary: {
                 goal: Array.isArray(facets.goal) ? facets.goal.slice(0, 8) : [],
                 time: Array.isArray(facets.time) ? facets.time.slice(0, 8) : [],
@@ -2081,6 +2203,7 @@
             && (facets.alternatives.length >= 2 || parentIds.length >= 3 || sourceDetailTypes.length >= 2);
         const rewriteTriggered = Boolean(options.rewriteTriggered);
         const hasRiskJudgment = Boolean(facets.risk.length) || intentProfile.type === 'policy-or-tip';
+        const inventoryIntent = Boolean(intentProfile.inventoryIntent);
         const triggerReasons = [];
 
         if (activeFacetNames.length >= 2) {
@@ -2101,6 +2224,9 @@
         if (hasRiskJudgment && strongEvidenceCount >= AI_REPORT_STRONG_EVIDENCE_MIN) {
             triggerReasons.push('涉及風險判斷且證據足夠');
         }
+        if (inventoryIntent) {
+            triggerReasons.push('需要完整盤點同主題卡片');
+        }
 
         if (!triggerReasons.length && options.defaultResponseMode === 'report') {
             triggerReasons.push('預設詳細報告模式');
@@ -2113,6 +2239,8 @@
         return {
             responseMode,
             intentType: intentProfile.type,
+            inventoryIntent,
+            coverageMode: responseMode === 'report' ? 'exhaustive' : 'standard',
             facets,
             activeFacetNames,
             activeFacetCount: activeFacetNames.length,
@@ -2291,9 +2419,9 @@
         }
 
         if (softModifierMatches >= 2) {
-            score += 8;
-        } else if (softModifierMatches === 1) {
             score += 4;
+        } else if (softModifierMatches === 1) {
+            score += 1;
         }
 
         if (slotMatches >= 2) {
@@ -2700,7 +2828,7 @@
             .map(doc => ({ ...doc, score: scoreDocumentForAi(doc, queryData) }))
             .filter(doc => doc.score > 0)
             .sort((a, b) => b.score - a.score)
-            .slice(0, 48);
+            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
 
         return { queryData, results };
     }
@@ -2815,7 +2943,7 @@
             if (['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(fieldType)) score += 24;
             if (result.sourceDetailType === 'official') score += 14;
             if (countMatchedTerms(result.normalizedCombined, queryData.softModifiers || []) >= 1) {
-                score += 8;
+                score += 4;
             }
         }
 
@@ -2934,9 +3062,9 @@
             maxResults: isReport ? AI_REPORT_MAX_RESULTS : 8,
             maxParents: isReport ? AI_REPORT_MAX_PARENTS : 4,
             maxPerParent: isReport ? AI_REPORT_MAX_PER_PARENT : 2,
-            maxPerSourceGroup: isReport ? 8 : 3,
-            maxSchedule: isReport ? 6 : (intentProfile.type === 'sequence' ? 3 : 2),
-            maxStatic: 1
+            maxPerSourceGroup: isReport ? 14 : 3,
+            maxSchedule: isReport ? 10 : (intentProfile.type === 'sequence' ? 3 : 2),
+            maxStatic: isReport ? 2 : 1
         };
     }
 
@@ -3377,6 +3505,388 @@
         };
     }
 
+    function getAiCoverageEntityType(result) {
+        if (!result) return 'mixed';
+        if (result.sourceType === 'deck') return 'facility';
+        if (result.sourceType === 'show') return 'show';
+        if (result.sourceType === 'schedule') return 'schedule';
+        if (result.sourceType === 'playbook') {
+            return (result.sourceDetailType || 'general') === 'general' ? 'playbook' : 'service';
+        }
+        return 'mixed';
+    }
+
+    function getAiCoverageParentPriority(result) {
+        if (!result) return 0;
+        if (result.sourceType === 'playbook') return 5;
+        if (result.sourceType === 'deck') return 4;
+        if (result.sourceType === 'show') return 3;
+        if (result.sourceType === 'schedule') return 2;
+        if (result.sourceType === 'static') return 1;
+        return 0;
+    }
+
+    function inferAiCoverageEvidenceRole(result, queryData = {}, reportPlan = {}) {
+        if (!result) return 'same-subject-detail';
+        const fieldType = result.fieldType || 'parent';
+        if (reportPlan.needsSourceComparison && (result.sourceDetailType || 'general') !== 'general' && ['parent', 'action', 'caution', 'desc', 'whenToUse'].includes(fieldType)) {
+            return 'source-contrast';
+        }
+        if (result.sourceType === 'schedule' || ['time', 'whenToUse', 'bestTime', 'timingTip'].includes(fieldType)) {
+            return 'timing-context';
+        }
+        if (['caution', 'bestTime', 'timingTip'].includes(fieldType)) {
+            return 'rules-limits';
+        }
+        if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) {
+            return 'core-answer';
+        }
+        if (countMatchedTerms(result.normalizedCombined || '', queryData.subjectClusters || []) >= 1) {
+            return 'same-subject-detail';
+        }
+        return 'same-subject-detail';
+    }
+
+    function scoreAiCoverageCandidate(result, queryData = {}, reportPlan = {}, displayParentIds = new Set()) {
+        if (!result) return 0;
+        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
+        const role = inferAiCoverageEvidenceRole(result, queryData, reportPlan);
+        const fieldType = result.fieldType || 'parent';
+        const parentId = result.parentId || result.id;
+        const sourceGroup = getAiSourceGroup(result.sourceType);
+        let score = scoreAiSelectionCandidate(result, role, queryData, intentProfile);
+
+        if (displayParentIds.has(parentId)) score += 24;
+        if (fieldType === 'parent') score += 18;
+        if (['action', 'summary', 'theme', 'desc'].includes(fieldType)) score += 14;
+        if (['tripUse', 'tripFit', 'tripLink'].includes(fieldType)) score += 10;
+        if ((result.sourceDetailType || 'general') !== 'general') score += 10;
+        if (getAiCoverageParentPriority(result) >= 4) score += 12;
+        if (countMatchedTerms(result.normalizedTitle || '', queryData.hardAnchors || []) >= 1) score += 12;
+        if (countMatchedTerms(result.normalizedCombined || '', queryData.subjectClusters || []) >= 1) score += 8;
+
+        if (reportPlan.inventoryIntent) {
+            if (sourceGroup === 'schedule' && !['time', 'desc', 'whenToUse'].includes(fieldType)) {
+                score -= 12;
+            }
+            if (result.sourceType === 'static') {
+                score -= 20;
+            }
+        }
+
+        if (reportPlan.intentType !== 'sequence' && result.sourceType === 'schedule' && fieldType === 'parent') {
+            score -= 8;
+        }
+
+        return score;
+    }
+
+    function shouldAssimilateVisibleAiResult(result, reportPlan = {}) {
+        if (!result) return false;
+        if (result.sourceType === 'static') return false;
+        if (result.sourceType === 'schedule') {
+            return reportPlan.intentType === 'sequence' || Boolean((reportPlan.facets?.time || []).length);
+        }
+        return ['playbook', 'deck', 'show'].includes(result.sourceType);
+    }
+
+    function isCoveragePrimaryParent(result, reportPlan = {}) {
+        if (!result) return false;
+        if (!['playbook', 'deck', 'show'].includes(result.sourceType)) return false;
+        if (result.sourceType === 'show') return true;
+        if (reportPlan.inventoryIntent) return true;
+        return getAiCoverageParentPriority(result) >= 4;
+    }
+
+    function collectAiCoverageAnchorValues(results = []) {
+        return uniqueItems((Array.isArray(results) ? results : []).flatMap(result => ([
+            result?.entityKey,
+            result?.venueKey,
+            result?.seriesKey,
+            result?.sourceClusterKey
+        ]).filter(Boolean)));
+    }
+
+    function collectAiCoverageParentIds(results = []) {
+        return uniqueItems((Array.isArray(results) ? results : [])
+            .map(result => result?.parentId || result?.id)
+            .filter(Boolean));
+    }
+
+    function collectAiMustRenderParentIds(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
+        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+        const visibleCandidates = (Array.isArray(displayResults) ? displayResults : [])
+            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan));
+        const seedResults = uniqueItems([
+            ...collectAiCoverageParentIds(selectedResults),
+            ...collectAiCoverageParentIds(visibleCandidates)
+        ]).map(parentId => pool.find(result => (result.parentId || result.id) === parentId))
+            .filter(Boolean);
+        const anchorValues = collectAiCoverageAnchorValues([...seedResults, ...selectedResults, ...visibleCandidates]);
+        const seen = new Set();
+        const parentIds = [];
+
+        const pushParent = (parentId) => {
+            if (!parentId || seen.has(parentId)) return;
+            seen.add(parentId);
+            parentIds.push(parentId);
+        };
+
+        collectAiCoverageParentIds(selectedResults).forEach(pushParent);
+        collectAiCoverageParentIds(visibleCandidates).forEach(pushParent);
+
+        pool
+            .filter(result => {
+                if (!isCoveragePrimaryParent(result, reportPlan)) return false;
+                if (anchorValues.length && [
+                    result.entityKey,
+                    result.venueKey,
+                    result.seriesKey,
+                    result.sourceClusterKey
+                ].some(anchor => anchor && anchorValues.includes(anchor))) {
+                    return true;
+                }
+                if (!reportPlan.inventoryIntent) return false;
+                return countMatchedTerms(result.normalizedCombined || '', reportPlan.subjectClusters || queryData.subjectClusters || []) >= 1;
+            })
+            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
+            .forEach(result => pushParent(result.parentId || result.id));
+
+        return parentIds.slice(0, AI_REPORT_MAX_PARENTS);
+    }
+
+    function buildAiCoverageContract(answerCoverageResults = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
+        const mustRenderParentIds = collectAiMustRenderParentIds(answerCoverageResults, displayResults, queryData, reportPlan, selectedResults);
+        const preferredParentIds = uniqueItems((Array.isArray(answerCoverageResults) ? answerCoverageResults : [])
+            .filter(result => result.sourceType === 'schedule' || result.sourceType === 'static')
+            .map(result => result.parentId || result.id))
+            .filter(parentId => !mustRenderParentIds.includes(parentId))
+            .slice(0, AI_REPORT_MAX_PARENTS);
+        const targetCoverageCount = mustRenderParentIds.length;
+        const minimumCoverageRatio = mustRenderParentIds.length === 0 ? 0 : 1;
+
+        return {
+            mode: reportPlan.inventoryIntent ? 'inventory' : 'standard',
+            targetCoverageCount,
+            minimumCoverageRatio,
+            mustRenderParentIds,
+            preferredParentIds,
+            relevantSourceTypes: uniqueItems((Array.isArray(answerCoverageResults) ? answerCoverageResults : [])
+                .map(result => result.sourceType)
+                .filter(sourceType => ['show', 'playbook', 'deck', 'schedule'].includes(sourceType))),
+            coverageReason: reportPlan.inventoryIntent
+                ? '完整盤點題會優先覆蓋右側可見結果與同主題 sibling cards'
+                : '依主題契合度優先覆蓋高價值 parent cards'
+        };
+    }
+
+    function orderAiParentBriefsForCoverage(parentBriefs = [], coverageContract = null) {
+        const orderMap = new Map((coverageContract?.mustRenderParentIds || []).map((parentId, index) => [parentId, index]));
+        return [...(Array.isArray(parentBriefs) ? parentBriefs : [])].sort((a, b) => {
+            const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
+            const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
+            if (orderA !== orderB) return orderA - orderB;
+            return (b.renderPriority || 0) - (a.renderPriority || 0);
+        });
+    }
+
+    function buildAiAnswerCoveragePool(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
+        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
+        const maxResults = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_RESULTS : 8;
+        const maxParents = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_PARENTS : 4;
+        const maxPerParent = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_PER_PARENT : 2;
+        const selected = [];
+        const seenIds = new Set();
+        const parentCounts = new Map();
+        const mustRenderParentIds = collectAiMustRenderParentIds(pool, displayResults, queryData, reportPlan, selectedResults);
+        const visibleParents = new Set(displayResults
+            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan))
+            .map(result => result.parentId || result.id));
+
+        const sortedPool = [...pool].sort((a, b) =>
+            scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents)
+            - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents)
+        );
+
+        const canAdd = (result) => {
+            if (!result || seenIds.has(result.id)) return false;
+            if (selected.length >= maxResults) return false;
+            const parentId = result.parentId || result.id;
+            const currentParentCount = parentCounts.get(parentId) || 0;
+            if (currentParentCount >= maxPerParent) return false;
+            if (!parentCounts.has(parentId) && parentCounts.size >= maxParents) return false;
+            return true;
+        };
+
+        const addResult = (result, role = '') => {
+            if (!canAdd(result)) return false;
+            const parentId = result.parentId || result.id;
+            seenIds.add(result.id);
+            parentCounts.set(parentId, (parentCounts.get(parentId) || 0) + 1);
+            selected.push({
+                ...result,
+                evidenceRole: role || result.evidenceRole || inferAiCoverageEvidenceRole(result, queryData, reportPlan)
+            });
+            return true;
+        };
+
+        const addParentBundle = (parentId, preferredRole = '') => {
+            if (!parentId) return;
+            const siblings = sortedPool.filter(result => (result.parentId || result.id) === parentId);
+            if (!siblings.length) return;
+
+            const preferredParent = siblings.find(result => (result.fieldType || 'parent') === 'parent') || siblings[0];
+            addResult(preferredParent, preferredRole || inferAiCoverageEvidenceRole(preferredParent, queryData, reportPlan));
+
+            getAiSiblingFieldPriority(preferredParent.sourceType).forEach(fieldType => {
+                const sibling = siblings.find(result => (result.fieldType || 'parent') === fieldType);
+                if (!sibling) return;
+                addResult(sibling, inferAiCoverageEvidenceRole(sibling, queryData, reportPlan));
+            });
+        };
+
+        mustRenderParentIds.forEach(parentId => {
+            const role = visibleParents.has(parentId) ? 'same-subject-detail' : 'core-answer';
+            addParentBundle(parentId, role);
+        });
+
+        uniqueItems(selectedResults.map(result => result.parentId || result.id)).forEach(parentId => {
+            addParentBundle(parentId, 'core-answer');
+        });
+
+        selectedResults
+            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents) - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents))
+            .forEach(result => {
+                addResult(result, result.evidenceRole || inferAiCoverageEvidenceRole(result, queryData, reportPlan));
+            });
+
+        displayResults
+            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
+            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan))
+            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents) - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents))
+            .forEach(result => {
+                addParentBundle(result.parentId || result.id, 'same-subject-detail');
+            });
+
+        uniqueItems([
+            ...(reportPlan.hardAnchors || []),
+            ...(reportPlan.subjectClusters || []),
+            ...((reportPlan.facets?.entityPlace || []).slice(0, 8))
+        ]).slice(0, 18).forEach(term => {
+            sortedPool
+                .filter(result =>
+                    canAdd(result)
+                    && countMatchedTerms(result.normalizedCombined || '', [term]) >= 1
+                    && getAiCoverageParentPriority(result) >= 3
+                )
+                .slice(0, 3)
+                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
+        });
+
+        sortedPool.forEach(result => {
+            if (selected.length >= maxResults) return;
+            addResult(result, inferAiCoverageEvidenceRole(result, queryData, reportPlan));
+        });
+
+        return selected.slice(0, maxResults);
+    }
+
+    function getAiParentBriefDetailLines(result, queryData = {}) {
+        if (!result) return [];
+        const lines = [];
+        if (result.timeHint) {
+            lines.push(`時段：${compactSearchText(result.timeHint)}`);
+        }
+        if (result.bestTimeHint) {
+            lines.push(`最佳時機：${compactSearchText(result.bestTimeHint)}`);
+        }
+
+        const highlightLines = buildSearchResultHighlights(result, queryData);
+        if (highlightLines.length) {
+            lines.push(...highlightLines);
+        } else {
+            lines.push(`${result.fieldLabel || getAiFieldLabel(result.fieldType || 'parent')}：${truncateSearchPreview(result.text || result.structuredText, 220)}`);
+        }
+
+        return uniqueItems(lines.filter(Boolean)).slice(0, (result.fieldType || 'parent') === 'parent' ? 4 : 3);
+    }
+
+    function buildAiParentBriefs(results = [], queryData = {}, reportPlan = {}) {
+        const grouped = new Map();
+        const orderedResults = [...results].sort((a, b) =>
+            scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan)
+        );
+
+        orderedResults.forEach(result => {
+            const parentId = result.parentId || result.id;
+            const current = grouped.get(parentId);
+            const sourceDetailType = result.sourceDetailType || 'general';
+            const sourceLabels = uniqueItems([
+                getAiAnswerSourceLabel(result.sourceType),
+                getAiSourceDetailLabel(sourceDetailType)
+            ]);
+
+            if (!current) {
+                grouped.set(parentId, {
+                    parentId,
+                    title: result.title,
+                    cardType: getAiCoverageEntityType(result),
+                    groupLabel: result.groupLabel || getSourceLabel(result.sourceType),
+                    sourceType: result.sourceType,
+                    entityKey: result.entityKey || '',
+                    venueKey: result.venueKey || '',
+                    seriesKey: result.seriesKey || '',
+                    sourceClusterKey: result.sourceClusterKey || '',
+                    renderPriority: getAiCoverageParentPriority(result),
+                    sourceLabels,
+                    detailBullets: [],
+                    citationIds: []
+                });
+            }
+
+            const target = grouped.get(parentId);
+            sourceLabels.forEach(label => {
+                if (target.sourceLabels.length < 4 && !target.sourceLabels.includes(label)) {
+                    target.sourceLabels.push(label);
+                }
+            });
+            getAiParentBriefDetailLines(result, queryData).forEach(line => {
+                if (target.detailBullets.length < 10 && !target.detailBullets.includes(line)) {
+                    target.detailBullets.push(line);
+                }
+            });
+            if (result.id && target.citationIds.length < AI_REPORT_MAX_RESULTS && !target.citationIds.includes(result.id)) {
+                target.citationIds.push(result.id);
+            }
+        });
+
+        return Array.from(grouped.values())
+            .filter(item => item.title && item.detailBullets.length)
+            .sort((a, b) => (b.renderPriority || 0) - (a.renderPriority || 0))
+            .slice(0, AI_REPORT_MAX_PARENTS);
+    }
+
+    function buildAiCoverageStats(results = [], queryData = {}, reportPlan = {}) {
+        const sourceCounts = {};
+        results.forEach(result => {
+            const key = result.sourceDetailType || 'general';
+            sourceCounts[key] = (sourceCounts[key] || 0) + 1;
+        });
+
+        return {
+            selectedParentCount: uniqueItems(results.map(result => result.parentId || result.id)).length,
+            selectedChunkCount: results.length,
+            sourceCounts,
+            primarySubject: (reportPlan.hardAnchors || [])[0]
+                || (reportPlan.subjectClusters || [])[0]
+                || (queryData.highlightTerms || [])[0]
+                || queryData.rawQuery
+                || ''
+        };
+    }
+
     function getAiRetrievalStatus(queryData, results, selectedResults, reportPlan = null) {
         if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
             return 'insufficient';
@@ -3428,7 +3938,7 @@
 
         return Array.from(merged.values())
             .sort((a, b) => b.score - a.score)
-            .slice(0, 48);
+            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
     }
 
     function getAiReportSectionEntries(report = {}) {
@@ -3444,6 +3954,12 @@
                 title: '推薦做法',
                 type: 'list',
                 items: Array.isArray(report.recommendedPlan) ? report.recommendedPlan : []
+            },
+            {
+                key: 'fullCardInventory',
+                title: '完整卡片總表',
+                type: 'full-card-inventory',
+                items: Array.isArray(report.fullCardInventory) ? report.fullCardInventory : []
             },
             {
                 key: 'detailBreakdown',
@@ -3490,6 +4006,61 @@
         ].filter(section => section.items.length);
     }
 
+    function renderAiCoverageSummary(report = {}) {
+        const coverageSummary = report.coverageSummary && typeof report.coverageSummary === 'object'
+            ? report.coverageSummary
+            : null;
+        if (!coverageSummary) return '';
+
+        const selectedParentCount = Number(coverageSummary.selectedParentCount || 0);
+        const targetParentCount = Number(coverageSummary.targetParentCount || 0);
+        const renderedParentCount = Number(coverageSummary.renderedParentCount || 0);
+        const backfilledParentCount = Number(coverageSummary.backfilledParentCount || 0);
+        const coverageRatio = Number(coverageSummary.coverageRatio || 0);
+        const primarySubject = compactSearchText(coverageSummary.primarySubject || '');
+        const sourceCounts = coverageSummary.sourceCounts && typeof coverageSummary.sourceCounts === 'object'
+            ? Object.entries(coverageSummary.sourceCounts)
+                .filter(([, count]) => Number(count) > 0)
+                .slice(0, 6)
+            : [];
+
+        if (!selectedParentCount && !targetParentCount && !renderedParentCount && !primarySubject && !sourceCounts.length) {
+            return '';
+        }
+
+        return `
+            <div class="search-ai-coverage-banner">
+                <div class="search-ai-coverage-summary">
+                    <strong>${renderedParentCount || selectedParentCount || 0}</strong>
+                    <span>張卡片已整理進回答</span>
+                    ${(targetParentCount || selectedParentCount) ? `<span class="search-ai-coverage-divider">/</span><span>目標 ${targetParentCount || selectedParentCount} 張</span>` : ''}
+                    ${backfilledParentCount ? `<span class="search-ai-coverage-divider">/</span><span>補齊 ${backfilledParentCount} 張</span>` : ''}
+                    ${coverageRatio ? `<span class="search-ai-coverage-divider">/</span><span>覆蓋率 ${Math.round(coverageRatio * 100)}%</span>` : ''}
+                    ${primarySubject ? `<span class="search-ai-coverage-divider">/</span><span>主題：${escapeHtml(primarySubject)}</span>` : ''}
+                </div>
+                ${sourceCounts.length ? `
+                    <div class="search-ai-coverage-chips">
+                        ${sourceCounts.map(([key, count]) => `
+                            <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(key || 'general'))} ${Number(count)}</span>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+
+    function getAiInventorySectionLabel(cardType = 'mixed') {
+        const mapping = {
+            show: '表演',
+            facility: '設施 / 場館',
+            playbook: '攻略 / SOP / 注意事項',
+            service: '攻略 / SOP / 注意事項',
+            schedule: '時間脈絡',
+            mixed: '綜合整理'
+        };
+        return mapping[cardType] || '綜合整理';
+    }
+
     function renderAiReportOutline(sectionEntries = []) {
         if (!sectionEntries.length) return '';
 
@@ -3509,6 +4080,71 @@
             ? report.sectionCitationIds
             : {};
         const citationCount = Array.isArray(sectionCitationIds[section.key]) ? sectionCitationIds[section.key].length : 0;
+
+        if (section.type === 'full-card-inventory') {
+            const groupedItems = section.items.reduce((groups, item) => {
+                const label = getAiInventorySectionLabel(item?.cardType || 'mixed');
+                if (!groups.has(label)) groups.set(label, []);
+                groups.get(label).push(item);
+                return groups;
+            }, new Map());
+
+            return `
+                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
+                    <div class="search-ai-report-section-header">
+                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
+                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
+                    </div>
+                    <div class="search-ai-full-card-inventory">
+                        ${Array.from(groupedItems.entries()).map(([groupLabel, items]) => `
+                            <div class="search-ai-full-card-group">
+                                <div class="search-ai-report-section-header compact">
+                                    <h4 class="search-ai-section-title">${escapeHtml(groupLabel)}</h4>
+                                    <span class="search-ai-section-meta">${items.length} 張卡</span>
+                                </div>
+                                ${items.map(item => `
+                                    <article class="search-ai-card-highlight-item inventory">
+                                        <div class="search-ai-card-highlight-top">
+                                            <div>
+                                                <h4 class="search-ai-card-highlight-title">${escapeHtml(item?.title || '')}</h4>
+                                                ${item?.groupLabel ? `<p class="search-ai-card-highlight-why">${escapeHtml(item.groupLabel)}</p>` : ''}
+                                            </div>
+                                            <div class="search-ai-card-highlight-chips">
+                                                ${item?.cardType ? `<span class="search-ai-source-chip">${escapeHtml(getAiEntityTypeLabel(item.cardType) || item.cardType)}</span>` : ''}
+                                                ${item?.renderOrigin === 'backfill' ? `<span class="search-ai-source-chip">補齊卡片</span>` : ''}
+                                                ${Array.isArray(item?.sourceLabels) ? item.sourceLabels
+                                                    .filter(Boolean)
+                                                    .slice(0, 4)
+                                                    .map(label => `<span class="search-ai-source-chip">${escapeHtml(label)}</span>`)
+                                                    .join('') : ''}
+                                            </div>
+                                        </div>
+                                        ${Array.isArray(item?.detailBullets) && item.detailBullets.length ? `
+                                            <ul class="search-ai-report-list dense">
+                                                ${item.detailBullets.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
+                                            </ul>
+                                        ` : ''}
+                                        ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
+                                            <div class="search-ai-inline-citations">
+                                                ${item.citationIds.map(citationId => {
+                                                    const citation = searchState.aiCitationsById.get(citationId);
+                                                    return citation ? `
+                                                        <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
+                                                            <i class="fa-solid fa-link"></i>
+                                                            <span>${escapeHtml(citation.title)}</span>
+                                                        </button>
+                                                    ` : '';
+                                                }).join('')}
+                                            </div>
+                                        ` : ''}
+                                    </article>
+                                `).join('')}
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `;
+        }
 
         if (section.type === 'card-highlights') {
             return `
@@ -3768,6 +4404,7 @@
                 ` : ''}
                 ${isReportMode && report?.headline ? `<h3 class="search-ai-report-headline">${escapeHtml(report.headline)}</h3>` : ''}
                 <p class="search-ai-summary">${escapeHtml(directAnswer)}</p>
+                ${isReportMode ? renderAiCoverageSummary(report) : ''}
                 ${isReportMode ? renderAiReportOutline(reportSections) : ''}
                 ${isReportMode ? `
                     <div class="search-ai-report-sections">
@@ -3841,10 +4478,19 @@
         const analysisPlan = options.analysisPlan && typeof options.analysisPlan === 'object'
             ? options.analysisPlan
             : null;
+        const parentBriefs = Array.isArray(options.parentBriefs) ? options.parentBriefs : [];
+        const coverageContract = options.coverageContract && typeof options.coverageContract === 'object'
+            ? options.coverageContract
+            : null;
+        const coverageStats = options.coverageStats && typeof options.coverageStats === 'object'
+            ? options.coverageStats
+            : null;
         const analysisPlanSignature = analysisPlan
             ? simpleHash(JSON.stringify({
                 responseMode: analysisPlan.responseMode,
                 intentType: analysisPlan.intentType,
+                inventoryIntent: analysisPlan.inventoryIntent,
+                coverageMode: analysisPlan.coverageMode,
                 activeFacetNames: analysisPlan.activeFacetNames || [],
                 triggerReasons: analysisPlan.triggerReasons || [],
                 evidenceBudget: analysisPlan.evidenceBudget,
@@ -3853,6 +4499,23 @@
                 facetSummary: analysisPlan.facetSummary || {}
             }))
             : 'compact';
+        const parentBriefSignature = parentBriefs.length
+            ? simpleHash(JSON.stringify(parentBriefs.map(item => ({
+                parentId: item.parentId,
+                title: item.title,
+                cardType: item.cardType,
+                groupLabel: item.groupLabel,
+                sourceLabels: item.sourceLabels || [],
+                detailBullets: item.detailBullets || [],
+                citationIds: item.citationIds || []
+            }))))
+            : 'no-parent-briefs';
+        const coverageSignature = coverageStats
+            ? simpleHash(JSON.stringify(coverageStats))
+            : 'no-coverage';
+        const coverageContractSignature = coverageContract
+            ? simpleHash(JSON.stringify(coverageContract))
+            : 'no-contract';
         const chunkSignature = chunks
             .map(chunk => `${chunk.id}:${simpleHash([
                 chunk.parentId,
@@ -3862,12 +4525,16 @@
                 chunk.sourceDetailType,
                 chunk.fieldType,
                 chunk.evidenceRole,
+                chunk.entityKey,
+                chunk.venueKey,
+                chunk.seriesKey,
+                chunk.sourceClusterKey,
                 chunk.structuredText,
                 chunk.text
             ].join('::'))}`)
             .join('|');
 
-        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
+        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${parentBriefSignature}::${coverageSignature}::${coverageContractSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
     }
 
     function buildAnswerContext(results, queryData, options = {}) {
@@ -3875,7 +4542,7 @@
         return results.map(result => {
             const fieldType = result.fieldType || 'parent';
             const preferredExcerptLength = responseMode === 'report'
-                ? (['action', 'caution', 'tripFit', 'summary', 'theme'].includes(fieldType) ? 900 : 700)
+                ? (['action', 'caution', 'tripFit', 'summary', 'theme', 'desc', 'parent'].includes(fieldType) ? 1200 : 900)
                 : (['action', 'caution', 'tripFit', 'summary', 'theme'].includes(fieldType) ? 480 : 360);
             const excerptSource = {
                 title: result.title,
@@ -3896,8 +4563,13 @@
                 timeHint: result.timeHint || '',
                 bestTimeHint: result.bestTimeHint || '',
                 navTarget: result.navTarget,
+                groupLabel: result.groupLabel || '',
+                entityKey: result.entityKey || '',
+                venueKey: result.venueKey || '',
+                seriesKey: result.seriesKey || '',
+                sourceClusterKey: result.sourceClusterKey || '',
                 structuredText: createPlainExcerpt(excerptSource, queryData, preferredExcerptLength),
-                text: createPlainExcerpt(result, queryData, Math.max(320, preferredExcerptLength - 140))
+                text: createPlainExcerpt(result, queryData, Math.max(420, preferredExcerptLength - 180))
             };
         });
     }
@@ -3944,6 +4616,14 @@
                 contentVersion: getAiContentVersion(),
                 responseMode: options.responseMode === 'report' ? 'report' : 'compact',
                 analysisPlan: options.analysisPlan || null,
+                inventoryIntent: Boolean(options.inventoryIntent),
+                coverageMode: options.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
+                answerCoveragePool: options.answerCoveragePool || null,
+                coverageContract: options.coverageContract || null,
+                mustRenderParents: options.mustRenderParents || null,
+                preferredRenderParents: options.preferredRenderParents || null,
+                parentBriefs: options.parentBriefs || null,
+                coverageStats: options.coverageStats || null,
                 chunks
             })
         });
@@ -4094,14 +4774,77 @@
             return;
         }
 
-        const analysisPlan = buildAiAnalysisPlanPayload(reportPlan);
-        const chunks = buildAnswerContext(selectedResults, queryData, {
+        const answerCoverageResults = reportPlan.responseMode === 'report'
+            ? buildAiAnswerCoveragePool(results, displayResults, queryData, reportPlan, selectedResults)
+            : selectedResults;
+        const coverageStats = buildAiCoverageStats(answerCoverageResults, queryData, reportPlan);
+        const coverageContract = buildAiCoverageContract(answerCoverageResults, displayResults, queryData, reportPlan, selectedResults);
+        const parentBriefs = orderAiParentBriefsForCoverage(
+            buildAiParentBriefs(answerCoverageResults, queryData, reportPlan),
+            coverageContract
+        );
+        const answerCoveragePool = parentBriefs.map(item => ({
+            parentId: item.parentId,
+            title: item.title,
+            cardType: item.cardType,
+            groupLabel: item.groupLabel,
+            sourceLabels: item.sourceLabels,
+            citationIds: item.citationIds,
+            entityKey: item.entityKey || '',
+            venueKey: item.venueKey || '',
+            seriesKey: item.seriesKey || '',
+            sourceClusterKey: item.sourceClusterKey || '',
+            renderPriority: item.renderPriority || 0
+        }));
+        const mustRenderParents = parentBriefs
+            .filter(item => coverageContract.mustRenderParentIds.includes(item.parentId))
+            .map(item => ({
+                parentId: item.parentId,
+                title: item.title,
+                cardType: item.cardType,
+                groupLabel: item.groupLabel,
+                sourceLabels: item.sourceLabels,
+                detailBullets: item.detailBullets,
+                citationIds: item.citationIds,
+                venueKey: item.venueKey || '',
+                seriesKey: item.seriesKey || '',
+                sourceClusterKey: item.sourceClusterKey || '',
+                renderPriority: item.renderPriority || 0
+            }));
+        const preferredRenderParents = parentBriefs
+            .filter(item => coverageContract.preferredParentIds.includes(item.parentId))
+            .map(item => ({
+                parentId: item.parentId,
+                title: item.title,
+                cardType: item.cardType,
+                groupLabel: item.groupLabel,
+                sourceLabels: item.sourceLabels,
+                detailBullets: item.detailBullets,
+                citationIds: item.citationIds,
+                venueKey: item.venueKey || '',
+                seriesKey: item.seriesKey || '',
+                sourceClusterKey: item.sourceClusterKey || '',
+                renderPriority: item.renderPriority || 0
+            }));
+        const analysisPlan = buildAiAnalysisPlanPayload({
+            ...reportPlan,
+            selectedChunkCount: answerCoverageResults.length,
+            parentCardCount: coverageStats.selectedParentCount,
+            sourceTypes: uniqueItems(answerCoverageResults.map(result => result.sourceType).filter(Boolean)),
+            sourceDetailTypes: uniqueItems(answerCoverageResults
+                .map(result => result.sourceDetailType || 'general')
+                .filter(type => type && type !== 'general'))
+        });
+        const chunks = buildAnswerContext(answerCoverageResults, queryData, {
             responseMode: reportPlan.responseMode,
             reportPlan
         });
         const cacheKey = getAiCacheKey(rawQuery, chunks, {
             responseMode: reportPlan.responseMode,
-            analysisPlan
+            analysisPlan,
+            parentBriefs,
+            coverageStats,
+            coverageContract
         });
         const cachedAnswer = readAiCache(cacheKey);
         if (cachedAnswer) {
@@ -4124,10 +4867,18 @@
         try {
             const payload = await askAiAnswer(rawQuery, chunks, {
                 responseMode: reportPlan.responseMode,
-                analysisPlan
+                analysisPlan,
+                inventoryIntent: reportPlan.inventoryIntent,
+                coverageMode: reportPlan.coverageMode,
+                answerCoveragePool,
+                coverageContract,
+                mustRenderParents,
+                preferredRenderParents,
+                parentBriefs,
+                coverageStats
             });
             if (!payload.primarySourceType) {
-                payload.primarySourceType = selectedResults[0]?.sourceType || '';
+                payload.primarySourceType = answerCoverageResults[0]?.sourceType || '';
             }
             if (rewriteMeta) {
                 payload.rewriteInfo = rewriteMeta;

@@ -38,23 +38,21 @@ function contextualKeywords(text) {
   const keywords = [];
 
   if (!normalized) return keywords;
+
   if (normalized.includes('concierge') || normalized.includes('lounge') || normalized.includes('禮賓') || normalized.includes('酒廊')) {
     keywords.push('concierge', 'lounge', '禮賓', '酒廊');
   }
   if (normalized.includes('room service') || normalized.includes('客房服務') || normalized.includes('房務')) {
     keywords.push('room service', '客房服務', '房務');
   }
-  if (normalized.includes('open house') || normalized.includes('oceaneer') || normalized.includes('kids club') || normalized.includes('兒童')) {
-    keywords.push('open house', 'oceaneer', 'kids club', '兒童');
+  if (normalized.includes('open house') || normalized.includes('oceaneer') || normalized.includes('kids club')) {
+    keywords.push('open house', 'oceaneer', 'kids club');
   }
   if (normalized.includes('theatre') || normalized.includes('theater') || normalized.includes('劇院') || normalized.includes('主秀')) {
     keywords.push('theatre', '劇院', '主秀');
   }
-  if (normalized.includes('pizza') || normalized.includes('披薩') || normalized.includes('點心') || normalized.includes('補給')) {
-    keywords.push('pizza', '披薩', '點心', '補給');
-  }
-  if (normalized.includes('day 1') || normalized.includes('第一天') || normalized.includes('登船')) {
-    keywords.push('day 1', '第一天', '登船');
+  if (normalized.includes('day 1') || normalized.includes('第一天') || normalized.includes('登船日')) {
+    keywords.push('day 1', '第一天', '登船日');
   }
 
   return unique(keywords);
@@ -64,15 +62,15 @@ const SOFT_MODIFIER_TERMS = [
   '注意事項',
   '注意',
   '流程',
+  '怎麼做',
   '要不要',
   '值不值得',
-  '規則',
-  '限制',
   '比較',
-  '順序',
-  '先後',
-  '怎麼做',
-  '怎麼安排'
+  '先後順序',
+  '限制',
+  '規則',
+  '幾點',
+  '會不會'
 ];
 
 function queryUnits(query) {
@@ -80,6 +78,7 @@ function queryUnits(query) {
   const tokens = normalized.split(' ').filter(Boolean);
   const compactChinese = normalized.replace(/[^\u4e00-\u9fff]/g, '');
   const ngrams = [];
+
   for (let size = Math.min(4, compactChinese.length); size >= 2; size -= 1) {
     for (let index = 0; index <= compactChinese.length - size; index += 1) {
       ngrams.push(compactChinese.slice(index, index + size));
@@ -209,8 +208,8 @@ function buildDocuments(data) {
       });
       return [
         parent,
-        createChildDoc(parent, 'theme', show.theme, { keywords: [category.title] }),
-        createChildDoc(parent, 'timingTip', show.timingTip, { keywords: [show.location] }),
+        createChildDoc(parent, 'theme', show.theme, { keywords: [show.location, category.title] }),
+        createChildDoc(parent, 'timingTip', show.timingTip, { keywords: [show.location, category.title] }),
         createChildDoc(parent, 'tripLink', show.tripLink, { keywords: [category.title] })
       ].filter(Boolean);
     })
@@ -267,7 +266,7 @@ function scoreDoc(doc, query, anchorProfile = extractAnchorProfile(query)) {
   if (['whenToUse', 'bestTime', 'timingTip', 'time'].includes(doc.fieldType)) score += 8;
   if (['tripFit', 'tripUse', 'tripLink', 'summary', 'theme'].includes(doc.fieldType)) score += 7;
 
-  if (textIncludesAny(normalized, ['day 1', '第一天', '登船'])) {
+  if (textIncludesAny(normalized, ['day 1', '第一天', '登船日'])) {
     if (doc.sourceType === 'schedule') score += 20;
     if (doc.fieldType === 'time' || doc.fieldType === 'whenToUse') score += 10;
   }
@@ -282,14 +281,15 @@ function scoreDoc(doc, query, anchorProfile = extractAnchorProfile(query)) {
     if (doc.sourceType === 'playbook') score += 10;
   }
 
-  if (textIncludesAny(normalized, ['open house', 'kids club', 'oceaneer', '兒童'])) {
+  if (textIncludesAny(normalized, ['open house', 'oceaneer', 'kids club'])) {
     if (doc.sourceType === 'playbook') score += 12;
     if (['action', 'tripFit', 'whenToUse'].includes(doc.fieldType)) score += 8;
   }
 
   if (textIncludesAny(normalized, ['theatre', '劇院', '主秀'])) {
-    if (doc.sourceType === 'show') score += 16;
+    if (doc.sourceType === 'show') score += 18;
     if (doc.sourceType === 'playbook') score += 12;
+    if (doc.sourceType === 'deck') score += 10;
   }
 
   if (anchorProfile.hardAnchors.length && hardTitleMatches === 0 && hardBodyMatches === 0 && softModifierMatches >= 1) {
@@ -306,13 +306,13 @@ function retrieve(query, docs) {
     .map((doc) => ({ ...doc, score: scoreDoc(doc, query, anchorProfile) }))
     .filter((doc) => doc.score > 0)
     .sort((a, b) => b.score - a.score);
-  const ranked = scoredDocs.slice(0, 48);
+  const ranked = scoredDocs.slice(0, 120);
 
   const selected = [];
   const parentCounts = new Map();
   const seenIds = new Set();
-  const maxSelected = 24;
-  const maxPerParent = 4;
+  const maxSelected = 48;
+  const maxPerParent = 5;
 
   function canAdd(doc) {
     if (!doc || seenIds.has(doc.id)) return false;
@@ -360,8 +360,8 @@ function retrieve(query, docs) {
     });
   });
 
-  if (textIncludesAny(normalized, ['lounge', 'concierge'])) {
-    ['Lounge 要當緩衝區', 'Lounge 的正確打開方式'].forEach((titleFragment) => {
+  if (textIncludesAny(normalized, ['lounge', 'concierge', '禮賓'])) {
+    ['lounge', 'concierge'].forEach((titleFragment) => {
       addDoc(pickBest((doc) =>
         doc.sourceType === 'playbook'
         && doc.normalizedTitle.includes(normalizeText(titleFragment)),
@@ -377,7 +377,7 @@ function retrieve(query, docs) {
     scoredDocs));
   }
 
-  if (textIncludesAny(normalized, ['room service'])) {
+  if (textIncludesAny(normalized, ['room service', '客房服務'])) {
     addDoc(pickBest((doc) =>
       doc.sourceType === 'playbook'
       && doc.normalizedTitle.includes(normalizeText('room service'))
@@ -385,15 +385,15 @@ function retrieve(query, docs) {
     scoredDocs));
   }
 
-  if (textIncludesAny(normalized, ['流程', '怎麼做', '要帶', '要不要', '順序'])) {
+  if (textIncludesAny(normalized, ['流程', '怎麼做', '要帶什麼', '準備'])) {
     addDoc(pickBest((doc) => doc.fieldType === 'action' || doc.fieldType === 'desc'));
   }
 
-  if (textIncludesAny(normalized, ['注意事項', '注意', '規則', '限制', '風險'])) {
+  if (textIncludesAny(normalized, ['注意事項', '注意', '限制', '規則'])) {
     addDoc(pickBest((doc) => doc.fieldType === 'caution' || doc.fieldType === 'bestTime' || doc.fieldType === 'timingTip'));
   }
 
-  if (textIncludesAny(normalized, ['第一天', 'day 1', '登船', '早上', '下午', '晚上'])) {
+  if (textIncludesAny(normalized, ['第一天', 'day 1', '登船日'])) {
     addDoc(pickBest((doc) => doc.sourceType === 'schedule' || doc.fieldType === 'time' || doc.fieldType === 'whenToUse'));
   }
 
@@ -447,12 +447,21 @@ const extraCases = [
     requiredFieldTypes: ['action', 'caution'],
     expectedSourceDetails: ['community'],
     minSelected: 5
+  },
+  {
+    query: '劇院有哪些表演與哪些注意事項',
+    requiredTitleIncludes: ['Walt Disney Theatre', '《Remember》', '《Disney Seas the Adventure》', '劇院優先入場 SOP'],
+    requiredFieldTypes: ['theme', 'caution'],
+    expectedSourceTypes: ['show', 'playbook', 'deck'],
+    minSelected: 6
   }
 ];
+
 const cases = [
   ...JSON.parse(fs.readFileSync(path.resolve('tests', 'fixtures', 'ai-retrieval-cases.json'), 'utf8')),
   ...extraCases
 ];
+
 const failures = [];
 
 cases.forEach((testCase) => {
