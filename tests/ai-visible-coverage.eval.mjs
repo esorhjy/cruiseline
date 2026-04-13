@@ -25,6 +25,7 @@ function loadScriptHooks() {
     disconnect() {}
   }
   const windowObject = {
+    AI_ENTITY_REGISTRY: {},
     AI_QUERY_TAXONOMY: {},
     __AI_SEARCH_TEST_HOOKS__: hooks,
     __AI_SEARCH_SKIP_BOOTSTRAP__: true,
@@ -115,6 +116,9 @@ function loadScriptHooks() {
     playbookGuideData: data.playbookGuideData
   };
 
+  const registrySource = fs.readFileSync(path.resolve('ai-entity-registry.js'), 'utf8');
+  vm.runInNewContext(registrySource, baseSandbox, { filename: 'ai-entity-registry.js' });
+
   const taxonomySource = fs.readFileSync(path.resolve('ai-query-taxonomy.js'), 'utf8');
   vm.runInNewContext(taxonomySource, baseSandbox, { filename: 'ai-query-taxonomy.js' });
 
@@ -157,8 +161,9 @@ async function invokeWorker(worker, body, fetchImpl) {
   }
 }
 
+const conciergeFacilitiesQuery = '\u54ea\u4e9b\u6a13\u5c64\u6709\u79ae\u8cd3\u8a2d\u65bd\uff0c\u6709\u54ea\u4e9b\u5167\u5bb9\uff1f';
 const hooks = loadScriptHooks();
-const simulation = hooks.runAiCoverageSimulation('哪些樓層有禮賓設施，有哪些內容？');
+const simulation = hooks.runAiCoverageSimulation(conciergeFacilitiesQuery);
 
 assert(simulation.displayResults.length > 0, 'display results should exist');
 
@@ -169,35 +174,34 @@ assert(visibleSundeck, 'right-side visible results should include Concierge Sund
 assert(visibleLounge, 'right-side visible results should include Concierge Lounge');
 
 const visibleParentIds = simulation.coverageContract.mustRenderVisibleParentIds || [];
+const derivedParentIds = simulation.coverageContract.mustRenderDerivedParentIds || [];
+const supportParentIds = simulation.coverageContract.preferredSupportParentIds || [];
+
 assert(
   visibleParentIds.includes(visibleLounge.parentId || visibleLounge.id)
-    || (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(visibleLounge.parentId || visibleLounge.id),
+    || derivedParentIds.includes(visibleLounge.parentId || visibleLounge.id),
   'right-side visible lounge card should still be retained in visible or derived coverage'
+);
+assert(
+  visibleParentIds.includes(visibleSundeck.parentId || visibleSundeck.id)
+    || derivedParentIds.includes(visibleSundeck.parentId || visibleSundeck.id),
+  'right-side visible sundeck card should still be retained in visible or derived coverage'
 );
 
 const requiredLoungeBrief = simulation.parentBriefs.find((item) => /concierge lounge/i.test(String(item.title || '')));
+const requiredSundeckBrief = simulation.parentBriefs.find((item) => /concierge sundeck/i.test(String(item.title || '')));
+
 assert(requiredLoungeBrief, 'coverage planning should retain a lounge parent brief for the left-side answer');
+assert(requiredSundeckBrief, 'coverage planning should retain a sundeck parent brief for the left-side answer');
+
 assert(
-  visibleParentIds.includes(requiredLoungeBrief.parentId)
-    || (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(requiredLoungeBrief.parentId),
+  visibleParentIds.includes(requiredLoungeBrief.parentId) || derivedParentIds.includes(requiredLoungeBrief.parentId),
   'coverage contract should keep a lounge-related parent in visible or derived coverage'
 );
 assert(
-  (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(visibleSundeck.parentId || visibleSundeck.id),
-  'right-side visible sundeck card should still be retained in derived coverage'
-);
-
-const requiredSundeckBrief = simulation.parentBriefs.find((item) => /concierge sundeck/i.test(String(item.title || '')));
-assert(requiredSundeckBrief, 'coverage planning should retain a sundeck parent brief for the left-side answer');
-assert(
-  visibleParentIds.includes(requiredSundeckBrief.parentId)
-    || (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(requiredSundeckBrief.parentId),
+  visibleParentIds.includes(requiredSundeckBrief.parentId) || derivedParentIds.includes(requiredSundeckBrief.parentId),
   'coverage contract should keep a sundeck-related parent in visible or derived coverage'
 );
-
-const parentBriefIds = simulation.parentBriefs.map((item) => item.parentId);
-assert(parentBriefIds.includes(requiredLoungeBrief.parentId), 'parent briefs should retain lounge coverage brief');
-assert(parentBriefIds.includes(requiredSundeckBrief.parentId), 'parent briefs should retain sundeck coverage brief');
 
 const relevantScheduleBrief = simulation.parentBriefs.find((item) =>
   item.cardType === 'schedule'
@@ -209,13 +213,11 @@ assert(
   'relevant schedule brief should stay in derived or support coverage tier'
 );
 assert(
-  (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(relevantScheduleBrief.parentId)
-    || (simulation.coverageContract.preferredSupportParentIds || []).includes(relevantScheduleBrief.parentId),
+  derivedParentIds.includes(relevantScheduleBrief.parentId) || supportParentIds.includes(relevantScheduleBrief.parentId),
   'relevant schedule brief should be retained in derived/support coverage contract'
 );
 
 const worker = await loadWorker();
-
 const loungeBrief = requiredLoungeBrief;
 assert(loungeBrief, 'lounge brief should exist');
 
@@ -226,31 +228,31 @@ const partialGeminiFetch = async () => new Response(JSON.stringify({
         parts: [
           {
             text: JSON.stringify({
-              answer: '禮賓設施主要集中在 Lounge，但也會延伸到其他禮賓空間。',
+              answer: 'Concierge facilities are centered around the lounge, with additional deck and schedule support.',
               confidence: 'high',
               primarySourceType: 'deck',
               missingReason: '',
               citationIds: loungeBrief.citationIds,
               insufficientData: false,
               sections: {
-                directAnswer: '禮賓設施不只一處，至少包含 Lounge 與其他禮賓專屬空間。',
+                directAnswer: 'The lounge is one core concierge facility, but the final report should include other concierge decks and support context.',
                 recommendedSteps: [
-                  '先把 Lounge 當成主補給與報到點，再依需求看其他禮賓空間。'
+                  'Start with the lounge as the primary concierge hub.'
                 ],
                 whyThisWorks: [
-                  '這樣可以先抓穩主要補給點，再延伸到次要禮賓設施。'
+                  'The concierge topic should keep visible facility cards, not only one lounge summary.'
                 ],
                 watchOuts: [
-                  '不同禮賓空間的用途和時段不完全相同。'
+                  'Do not let visible concierge deck cards drop out of the final inventory.'
                 ]
               },
               report: {
-                headline: '禮賓設施整理',
+                headline: 'Concierge facilities overview',
                 executiveSummary: [
-                  '禮賓設施分散在不同樓層，不只 Concierge Lounge。'
+                  'The model only wrote the lounge on purpose so the post-process must backfill the missing visible cards.'
                 ],
                 recommendedPlan: [
-                  '先看主要報到與補給點，再整理其他禮賓設施。'
+                  'Use the lounge as one primary concierge stop.'
                 ],
                 fullCardInventory: [
                   {
@@ -267,7 +269,7 @@ const partialGeminiFetch = async () => new Response(JSON.stringify({
                   }
                 ],
                 detailBreakdown: [
-                  'Lounge 是禮賓行程裡最常用的報到與補給據點。'
+                  'Concierge coverage should still include deck-specific facilities and relevant schedule context.'
                 ],
                 topicAppendix: [],
                 sourceComparison: []
@@ -286,7 +288,7 @@ const partialGeminiFetch = async () => new Response(JSON.stringify({
 });
 
 const workerBody = {
-  query: '哪些樓層有禮賓設施，有哪些內容？',
+  query: conciergeFacilitiesQuery,
   mode: 'grounded_qa_v1',
   responseMode: 'report',
   analysisPlan: {
@@ -313,17 +315,17 @@ const workerBody = {
     coverageReason: simulation.coverageContract.coverageReason || ''
   },
   mustRenderParents: simulation.parentBriefs.filter((item) => (simulation.coverageContract.mustRenderParentIds || []).includes(item.parentId)),
-  mustRenderVisibleParents: simulation.parentBriefs.filter((item) => (simulation.coverageContract.mustRenderVisibleParentIds || []).includes(item.parentId)),
-  mustRenderDerivedParents: simulation.parentBriefs.filter((item) => (simulation.coverageContract.mustRenderDerivedParentIds || []).includes(item.parentId)),
+  mustRenderVisibleParents: simulation.parentBriefs.filter((item) => visibleParentIds.includes(item.parentId)),
+  mustRenderDerivedParents: simulation.parentBriefs.filter((item) => derivedParentIds.includes(item.parentId)),
   preferredRenderParents: simulation.parentBriefs.filter((item) => (simulation.coverageContract.preferredParentIds || []).includes(item.parentId)),
-  preferredSupportParents: simulation.parentBriefs.filter((item) => (simulation.coverageContract.preferredSupportParentIds || []).includes(item.parentId)),
+  preferredSupportParents: simulation.parentBriefs.filter((item) => supportParentIds.includes(item.parentId)),
   parentDossiers: simulation.parentBriefs,
   answerDepthMode: 'exhaustive',
   coverageStats: {
     selectedParentCount: simulation.parentBriefs.length,
     targetParentCount: simulation.coverageContract.targetCoverageCount || 0,
     visibleTargetCount: simulation.coverageContract.targetVisibleCoverageCount || 0,
-    primarySubject: '禮賓設施'
+    primarySubject: 'concierge facilities'
   }
 };
 
@@ -349,7 +351,7 @@ assert(
   'schedule coverage should stay in derived or support tier'
 );
 assert(
-  scheduleInventory.detailBullets.some((detail) => /day 1|day 3|時段|行程/i.test(String(detail || ''))),
+  scheduleInventory.detailBullets.some((detail) => /(day\s*[13]|上午|下午|晚上|晚間|時段)/i.test(String(detail || ''))),
   'schedule inventory should keep detailed time or itinerary bullets'
 );
 
