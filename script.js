@@ -124,6 +124,7 @@
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
     const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
     const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
+    const aiEntityRegistry = normalizeAiEntityRegistry(window.AI_ENTITY_REGISTRY || {});
     const aiQueryTaxonomy = normalizeAiQueryTaxonomy({
         ...(window.AI_QUERY_TAXONOMY || {}),
         capabilityProfiles: [
@@ -1085,6 +1086,12 @@
     function deriveContextualKeywords(text) {
         const normalized = normalizeSearchText(text);
         const keywords = collectTaxonomyContextualTerms(normalized);
+        const entityRefs = inferEntityRefsFromText([text], 6);
+
+        keywords.push(
+            ...collectEntityRegistryProperNounTokens(entityRefs),
+            ...collectEntityRegistryAliasTokens(entityRefs)
+        );
 
         if (!normalized) return keywords;
 
@@ -1126,6 +1133,199 @@
             .map(item => compactSearchText(item).slice(0, maxLength))
             .filter(Boolean))
             .slice(0, maxItems);
+    }
+
+    function sanitizeEntityId(value) {
+        return compactSearchText(value).toLowerCase();
+    }
+
+    function sanitizeEntityRefArray(items = [], maxItems = 12) {
+        return uniqueItems((Array.isArray(items) ? items : [])
+            .map(item => sanitizeEntityId(item))
+            .filter(Boolean))
+            .slice(0, maxItems);
+    }
+
+    function normalizeAiEntityRegistry(rawRegistry = {}) {
+        const rawEntities = Array.isArray(rawRegistry.entities) ? rawRegistry.entities : [];
+        const normalizedEntities = rawEntities
+            .map(entry => {
+                const entityId = sanitizeEntityId(entry?.entityId);
+                const officialNameEn = compactSearchText(entry?.officialNameEn);
+                const displayNameZh = compactSearchText(entry?.displayNameZh);
+                const officialNameZh = compactSearchText(entry?.officialNameZh);
+                const entityType = compactSearchText(entry?.entityType);
+                if (!entityId || !officialNameEn || !displayNameZh || !entityType) {
+                    return null;
+                }
+
+                return {
+                    entityId,
+                    officialNameEn,
+                    displayNameZh,
+                    officialNameZh,
+                    translationType: compactSearchText(entry?.translationType) || 'site-localized',
+                    entityType,
+                    categoryFamilies: sanitizeSearchTextArray(entry?.categoryFamilies, 8, 60),
+                    capabilityTags: uniqueItems((Array.isArray(entry?.capabilityTags) ? entry.capabilityTags : [])
+                        .map(item => compactSearchText(item).toLowerCase())
+                        .filter(Boolean))
+                        .slice(0, 8),
+                    aliases: sanitizeSearchTextArray(entry?.aliases, 16, 120),
+                    deckHints: sanitizeSearchTextArray(entry?.deckHints, 8, 40),
+                    area: compactSearchText(entry?.area),
+                    relatedEntityIds: sanitizeEntityRefArray(entry?.relatedEntityIds, 12),
+                    sourceUrls: sanitizeSearchTextArray(entry?.sourceUrls, 8, 200),
+                    sourceAuthority: compactSearchText(entry?.sourceAuthority) || 'official',
+                    lastVerifiedDate: compactSearchText(entry?.lastVerifiedDate) || compactSearchText(rawRegistry.lastVerifiedDate)
+                };
+            })
+            .filter(Boolean);
+
+        const entityLookup = new Map(normalizedEntities.map(entry => [entry.entityId, entry]));
+        const tokenLookup = new Map();
+
+        const pushToken = (token, entityId) => {
+            const normalizedToken = normalizeSearchText(token);
+            if (!normalizedToken || normalizedToken.length < 2) return;
+            if (!tokenLookup.has(normalizedToken)) {
+                tokenLookup.set(normalizedToken, new Set());
+            }
+            tokenLookup.get(normalizedToken).add(entityId);
+        };
+
+        normalizedEntities.forEach(entry => {
+            [
+                entry.officialNameEn,
+                entry.displayNameZh,
+                entry.officialNameZh,
+                ...entry.aliases,
+                entry.area
+            ].filter(Boolean).forEach(token => pushToken(token, entry.entityId));
+        });
+
+        const tokenEntries = Array.from(tokenLookup.entries())
+            .map(([token, entityIds]) => ({
+                token,
+                entityIds: Array.from(entityIds),
+                length: token.replace(/\s+/g, '').length
+            }))
+            .sort((left, right) => right.length - left.length);
+
+        const normalizeBindingMap = (rawMap = {}, defaultRole = 'primary') => {
+            const bindingMap = new Map();
+            Object.entries(rawMap || {}).forEach(([bindingKey, binding]) => {
+                const normalizedBindingKey = compactSearchText(bindingKey);
+                if (!normalizedBindingKey || !binding || typeof binding !== 'object') return;
+                bindingMap.set(normalizedBindingKey, {
+                    entityRefs: sanitizeEntityRefArray(binding.entityRefs, 12),
+                    supportForEntityRefs: sanitizeEntityRefArray(binding.supportForEntityRefs, 12),
+                    keywordHints: sanitizeSearchTextArray(binding.keywordHints, 16, 80),
+                    contentRole: compactSearchText(binding.contentRole) || defaultRole
+                });
+            });
+            return bindingMap;
+        };
+
+        const bindings = {
+            deckFacilities: normalizeBindingMap(rawRegistry.bindings?.deckFacilities, 'primary'),
+            shows: normalizeBindingMap(rawRegistry.bindings?.shows, 'primary'),
+            scheduleEvents: normalizeBindingMap(rawRegistry.bindings?.scheduleEvents, 'support'),
+            playbookItems: normalizeBindingMap(rawRegistry.bindings?.playbookItems, 'primary')
+        };
+
+        return {
+            version: compactSearchText(rawRegistry.version) || 'registry-v1',
+            lastVerifiedDate: compactSearchText(rawRegistry.lastVerifiedDate),
+            entities: normalizedEntities,
+            entityLookup,
+            tokenLookup,
+            tokenEntries,
+            bindings
+        };
+    }
+
+    function getAiEntityRegistryEntry(entityId) {
+        return aiEntityRegistry.entityLookup.get(sanitizeEntityId(entityId)) || null;
+    }
+
+    function getAiEntityBinding(bindingGroup, bindingKey) {
+        const group = aiEntityRegistry.bindings?.[bindingGroup];
+        if (!(group instanceof Map)) return null;
+        return group.get(compactSearchText(bindingKey)) || null;
+    }
+
+    function inferEntityRefsFromText(textParts = [], limit = 8) {
+        const normalized = normalizeSearchText(textParts.join(' '));
+        if (!normalized) return [];
+
+        const matched = [];
+        aiEntityRegistry.tokenEntries.forEach(entry => {
+            if (!normalized.includes(entry.token)) return;
+            matched.push(...entry.entityIds);
+        });
+
+        return sanitizeEntityRefArray(matched, limit);
+    }
+
+    function resolveEntityRefs(config = {}) {
+        const explicit = sanitizeEntityRefArray(config.entityRefs, config.limit || 10);
+        if (explicit.length) {
+            return explicit;
+        }
+
+        return inferEntityRefsFromText([
+            config.title,
+            config.text,
+            config.structuredText,
+            ...(Array.isArray(config.keywords) ? config.keywords : []),
+            config.locationLabel,
+            config.groupLabel
+        ], config.limit || 10);
+    }
+
+    function collectEntityRegistryProperNounTokens(entityRefs = []) {
+        return uniqueItems((Array.isArray(entityRefs) ? entityRefs : [])
+            .map(entityId => getAiEntityRegistryEntry(entityId))
+            .filter(Boolean)
+            .flatMap(entry => [entry.displayNameZh, entry.officialNameEn, entry.officialNameZh])
+            .map(item => compactSearchText(item))
+            .filter(Boolean))
+            .slice(0, 24);
+    }
+
+    function collectEntityRegistryAliasTokens(entityRefs = []) {
+        return uniqueItems((Array.isArray(entityRefs) ? entityRefs : [])
+            .map(entityId => getAiEntityRegistryEntry(entityId))
+            .filter(Boolean)
+            .flatMap(entry => [...(entry.aliases || []), ...(entry.deckHints || []), entry.area])
+            .map(item => compactSearchText(item))
+            .filter(Boolean))
+            .slice(0, 24);
+    }
+
+    function collectEntityRegistryCategoryFamilies(entityRefs = []) {
+        return uniqueItems((Array.isArray(entityRefs) ? entityRefs : [])
+            .map(entityId => getAiEntityRegistryEntry(entityId))
+            .filter(Boolean)
+            .flatMap(entry => entry.categoryFamilies || []))
+            .slice(0, 8);
+    }
+
+    function collectEntityRegistryCapabilityTags(entityRefs = []) {
+        return uniqueItems((Array.isArray(entityRefs) ? entityRefs : [])
+            .map(entityId => getAiEntityRegistryEntry(entityId))
+            .filter(Boolean)
+            .flatMap(entry => entry.capabilityTags || []))
+            .slice(0, 8);
+    }
+
+    function collectEntityRegistryEntityFamilies(entityRefs = []) {
+        return uniqueItems((Array.isArray(entityRefs) ? entityRefs : [])
+            .map(entityId => getAiEntityRegistryEntry(entityId))
+            .filter(Boolean)
+            .flatMap(entry => [entry.entityType]))
+            .slice(0, 8);
     }
 
     function normalizeAiQueryTaxonomy(rawTaxonomy = {}) {
@@ -1603,8 +1803,7 @@
         const normalized = normalizeSearchText(normalizedQuery);
         const seedTerms = uniqueItems([
             ...(context.literalAnchors || []),
-            ...(context.canonicalEntities || []),
-            ...(context.expandedAliases || [])
+            ...(context.canonicalEntities || [])
         ])
             .map(term => normalizeSearchText(term))
             .filter(Boolean);
@@ -1652,6 +1851,10 @@
 
         if ((result.categoryFamilies || []).some(label => getCapabilitySignalCategoryFamilies(capability).includes(label))) {
             return true;
+        }
+
+        if (Array.isArray(result.canonicalEntityIds) && result.canonicalEntityIds.length) {
+            return false;
         }
 
         const sourceText = result.normalizedCombined || normalizeSearchText([
@@ -1742,6 +1945,8 @@
                     doc.title,
                     doc.groupLabel,
                     ...(doc.keywords || []).slice(0, 6),
+                    ...(doc.properNounTokens || []).slice(0, 6),
+                    ...(doc.canonicalEntityIds || []).slice(0, 6),
                     ...(doc.categoryFamilies || []),
                     doc.entityKey,
                     doc.venueKey,
@@ -1750,6 +1955,8 @@
                 ]).filter(Boolean);
                 const relatedTerms = uniqueItems([
                     doc.title,
+                    ...(doc.properNounTokens || []).slice(0, 8),
+                    ...(doc.aliasTokens || []).slice(0, 8),
                     ...(doc.keywords || []).slice(0, 8),
                     ...(doc.categoryFamilies || []),
                     doc.groupLabel,
@@ -2348,27 +2555,65 @@
 
     function createSearchDocumentBase(config) {
         const id = config.id;
-        const keywords = Array.isArray(config.keywords) ? uniqueItems(config.keywords.filter(Boolean)) : [];
+        const seedKeywords = Array.isArray(config.keywords) ? uniqueItems(config.keywords.filter(Boolean)) : [];
         const text = joinSearchTextParts([config.text]);
         const structuredText = joinSearchTextParts([config.structuredText || text]);
+        const entityRefs = resolveEntityRefs({
+            ...config,
+            text,
+            structuredText,
+            keywords: seedKeywords
+        });
+        const supportForEntityRefs = sanitizeEntityRefArray(config.supportForEntityRefs, 10);
+        const registryProperNounTokens = collectEntityRegistryProperNounTokens(entityRefs);
+        const registryAliasTokens = collectEntityRegistryAliasTokens(entityRefs);
+        const keywords = uniqueItems([
+            ...seedKeywords,
+            ...(Array.isArray(config.keywordHints) ? config.keywordHints : []),
+            ...registryProperNounTokens,
+            ...registryAliasTokens
+        ]).slice(0, 24);
+        const registryCategoryFamilies = collectEntityRegistryCategoryFamilies(entityRefs);
         const categoryFamilies = inferAiCategoryFamilies({
             ...config,
             text,
             structuredText,
             keywords
         });
+        const mergedCategoryFamilies = uniqueItems(
+            registryCategoryFamilies.length
+                ? [
+                    ...registryCategoryFamilies,
+                    ...categoryFamilies.filter(label => registryCategoryFamilies.includes(label) || label === '時間脈絡')
+                ]
+                : categoryFamilies
+        ).slice(0, 8);
+        const registryCapabilityTags = collectEntityRegistryCapabilityTags(entityRefs);
         const capabilityTags = inferAiCapabilityTags({
             ...config,
             text,
             structuredText,
             keywords,
-            categoryFamilies
+            categoryFamilies: mergedCategoryFamilies
         });
+        const mergedCapabilityTags = uniqueItems(
+            registryCapabilityTags.length
+                ? [
+                    ...registryCapabilityTags,
+                    ...capabilityTags.filter(capabilityId => registryCapabilityTags.includes(capabilityId))
+                ]
+                : capabilityTags
+        ).slice(0, 8);
+        const registryEntityFamilies = collectEntityRegistryEntityFamilies(entityRefs);
         const entityFamilies = inferAiEntityFamilies({
             ...config,
-            categoryFamilies,
-            capabilityTags
+            categoryFamilies: mergedCategoryFamilies,
+            capabilityTags: mergedCapabilityTags
         });
+        const mergedEntityFamilies = uniqueItems([
+            ...entityFamilies,
+            ...registryEntityFamilies
+        ]).slice(0, 8);
         const anchorKeys = inferCoverageAnchorKeys({
             ...config,
             text,
@@ -2393,15 +2638,20 @@
             fieldLabel: config.fieldLabel || getAiFieldLabel(config.fieldType || 'parent'),
             timeHint: compactSearchText(config.timeHint),
             bestTimeHint: compactSearchText(config.bestTimeHint),
-            categoryFamilies,
-            capabilityTags,
-            entityFamilies,
+            categoryFamilies: mergedCategoryFamilies,
+            capabilityTags: mergedCapabilityTags,
+            entityFamilies: mergedEntityFamilies,
+            canonicalEntityIds: entityRefs,
+            properNounTokens: registryProperNounTokens,
+            aliasTokens: registryAliasTokens,
+            supportOfEntityIds: supportForEntityRefs,
             supportOfParentIds: Array.isArray(config.supportOfParentIds) ? uniqueItems(config.supportOfParentIds.filter(Boolean)).slice(0, 10) : [],
             evidenceRoleHints: Array.isArray(config.evidenceRoleHints) ? config.evidenceRoleHints.filter(Boolean) : [],
-            entityKey: config.entityKey || anchorKeys.entityKey,
+            entityKey: config.entityKey || entityRefs[0] || anchorKeys.entityKey,
             venueKey: config.venueKey || anchorKeys.venueKey,
             seriesKey: config.seriesKey || anchorKeys.seriesKey,
             sourceClusterKey: config.sourceClusterKey || anchorKeys.sourceClusterKey,
+            contentRole: compactSearchText(config.contentRole) || (supportForEntityRefs.length ? 'support' : 'primary'),
             aiOnly: Boolean(config.aiOnly)
         };
     }
@@ -2416,6 +2666,9 @@
             id: `${parentDoc.id}::${fieldType}`,
             parentId: parentDoc.parentId || parentDoc.id,
             text: normalizedValue,
+            entityRefs: parentDoc.canonicalEntityIds || [],
+            supportForEntityRefs: parentDoc.supportOfEntityIds || [],
+            contentRole: parentDoc.contentRole || 'primary',
             structuredText: buildStructuredSearchText([
                 ['主題', parentDoc.title],
                 [fieldLabel, normalizedValue],
@@ -2441,6 +2694,7 @@
             dayData.periods.flatMap((period, periodIndex) =>
                 period.events.flatMap((event, eventIndex) => {
                     const eventId = getScheduleEventId(dayData.id, periodIndex, eventIndex);
+                    const binding = getAiEntityBinding('scheduleEvents', `${dayData.id}:${periodIndex}:${eventIndex}`);
                     const locationLabel = `${dayData.tabTitle} · ${period.name}`;
                     const navTarget = {
                         type: 'schedule',
@@ -2462,6 +2716,10 @@
                             ['重點', event.desc]
                         ]),
                         keywords: [dayData.tabTitle, dayData.dateTitle, period.name, event.tag, event.title],
+                        entityRefs: binding?.entityRefs || [],
+                        supportForEntityRefs: binding?.supportForEntityRefs || [],
+                        keywordHints: binding?.keywordHints || [],
+                        contentRole: binding?.contentRole || 'support',
                         locationLabel,
                         navTarget,
                         fieldType: 'parent',
@@ -2495,6 +2753,7 @@
         return deckGuideData.flatMap(deck =>
             deck.facilities.flatMap((facility, facilityIndex) => {
                 const facilityId = getDeckFacilityId(deck.id, facilityIndex);
+                const binding = getAiEntityBinding('deckFacilities', `${deck.id}:${facilityIndex}`);
                 const locationLabel = `${deck.label} · ${deck.title}`;
                 const normalizedFacility = normalizeSearchText([facility.name, facility.summary, facility.tripUse, deck.title, deck.theme].join(' '));
                 const isTheatreFacility = hasQueryHint(normalizedFacility, ['walt disney theatre', '劇院', 'theatre', '主秀']);
@@ -2519,6 +2778,10 @@
                         ['這趟怎麼用', facility.tripUse]
                     ]),
                     keywords: [deck.label, deck.title, deck.theme, deck.tripFocus, ...deck.badges],
+                    entityRefs: binding?.entityRefs || [],
+                    supportForEntityRefs: binding?.supportForEntityRefs || [],
+                    keywordHints: binding?.keywordHints || [],
+                    contentRole: binding?.contentRole || 'primary',
                     locationLabel,
                     navTarget,
                     fieldType: 'parent',
@@ -2555,6 +2818,7 @@
         return showGuideData.flatMap(category =>
             category.shows.flatMap((show, showIndex) => {
                 const showId = getShowItemId(category.id, showIndex);
+                const binding = getAiEntityBinding('shows', `${category.id}:${showIndex}`);
                 const locationLabel = `表演精華 · ${category.title}`;
                 const normalizedShow = normalizeSearchText([show.name, show.location, show.theme, category.title, category.intro].join(' '));
                 const isTheatreShow = hasQueryHint(normalizedShow, ['walt disney theatre', '劇院', 'theatre', '主秀']);
@@ -2579,6 +2843,10 @@
                         ['旅程連結', show.tripLink]
                     ]),
                     keywords: [category.title, category.intro, show.location, show.tripLink],
+                    entityRefs: binding?.entityRefs || [],
+                    supportForEntityRefs: binding?.supportForEntityRefs || [],
+                    keywordHints: binding?.keywordHints || [],
+                    contentRole: binding?.contentRole || 'primary',
                     locationLabel,
                     navTarget,
                     fieldType: 'parent',
@@ -2615,6 +2883,7 @@
         return playbookGuideData.flatMap(mission =>
             mission.items.map((item, itemIndex) => {
                 const itemId = getPlaybookItemId(mission.id, itemIndex);
+                const binding = getAiEntityBinding('playbookItems', `${mission.id}:${itemIndex}`);
                 const locationLabel = `攻略本 · ${mission.label}`;
                 const normalizedPlaybook = normalizeSearchText([item.title, item.whenToUse, item.action, item.tripFit, item.caution, mission.label].join(' '));
                 const isTheatrePlaybook = hasQueryHint(normalizedPlaybook, ['walt disney theatre', '劇院', 'theatre', '主秀', '優先入場', '看秀']);
@@ -2642,6 +2911,10 @@
                         ['注意事項', item.caution]
                     ]),
                     keywords: [mission.label, mission.intro, item.sourceType, ...deriveContextualKeywords(combinedText)],
+                    entityRefs: binding?.entityRefs || [],
+                    supportForEntityRefs: binding?.supportForEntityRefs || [],
+                    keywordHints: binding?.keywordHints || [],
+                    contentRole: binding?.contentRole || 'primary',
                     locationLabel,
                     navTarget,
                     fieldType: 'parent',
@@ -2750,26 +3023,35 @@
             const normalizedText = normalizeSearchText(doc.text);
             const normalizedStructuredText = normalizeSearchText(doc.structuredText || doc.text);
             const normalizedKeywords = normalizeSearchText(doc.keywords.join(' '));
+            const normalizedProperNouns = normalizeSearchText((doc.properNounTokens || []).join(' '));
+            const normalizedAliases = normalizeSearchText((doc.aliasTokens || []).join(' '));
             const normalizedCategories = normalizeSearchText((doc.categoryFamilies || []).join(' '));
             const normalizedCapabilities = normalizeSearchText((doc.capabilityTags || []).join(' '));
             const normalizedEntityFamilies = normalizeSearchText((doc.entityFamilies || []).join(' '));
+            const normalizedEntityRefs = normalizeSearchText((doc.canonicalEntityIds || []).join(' '));
             return {
                 ...doc,
                 normalizedTitle,
                 normalizedText,
                 normalizedStructuredText,
                 normalizedKeywords,
+                normalizedProperNouns,
+                normalizedAliases,
                 normalizedCategories,
                 normalizedCapabilities,
                 normalizedEntityFamilies,
+                normalizedEntityRefs,
                 normalizedCombined: uniqueItems([
                     normalizedTitle,
                     normalizedKeywords,
+                    normalizedProperNouns,
+                    normalizedAliases,
                     normalizedText,
                     normalizedStructuredText,
                     normalizedCategories,
                     normalizedCapabilities,
-                    normalizedEntityFamilies
+                    normalizedEntityFamilies,
+                    normalizedEntityRefs
                 ].filter(Boolean)).join(' ')
             };
         });
@@ -2778,9 +3060,21 @@
             (doc.fieldType || 'parent') === 'parent'
             && !['schedule', 'static'].includes(doc.sourceType)
         );
+        const parentIdsByEntity = new Map();
+
+        primaryParents.forEach(doc => {
+            (doc.canonicalEntityIds || []).forEach(entityId => {
+                if (!parentIdsByEntity.has(entityId)) {
+                    parentIdsByEntity.set(entityId, new Set());
+                }
+                parentIdsByEntity.get(entityId).add(doc.parentId || doc.id);
+            });
+        });
 
         searchState.documents = baseDocuments.map(doc => {
-            const supportOfParentIds = ['schedule', 'static'].includes(doc.sourceType)
+            const explicitSupportParents = uniqueItems((doc.supportOfEntityIds || [])
+                .flatMap(entityId => Array.from(parentIdsByEntity.get(entityId) || [])));
+            const inferredSupportParents = ['schedule', 'static'].includes(doc.sourceType)
                 ? uniqueItems(primaryParents
                     .filter(parentDoc => {
                         const sharedAnchor = [
@@ -2802,6 +3096,10 @@
                     .map(parentDoc => parentDoc.parentId || parentDoc.id))
                     .slice(0, 10)
                 : (doc.supportOfParentIds || []).slice(0, 10);
+            const supportOfParentIds = uniqueItems([
+                ...explicitSupportParents,
+                ...inferredSupportParents
+            ]).slice(0, 12);
 
             return {
                 ...doc,
@@ -2812,7 +3110,7 @@
 
         searchState.aiConceptGraph = buildAiConceptGraph(searchState.documents);
         searchState.documentVersion = simpleHash(searchState.documents
-            .map(doc => `${doc.id}::${doc.normalizedCombined}::${(doc.categoryFamilies || []).join(',')}::${(doc.capabilityTags || []).join(',')}::${(doc.supportOfParentIds || []).join(',')}`)
+            .map(doc => `${doc.id}::${doc.normalizedCombined}::${(doc.canonicalEntityIds || []).join(',')}::${(doc.categoryFamilies || []).join(',')}::${(doc.capabilityTags || []).join(',')}::${(doc.supportOfParentIds || []).join(',')}`)
             .join('||'));
     }
 
@@ -3644,6 +3942,10 @@
 
         if ((item.entityFamilies || []).includes(capability.id)) {
             return true;
+        }
+
+        if (Array.isArray(item.canonicalEntityIds) && item.canonicalEntityIds.length) {
+            return false;
         }
 
         const sourceText = normalizeSearchText([
@@ -5752,6 +6054,8 @@
                     cardType: getAiCoverageEntityType(result),
                     groupLabel: result.groupLabel || getSourceLabel(result.sourceType),
                     sourceType: result.sourceType,
+                    contentRole: result.contentRole || 'primary',
+                    canonicalEntityIds: Array.isArray(result.canonicalEntityIds) ? result.canonicalEntityIds.slice(0, 8) : [],
                     entityKey: result.entityKey || '',
                     venueKey: result.venueKey || '',
                     seriesKey: result.seriesKey || '',
@@ -5794,6 +6098,14 @@
                     target.supportOfParentIds.push(relatedParentId);
                 }
             });
+            (result.canonicalEntityIds || []).forEach(entityId => {
+                if (!target.canonicalEntityIds.includes(entityId) && target.canonicalEntityIds.length < 8) {
+                    target.canonicalEntityIds.push(entityId);
+                }
+            });
+            if (result.contentRole === 'support') {
+                target.contentRole = 'support';
+            }
             getAiParentBriefDetailLines(result, queryData).forEach(line => {
                 if (target.detailBullets.length < 10 && !target.detailBullets.includes(line)) {
                     target.detailBullets.push(line);
@@ -5865,6 +6177,7 @@
             const capabilityMatched = !isAiCapabilityGatedQuery(queryData)
                 || requiredCapabilities.every(capabilityId => briefMatchesCapability(item, capabilityId));
             const isPrimaryCandidate = capabilityMatched
+                && item.contentRole !== 'support'
                 && item.sourceType !== 'schedule'
                 && item.sourceType !== 'static'
                 && (visibleIds.has(item.parentId)

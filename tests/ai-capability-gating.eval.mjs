@@ -25,6 +25,7 @@ function loadScriptHooks() {
   }
 
   const windowObject = {
+    AI_ENTITY_REGISTRY: {},
     AI_QUERY_TAXONOMY: {},
     __AI_SEARCH_TEST_HOOKS__: hooks,
     __AI_SEARCH_SKIP_BOOTSTRAP__: true,
@@ -121,6 +122,9 @@ function loadScriptHooks() {
     showGuideData: data.showGuideData,
     playbookGuideData: data.playbookGuideData
   };
+
+  const registrySource = fs.readFileSync(path.resolve('ai-entity-registry.js'), 'utf8');
+  vm.runInNewContext(registrySource, sandbox, { filename: 'ai-entity-registry.js' });
 
   const taxonomySource = fs.readFileSync(path.resolve('ai-query-taxonomy.js'), 'utf8');
   vm.runInNewContext(taxonomySource, sandbox, { filename: 'ai-query-taxonomy.js' });

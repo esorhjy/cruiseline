@@ -3601,7 +3601,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         terms: sanitizeTerms([entry?.canonical, ...(Array.isArray(entry?.terms) ? entry.terms : [])], 16, 80)
       }))
       .filter((entry) => entry.canonical && entry.terms.length)
-      .slice(0, 24),
+      .slice(0, 160),
     genericClasses: (Array.isArray(safeTaxonomy.genericClasses) ? safeTaxonomy.genericClasses : [])
       .map((entry) => ({
         canonical: sanitizeString(entry?.canonical, 80),
@@ -3609,7 +3609,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         expandsTo: sanitizeTerms(entry?.expandsTo, 10, 80)
       }))
       .filter((entry) => entry.canonical && entry.terms.length)
-      .slice(0, 16),
+      .slice(0, 32),
     categoryFamilies: (Array.isArray(safeTaxonomy.categoryFamilies) ? safeTaxonomy.categoryFamilies : [])
       .map((entry) => ({
         id: sanitizeString(entry?.id || entry?.label, 60),
@@ -3618,7 +3618,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         keywords: sanitizeTerms([...(Array.isArray(entry?.keywords) ? entry.keywords : []), ...(Array.isArray(entry?.terms) ? entry.terms : [])], 20, 80)
       }))
       .filter((entry) => entry.label && entry.terms.length)
-      .slice(0, 16),
+      .slice(0, 40),
     clusterRelations: (Array.isArray(safeTaxonomy.clusterRelations) ? safeTaxonomy.clusterRelations : [])
       .map((entry) => ({
         key: sanitizeString(entry?.key || entry?.label, 60),
@@ -3629,7 +3629,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         relatedTerms: sanitizeTerms(entry?.relatedTerms, 16, 80)
       }))
       .filter((entry) => entry.key && entry.triggers.length)
-      .slice(0, 16),
+      .slice(0, 80),
     relatedEdges: (Array.isArray(safeTaxonomy.relatedEdges) ? safeTaxonomy.relatedEdges : [])
       .map((entry) => ({
         source: sanitizeString(entry?.source, 80),
@@ -3638,7 +3638,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         terms: sanitizeTerms(entry?.terms, 12, 80)
       }))
       .filter((entry) => entry.source && entry.target)
-      .slice(0, 24),
+      .slice(0, 160),
     capabilityProfiles: (Array.isArray(safeTaxonomy.capabilityProfiles) ? safeTaxonomy.capabilityProfiles : [])
       .map((entry) => ({
         id: sanitizeString(entry?.id || entry?.label, 40),
@@ -3649,7 +3649,7 @@ function sanitizeQueryTaxonomy(taxonomy = {}) {
         disallowedCategories: sanitizeTerms(entry?.disallowedCategories, 10, 80)
       }))
       .filter((entry) => entry.id && entry.terms.length)
-      .slice(0, 16),
+      .slice(0, 32),
     supportedSourceTypes: sanitizeTerms(safeTaxonomy.supportedSourceTypes, 6, 24).map(sanitizeSourceType)
   };
 }
@@ -3711,6 +3711,16 @@ function findCategoryFamilyByLabel(taxonomy, label) {
   ) || null;
 }
 
+function findCanonicalEntityByTerm(taxonomy, term) {
+  const normalizedTerm = normalizeComparableQueryText(term);
+  if (!normalizedTerm) return null;
+
+  return taxonomy.aliases.find((entry) =>
+    normalizeComparableQueryText(entry.canonical) === normalizedTerm
+      || entry.terms.some((candidate) => normalizeComparableQueryText(candidate) === normalizedTerm)
+  ) || null;
+}
+
 function findCapabilityProfileById(taxonomy, capabilityId) {
   const normalizedCapabilityId = normalizeComparableQueryText(capabilityId);
   return (taxonomy.capabilityProfiles || []).find((entry) =>
@@ -3767,6 +3777,14 @@ function expandClusterTermsFromKeys(taxonomy, clusterKeys = []) {
   }).map((item) => sanitizeString(item, 80)).filter(Boolean)).slice(0, 24);
 }
 
+function expandCanonicalEntitiesFromClusterKeys(taxonomy, clusterKeys = []) {
+  return uniqueItems(clusterKeys.flatMap((key) => {
+    const entry = findClusterRelationByKey(taxonomy, key);
+    if (!entry) return [];
+    return (entry.relatedEntities || []).map((item) => findCanonicalEntityByTerm(taxonomy, item)?.canonical || sanitizeString(item, 80));
+  }).filter(Boolean)).slice(0, 10);
+}
+
 function expandRelatedEdgeTerms(taxonomy, terms = []) {
   const normalizedTerms = uniqueItems((Array.isArray(terms) ? terms : [])
     .map((item) => normalizeComparableQueryText(item))
@@ -3785,7 +3803,7 @@ function buildQueryInterpretationFallback(query, taxonomyInput = null) {
   const taxonomy = sanitizeQueryTaxonomy(taxonomyInput);
   const normalizedQuery = normalizeComparableQueryText(query);
   const literalAnchors = sanitizeInterpretationArray(extractKeywordCandidates(query), 12, 60);
-  const canonicalEntities = uniqueItems(taxonomy.aliases
+  const directCanonicalEntities = uniqueItems(taxonomy.aliases
     .filter((entry) => entry.terms.some((term) => queryIncludesTerm(normalizedQuery, term)))
     .map((entry) => entry.canonical))
     .slice(0, 10);
@@ -3798,10 +3816,14 @@ function buildQueryInterpretationFallback(query, taxonomyInput = null) {
     .map((entry) => entry.label))
     .slice(0, 10);
   const clusterKeys = uniqueItems([
-    ...canonicalEntities.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item)),
+    ...directCanonicalEntities.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item)),
     ...literalAnchors.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item)),
     ...categoryMatches.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item))
   ]).slice(0, 8);
+  const canonicalEntities = uniqueItems([
+    ...directCanonicalEntities,
+    ...expandCanonicalEntitiesFromClusterKeys(taxonomy, clusterKeys)
+  ]).slice(0, 10);
   const expandedCategories = uniqueItems([
     ...genericClasses.flatMap((item) => taxonomy.genericClasses.find((entry) => entry.canonical === item)?.expandsTo || []),
     ...categoryMatches,
@@ -4073,9 +4095,7 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
   const canonicalEntities = uniqueItems([
     ...fallback.canonicalEntities,
     ...sanitizeInterpretationArray(safeOutput.canonicalEntities, 10, 80)
-      .map((item) => taxonomy.aliases.find((entry) =>
-        entry.terms.some((term) => normalizeComparableQueryText(term) === normalizeComparableQueryText(item))
-      )?.canonical || sanitizeString(item, 80))
+      .map((item) => findCanonicalEntityByTerm(taxonomy, item)?.canonical || sanitizeString(item, 80))
   ]).slice(0, 10);
   const genericClasses = uniqueItems([
     ...fallback.genericClasses,
@@ -4099,11 +4119,15 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
     }),
     ...canonicalEntities.flatMap((item) => getClusterKeysForQueryTerm(taxonomy, item))
   ]).slice(0, 8);
+  const normalizedCanonicalEntities = uniqueItems([
+    ...canonicalEntities,
+    ...expandCanonicalEntitiesFromClusterKeys(taxonomy, clusterKeys)
+  ]).slice(0, 10);
   const expandedAliases = uniqueItems([
     ...fallback.expandedAliases,
     ...sanitizeInterpretationArray(safeOutput.expandedAliases, 20, 80),
-    ...canonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item]),
-    ...expandRelatedEdgeTerms(taxonomy, [...canonicalEntities, ...genericClasses, ...expandedCategories])
+    ...normalizedCanonicalEntities.flatMap((item) => taxonomy.aliases.find((entry) => entry.canonical === item)?.terms || [item]),
+    ...expandRelatedEdgeTerms(taxonomy, [...normalizedCanonicalEntities, ...genericClasses, ...expandedCategories])
   ]).slice(0, 28);
   const coverageHints = uniqueItems([
     ...fallback.coverageHints,
@@ -4142,7 +4166,7 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
       ...fallback.literalAnchors,
       ...sanitizeInterpretationArray(safeOutput.literalAnchors, 12, 60)
     ]).slice(0, 12),
-    canonicalEntities,
+    canonicalEntities: normalizedCanonicalEntities,
     genericClasses,
     requiredCapabilities,
     expandedAliases,
@@ -4160,7 +4184,7 @@ function finalizeQueryInterpretation(modelOutput, query, taxonomyInput = null) {
     negativeTerms,
     confidence: safeOutput?.confidence === 'high'
       ? 'high'
-      : ((canonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence)
+      : ((normalizedCanonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence)
   };
 }
 

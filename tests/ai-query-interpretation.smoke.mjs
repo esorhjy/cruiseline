@@ -18,10 +18,13 @@ async function loadWorker() {
 }
 
 function loadTaxonomy() {
+  const registryPath = path.resolve('ai-entity-registry.js');
   const taxonomyPath = path.resolve('ai-query-taxonomy.js');
-  const source = fs.readFileSync(taxonomyPath, 'utf8');
+  const registrySource = fs.readFileSync(registryPath, 'utf8');
+  const taxonomySource = fs.readFileSync(taxonomyPath, 'utf8');
   const sandbox = { window: {} };
-  vm.runInNewContext(source, sandbox, { filename: 'ai-query-taxonomy.js' });
+  vm.runInNewContext(registrySource, sandbox, { filename: 'ai-entity-registry.js' });
+  vm.runInNewContext(taxonomySource, sandbox, { filename: 'ai-query-taxonomy.js' });
   return sandbox.window.AI_QUERY_TAXONOMY;
 }
 
@@ -50,7 +53,7 @@ async function invokeWorker(worker, body, options = {}) {
 
 const worker = await loadWorker();
 const taxonomy = loadTaxonomy();
-const swimQuery = '有哪些設施可以游泳';
+const swimQuery = '\u6709\u54ea\u4e9b\u8a2d\u65bd\u53ef\u4ee5\u6e38\u6cf3';
 
 const interpretationFetch = async () => new Response(JSON.stringify({
   candidates: [
@@ -60,18 +63,18 @@ const interpretationFetch = async () => new Response(JSON.stringify({
           {
             text: JSON.stringify({
               canonicalQuery: swimQuery,
-              literalAnchors: ['設施', '游泳'],
-              canonicalEntities: ['設施'],
-              genericClasses: ['設施'],
+              literalAnchors: ['\u8a2d\u65bd', '\u6e38\u6cf3'],
+              canonicalEntities: ['\u8a2d\u65bd'],
+              genericClasses: ['\u8a2d\u65bd'],
               requiredCapabilities: ['swim'],
               expandedAliases: ['pool', 'splash', 'slide'],
-              expandedCategories: ['泳池', '水區'],
+              expandedCategories: ['\u6cf3\u6c60', '\u6c34\u5340'],
               clusterExpansions: ['pool deck', 'water play'],
               coverageHints: ['inventory', 'all-details'],
-              disallowedCategories: ['劇院', '表演'],
+              disallowedCategories: ['\u8868\u6f14', '\u5287\u9662'],
               answerIntent: 'inventory',
               breadthProfile: 'maximum-expansion',
-              expansionReasons: ['capability:swim', 'expand:泳池'],
+              expansionReasons: ['capability:swim', 'expand:pool'],
               negativeTerms: [],
               confidence: 'high'
             })
@@ -101,10 +104,10 @@ const interpreted = await invokeWorker(worker, {
 
 assert.equal(interpreted.response.status, 200);
 assert(interpreted.payload.requiredCapabilities.includes('swim'));
-assert(interpreted.payload.disallowedCategories.includes('劇院'));
+assert(interpreted.payload.disallowedCategories.includes('\u8868\u6f14'));
 assert.equal(interpreted.payload.answerIntent, 'inventory');
 assert.equal(interpreted.payload.breadthProfile, 'maximum-expansion');
-assert(interpreted.payload.expandedCategories.includes('泳池'));
+assert(interpreted.payload.expandedCategories.includes('\u6cf3\u6c60'));
 
 const fallback = await invokeWorker(worker, {
   query: swimQuery,
@@ -124,7 +127,7 @@ assert.equal(typeof fallback.payload.answerIntent, 'string');
 assert(['inventory', 'answer', 'comparison'].includes(fallback.payload.answerIntent));
 
 const bilingual = await invokeWorker(worker, {
-  query: 'concierge 有哪些服務',
+  query: 'concierge \u6709\u54ea\u4e9b\u670d\u52d9',
   mode: 'query_interpretation_v3',
   responseLocale: 'zh-Hant',
   taxonomy
@@ -134,5 +137,18 @@ const bilingual = await invokeWorker(worker, {
 
 assert.equal(bilingual.response.status, 200);
 assert(Array.isArray(bilingual.payload.canonicalEntities));
-assert(bilingual.payload.canonicalEntities.length >= 1);
+assert(
+  bilingual.payload.canonicalEntities.some((item) => /concierge|禮賓/i.test(String(item || ''))),
+  `canonicalEntities should retain a concierge subject: ${JSON.stringify(bilingual.payload.canonicalEntities)}`
+);
 assert(Array.isArray(bilingual.payload.expandedAliases));
+assert(
+  bilingual.payload.expandedAliases.some((item) => /concierge|lounge|禮賓/i.test(String(item || ''))),
+  `expandedAliases should include concierge-related aliases: ${JSON.stringify(bilingual.payload.expandedAliases)}`
+);
+assert(
+  bilingual.payload.clusterExpansions.some((item) => /concierge|lounge|禮賓/i.test(String(item || ''))),
+  `clusterExpansions should include concierge-related expansions: ${JSON.stringify(bilingual.payload.clusterExpansions)}`
+);
+
+console.log('AI query interpretation smoke passed.');

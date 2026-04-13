@@ -572,7 +572,7 @@ const deckGuideData = [
         facilities: [
             {
                 icon: "fa-solid fa-utensils",
-                name: "Enchanted Summer / Enchanted Restaurant",
+                name: "Enchanted Summer Restaurant",
                 summary: "花園與仲夏氛圍很適合慢慢吃，白天與晚間都各有表情。",
                 bestTime: "入座前 5–10 分鐘先到，拍環境最輕鬆。",
                 tripUse: "Day 2 午餐如果想從容一點，這層最適合當節奏緩衝。",
@@ -622,7 +622,7 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-gamepad",
-                name: "Big Hero 6 Arcade",
+                name: "Big Hero Arcade",
                 summary: "房卡就能啟動的大英雄天團體感電玩，四款遊戲都需要全身互動，是下午最好的放電分流點。",
                 bestTime: "避開晚間尖峰，下午更能玩到完整體感機。",
                 tripUse: "Day 2 下午很適合全家刷房卡輪流玩四款雙人體感遊戲：Super Fred Kaiju Chaos（怪獸追逐）、Go Go Racers（節奏賽車）、Honey Lemon Chem-Ball Blast（化學球射擊）、Wasabi Speed Slice（電漿切片）。",
@@ -672,7 +672,7 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-crown",
-                name: "Royal Society for Friendship and Tea / 主題活動",
+                name: "Royal Society for Friendship and Tea",
                 summary: "付費活動雖不是必排，但若孩子超吃公主主題，這裡要提早決定。",
                 bestTime: "有意願就提早透過禮賓或系統確認名額。",
                 tripUse: "列入願望清單，不和主行程綁死。",
@@ -814,7 +814,7 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-pizza-slice",
-                name: "Pixar Market / Pizza Planet / Wheezy’s Freezies",
+                name: "Pixar Market Restaurant / Pizza Planet / Wheezy’s Freezies",
                 summary: "濕答答也能快速補能量，尤其 Pizza Planet 是最不打斷節奏的披薩補給點之一，剛出爐時表現通常特別好。",
                 bestTime: "常見窗口約 10:30–18:00 與 21:00–00:00；下午點心、玩水後與宵夜時段特別好用，先找位子再分工取餐效率最高。",
                 tripUse: "玩水中場、下午餓了、孩子只想快點吃點東西時都很好用；它比較像方便補給站，不必神化成必吃目的地，高峰時段仍可能明顯排隊。若要裝免費飲料，記得找泳池另一側的飲料機，不要把旁邊的付費酒吧當成同一區。",
@@ -822,7 +822,7 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-gem",
-                name: "Market Bar / Wishes Treasures / Palace Treasures",
+                name: "Market Bar / 3 Wishes / Palace Treasures",
                 summary: "想順手補看精品或喝一杯可以留意，但不需要和主行程綁太死。",
                 bestTime: "非用餐尖峰或晚上較鬆。",
                 tripUse: "主要還是陪襯用途，真正核心依舊是玩水與補給。",
@@ -882,7 +882,7 @@ const deckGuideData = [
         facilities: [
             {
                 icon: "fa-solid fa-sun",
-                name: "Concierge Sundeck & Pool / Sundeck Dining",
+                name: "Concierge Sundeck & Pool",
                 summary: "禮賓專屬空間的最大價值不是奢華，而是能在最吵的時候快速抽離；整區 07:00–22:00 開放。",
                 bestTime: "11:00–16:30 最適合補 light bites 與 hot items；07:00–22:00 都能回來休息和補基本飲品。",
                 tripUse: "可當作 Day 2、Day 3 的中場休息點，重新整理體力；基本免費飲品供應到 22:00，付費酒水則從 11:00–22:00 可點。",

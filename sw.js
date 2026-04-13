@@ -1,9 +1,10 @@
-const CORE_CACHE_NAME = 'dcl-guide-v11';
+const CORE_CACHE_NAME = 'dcl-guide-v12';
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const CORE_ASSETS_TO_CACHE = [
   'index.html',
   'style.css',
   'script.js',
+  'ai-entity-registry.js',
   'ai-query-taxonomy.js',
   'data.js',
   'manifest.json',
