@@ -5,16 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
+    <meta name="app-build" content="2026-04-15-ai-search-section-guide-v9">
+    <script>
+window.__DCL_GUIDE_BUILD__ = '2026-04-15-ai-search-section-guide-v11';
+        document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
+        console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <link rel="stylesheet" href="style.css?v=2026-04-15-ai-search-section-guide-v9">
+    <link rel="manifest" href="manifest.json?v=2026-04-15-ai-search-section-guide-v9">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-04-15-ai-search-section-guide-v9">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-04-15-ai-search-section-guide-v9">
     <meta name="ai-answer-endpoint" content="https://disney-adventure-ai-answer.esorhjy.workers.dev/api/ai-answer">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -575,15 +581,17 @@
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-    <script src="data.js"></script>
-    <script src="ai-entity-registry.js"></script>
-    <script src="ai-query-taxonomy.js"></script>
-    <script src="script.js"></script>
+<script src="data.js?v=2026-04-15-ai-search-section-guide-v8"></script>
+<script src="ai-entity-registry.js?v=2026-04-15-ai-search-section-guide-v8"></script>
+<script src="ai-query-taxonomy.js?v=2026-04-15-ai-search-section-guide-v8"></script>
+<script src="script.js?v=2026-04-15-ai-search-section-guide-v8"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const hadController = Boolean(navigator.serviceWorker.controller);
                 let hasReloadedForUpdate = false;
+                const buildId = window.__DCL_GUIDE_BUILD__ || 'local-dev';
+                const withBuild = (assetPath) => `${assetPath}?v=${encodeURIComponent(buildId)}`;
 
                 navigator.serviceWorker.addEventListener('controllerchange', () => {
                     if (!hadController || hasReloadedForUpdate) {
@@ -593,7 +601,7 @@
                     window.location.reload();
                 });
 
-                navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
+                navigator.serviceWorker.register(withBuild('sw.js'), { updateViaCache: 'none' })
                     .then(reg => {
                         reg.update().catch(() => null);
                         console.log('Service Worker registered!');

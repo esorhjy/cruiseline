@@ -1394,6 +1394,11 @@ body.search-open {
     z-index: 1;
 }
 
+.search-panel.reading-mode {
+    gap: 12px;
+    padding-top: 18px;
+}
+
 .search-panel-body {
     flex: 1 1 auto;
     min-height: 0;
@@ -1430,15 +1435,41 @@ body.search-open {
     gap: 16px;
 }
 
+.search-panel.reading-mode .search-panel-header {
+    align-items: center;
+    gap: 12px;
+}
+
 .search-panel-copy h2 {
     margin: 6px 0 8px;
     color: var(--dcl-navy);
     font-size: 2.1rem;
 }
 
+.search-panel.reading-mode .search-panel-copy h2 {
+    margin: 0;
+    font-size: 1.55rem;
+}
+
 .search-panel-copy p {
     color: var(--text-gray);
     line-height: 1.65;
+}
+
+.search-panel.reading-mode .search-panel-copy p {
+    display: none;
+}
+
+.search-panel.reading-mode .search-kicker {
+    margin-bottom: 2px;
+}
+
+.search-panel.reading-mode .search-mode-switch {
+    margin-top: 0;
+}
+
+.search-panel.reading-mode .search-input-shell {
+    margin-bottom: 6px;
 }
 
 .search-kicker {
@@ -1577,6 +1608,10 @@ body.search-open {
     box-shadow: 0 18px 40px rgba(0, 11, 35, 0.22);
 }
 
+.search-ai-card.longform-mode {
+    padding: 16px 18px 18px;
+}
+
 .search-ai-card.loading,
 .search-ai-card.info {
     background: rgba(255, 255, 255, 0.92);
@@ -1685,6 +1720,11 @@ body.search-open {
     margin-bottom: 12px;
 }
 
+.search-ai-interpretation.compact {
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
 .search-ai-interpretation-label {
     display: inline-flex;
     align-items: center;
@@ -1713,6 +1753,39 @@ body.search-open {
     font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.02em;
+}
+
+.search-ai-worker-warning {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 16px;
+    background: rgba(243, 181, 0, 0.14);
+    border: 1px solid rgba(243, 181, 0, 0.24);
+    color: inherit;
+}
+
+.search-ai-worker-warning.compact {
+    margin-bottom: 10px;
+    padding: 10px 12px;
+}
+
+.search-ai-worker-warning-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.search-ai-worker-warning p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    opacity: 0.94;
 }
 
 .search-ai-summary {
@@ -1805,10 +1878,46 @@ body.search-open {
     margin-top: 12px;
 }
 
+.search-ai-longform-article {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.search-ai-longform-intro,
+.search-ai-article-section-summary {
+    margin: 0;
+    line-height: 1.82;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.search-ai-article-section-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.search-ai-article-section-body p {
+    margin: 0;
+    line-height: 1.88;
+    color: rgba(255, 255, 255, 0.94);
+}
+
+.search-ai-longform-sections,
+.search-ai-article-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
 .search-ai-report-section {
     padding: 18px 18px 16px;
     border-radius: 18px;
     background: rgba(255, 255, 255, 0.08);
+}
+
+.search-ai-card.longform-mode .search-ai-report-section {
+    padding: 16px 16px 14px;
 }
 
 .search-ai-report-section-header {
@@ -1963,6 +2072,50 @@ body.search-open {
     background: rgba(255, 255, 255, 0.1);
 }
 
+.search-ai-article-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.search-ai-article-card.backfill {
+    border-color: rgba(243, 181, 0, 0.24);
+    background: rgba(243, 181, 0, 0.08);
+}
+
+.search-ai-article-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.search-ai-article-card-title {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.58;
+    font-weight: 900;
+}
+
+.search-ai-article-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.search-ai-article-card-body p {
+    margin: 0;
+    line-height: 1.84;
+}
+
+.search-ai-article-card-body strong {
+    color: rgba(243, 181, 0, 0.98);
+}
+
 .search-ai-card-highlight-top {
     display: flex;
     justify-content: space-between;
@@ -2016,9 +2169,10 @@ body.search-open {
 
 .search-ai-section-title {
     margin: 0 0 10px;
-    font-size: 0.95rem;
-    font-weight: 800;
-    letter-spacing: 0.03em;
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 1.02rem;
+    font-weight: 900;
+    letter-spacing: 0.02em;
 }
 
 .search-ai-bullets {
@@ -2035,6 +2189,10 @@ body.search-open {
     color: inherit;
     opacity: 0.92;
     line-height: 1.7;
+}
+
+.search-ai-note.subtle {
+    opacity: 0.74;
 }
 
 .search-ai-source-breakdown {

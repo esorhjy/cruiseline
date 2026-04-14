@@ -67,6 +67,7 @@
 * **解決方案：**
   * 新增 **Quick Find 搜尋浮層**，保留單頁架構不變，但讓使用者可從任意位置快速叫出搜尋面板。
   * 導入 **本地語意化關鍵字搜尋**，同時索引 `cruiseSchedule`、`deckGuideData`、`showGuideData`、`playbookGuideData` 與重要靜態 section。
+  * 建立 **Disney Adventure Proper Noun Registry**，以官方英文 canonical name、中文顯示名、別名、能力標籤與關聯作為搜尋 / AI 解答的資料基礎，不再讓散落自由文字主導專有名詞判斷。
   * 搜尋結果支援 **自動跳轉與自動展開**，可直達對應的 Day、Deck、Playbook mission 或靜態卡片。
   * 在不破壞原搜尋的前提下，新增 **Gemini grounded AI 解答模式**，並已進一步升級成 **AI 規劃 + 本地搜尋執行 + Coverage Judge 補搜 + AI 報告生成** 的混合架構。
   * AI Query Planner 已升級為 `query_interpretation_v3`：
@@ -79,6 +80,18 @@
     * 行程只作為 `support context`
     * 右欄高價值可見卡會升級成左欄的 coverage 契約，避免「右欄有、左欄沒寫」
   * AI 回答模式已升級為 **預設完整報告模式**，以 `executiveSummary + fullCardInventory + topicAppendix + sourceComparison` 重組多張卡片，而不是只回精簡摘要。
+  * 左欄閱讀模式已再進一步收斂成 **三段自然語言攻略文章**：
+    * `行程區塊`：先講排程與時段脈絡
+    * `甲板設施 / 表演區塊`：再講設施、服務、場館與表演內容
+    * `攻略區塊`：最後講心得、注意事項、小技巧
+  * AI 生成策略改為 **prompt-first prose mode**：
+    * 先整理 section dossier
+    * 再用預設指令重寫成攻略文章
+    * Gemini 若失敗，仍由 deterministic fallback 回 `200` 並產出可讀文章
+  * 左欄 UI 採 **極簡文章模式**，讓正文優先；逐卡 metadata、coverage 與 inventory 保留在 internal payload 與 fallback 層，不再作主要閱讀介面。
+  * Worker 與前端必須維持 **版本握手**：前端會送出 `expectedWorkerSchemaVersion`，Worker 則需回傳 `workerBuildId / workerSchemaVersion / workerCapabilities`，避免前端新版誤接到舊後端。
+  * Cloudflare Worker 必須提供 **health/version endpoint**，至少能透過 `GET /api/ai-answer?health=1` 驗證目前 live build 與 schema。
+  * 只要 `worker/ai-answer.js` 的 schema、fallback、coverage contract 或長文章 rendering 有變更，**重新部署 Worker** 就是 release blocker；前端 fallback 只能作為相容層，不能取代正式部署。
   * AI 解答嚴格限制為 **只根據站內命中的內容回答**，並附引用來源、來源層級與信心提示，避免外部幻覺。
   * 搜尋面板已升級為 **近全螢幕雙欄工作台**，讓左側 AI 長答案與右側搜尋結果卡可以並排對照閱讀，並逐步對齊左右欄 coverage。
   * 針對中文輸入法、長答案與快取更新，補強 **form submit、composition 保護、單次 rewrite 回補、可捲動答案區、fallback 報告骨架、Service Worker 更新策略與快取版控**，確保實際可用性。
@@ -98,10 +111,13 @@
 * **階層化展示：** 從「每日目標」->「時段標頭」->「具體事件」、以及「甲板主題」->「關鍵設施」->「這趟用途」、再到「任務類別」->「攻略卡」->「何時用 / 這趟怎麼用 / 避免踩雷」進行階層式渲染，讓資訊呈現具備清楚節奏感。
 * **模組化擴充：** 新功能優先採用獨立資料源與獨立 renderer，例如 `cruiseSchedule`、`checklistData`、`deckGuideData`、`showGuideData`、`playbookGuideData`，確保互動區塊彼此不干擾。
 * **搜尋可追溯性：** 搜尋與 AI 解答都必須回到站內原文，保留 `搜尋命中 -> 跳轉定位 -> 使用者自行核對` 的路徑，不可讓模型成為唯一資訊來源。
+* **專有名詞 registry 優先：** 餐廳、設施、表演、商店、concierge 空間等專有名詞，先由 entity registry 對齊 canonical name、別名、category 與 capability，再交給 taxonomy 與 planner 使用。
+* **資料層先於搜尋層：** 若搜尋不準，優先修正 entity registry、`entityRefs`、`supportForEntityRefs` 與 capability metadata，而不是先堆更多 prompt 或 synonym。
 * **主體優先、能力約束：** 自然語言問句中的主體詞、專有名詞與 `requiredCapabilities` 先決定 primary results，再決定可擴張類別，避免泛稱把答案沖散。
 * **主體與支援分層：** 設施 / 甲板 / 表演 / 攻略卡是主體層，schedule 僅作支援層，不可反客為主。
 * **左右欄 coverage 對齊：** 右欄已顯示的高價值卡會升級成左欄答案的 coverage contract，不接受模型只摘要部分卡片。
 * **長答案可掃讀：** 當 AI 已命中多張高價值卡時，優先整理成 `完整盤點 + 深入附錄`，而不是主動壓回過短答案。
+* **版本不一致必須可見：** 若前端 build 已更新，但遠端 Worker schema 太舊，畫面必須明確顯示 mismatch warning，不能靜默退回舊 rendering。
 
 ### B. 設計原則：Premium & Magicial
 
@@ -125,7 +141,7 @@
 | **Phase 4** | ✅ | 實作三段式互動 Checklist、localStorage 持久化 |
 | **Phase 5** | ✅ | 新增甲板與表演分頁導覽、依行程重寫設施動線與看秀節奏 |
 | **Phase 6** | ✅ | 首頁升級故事書 Hero、本地主視覺圖片整合、實作 Playbook 互動攻略區塊 |
-| **Phase 7** | ✅ | 新增 Quick Find 搜尋浮層、本地語意化搜尋、Gemini grounded AI 解答、`query_interpretation_v3`、capability gating、左右欄 coverage 對齊與完整長報告模式 |
+| **Phase 7** | ✅ | 新增 Quick Find 搜尋浮層、本地語意化搜尋、Gemini grounded AI 解答、Disney Adventure entity registry、registry-driven taxonomy、`query_interpretation_v3`、capability gating、左右欄 coverage 對齊與完整長報告模式 |
 
 ---
 

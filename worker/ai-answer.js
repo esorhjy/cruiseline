@@ -25,6 +25,16 @@ const REPORT_SECTION_KEYS = [
   'sourceComparison',
   'unansweredQuestions'
 ];
+const WORKER_BUILD_ID = '2026-04-15-ai-worker-v11';
+const WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
+const WORKER_DEPLOYED_AT = '2026-04-15T18:10:00+08:00';
+const WORKER_CAPABILITIES = [
+  'health_check',
+  'grounded_qa_v1',
+  'query_interpretation_v3',
+  'query_rewrite_v1',
+  'section_narrative_longform'
+];
 
 function createCorsHeaders() {
   return {
@@ -35,8 +45,28 @@ function createCorsHeaders() {
   };
 }
 
+function attachWorkerMetadata(body = {}) {
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return body;
+  return {
+    ...body,
+    workerBuildId: WORKER_BUILD_ID,
+    workerSchemaVersion: WORKER_SCHEMA_VERSION,
+    workerCapabilities: WORKER_CAPABILITIES
+  };
+}
+
+function buildHealthPayload(env = {}) {
+  return {
+    ok: true,
+    endpoint: 'ai-answer',
+    status: 'healthy',
+    geminiModel: String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim(),
+    deployedAt: WORKER_DEPLOYED_AT
+  };
+}
+
 function jsonResponse(body, status = 200) {
-  return new Response(JSON.stringify(body), {
+  return new Response(JSON.stringify(attachWorkerMetadata(body)), {
     status,
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
@@ -47,6 +77,18 @@ function jsonResponse(body, status = 200) {
 
 function uniqueItems(items) {
   return [...new Set(items.filter(Boolean))];
+}
+
+function uniqueBy(items, getKey) {
+  const map = new Map();
+  (Array.isArray(items) ? items : []).forEach((item) => {
+    if (!item) return;
+    const key = typeof getKey === 'function' ? getKey(item) : item;
+    const safeKey = sanitizeString(key, 160);
+    if (!safeKey || map.has(safeKey)) return;
+    map.set(safeKey, item);
+  });
+  return Array.from(map.values());
 }
 
 function normalizeQuery(text) {
@@ -1382,6 +1424,52 @@ function sanitizeCapabilityCoveragePlan(plan = {}) {
   };
 }
 
+function sanitizeSectionDossiers(sectionDossiers = []) {
+  return (Array.isArray(sectionDossiers) ? sectionDossiers : [])
+    .map((section) => ({
+      sectionKey: ['schedule', 'deckShow', 'playbook'].includes(sanitizeString(section?.sectionKey, 40))
+        ? sanitizeString(section?.sectionKey, 40)
+        : 'deckShow',
+      sectionTitle: sanitizeString(section?.sectionTitle, 120),
+      cards: (Array.isArray(section?.cards) ? section.cards : [])
+        .map((card) => ({
+          parentId: sanitizeString(card?.parentId, 120),
+          title: sanitizeString(card?.title, 160),
+          cardType: sanitizeString(card?.cardType, 40),
+          sourceLabels: sanitizeTextArray(card?.sourceLabels, 5, 60),
+          detailBullets: sanitizeTextArray(card?.detailBullets, 10, 220),
+          citationIds: sanitizeTextArray(card?.citationIds, MAX_CHUNKS, 120)
+        }))
+        .filter((card) => card.parentId && card.title)
+        .slice(0, 32)
+    }))
+    .filter((section) => section.sectionTitle && section.cards.length)
+    .slice(0, 3);
+}
+
+function sanitizeSectionWritingRules(rules = {}) {
+  const safeRules = rules && typeof rules === 'object' ? rules : {};
+  return {
+    mode: sanitizeString(safeRules.mode, 40) || 'section-first-guide',
+    targetParagraphsPerSection: safeRules.targetParagraphsPerSection && typeof safeRules.targetParagraphsPerSection === 'object'
+      ? {
+          schedule: sanitizeTextArray(safeRules.targetParagraphsPerSection.schedule, 2, 4),
+          deckShow: sanitizeTextArray(safeRules.targetParagraphsPerSection.deckShow, 2, 4),
+          playbook: sanitizeTextArray(safeRules.targetParagraphsPerSection.playbook, 2, 4)
+        }
+      : {},
+    priorities: safeRules.priorities && typeof safeRules.priorities === 'object'
+      ? {
+          schedule: sanitizeString(safeRules.priorities.schedule, 220),
+          deckShow: sanitizeString(safeRules.priorities.deckShow, 220),
+          playbook: sanitizeString(safeRules.priorities.playbook, 220)
+        }
+      : {},
+    dedupeRule: sanitizeString(safeRules.dedupeRule, 220),
+    proseStyle: sanitizeString(safeRules.proseStyle, 220)
+  };
+}
+
 function buildParentBriefLineFromChunk(chunk) {
   if (!chunk) return '';
   const prefix = sanitizeString(chunk.fieldLabel || '內容重點', 36);
@@ -2348,6 +2436,1035 @@ function buildAnalysisPlanTextV4(analysisPlan) {
 buildFallbackReport = buildFallbackReportCoverageV3;
 normalizeReportObject = normalizeReportObjectCoverageV3;
 buildFullCardInventoryFromParentBriefs = buildFullCardInventoryCoverageV3;
+
+const LONGFORM_SECTION_META_V4 = {
+  schedule: {
+    sectionKey: 'schedule',
+    sectionTitle: '行程區塊',
+    sectionSummary: '先把跟問題有關的時段與安排脈絡整理出來。'
+  },
+  deckShow: {
+    sectionKey: 'deckShow',
+    sectionTitle: '甲板設施 / 表演區塊',
+    sectionSummary: '再把設施、服務、表演與位置細節整合成主要攻略。'
+  },
+  playbook: {
+    sectionKey: 'playbook',
+    sectionTitle: '攻略區塊',
+    sectionSummary: '最後補上做法、心得、注意事項與小技巧。'
+  }
+};
+const LONGFORM_SECTION_ORDER_V4 = ['schedule', 'deckShow', 'playbook'];
+
+function inferSectionKeyFromInventoryItemV4(item = {}) {
+  const sourceType = sanitizeSourceType(item?.sourceType);
+  const cardType = sanitizeSourceType(item?.cardType);
+  const parentId = sanitizeString(item?.parentId, 160).toLowerCase();
+  const sourceLabels = sanitizeTextArray(item?.sourceLabels, 6, 80).join(' ');
+  const groupLabel = sanitizeString(item?.groupLabel, 120);
+  const title = sanitizeString(item?.title, 160);
+  const searchable = `${parentId} ${sourceLabels} ${groupLabel} ${title}`.toLowerCase();
+
+  if (
+    sourceType === 'schedule'
+    || cardType === 'schedule'
+    || /^schedule[-:_]/.test(parentId)
+    || /行程|day\s*\d|報到|登船|時段/.test(searchable)
+  ) {
+    return 'schedule';
+  }
+  if (
+    sourceType === 'playbook'
+    || cardType === 'playbook'
+    || /^playbook[-:_]/.test(parentId)
+    || /攻略|sop|做法|注意事項|提醒|心得|技巧|加值|優先入場|meet\s*&?\s*greet|royal meet|royal society/.test(searchable)
+  ) {
+    return 'playbook';
+  }
+  return 'deckShow';
+}
+
+function buildSectionNarrativeParagraphsV4(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const sectionLead = {
+    schedule: '先把和問題直接相關的行程與時段脈絡整理起來：',
+    deckShow: '再看實際的甲板設施、服務與表演內容，重點可以這樣理解：',
+    playbook: '最後把攻略卡片裡比較實戰的做法、提醒與小技巧整理如下：'
+  }[sectionKey] || '';
+
+  const summaryFacts = [];
+  const supportFacts = [];
+  const seen = new Set();
+  const pushFact = (target, text) => {
+    const safeText = sanitizeString(text, 420);
+    const key = normalizeComparableQueryText(safeText);
+    if (!safeText || !key || seen.has(key)) return;
+    seen.add(key);
+    target.push(safeText);
+  };
+
+  inventoryItems.forEach((item) => {
+    const title = sanitizeString(item?.title, 120);
+    const bullets = sanitizeTextArray(item?.detailBullets, 8, 220);
+    const primaryFacts = bullets.slice(0, 2);
+    const support = bullets.slice(2, 5);
+    if (primaryFacts.length) {
+      pushFact(summaryFacts, title ? `${title}：${primaryFacts.join('；')}` : primaryFacts.join('；'));
+    } else if (title) {
+      pushFact(summaryFacts, title);
+    }
+    if (support.length) {
+      pushFact(supportFacts, title ? `${title}另外可以留意 ${support.join('；')}` : `另外可以留意 ${support.join('；')}`);
+    }
+  });
+
+  const groupedParagraphs = [];
+  const appendGroups = (facts, prefix = '', groupSize = 2) => {
+    for (let index = 0; index < facts.length; index += groupSize) {
+      const group = facts.slice(index, index + groupSize);
+      const lead = index === 0 && prefix ? prefix : '';
+      const paragraph = sanitizeString(`${lead}${group.join('。')}`.replace(/\s+/g, ' '), 1400);
+      if (paragraph) groupedParagraphs.push(paragraph);
+    }
+  };
+
+  appendGroups(summaryFacts, sectionLead, sectionKey === 'schedule' ? 3 : 2);
+  appendGroups(supportFacts, groupedParagraphs.length ? '另外也可以一起留意：' : sectionLead, 2);
+
+  if (groupedParagraphs.length) {
+    return groupedParagraphs.slice(0, sectionKey === 'schedule' ? 3 : 4);
+  }
+
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+function buildSectionNarrativesFromReportV4(report = {}, citationIds = []) {
+  const fullCardInventory = Array.isArray(report?.fullCardInventory) ? report.fullCardInventory : [];
+  const grouped = {
+    schedule: [],
+    deckShow: [],
+    playbook: []
+  };
+
+  fullCardInventory.forEach((item) => {
+    const cardType = sanitizeSourceType(item?.cardType || item?.sourceType);
+    const sectionKey = inferSectionKeyFromInventoryItemV4(item);
+    grouped[sectionKey].push({
+      parentId: sanitizeString(item?.parentId, 120),
+      title: sanitizeString(item?.title, 160),
+      cardType,
+      sourceLabels: sanitizeTextArray(item?.sourceLabels, 5, 60),
+      detailBullets: sanitizeTextArray(item?.detailBullets, 8, 220),
+      citationIds: uniqueItems((Array.isArray(item?.citationIds) ? item.citationIds : [])
+        .map((citationId) => sanitizeString(citationId, 120))
+        .filter((citationId) => !citationIds.length || citationIds.includes(citationId)))
+        .slice(0, MAX_CHUNKS),
+      renderOrigin: sanitizeString(item?.renderOrigin, 40) || 'backfill'
+    });
+  });
+
+  const sections = LONGFORM_SECTION_ORDER_V4.map((sectionKey) => {
+    const cards = grouped[sectionKey];
+    if (!cards.length) return null;
+    const meta = LONGFORM_SECTION_META_V4[sectionKey];
+    return {
+      sectionKey,
+      sectionTitle: meta.sectionTitle,
+      sectionSummary: meta.sectionSummary,
+      narrativeParagraphs: buildSectionNarrativeParagraphsV4(sectionKey, cards),
+      citationIds: uniqueItems(cards.flatMap((card) => card.citationIds || [])).slice(0, MAX_CHUNKS),
+      renderOrigin: cards.some((card) => String(card?.renderOrigin || '').endsWith('backfill')) ? 'backfill' : 'model',
+      cards
+    };
+  }).filter(Boolean);
+
+  return {
+    headline: sanitizeString(report?.headline, 120) || '站內攻略整理',
+    introSummary: sanitizeString(
+      (Array.isArray(report?.executiveSummary) ? report.executiveSummary[0] : '')
+      || (Array.isArray(report?.recommendedPlan) ? report.recommendedPlan[0] : ''),
+      360
+    ),
+    sections,
+    sourceComparison: Array.isArray(report?.sourceComparison) ? report.sourceComparison : [],
+    unansweredQuestions: sanitizeTextArray(report?.unansweredQuestions, 6, 180)
+  };
+}
+
+function splitAiArticleDetailBucketsV5(detailBullets = []) {
+  const buckets = {
+    time: [],
+    location: [],
+    content: [],
+    insight: [],
+    caution: []
+  };
+  const timePattern = /^(時段|日期|時間|最佳時機|時段提示|開演前|集合時間|時機|day\s*\d+)/i;
+  const locationPattern = /^(地點|位置|相關位置|樓層|甲板|Deck|場館|區域|船頭|船尾)/i;
+  const cautionPattern = /^(注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒)/i;
+  const insightPattern = /^(心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順)/i;
+
+  (Array.isArray(detailBullets) ? detailBullets : []).forEach((detail) => {
+    const line = sanitizeString(detail, 220);
+    if (!line) return;
+    if (timePattern.test(line) || /(上午|下午|晚上|海上日|登船日|晚餐前|開演前|每次主秀|day\s*\d+)/i.test(line)) {
+      buckets.time.push(line);
+      return;
+    }
+    if (locationPattern.test(line) || /(deck\s*\d+|甲板|樓層|forward|aft|midship|劇院|酒廊|泳池|花園|餐廳)/i.test(line.toLowerCase())) {
+      buckets.location.push(line);
+      return;
+    }
+    if (cautionPattern.test(line) || /(注意|提醒|限制|風險|避免|踩雷|壓縮|錯過|晚到|以當晚通知為主|仍以)/i.test(line)) {
+      buckets.caution.push(line);
+      return;
+    }
+    if (insightPattern.test(line) || /(心得|亮點|旅程連結|適合|值得|加值|最順|推薦|這趟)/i.test(line)) {
+      buckets.insight.push(line);
+      return;
+    }
+    buckets.content.push(line);
+  });
+
+  return buckets;
+}
+
+function normalizeAiArticleFactTextV5(value = '') {
+  return sanitizeString(value, 220)
+    .replace(/^(時段|日期|時間|最佳時機|時段提示|開演前|集合時間|時機|地點|位置|相關位置|樓層|甲板|場館|區域|船頭|船尾|心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順|注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒)\s*[：:]\s*/i, '')
+    .trim();
+}
+
+function joinNarrativeTitlesV5(items = []) {
+  const safeItems = uniqueItems((Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, 120))
+    .filter(Boolean));
+  if (!safeItems.length) return '';
+  if (safeItems.length === 1) return safeItems[0];
+  if (safeItems.length === 2) return `${safeItems[0]}和${safeItems[1]}`;
+  return `${safeItems.slice(0, -1).join('、')}，以及${safeItems[safeItems.length - 1]}`;
+}
+
+function buildSectionNarrativeParagraphsV5(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const titles = [];
+  const timeFacts = [];
+  const locationFacts = [];
+  const contentFacts = [];
+  const insightFacts = [];
+  const cautionFacts = [];
+  const seenFacts = new Set();
+
+  const pushFact = (target, value) => {
+    const text = normalizeAiArticleFactTextV6(value);
+    const key = normalizeComparableQueryText(text);
+    if (!text || isAiNarrativeNoiseV6(text) || !key || seenFacts.has(key)) return;
+    seenFacts.add(key);
+    target.push(text);
+  };
+
+  const pushBucketFacts = (buckets = {}, maxItems = 3) => {
+    sanitizeTextArray((buckets.time || []).map(normalizeAiArticleFactTextV6), maxItems, 220).forEach((item) => pushFact(timeFacts, item));
+    sanitizeTextArray((buckets.location || []).map(normalizeAiArticleFactTextV6), maxItems, 220).forEach((item) => pushFact(locationFacts, item));
+    sanitizeTextArray((buckets.content || []).map(normalizeAiArticleFactTextV6), maxItems, 220).forEach((item) => pushFact(contentFacts, item));
+    sanitizeTextArray((buckets.insight || []).map(normalizeAiArticleFactTextV6), maxItems, 220).forEach((item) => pushFact(insightFacts, item));
+    sanitizeTextArray((buckets.caution || []).map(normalizeAiArticleFactTextV6), maxItems, 220).forEach((item) => pushFact(cautionFacts, item));
+  };
+
+  (Array.isArray(inventoryItems) ? inventoryItems : []).forEach((item) => {
+    const title = sanitizeString(item?.title, 120);
+    if (title && !isAiNarrativeNoiseV6(title) && !titles.includes(title)) {
+      titles.push(title);
+    }
+    const bullets = sanitizeTextArray(item?.detailBullets, 10, 220);
+    if (bullets.length) {
+      pushBucketFacts(splitAiArticleDetailBucketsV5(bullets));
+    }
+  });
+
+  const titleLead = joinNarrativeTitlesV6(titles);
+  const paragraphs = [];
+
+  if (sectionKey === 'schedule') {
+    const planningSentences = [];
+    if (titleLead) {
+      planningSentences.push(`和這題最相關的行程安排，主要圍繞 ${titleLead} 來串接。`);
+    }
+    if (timeFacts.length) {
+      planningSentences.push(`排程上可以先抓 ${timeFacts.join('； ')}。`);
+    }
+    if (contentFacts.length) {
+      planningSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (planningSentences.length) {
+      paragraphs.push(sanitizeString(planningSentences.join(' '), 1400));
+    }
+
+    const supportSentences = [];
+    if (locationFacts.length) {
+      supportSentences.push(`如果要對位置有概念，可以先記 ${locationFacts.join('； ')}。`);
+    }
+    if (insightFacts.length) {
+      supportSentences.push(insightFacts.slice(0, 2).join('； '));
+    }
+    if (cautionFacts.length) {
+      supportSentences.push(`時間安排上另外要留意 ${cautionFacts.join('； ')}。`);
+    }
+    if (supportSentences.length) {
+      paragraphs.push(sanitizeString(supportSentences.join(' '), 1400));
+    }
+  } else if (sectionKey === 'deckShow') {
+    const coreSentences = [];
+    if (titleLead) {
+      coreSentences.push(`和這題最直接相關的甲板設施與表演，重點集中在 ${titleLead}。`);
+    }
+    if (contentFacts.length) {
+      coreSentences.push(contentFacts.slice(0, 3).join('； '));
+    }
+    if (coreSentences.length) {
+      paragraphs.push(sanitizeString(coreSentences.join(' '), 1400));
+    }
+
+    const detailSentences = [];
+    if (locationFacts.length) {
+      detailSentences.push(`位置上可以先記 ${locationFacts.join('； ')}。`);
+    }
+    if (timeFacts.length) {
+      detailSentences.push(`若要抓順序或時機，${timeFacts.join('； ')}。`);
+    }
+    if (detailSentences.length) {
+      paragraphs.push(sanitizeString(detailSentences.join(' '), 1400));
+    }
+
+    const supportSentences = [];
+    if (insightFacts.length) {
+      supportSentences.push(insightFacts.slice(0, 2).join('； '));
+    }
+    if (cautionFacts.length) {
+      supportSentences.push(`實際使用時要注意 ${cautionFacts.join('； ')}。`);
+    }
+    if (supportSentences.length) {
+      paragraphs.push(sanitizeString(supportSentences.join(' '), 1400));
+    }
+  } else {
+    const guideSentences = [];
+    if (titleLead) {
+      guideSentences.push(`攻略與實戰心得主要集中在 ${titleLead}。`);
+    }
+    if (insightFacts.length) {
+      guideSentences.push(insightFacts.slice(0, 3).join('； '));
+    } else if (contentFacts.length) {
+      guideSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (guideSentences.length) {
+      paragraphs.push(sanitizeString(guideSentences.join(' '), 1400));
+    }
+
+    const methodSentences = [];
+    if (timeFacts.length) {
+      methodSentences.push(`如果要抓使用時機，可以先看 ${timeFacts.join('； ')}。`);
+    }
+    if (locationFacts.length) {
+      methodSentences.push(`搭配位置資訊來看，${locationFacts.join('； ')}。`);
+    }
+    if (contentFacts.length && insightFacts.length) {
+      methodSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (methodSentences.length) {
+      paragraphs.push(sanitizeString(methodSentences.join(' '), 1400));
+    }
+
+    if (cautionFacts.length) {
+      paragraphs.push(sanitizeString(`最後要留意 ${cautionFacts.join('； ')}。`, 1400));
+    }
+  }
+
+  const sanitizedParagraphs = sanitizeTextArray(paragraphs, sectionKey === 'schedule' ? 2 : 4, 1400);
+  if (sanitizedParagraphs.length) {
+    return sanitizedParagraphs;
+  }
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+function buildSectionNarrativesFromReportV5(report = {}, citationIds = []) {
+  const fallback = buildSectionNarrativesFromReportV4(report, citationIds);
+  return {
+    ...fallback,
+    sections: LONGFORM_SECTION_ORDER_V4.map((sectionKey) => {
+      const section = Array.isArray(fallback.sections)
+        ? fallback.sections.find((item) => item.sectionKey === sectionKey)
+        : null;
+      if (!section) return null;
+      return {
+        ...section,
+        narrativeParagraphs: buildSectionNarrativeParagraphsV9(sectionKey, Array.isArray(section.cards) ? section.cards : [])
+      };
+    }).filter(Boolean)
+  };
+}
+
+function buildSectionNarrativesFromSectionDossiersV5(sectionDossiers = [], citationIds = []) {
+  const safeSections = sanitizeSectionDossiers(sectionDossiers);
+  const sections = LONGFORM_SECTION_ORDER_V4.map((sectionKey) => {
+    const sourceSection = safeSections.find((section) => section.sectionKey === sectionKey);
+    if (!sourceSection || !Array.isArray(sourceSection.cards) || !sourceSection.cards.length) return null;
+
+    const cards = sourceSection.cards.map((card) => ({
+      parentId: sanitizeString(card?.parentId, 120),
+      title: sanitizeString(card?.title, 160),
+      cardType: sanitizeString(card?.cardType, 40) || (sectionKey === 'playbook' ? 'playbook' : (sectionKey === 'schedule' ? 'schedule' : 'deck')),
+      sourceLabels: sanitizeTextArray(card?.sourceLabels, 5, 60),
+      detailBullets: sanitizeTextArray(card?.detailBullets, 10, 220),
+      citationIds: uniqueItems((Array.isArray(card?.citationIds) ? card.citationIds : [])
+        .map((citationId) => sanitizeString(citationId, 120))
+        .filter((citationId) => !citationIds.length || citationIds.includes(citationId))).slice(0, MAX_CHUNKS),
+      renderOrigin: 'backfill'
+    }));
+    const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+    const sectionCitationIds = uniqueItems(cards.flatMap((card) => card.citationIds || [])).slice(0, MAX_CHUNKS);
+    return {
+      sectionKey,
+      sectionTitle: sanitizeString(sourceSection.sectionTitle, 120) || meta.sectionTitle,
+      sectionSummary: meta.sectionSummary,
+      narrativeParagraphs: buildSectionNarrativeParagraphsV9(sectionKey, cards),
+      citationIds: sectionCitationIds,
+      renderOrigin: 'backfill',
+      cards
+    };
+  }).filter(Boolean);
+
+  return {
+    headline: '站內資料整合攻略',
+    introSummary: '',
+    sections,
+    sourceComparison: [],
+    unansweredQuestions: []
+  };
+}
+
+function normalizeAiArticleFactTextV6(value = '') {
+  return sanitizeString(value, 220)
+    .replace(/^(時段|日期|時間|時間\s*\/\s*時段|最佳時機|時段提示|開演前|集合時間|時機|地點|位置|相關位置|樓層|甲板|場館|區域|船頭|船尾|心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順|注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒|行程重點|活動標籤|目的|節奏判斷|點心補給|重點摘要|適用時機)\s*[：:]\s*/i, '')
+    .replace(/\s*[|｜]\s*/g, '，')
+    .replace(/\s*\/\s*/g, '／')
+    .replace(/[?？]{2,}/g, ' ')
+    .trim();
+}
+
+function isAiNarrativeNoiseV6(text = '') {
+  const normalized = sanitizeString(text, 220).trim();
+  if (!normalized) return true;
+  if (normalized.length <= 2) return true;
+  if (/^(day\s*\d+|deck\s*\d+)$/i.test(normalized)) return true;
+  if (/^(行程重點|活動標籤|時間|日期|地點|位置|樓層|甲板|注意事項|提醒|限制)$/i.test(normalized)) return true;
+  return false;
+}
+
+function joinNarrativeTitlesV6(items = []) {
+  const safeItems = uniqueItems((Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, 120))
+    .filter((item) => item && !isAiNarrativeNoiseV6(item)));
+  if (!safeItems.length) return '';
+  if (safeItems.length === 1) return safeItems[0];
+  if (safeItems.length === 2) return `${safeItems[0]}和${safeItems[1]}`;
+  if (safeItems.length > 3) return `${safeItems.slice(0, 2).join('、')}等重點`;
+  return `${safeItems.slice(0, -1).join('、')}，以及${safeItems[safeItems.length - 1]}`;
+}
+
+function buildSectionNarrativeParagraphsV6(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const titles = [];
+  const timeFacts = [];
+  const locationFacts = [];
+  const contentFacts = [];
+  const insightFacts = [];
+  const cautionFacts = [];
+  const seenFacts = new Set();
+
+  const pushFact = (target, value) => {
+    const text = sanitizeString(value, 420);
+    const key = normalizeComparableQueryText(text);
+    if (!text || !key || seenFacts.has(key)) return;
+    seenFacts.add(key);
+    target.push(text);
+  };
+
+  const pushBucketFacts = (buckets = {}, maxItems = 3) => {
+    sanitizeTextArray((buckets.time || []).map(normalizeAiArticleFactTextV5), maxItems, 220).forEach((item) => pushFact(timeFacts, item));
+    sanitizeTextArray((buckets.location || []).map(normalizeAiArticleFactTextV5), maxItems, 220).forEach((item) => pushFact(locationFacts, item));
+    sanitizeTextArray((buckets.content || []).map(normalizeAiArticleFactTextV5), maxItems, 220).forEach((item) => pushFact(contentFacts, item));
+    sanitizeTextArray((buckets.insight || []).map(normalizeAiArticleFactTextV5), maxItems, 220).forEach((item) => pushFact(insightFacts, item));
+    sanitizeTextArray((buckets.caution || []).map(normalizeAiArticleFactTextV5), maxItems, 220).forEach((item) => pushFact(cautionFacts, item));
+  };
+
+  (Array.isArray(inventoryItems) ? inventoryItems : []).forEach((item) => {
+    const title = sanitizeString(item?.title, 120);
+    if (title && !titles.includes(title)) {
+      titles.push(title);
+    }
+    const bullets = sanitizeTextArray(item?.detailBullets, 10, 220);
+    if (bullets.length) {
+      pushBucketFacts(splitAiArticleDetailBucketsV5(bullets));
+    }
+  });
+
+  const titleLead = joinNarrativeTitlesV5(titles);
+  const paragraphs = [];
+
+  if (sectionKey === 'schedule') {
+    const planningSentences = [];
+    if (titleLead) {
+      planningSentences.push(`如果你是為了這題安排整體節奏，最值得先留意的是 ${titleLead} 這幾段行程怎麼串在一起。`);
+    }
+    if (timeFacts.length) {
+      planningSentences.push(`排程上可以先抓 ${timeFacts.join('； ')}。`);
+    }
+    if (contentFacts.length) {
+      planningSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (planningSentences.length) {
+      paragraphs.push(sanitizeString(planningSentences.join(' '), 1400));
+    }
+
+    const supportSentences = [];
+    if (locationFacts.length) {
+      supportSentences.push(`如果要把移動路線想清楚，可以先記 ${locationFacts.join('； ')}。`);
+    }
+    if (insightFacts.length) {
+      supportSentences.push(insightFacts.slice(0, 2).join('； '));
+    }
+    if (cautionFacts.length) {
+      supportSentences.push(`實際排程時另外要留意 ${cautionFacts.join('； ')}。`);
+    }
+    if (supportSentences.length) {
+      paragraphs.push(sanitizeString(supportSentences.join(' '), 1400));
+    }
+  } else if (sectionKey === 'deckShow') {
+    const coreSentences = [];
+    if (titleLead) {
+      coreSentences.push(`就設施與表演本體來看，最值得先掌握的是 ${titleLead} 這幾個重點。`);
+    }
+    if (contentFacts.length) {
+      coreSentences.push(contentFacts.slice(0, 3).join('； '));
+    }
+    if (coreSentences.length) {
+      paragraphs.push(sanitizeString(coreSentences.join(' '), 1400));
+    }
+
+    const detailSentences = [];
+    if (locationFacts.length) {
+      detailSentences.push(`先把位置記熟會更容易規劃動線，像是 ${locationFacts.join('； ')}。`);
+    }
+    if (timeFacts.length) {
+      detailSentences.push(`如果要抓順序或使用時機，可以先看 ${timeFacts.join('； ')}。`);
+    }
+    if (detailSentences.length) {
+      paragraphs.push(sanitizeString(detailSentences.join(' '), 1400));
+    }
+
+    const supportSentences = [];
+    if (insightFacts.length) {
+      supportSentences.push(insightFacts.slice(0, 2).join('； '));
+    }
+    if (cautionFacts.length) {
+      supportSentences.push(`實際去用時，最容易影響體驗的是 ${cautionFacts.join('； ')}。`);
+    }
+    if (supportSentences.length) {
+      paragraphs.push(sanitizeString(supportSentences.join(' '), 1400));
+    }
+  } else {
+    const guideSentences = [];
+    if (titleLead) {
+      guideSentences.push(`真正讓行程更順的做法，主要集中在 ${titleLead} 這些攻略重點。`);
+    }
+    if (insightFacts.length) {
+      guideSentences.push(insightFacts.slice(0, 3).join('； '));
+    } else if (contentFacts.length) {
+      guideSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (guideSentences.length) {
+      paragraphs.push(sanitizeString(guideSentences.join(' '), 1400));
+    }
+
+    const methodSentences = [];
+    if (timeFacts.length) {
+      methodSentences.push(`如果要抓最佳使用時機，可以先看 ${timeFacts.join('； ')}。`);
+    }
+    if (locationFacts.length) {
+      methodSentences.push(`搭配位置一起看，會更知道什麼時候該切過去，像是 ${locationFacts.join('； ')}。`);
+    }
+    if (contentFacts.length && insightFacts.length) {
+      methodSentences.push(contentFacts.slice(0, 2).join('； '));
+    }
+    if (methodSentences.length) {
+      paragraphs.push(sanitizeString(methodSentences.join(' '), 1400));
+    }
+
+    if (cautionFacts.length) {
+      paragraphs.push(sanitizeString(`最後要留意 ${cautionFacts.join('； ')}。`, 1400));
+    }
+  }
+
+  const sanitizedParagraphs = sanitizeTextArray(paragraphs, sectionKey === 'schedule' ? 2 : 4, 1400);
+  if (sanitizedParagraphs.length) {
+    return sanitizedParagraphs;
+  }
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+function normalizeAiArticleFactTextV7(value = '') {
+  return sanitizeString(value, 220)
+    .replace(/^(時段|日期|時間|時間\s*\/\s*時段|最佳時機|時段提示|開演前|集合時間|時機|地點|位置|相關位置|樓層|甲板|場館|區域|船頭|船尾|心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順|注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒|行程重點|活動標籤|目的|節奏判斷|點心補給|重點摘要|適用時機)\s*[：:]\s*/i, '')
+    .replace(/\s*[|｜]\s*/g, '，')
+    .replace(/\s*\/\s*/g, '／')
+    .replace(/[?？]{2,}/g, ' ')
+    .trim();
+}
+
+function isAiNarrativeNoiseV7(text = '') {
+  const normalized = sanitizeString(text, 220).trim();
+  if (!normalized) return true;
+  if (normalized.length <= 2) return true;
+  if (/^(day\s*\d+|deck\s*\d+)$/i.test(normalized)) return true;
+  if (/^(行程重點|活動標籤|時間|日期|地點|位置|樓層|甲板|注意事項|提醒|限制)$/i.test(normalized)) return true;
+  if ((normalized.match(/[、；]/g) || []).length >= 4 && /(deck\s*\d+|day\s*\d+|登船|海上|下船)/i.test(normalized)) return true;
+  return false;
+}
+
+function condenseAiNarrativeFactV7(text = '', maxClauses = 2) {
+  const normalized = normalizeAiArticleFactTextV7(text);
+  if (!normalized) return '';
+  const clauses = normalized
+    .split(/[；。]/)
+    .map((item) => sanitizeString(item, 220).trim())
+    .filter(Boolean);
+  if (!clauses.length) return '';
+  return sanitizeString(clauses.slice(0, maxClauses).join('，'), 220);
+}
+
+function joinNarrativeTitlesV7(items = []) {
+  const safeItems = uniqueItems((Array.isArray(items) ? items : [])
+    .map((item) => sanitizeString(item, 120))
+    .filter((item) => item && !isAiNarrativeNoiseV7(item)));
+  if (!safeItems.length) return '';
+  if (safeItems.length === 1) return safeItems[0];
+  if (safeItems.length === 2) return `${safeItems[0]}和${safeItems[1]}`;
+  if (safeItems.length > 3) return `${safeItems.slice(0, 2).join('、')}等重點`;
+  return `${safeItems.slice(0, -1).join('、')}，以及${safeItems[safeItems.length - 1]}`;
+}
+
+function collectSectionMaterialFactsV8(inventoryItems = []) {
+  const titles = [];
+  const timeFacts = [];
+  const locationFacts = [];
+  const contentFacts = [];
+  const insightFacts = [];
+  const cautionFacts = [];
+  const seenFacts = new Set();
+
+  const pushFact = (target, value) => {
+    const text = condenseAiNarrativeFactV7(value);
+    const key = normalizeComparableQueryText(text);
+    if (!text || isAiNarrativeNoiseV7(text) || !key || seenFacts.has(key)) return;
+    seenFacts.add(key);
+    target.push(text);
+  };
+
+  const pushBucketFacts = (buckets = {}, maxItems = 3) => {
+    sanitizeTextArray((buckets.time || []).map(normalizeAiArticleFactTextV7), maxItems, 220).forEach((item) => pushFact(timeFacts, item));
+    sanitizeTextArray((buckets.location || []).map(normalizeAiArticleFactTextV7), maxItems, 220).forEach((item) => pushFact(locationFacts, item));
+    sanitizeTextArray((buckets.content || []).map(normalizeAiArticleFactTextV7), maxItems, 220).forEach((item) => pushFact(contentFacts, item));
+    sanitizeTextArray((buckets.insight || []).map(normalizeAiArticleFactTextV7), maxItems, 220).forEach((item) => pushFact(insightFacts, item));
+    sanitizeTextArray((buckets.caution || []).map(normalizeAiArticleFactTextV7), maxItems, 220).forEach((item) => pushFact(cautionFacts, item));
+  };
+
+  (Array.isArray(inventoryItems) ? inventoryItems : []).forEach((item) => {
+    const title = sanitizeString(item?.title, 120);
+    if (title && !isAiNarrativeNoiseV7(title) && !titles.includes(title)) {
+      titles.push(title);
+    }
+    const bullets = sanitizeTextArray(item?.detailBullets, 10, 220);
+    if (bullets.length) {
+      pushBucketFacts(splitAiArticleDetailBucketsV5(bullets));
+    }
+  });
+
+  return {
+    titles,
+    timeFacts,
+    locationFacts,
+    contentFacts,
+    insightFacts,
+    cautionFacts
+  };
+}
+
+function buildSectionNarrativeParagraphsV7(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const {
+    titles,
+    timeFacts,
+    locationFacts,
+    contentFacts,
+    insightFacts,
+    cautionFacts
+  } = collectSectionMaterialFactsV8(inventoryItems);
+
+  const titleLead = joinNarrativeTitlesV7(titles);
+  const paragraphs = [];
+  const takeFacts = (items, maxItems = 2) => sanitizeTextArray(items, maxItems, 220)
+    .map((item) => sanitizeString(item, 220).trim())
+    .filter((item) => item && !isAiNarrativeNoiseV7(item));
+  const joinGuideFacts = (items, maxItems = 2) => {
+    const picked = takeFacts(items, maxItems);
+    if (!picked.length) return '';
+    if (picked.length === 1) return picked[0];
+    if (picked.length === 2) return `${picked[0]}，也可以順手處理 ${picked[1]}`;
+    return `${picked[0]}，再搭配 ${picked[1]}，最後留意 ${picked[2]}`;
+  };
+  const pushParagraph = (sentences = []) => {
+    const paragraph = sanitizeString(
+      (Array.isArray(sentences) ? sentences : [])
+        .map((item) => sanitizeString(item, 1400).trim())
+        .filter(Boolean)
+        .join(' '),
+      1400
+    ).trim();
+    if (paragraph) {
+      paragraphs.push(paragraph);
+    }
+  };
+
+  if (sectionKey === 'schedule') {
+    pushParagraph([
+      titleLead ? `如果你是為了把這題的節奏排順，先把 ${titleLead} 當成主要安排順序。` : '',
+      timeFacts.length ? `排程上最值得先抓的是 ${joinGuideFacts(timeFacts)}。` : '',
+      contentFacts.length ? `把 ${joinGuideFacts(contentFacts)} 串起來看，整體節奏會更清楚。` : ''
+    ]);
+
+    pushParagraph([
+      locationFacts.length ? `移動路線上可以先記 ${joinGuideFacts(locationFacts)}。` : '',
+      insightFacts.length ? `實際執行時，${joinGuideFacts(insightFacts)}。` : '',
+      cautionFacts.length ? `另外要避開的點是 ${joinGuideFacts(cautionFacts)}。` : ''
+    ]);
+  } else if (sectionKey === 'deckShow') {
+    pushParagraph([
+      titleLead ? `就設施與表演本體來看，先認識 ${titleLead} 這幾個重點最有幫助。` : '',
+      contentFacts.length ? `真正能用上的內容，重點是 ${joinGuideFacts(contentFacts, 3)}。` : '',
+      locationFacts.length ? `位置上主要會落在 ${joinGuideFacts(locationFacts)}。` : ''
+    ]);
+
+    pushParagraph([
+      timeFacts.length ? `如果要抓什麼時候去最順，可以先看 ${joinGuideFacts(timeFacts)}。` : '',
+      insightFacts.length ? `比較值得提前知道的是 ${joinGuideFacts(insightFacts)}。` : '',
+      cautionFacts.length ? `實際去用時要特別留意 ${joinGuideFacts(cautionFacts)}。` : ''
+    ]);
+  } else {
+    pushParagraph([
+      titleLead ? `如果把這題整理成一版真的好執行的攻略，先抓 ${titleLead} 這幾個重點就夠用了。` : '',
+      insightFacts.length ? `比較有幫助的做法是 ${joinGuideFacts(insightFacts, 3)}。` : '',
+      !insightFacts.length && contentFacts.length ? `可以先記 ${joinGuideFacts(contentFacts)}。` : ''
+    ]);
+
+    pushParagraph([
+      timeFacts.length ? `排進行程時，${joinGuideFacts(timeFacts)} 會比較順。` : '',
+      locationFacts.length ? `切換位置或動線時，也可以一起記 ${joinGuideFacts(locationFacts)}。` : '',
+      cautionFacts.length ? `最後最容易被忽略的是 ${joinGuideFacts(cautionFacts)}。` : ''
+    ]);
+  }
+
+  const sanitizedParagraphs = sanitizeTextArray(paragraphs, sectionKey === 'schedule' ? 2 : 3, 1400);
+  if (sanitizedParagraphs.length) {
+    return sanitizedParagraphs;
+  }
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+function buildSectionNarrativeParagraphsV8(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const {
+    titles,
+    timeFacts,
+    locationFacts,
+    contentFacts,
+    insightFacts,
+    cautionFacts
+  } = collectSectionMaterialFactsV8(inventoryItems);
+
+  const paragraphs = [];
+  const takeFacts = (items, maxItems = 2) => sanitizeTextArray(items, maxItems, 220)
+    .map((item) => sanitizeString(item, 220).trim())
+    .filter((item) => item && !isAiNarrativeNoiseV7(item));
+  const joinFacts = (items, maxItems = 2) => {
+    const picked = takeFacts(items, maxItems);
+    if (!picked.length) return '';
+    if (picked.length === 1) return picked[0];
+    if (picked.length === 2) return `${picked[0]}，也可以順手留意 ${picked[1]}`;
+    return `${picked[0]}、${picked[1]}，以及 ${picked[2]}`;
+  };
+  const joinTitles = (items, maxItems = 3) => {
+    const picked = sanitizeTextArray(items, maxItems, 120)
+      .map((item) => sanitizeString(item, 120).trim())
+      .filter((item) => item && !isAiNarrativeNoiseV7(item));
+    if (!picked.length) return '';
+    if (picked.length === 1) return picked[0];
+    if (picked.length === 2) return `${picked[0]}和${picked[1]}`;
+    return `${picked.slice(0, -1).join('、')}，以及${picked[picked.length - 1]}`;
+  };
+  const pushParagraph = (sentences = []) => {
+    const paragraph = sanitizeString(
+      (Array.isArray(sentences) ? sentences : [])
+        .map((item) => sanitizeString(item, 1400).trim())
+        .filter(Boolean)
+        .join(' '),
+      1400
+    ).trim();
+    if (paragraph) {
+      paragraphs.push(paragraph);
+    }
+  };
+
+  const titleLead = joinTitles(titles);
+
+  if (sectionKey === 'schedule') {
+    pushParagraph([
+      timeFacts.length ? `先看排程的話，最值得先抓的是 ${joinFacts(timeFacts, 3)}。` : '',
+      contentFacts.length ? `這段時間通常會穿插 ${joinFacts(contentFacts, 2)}，所以安排行程時可以把它當成節奏線索。` : '',
+      titleLead ? `如果你看到像 ${titleLead} 這幾段安排，通常代表這題相關的活動就是沿著這個順序串起來的。` : ''
+    ]);
+
+    pushParagraph([
+      locationFacts.length ? `動線上則可以一起記住 ${joinFacts(locationFacts, 2)}，這樣在切換場地時比較不會亂。` : '',
+      insightFacts.length ? `實際安排時，${joinFacts(insightFacts, 2)} 這些節奏判斷通常最有幫助。` : '',
+      cautionFacts.length ? `如果要少踩雷，最後再提醒自己 ${joinFacts(cautionFacts, 2)}。` : ''
+    ]);
+  } else if (sectionKey === 'deckShow') {
+    pushParagraph([
+      titleLead ? `真正和這題最相關的甲板設施、服務或表演，會集中在 ${titleLead} 這幾個主體。` : '',
+      contentFacts.length ? `把它們放在一起看時，核心內容大致就是 ${joinFacts(contentFacts, 3)}。` : '',
+      locationFacts.length ? `位置上多半會落在 ${joinFacts(locationFacts, 2)}，先有這個概念，現場會比較好找。` : ''
+    ]);
+
+    pushParagraph([
+      timeFacts.length ? `如果想把體驗排順，通常可以抓 ${joinFacts(timeFacts, 2)} 這些時段。` : '',
+      insightFacts.length ? `實際玩起來比較有感的地方，往往是 ${joinFacts(insightFacts, 2)}。` : '',
+      cautionFacts.length ? `要避免現場手忙腳亂，記得留意 ${joinFacts(cautionFacts, 2)}。` : ''
+    ]);
+  } else {
+    pushParagraph([
+      titleLead ? `如果把攻略卡放在一起看，${titleLead} 這幾張最能回答這題。` : '',
+      insightFacts.length ? `它們比較像旅伴會提醒你的重點，像是 ${joinFacts(insightFacts, 3)}。` : '',
+      !insightFacts.length && contentFacts.length ? `整理後最實用的做法通常是 ${joinFacts(contentFacts, 2)}。` : ''
+    ]);
+
+    pushParagraph([
+      contentFacts.length ? `具體做法可以從 ${joinFacts(contentFacts, 2)} 開始照著排。` : '',
+      timeFacts.length ? `如果要抓節奏，${joinFacts(timeFacts, 2)} 這類時機通常最值得優先記。` : '',
+      cautionFacts.length ? `另外也別忽略 ${joinFacts(cautionFacts, 2)} 這些提醒，通常就是現場最容易出狀況的地方。` : ''
+    ]);
+  }
+
+  const sanitizedParagraphs = sanitizeTextArray(paragraphs, sectionKey === 'schedule' ? 2 : 3, 1400);
+  if (sanitizedParagraphs.length) {
+    return sanitizedParagraphs;
+  }
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+function buildSectionNarrativeParagraphsV9(sectionKey = 'deckShow', inventoryItems = []) {
+  const meta = LONGFORM_SECTION_META_V4[sectionKey] || LONGFORM_SECTION_META_V4.deckShow;
+  const cards = (Array.isArray(inventoryItems) ? inventoryItems : [])
+    .map((item) => ({
+      title: sanitizeString(item?.title, 120).trim(),
+      detailBullets: sanitizeTextArray(item?.detailBullets, 6, 200)
+        .map((bullet) => sanitizeString(bullet, 200).trim())
+        .filter((bullet) => bullet && !isAiNarrativeNoiseV7(bullet))
+    }))
+    .filter((item) => item.title || item.detailBullets.length);
+  const {
+    timeFacts,
+    contentFacts,
+    insightFacts,
+    cautionFacts
+  } = collectSectionMaterialFactsV8(cards);
+
+  const takeFacts = (items, maxItems = 2) => sanitizeTextArray(items, maxItems, 220)
+    .map((item) => sanitizeString(item, 220).trim())
+    .filter((item) => item && !isAiNarrativeNoiseV7(item));
+  const joinFacts = (items, maxItems = 2) => {
+    const picked = takeFacts(items, maxItems);
+    if (!picked.length) return '';
+    if (picked.length === 1) return picked[0];
+    if (picked.length === 2) return `${picked[0]}，再加上 ${picked[1]}`;
+    return `${picked[0]}、${picked[1]}，以及 ${picked[2]}`;
+  };
+  const describeCard = (card, index = 0) => {
+    if (!card) return '';
+    const bullets = sanitizeTextArray(card.detailBullets, 2, 180);
+    if (!card.title && !bullets.length) return '';
+    if (!bullets.length) {
+      return index === 0
+        ? `${card.title} 會是這段最值得先抓的主體。`
+        : `${card.title} 也可以一起放進這段安排裡。`;
+    }
+    if (index === 0) {
+      return `先把重點放在 ${card.title}，${bullets.join('，')}。`;
+    }
+    return `接著可以把 ${card.title} 串進來，${bullets.join('，')}。`;
+  };
+  const pushParagraph = (target, sentences = []) => {
+    const paragraph = sanitizeString(
+      (Array.isArray(sentences) ? sentences : [])
+        .map((item) => sanitizeString(item, 1400).trim())
+        .filter(Boolean)
+        .join(' '),
+      1400
+    ).trim();
+    if (paragraph) {
+      target.push(paragraph);
+    }
+  };
+
+  const paragraphs = [];
+  const firstCard = cards[0] || null;
+  const secondCard = cards[1] || null;
+  const thirdCard = cards[2] || null;
+
+  if (sectionKey === 'schedule') {
+    pushParagraph(paragraphs, [
+      timeFacts.length ? `排程上先抓 ${joinFacts(timeFacts, 3)} 這條主線，最容易看懂這題的節奏。` : '',
+      describeCard(firstCard, 0),
+      secondCard ? describeCard(secondCard, 1) : ''
+    ]);
+
+    pushParagraph(paragraphs, [
+      contentFacts.length ? `如果要把安排串得更順，可以把 ${joinFacts(contentFacts, 2)} 一起放進同一段動線裡。` : '',
+      insightFacts.length ? `實際排起來時，${joinFacts(insightFacts, 2)} 這種節奏判斷通常最有幫助。` : '',
+      cautionFacts.length ? `最後別忘了 ${joinFacts(cautionFacts, 2)}，這通常就是最容易忽略的提醒。` : ''
+    ]);
+  } else if (sectionKey === 'deckShow') {
+    pushParagraph(paragraphs, [
+      describeCard(firstCard, 0),
+      secondCard ? describeCard(secondCard, 1) : '',
+      thirdCard ? describeCard(thirdCard, 2) : ''
+    ]);
+
+    pushParagraph(paragraphs, [
+      timeFacts.length ? `如果想把體驗排順，通常可以抓 ${joinFacts(timeFacts, 2)} 這些時段。` : '',
+      contentFacts.length ? `把這幾張資料放在一起看時，最值得留意的共通點其實是 ${joinFacts(contentFacts, 2)}。` : '',
+      cautionFacts.length ? `現場最實用的提醒則是 ${joinFacts(cautionFacts, 2)}。` : ''
+    ]);
+  } else {
+    pushParagraph(paragraphs, [
+      describeCard(firstCard, 0),
+      secondCard ? describeCard(secondCard, 1) : '',
+      thirdCard ? describeCard(thirdCard, 2) : ''
+    ]);
+
+    pushParagraph(paragraphs, [
+      insightFacts.length ? `如果只記幾個真正有用的小技巧，通常會是 ${joinFacts(insightFacts, 3)}。` : '',
+      contentFacts.length ? `換成實際操作時，可以優先照著 ${joinFacts(contentFacts, 2)} 去安排。` : '',
+      cautionFacts.length ? `另外也別忽略 ${joinFacts(cautionFacts, 2)}，這些通常就是最容易出錯的地方。` : ''
+    ]);
+  }
+
+  const sanitizedParagraphs = sanitizeTextArray(paragraphs, sectionKey === 'schedule' ? 2 : 3, 1400);
+  if (sanitizedParagraphs.length) {
+    return sanitizedParagraphs;
+  }
+  return meta.sectionSummary ? [meta.sectionSummary] : [];
+}
+
+const buildFallbackReportCoverageV4Base = buildFallbackReport;
+function buildFallbackReportCoverageV4(options = {}) {
+  const report = buildFallbackReportCoverageV4Base(options);
+  const fallbackInventory = buildFullCardInventoryFromParentBriefs(
+    options.parentBriefs || options.parentDossiers || [],
+    options.citationIds || []
+  );
+  if (fallbackInventory.length) {
+    report.fullCardInventory = uniqueBy(
+      [
+        ...(Array.isArray(report.fullCardInventory) ? report.fullCardInventory : []),
+        ...fallbackInventory
+      ],
+      (item) => sanitizeString(item?.parentId, 120) || sanitizeString(item?.title, 160)
+    );
+  }
+  const dossierArticle = buildSectionNarrativesFromSectionDossiersV5(options.sectionDossiers || [], options.citationIds || []);
+  const reportArticle = buildSectionNarrativesFromReportV5(report, options.citationIds || []);
+  report.longformArticle = reportArticle.sections?.length ? reportArticle : dossierArticle;
+  return report;
+}
+
+const normalizeReportObjectCoverageV4Base = normalizeReportObject;
+function normalizeReportObjectCoverageV4(report, citationIds, chunks, answer, sections, sourceBreakdown, followUpHint, missingReason, options = {}) {
+  const normalized = normalizeReportObjectCoverageV4Base(
+    report,
+    citationIds,
+    chunks,
+    answer,
+    sections,
+    sourceBreakdown,
+    followUpHint,
+    missingReason,
+    options
+  );
+
+  const dossierArticle = buildSectionNarrativesFromSectionDossiersV5(options.sectionDossiers || [], citationIds);
+  const fallbackArticle = buildSectionNarrativesFromReportV5(normalized, citationIds);
+  const mergedFallbackArticle = fallbackArticle.sections?.length ? fallbackArticle : dossierArticle;
+  const safeArticle = report && typeof report === 'object' && report.longformArticle && typeof report.longformArticle === 'object'
+    ? report.longformArticle
+    : {};
+
+  normalized.longformArticle = {
+    headline: sanitizeString(safeArticle.headline, 120) || mergedFallbackArticle.headline,
+    introSummary: sanitizeString(safeArticle.introSummary, 360) || mergedFallbackArticle.introSummary,
+    sections: LONGFORM_SECTION_ORDER_V4.map((sectionKey) => {
+      const fallbackSection = (mergedFallbackArticle.sections || []).find((section) => section.sectionKey === sectionKey);
+      const modelSection = Array.isArray(safeArticle.sections)
+        ? safeArticle.sections.find((section) => sanitizeString(section?.sectionKey, 40) === sectionKey)
+        : null;
+      if (!fallbackSection && !modelSection) return null;
+      return {
+        sectionKey,
+        sectionTitle: sanitizeString(modelSection?.sectionTitle, 120) || fallbackSection?.sectionTitle || LONGFORM_SECTION_META_V4[sectionKey].sectionTitle,
+        sectionSummary: sanitizeString(modelSection?.sectionSummary, 260) || fallbackSection?.sectionSummary || LONGFORM_SECTION_META_V4[sectionKey].sectionSummary,
+        narrativeParagraphs: sanitizeTextArray(modelSection?.narrativeParagraphs, 5, 1400).length
+          ? sanitizeTextArray(modelSection?.narrativeParagraphs, 5, 1400)
+          : (fallbackSection?.narrativeParagraphs || []),
+        citationIds: uniqueItems([
+          ...(Array.isArray(modelSection?.citationIds) ? modelSection.citationIds : []),
+          ...((fallbackSection?.citationIds || []))
+        ]).slice(0, MAX_CHUNKS),
+        renderOrigin: sanitizeString(modelSection?.renderOrigin, 40) || fallbackSection?.renderOrigin || 'backfill',
+        cards: uniqueBy(
+          [
+            ...(Array.isArray(modelSection?.cards) ? modelSection.cards : []),
+            ...(Array.isArray(fallbackSection?.cards) ? fallbackSection.cards : [])
+          ],
+          (card) => sanitizeString(card?.parentId, 120) || sanitizeString(card?.title, 160)
+        )
+      };
+    }).filter(Boolean),
+    sourceComparison: Array.isArray(safeArticle.sourceComparison) && safeArticle.sourceComparison.length
+      ? safeArticle.sourceComparison
+      : (Array.isArray(normalized.sourceComparison) ? normalized.sourceComparison : []),
+    unansweredQuestions: sanitizeTextArray(
+      Array.isArray(safeArticle.unansweredQuestions) && safeArticle.unansweredQuestions.length
+        ? safeArticle.unansweredQuestions
+        : normalized.unansweredQuestions,
+      6,
+      180
+    )
+  };
+
+  return normalized;
+}
+
+buildFallbackReport = buildFallbackReportCoverageV4;
+normalizeReportObject = normalizeReportObjectCoverageV4;
 buildCoverageSummaryFromInventory = buildCoverageSummaryFromInventoryV4;
 buildCoverageOutline = buildCoverageOutlineV4;
 buildAnalysisPlanText = buildAnalysisPlanTextV3;
@@ -2752,6 +3869,301 @@ category dossiers:
 ${categoryDossierDump}
 
 ${reportInstructions}
+
+User query:
+${query}
+
+Sources:
+${sourceDump}`;
+}
+
+function buildSectionDossierDumpV5(sectionDossiers = []) {
+  const safeSections = sanitizeSectionDossiers(sectionDossiers);
+  if (!safeSections.length) return 'none';
+
+  return safeSections.map((section, index) => {
+    const cards = Array.isArray(section.cards) ? section.cards : [];
+    const {
+      titles,
+      timeFacts,
+      locationFacts,
+      contentFacts,
+      insightFacts,
+      cautionFacts
+    } = collectSectionMaterialFactsV8(cards);
+    const focusTitles = joinNarrativeTitlesV7(titles);
+    const citationIds = uniqueItems(cards.flatMap((card) => Array.isArray(card?.citationIds) ? card.citationIds : [])).slice(0, MAX_CHUNKS);
+
+    return [
+      `[section ${index + 1}]`,
+      `sectionKey: ${section.sectionKey}`,
+      `sectionTitle: ${section.sectionTitle}`,
+      `focusTitles: ${focusTitles || 'none'}`,
+      `cardCount: ${cards.length}`,
+      `timeFacts: ${timeFacts.slice(0, 3).join(' || ') || 'none'}`,
+      `locationFacts: ${locationFacts.slice(0, 3).join(' || ') || 'none'}`,
+      `contentFacts: ${contentFacts.slice(0, 4).join(' || ') || 'none'}`,
+      `insightFacts: ${insightFacts.slice(0, 3).join(' || ') || 'none'}`,
+      `cautionFacts: ${cautionFacts.slice(0, 3).join(' || ') || 'none'}`,
+      `citationIds: ${citationIds.join(', ') || 'none'}`
+    ].join('\n');
+  }).join('\n\n');
+}
+
+function buildSectionWritingRulesDumpV5(sectionWritingRules = {}) {
+  const safeRules = sanitizeSectionWritingRules(sectionWritingRules);
+  return [
+    `mode: ${safeRules.mode || 'section-first-guide'}`,
+    `schedule target: ${(safeRules.targetParagraphsPerSection?.schedule || []).join(', ') || '2-3 paragraphs'}`,
+    `deckShow target: ${(safeRules.targetParagraphsPerSection?.deckShow || []).join(', ') || '2-4 paragraphs'}`,
+    `playbook target: ${(safeRules.targetParagraphsPerSection?.playbook || []).join(', ') || '2-4 paragraphs'}`,
+    `schedule priority: ${safeRules.priorities?.schedule || 'Use schedule as sequencing context only.'}`,
+    `deckShow priority: ${safeRules.priorities?.deckShow || 'Use deck/show as the main body for facilities, services, and show details.'}`,
+    `playbook priority: ${safeRules.priorities?.playbook || 'Use playbook as the advice, caution, and tactics layer.'}`,
+    `dedupeRule: ${safeRules.dedupeRule || 'State shared facts once in the best-fit section and let support cards only add differences.'}`,
+    `proseStyle: ${safeRules.proseStyle || 'Write natural guide prose in Traditional Chinese, not card-by-card summaries.'}`
+  ].join('\n');
+}
+
+function buildGroundedCoveragePromptV5(query, chunks, responseMode = 'compact', analysisPlan = null, options = {}) {
+  const sourceDump = chunks
+    .map((chunk, index) => [
+      `[#${index + 1}]`,
+      `id: ${chunk.id}`,
+      `parentId: ${chunk.parentId || chunk.id}`,
+      `sourceType: ${chunk.sourceType}`,
+      `sourceDetailType: ${chunk.sourceDetailType}`,
+      `title: ${chunk.title}`,
+      `locationLabel: ${chunk.locationLabel || 'unknown'}`,
+      `evidenceRole: ${chunk.evidenceRole || 'supporting'}`,
+      `timeHint: ${chunk.timeHint || 'none'}`,
+      `bestTimeHint: ${chunk.bestTimeHint || 'none'}`,
+      `body: ${chunk.structuredText || chunk.text}`
+    ].join('\n'))
+    .join('\n\n');
+
+  if (responseMode !== 'report') {
+    return buildGroundedCoveragePromptV4(query, chunks, responseMode, analysisPlan, options);
+  }
+
+  const sectionDossierDump = buildSectionDossierDumpV5(options.sectionDossiers || options.cardDossiersByBlock || []);
+  const sectionWritingRulesDump = buildSectionWritingRulesDumpV5(options.sectionWritingRules || {});
+  const coverageSummary = sanitizeCoverageStats(options.coverageStats);
+  const coverageContract = sanitizeCoverageContract(options.coverageContract);
+
+  return `You are writing a grounded cruise guide article in Traditional Chinese.
+Use only the provided sources. Do not invent facts.
+Return JSON only.
+
+Default instruction:
+Write one readable cruise guide article that answers the original question. First, use the schedule materials to explain the timing and sequencing that matter. Second, use the deck, venue, service, and show materials to explain what the user will actually find and how those places or experiences fit together. Third, use the playbook materials to explain practical tactics, cautions, community tips, and small tricks. Merge overlapping facts before writing. Do not sound like a database export.
+根據找到的「行程、甲板、表演、攻略卡片資料」，生成一篇解決「原始提問問題」的攻略文章。請一步一步撰寫，先根據行程資料梳理出跟問題有關的回答，然後改寫成第一部分攻略，強調排程。再根據甲板上的設施與表演資料找出跟問題有關的回答，改寫成第二部分攻略，強調設施、服務、表演內容細節。最後根據攻略卡片資料梳理跟問題有關的回答，改寫成第三部分攻略，強調社群心得、注意事項與小技巧。
+
+Article structure:
+1. sections: keep this exact order when a section has usable evidence:
+   - schedule
+   - deckShow
+   - playbook
+2. sourceComparison: only if source types disagree or add meaningful nuance.
+3. unansweredQuestions: only if there is a real evidence gap.
+
+Writing rules:
+- Write natural, readable guide prose in Traditional Chinese.
+- Do not produce a separate opening summary block. Go directly into the three guide sections.
+- Each section should be 2-4 readable paragraphs when evidence is rich, or 1 paragraph when evidence is light.
+- Use the section dossiers as your main writing material. Use the raw sources only to verify details and citations.
+- Do not write card-by-card summaries.
+- Do not copy raw field labels, raw Day/Deck markers, or raw source snippets into the prose.
+- Do not sound like a database export, checklist, or concatenated note dump.
+- Merge overlapping card facts into cohesive prose before writing.
+- Mention the same fact once in the best-fit section; support cards should only add differences.
+- Absorb noisy raw labels such as 時間 / 行程重點 / 活動標籤 / 適用時機 / Day / Deck into natural sentences instead of copying them.
+- Do not open with a comma-separated list of matched cards or raw source snippets.
+- Write like a travel companion explaining what matters next.
+- If schedule data is relevant, weave it into timing strategy rather than letting schedule dominate the answer.
+- If playbook cards overlap with facilities, keep the facility facts in deckShow and move tactics, cautions, and little tricks to playbook.
+- Write like a helpful cruise guide, not like a summary of cards or fields.
+- If a conclusion is synthesized across cards rather than directly stated by one card, label it as 綜合判斷.
+- Keep official / concierge / community / general differences separated in sourceComparison.
+- Keep citations attached at the section level, not per bullet.
+
+analysis plan:
+${buildAnalysisPlanSummary(analysisPlan)}
+
+coverage summary:
+- selectedParentCount: ${coverageSummary.selectedParentCount || 0}
+- selectedChunkCount: ${coverageSummary.selectedChunkCount || 0}
+- targetParentCount: ${coverageSummary.targetParentCount || 0}
+- visibleTargetCount: ${coverageSummary.visibleTargetCount || 0}
+- visibleRenderedCount: ${coverageSummary.visibleRenderedCount || 0}
+- primarySubject: ${coverageSummary.primarySubject || 'none'}
+
+coverage contract:
+- mode: ${coverageContract.mode}
+- mustRenderVisibleParentIds: ${(coverageContract.mustRenderVisibleParentIds || []).join(', ') || 'none'}
+- mustRenderDerivedParentIds: ${(coverageContract.mustRenderDerivedParentIds || []).join(', ') || 'none'}
+- preferredSupportParentIds: ${(coverageContract.preferredSupportParentIds || []).join(', ') || 'none'}
+- mustCoverCategories: ${(coverageContract.mustCoverCategories || []).join(', ') || 'none'}
+- preferredClusters: ${(coverageContract.preferredClusters || []).join(', ') || 'none'}
+- relevantSourceTypes: ${(coverageContract.relevantSourceTypes || []).join(', ') || 'none'}
+
+section dossiers:
+${sectionDossierDump}
+
+section writing rules:
+${sectionWritingRulesDump}
+
+Required JSON shape:
+{
+  "answer": string,
+  "confidence": "high" | "medium" | "low",
+  "primarySourceType": "schedule" | "deck" | "show" | "playbook" | "static",
+  "missingReason": string,
+  "citationIds": string[],
+  "insufficientData": boolean,
+  "report": {
+    "headline": string,
+    "longformArticle": {
+      "headline": string,
+      "sections": [
+        {
+          "sectionKey": "schedule" | "deckShow" | "playbook",
+          "sectionTitle": string,
+          "narrativeParagraphs": string[],
+          "citationIds": string[],
+          "renderOrigin": "model"
+        }
+      ],
+      "sourceComparison": [{"sourceDetailType": string, "summary": string, "stance": string, "confidenceNote": string}],
+      "unansweredQuestions": string[]
+    },
+    "sourceComparison": [{"sourceDetailType": string, "summary": string, "stance": string, "confidenceNote": string}],
+    "unansweredQuestions": string[]
+  }
+}
+
+User query:
+${query}
+
+Sources:
+${sourceDump}`;
+}
+
+function buildGroundedCoveragePromptV6(query, chunks, responseMode = 'compact', analysisPlan = null, options = {}) {
+  if (responseMode !== 'report') {
+    return buildGroundedCoveragePromptV4(query, chunks, responseMode, analysisPlan, options);
+  }
+
+  const sourceDump = chunks
+    .map((chunk, index) => [
+      `[#${index + 1}]`,
+      `id: ${chunk.id}`,
+      `parentId: ${chunk.parentId || chunk.id}`,
+      `sourceType: ${chunk.sourceType}`,
+      `sourceDetailType: ${chunk.sourceDetailType}`,
+      `title: ${chunk.title}`,
+      `locationLabel: ${chunk.locationLabel || 'unknown'}`,
+      `evidenceRole: ${chunk.evidenceRole || 'supporting'}`,
+      `timeHint: ${chunk.timeHint || 'none'}`,
+      `bestTimeHint: ${chunk.bestTimeHint || 'none'}`,
+      `body: ${chunk.structuredText || chunk.text}`
+    ].join('\n'))
+    .join('\n\n');
+
+  const sectionDossierDump = buildSectionDossierDumpV5(options.sectionDossiers || options.cardDossiersByBlock || []);
+  const sectionWritingRulesDump = buildSectionWritingRulesDumpV5(options.sectionWritingRules || {});
+  const coverageSummary = sanitizeCoverageStats(options.coverageStats);
+  const coverageContract = sanitizeCoverageContract(options.coverageContract);
+
+  return `You are writing a grounded cruise guide article in Traditional Chinese.
+Use only the provided sources. Do not invent facts.
+Return JSON only.
+
+Default instruction:
+根據找到的行程、甲板、表演、攻略卡片資料，生成一篇解決原始提問問題的攻略文章。請一步一步撰寫，先根據行程資料梳理出跟問題有關的回答，然後改寫成第一部分攻略，強調排程。再根據甲板上的設施與表演資料找出跟問題有關的回答，改寫成第二部分攻略，強調設施、服務、表演內容細節。最後根據攻略卡片資料梳理跟問題有關的回答，改寫成第三部分攻略，強調社群心得、注意事項與小技巧。
+
+Article structure:
+1. sections: keep this exact order when a section has usable evidence:
+   - schedule
+   - deckShow
+   - playbook
+2. sourceComparison: only if source types disagree or add meaningful nuance.
+3. unansweredQuestions: only if there is a real evidence gap.
+
+Writing rules:
+- Write natural, readable guide prose in Traditional Chinese.
+- Go directly into the guide sections. Do not write a separate opening summary block.
+- Each section should be 2-4 readable paragraphs when evidence is rich, or 1 paragraph when evidence is light.
+- Use the section dossiers as your main writing material. Use the raw sources only to verify details and citations.
+- Do not write card-by-card summaries.
+- Do not copy raw field labels, raw Day or Deck markers, or raw source snippets into the prose.
+- Rewrite raw itinerary labels into natural timing phrases when possible instead of exposing raw markers like Day 1, 行程重點, or 活動標籤.
+- Do not sound like a database export, checklist, or concatenated note dump.
+- Merge overlapping facts before writing.
+- Mention the same fact once in the best-fit section; support cards should only add differences.
+- Do not open with a comma-separated list of matched cards or raw snippets.
+- Write like a travel companion explaining what matters next.
+- Let schedule explain timing and sequencing, not dominate the whole answer.
+- Let deckShow carry the main body for facilities, services, venues, and shows.
+- Let playbook carry tactics, cautions, edge cases, and small tricks.
+- If a conclusion is synthesized across multiple cards rather than directly stated by one card, label it as 綜合判斷.
+- Keep official / concierge / community / general differences separated in sourceComparison.
+- Keep citations attached at the section level, not per bullet.
+
+analysis plan:
+${buildAnalysisPlanSummary(analysisPlan)}
+
+coverage summary:
+- selectedParentCount: ${coverageSummary.selectedParentCount || 0}
+- selectedChunkCount: ${coverageSummary.selectedChunkCount || 0}
+- targetParentCount: ${coverageSummary.targetParentCount || 0}
+- visibleTargetCount: ${coverageSummary.visibleTargetCount || 0}
+- visibleRenderedCount: ${coverageSummary.visibleRenderedCount || 0}
+- primarySubject: ${coverageSummary.primarySubject || 'none'}
+
+coverage contract:
+- mode: ${coverageContract.mode}
+- mustRenderVisibleParentIds: ${(coverageContract.mustRenderVisibleParentIds || []).join(', ') || 'none'}
+- mustRenderDerivedParentIds: ${(coverageContract.mustRenderDerivedParentIds || []).join(', ') || 'none'}
+- preferredSupportParentIds: ${(coverageContract.preferredSupportParentIds || []).join(', ') || 'none'}
+- mustCoverCategories: ${(coverageContract.mustCoverCategories || []).join(', ') || 'none'}
+- preferredClusters: ${(coverageContract.preferredClusters || []).join(', ') || 'none'}
+- relevantSourceTypes: ${(coverageContract.relevantSourceTypes || []).join(', ') || 'none'}
+
+section dossiers:
+${sectionDossierDump}
+
+section writing rules:
+${sectionWritingRulesDump}
+
+Required JSON shape:
+{
+  "answer": string,
+  "confidence": "high" | "medium" | "low",
+  "primarySourceType": "schedule" | "deck" | "show" | "playbook" | "static",
+  "missingReason": string,
+  "citationIds": string[],
+  "insufficientData": boolean,
+  "report": {
+    "headline": string,
+    "longformArticle": {
+      "headline": string,
+      "sections": [
+        {
+          "sectionKey": "schedule" | "deckShow" | "playbook",
+          "sectionTitle": string,
+          "narrativeParagraphs": string[],
+          "citationIds": string[],
+          "renderOrigin": "model"
+        }
+      ],
+      "sourceComparison": [{"sourceDetailType": string, "summary": string, "stance": string, "confidenceNote": string}],
+      "unansweredQuestions": string[]
+    },
+    "sourceComparison": [{"sourceDetailType": string, "summary": string, "stance": string, "confidenceNote": string}],
+    "unansweredQuestions": string[]
+  }
+}
 
 User query:
 ${query}
@@ -3444,6 +4856,284 @@ function buildGroundedSchemaV2() {
   };
 }
 
+function buildGroundedSchemaV3() {
+  const citationIdArray = {
+    type: 'ARRAY',
+    items: { type: 'STRING' },
+    minItems: 0,
+    maxItems: MAX_CHUNKS
+  };
+
+  return {
+    type: 'OBJECT',
+    properties: {
+      answer: { type: 'STRING' },
+      bullets: {
+        type: 'ARRAY',
+        items: { type: 'STRING' },
+        minItems: 0,
+        maxItems: 8
+      },
+      confidence: {
+        type: 'STRING',
+        enum: ALLOWED_CONFIDENCE
+      },
+      primarySourceType: {
+        type: 'STRING',
+        enum: ALLOWED_SOURCE_TYPES
+      },
+      missingReason: { type: 'STRING' },
+      citationIds: citationIdArray,
+      insufficientData: { type: 'BOOLEAN' },
+      sections: {
+        type: 'OBJECT',
+        properties: {
+          directAnswer: { type: 'STRING' },
+          recommendedSteps: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 8
+          },
+          whyThisWorks: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 6
+          },
+          watchOuts: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 8
+          }
+        },
+        required: ['directAnswer', 'recommendedSteps', 'whyThisWorks', 'watchOuts']
+      },
+      sourceBreakdown: {
+        type: 'ARRAY',
+        items: {
+          type: 'OBJECT',
+          properties: {
+            type: {
+              type: 'STRING',
+              enum: ALLOWED_SOURCE_DETAIL_TYPES
+            },
+            summary: { type: 'STRING' }
+          },
+          required: ['type', 'summary']
+        },
+        minItems: 0,
+        maxItems: 4
+      },
+      followUpHint: { type: 'STRING' },
+      report: {
+        type: 'OBJECT',
+        properties: {
+          headline: { type: 'STRING' },
+          longformArticle: {
+            type: 'OBJECT',
+            properties: {
+              headline: { type: 'STRING' },
+              introSummary: { type: 'STRING' },
+              sections: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    sectionKey: {
+                      type: 'STRING',
+                      enum: ['schedule', 'deckShow', 'playbook']
+                    },
+                    sectionTitle: { type: 'STRING' },
+                    sectionSummary: { type: 'STRING' },
+                    narrativeParagraphs: {
+                      type: 'ARRAY',
+                      items: { type: 'STRING' },
+                      minItems: 0,
+                      maxItems: 4
+                    },
+                    citationIds: citationIdArray,
+                    renderOrigin: {
+                      type: 'STRING',
+                      enum: ['model', 'backfill']
+                    }
+                  },
+                  required: ['sectionKey', 'sectionTitle', 'narrativeParagraphs', 'citationIds']
+                },
+                minItems: 0,
+                maxItems: 3
+              },
+              sourceComparison: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    sourceDetailType: {
+                      type: 'STRING',
+                      enum: ALLOWED_SOURCE_DETAIL_TYPES
+                    },
+                    stance: { type: 'STRING' },
+                    summary: { type: 'STRING' },
+                    confidenceNote: { type: 'STRING' }
+                  },
+                  required: ['sourceDetailType', 'summary']
+                },
+                minItems: 0,
+                maxItems: 6
+              },
+              unansweredQuestions: {
+                type: 'ARRAY',
+                items: { type: 'STRING' },
+                minItems: 0,
+                maxItems: 6
+              }
+            },
+            required: ['sections']
+          }
+        }
+      }
+    },
+    required: [
+      'answer',
+      'bullets',
+      'confidence',
+      'primarySourceType',
+      'missingReason',
+      'citationIds',
+      'insufficientData',
+      'sections',
+      'sourceBreakdown',
+      'followUpHint'
+    ]
+  };
+}
+
+function buildGroundedSchemaV4() {
+  const citationIdArray = {
+    type: 'ARRAY',
+    items: { type: 'STRING' },
+    minItems: 0,
+    maxItems: MAX_CHUNKS
+  };
+
+  return {
+    type: 'OBJECT',
+    properties: {
+      answer: { type: 'STRING' },
+      confidence: {
+        type: 'STRING',
+        enum: ALLOWED_CONFIDENCE
+      },
+      primarySourceType: {
+        type: 'STRING',
+        enum: ALLOWED_SOURCE_TYPES
+      },
+      missingReason: { type: 'STRING' },
+      citationIds: citationIdArray,
+      insufficientData: { type: 'BOOLEAN' },
+      report: {
+        type: 'OBJECT',
+        properties: {
+          headline: { type: 'STRING' },
+          longformArticle: {
+            type: 'OBJECT',
+            properties: {
+              headline: { type: 'STRING' },
+              sections: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    sectionKey: {
+                      type: 'STRING',
+                      enum: ['schedule', 'deckShow', 'playbook']
+                    },
+                    sectionTitle: { type: 'STRING' },
+                    narrativeParagraphs: {
+                      type: 'ARRAY',
+                      items: { type: 'STRING' },
+                      minItems: 0,
+                      maxItems: 4
+                    },
+                    citationIds: citationIdArray,
+                    renderOrigin: {
+                      type: 'STRING',
+                      enum: ['model', 'backfill']
+                    }
+                  },
+                  required: ['sectionKey', 'sectionTitle', 'narrativeParagraphs', 'citationIds']
+                },
+                minItems: 0,
+                maxItems: 3
+              },
+              sourceComparison: {
+                type: 'ARRAY',
+                items: {
+                  type: 'OBJECT',
+                  properties: {
+                    sourceDetailType: {
+                      type: 'STRING',
+                      enum: ALLOWED_SOURCE_DETAIL_TYPES
+                    },
+                    stance: { type: 'STRING' },
+                    summary: { type: 'STRING' },
+                    confidenceNote: { type: 'STRING' }
+                  },
+                  required: ['sourceDetailType', 'summary']
+                },
+                minItems: 0,
+                maxItems: 6
+              },
+              unansweredQuestions: {
+                type: 'ARRAY',
+                items: { type: 'STRING' },
+                minItems: 0,
+                maxItems: 6
+              }
+            },
+            required: ['sections']
+          },
+          sourceComparison: {
+            type: 'ARRAY',
+            items: {
+              type: 'OBJECT',
+              properties: {
+                sourceDetailType: {
+                  type: 'STRING',
+                  enum: ALLOWED_SOURCE_DETAIL_TYPES
+                },
+                stance: { type: 'STRING' },
+                summary: { type: 'STRING' },
+                confidenceNote: { type: 'STRING' }
+              },
+              required: ['sourceDetailType', 'summary']
+            },
+            minItems: 0,
+            maxItems: 6
+          },
+          unansweredQuestions: {
+            type: 'ARRAY',
+            items: { type: 'STRING' },
+            minItems: 0,
+            maxItems: 6
+          }
+        },
+        required: ['longformArticle']
+      }
+    },
+    required: [
+      'answer',
+      'confidence',
+      'primarySourceType',
+      'missingReason',
+      'citationIds',
+      'insufficientData',
+      'report'
+    ]
+  };
+}
+
 function buildRewriteSchema() {
   return {
     type: 'OBJECT',
@@ -3507,7 +5197,12 @@ function buildInsufficientDataPayload(message, options = {}) {
       citationIds: citations.map((item) => item.id),
       followUpHint: payload.followUpHint,
       missingReason: payload.missingReason,
-      chunks: options.chunks || []
+      chunks: options.chunks || [],
+      parentBriefs: options.parentBriefs || options.parentDossiers || [],
+      sectionDossiers: options.sectionDossiers || [],
+      categoryDossiers: options.categoryDossiers || options.categoryCoveragePlan || [],
+      coverageStats: options.coverageStats || null,
+      coverageContract: options.coverageContract || null
     });
   }
 
@@ -3568,6 +5263,7 @@ function buildLowConfidenceFallback(query, chunks, options = {}) {
             missingReason: '目前可引用的證據還偏零碎，建議同時點開下方來源快速核對細節。',
             chunks: topChunks,
             parentBriefs: options.parentBriefs || [],
+            sectionDossiers: options.sectionDossiers || [],
             coverageStats: options.coverageStats || null,
             coverageContract: options.coverageContract || null
           })
@@ -4219,14 +5915,15 @@ async function callGemini(env, mode, query, chunks, options = {}) {
   const model = String(env.GEMINI_MODEL || 'gemini-2.5-flash-lite').trim();
   const isRewriteMode = mode === 'query_rewrite_v1';
   const isInterpreterMode = mode === 'query_interpretation_v1' || mode === 'query_interpretation_v2' || mode === 'query_interpretation_v3';
+  const isReportMode = !isRewriteMode && !isInterpreterMode && sanitizeResponseMode(options.responseMode) === 'report';
   const schema = isRewriteMode
     ? buildRewriteSchema()
-    : (isInterpreterMode ? buildQueryInterpretationSchema() : buildGroundedSchemaV2());
+    : (isInterpreterMode ? buildQueryInterpretationSchema() : (isReportMode ? buildGroundedSchemaV4() : buildGroundedSchemaV2()));
   const prompt = isRewriteMode
     ? buildRewritePrompt(query, chunks)
     : (isInterpreterMode
       ? buildQueryInterpretationPromptV3(query, options.taxonomy || null)
-      : buildGroundedCoveragePromptV4(query, chunks, options.responseMode || 'compact', options.analysisPlan || null, options));
+      : buildGroundedCoveragePromptV6(query, chunks, options.responseMode || 'compact', options.analysisPlan || null, options));
 
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`,
@@ -4333,6 +6030,7 @@ function finalizeGroundedAnswer(modelOutput, chunks, query, responseMode = 'comp
     return buildLowConfidenceFallback(query, chunks, {
       responseMode,
       parentBriefs: options.parentBriefs,
+      sectionDossiers: options.sectionDossiers,
       coverageStats: options.coverageStats,
       coverageContract: options.coverageContract
     });
@@ -4353,6 +6051,8 @@ function finalizeGroundedAnswer(modelOutput, chunks, query, responseMode = 'comp
         primaryEntityParents: options.primaryEntityParents || [],
         supportEntityParents: options.supportEntityParents || [],
         capabilityCoveragePlan: options.capabilityCoveragePlan || null,
+        sectionDossiers: options.sectionDossiers || [],
+        sectionWritingRules: options.sectionWritingRules || {},
         categoryDossiers: options.categoryDossiers || [],
         coverageStats: options.coverageStats || null,
         coverageContract: options.coverageContract || null
@@ -4418,6 +6118,10 @@ export default {
       return jsonResponse({ error: 'Not found' }, 404);
     }
 
+    if (request.method === 'GET' && url.searchParams.get('health') === '1') {
+      return jsonResponse(buildHealthPayload(env));
+    }
+
     if (request.method !== 'POST') {
       return jsonResponse({ error: 'Method not allowed' }, 405);
     }
@@ -4466,6 +6170,11 @@ export default {
     const primaryEntityParents = sanitizeParentBriefs(body?.primaryEntityParents, chunks.map((chunk) => chunk.id));
     const supportEntityParents = sanitizeParentBriefs(body?.supportEntityParents, chunks.map((chunk) => chunk.id));
     const capabilityCoveragePlan = sanitizeCapabilityCoveragePlan(body?.capabilityCoveragePlan);
+    const articleMode = sanitizeString(body?.articleMode, 40) === 'longform-by-section'
+      ? 'longform-by-section'
+      : (sanitizeString(body?.articleMode, 40) === 'longform-by-block' ? 'longform-by-block' : 'standard');
+    const sectionDossiers = sanitizeSectionDossiers(body?.sectionDossiers || body?.cardDossiersByBlock);
+    const sectionWritingRules = sanitizeSectionWritingRules(body?.sectionWritingRules);
     const coverageContract = sanitizeCoverageContract(body?.coverageContract);
     const coverageStats = sanitizeCoverageStats(body?.coverageStats);
     const answerDepthMode = sanitizeString(body?.answerDepthMode, 24) === 'exhaustive' ? 'exhaustive' : 'broad';
@@ -4495,7 +6204,11 @@ export default {
         {
           missingReason: '請把問題補到至少 6 個字，最好直接帶上 Day、時段、設施或想完成的步驟。',
           chunks,
-          responseMode
+          responseMode,
+          parentBriefs,
+          categoryDossiers,
+          coverageStats,
+          coverageContract
         }
       ));
     }
@@ -4510,7 +6223,11 @@ export default {
         {
           missingReason: '至少需要兩個可引用的站內片段，才能把步驟、限制或時機整理得更可靠。',
           chunks,
-          responseMode
+          responseMode,
+          parentBriefs,
+          categoryDossiers,
+          coverageStats,
+          coverageContract
         }
       ));
     }
@@ -4525,6 +6242,9 @@ export default {
         primaryEntityParents,
         supportEntityParents,
         capabilityCoveragePlan,
+        articleMode,
+        sectionDossiers,
+        sectionWritingRules,
         categoryCoveragePlan: categoryDossiers,
         categoryDossiers,
         answerDepthMode,
@@ -4541,6 +6261,9 @@ export default {
         primaryEntityParents,
         supportEntityParents,
         capabilityCoveragePlan,
+        articleMode,
+        sectionDossiers,
+        sectionWritingRules,
         answerDepthMode,
         coverageStats,
         coverageContract
@@ -4550,10 +6273,21 @@ export default {
         return jsonResponse(buildRewriteFallback(query, chunks));
       }
 
-      return jsonResponse({
-        error: 'Gemini request failed',
-        detail: error?.message || 'Unknown error'
-      }, 502);
+      return jsonResponse(buildLowConfidenceFallback(query, chunks, {
+        responseMode,
+        parentBriefs,
+        categoryDossiers,
+        primaryEntityParents,
+        supportEntityParents,
+        capabilityCoveragePlan,
+        articleMode,
+        sectionDossiers,
+        sectionWritingRules,
+        answerDepthMode,
+        coverageStats,
+        coverageContract,
+        workerFallbackReason: error?.message || 'Gemini request failed'
+      }));
     }
   }
 };

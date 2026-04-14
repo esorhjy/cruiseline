@@ -1,13 +1,19 @@
-const CORE_CACHE_NAME = 'dcl-guide-v12';
+const APP_BUILD_ID = '2026-04-15-ai-search-section-guide-v11';
+const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
-const CORE_ASSETS_TO_CACHE = [
-  'index.html',
+const VERSIONED_CORE_ASSETS = [
   'style.css',
   'script.js',
   'ai-entity-registry.js',
   'ai-query-taxonomy.js',
   'data.js',
   'manifest.json',
+  'icons/icon-192.png',
+  'icons/icon-512.png'
+].map((asset) => `${asset}?v=${APP_BUILD_ID}`);
+const CORE_ASSETS_TO_CACHE = [
+  'index.html',
+  ...VERSIONED_CORE_ASSETS,
   '1772539078755.png',
   'icons/icon-192.png',
   'icons/icon-512.png'
