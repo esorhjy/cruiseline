@@ -124,6 +124,8 @@
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
     const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
     const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
+    const APP_BUILD_ID = document.documentElement?.dataset?.appBuild || window.__DCL_GUIDE_BUILD__ || 'local-dev';
+    window.__DCL_GUIDE_BUILD__ = APP_BUILD_ID;
     const aiEntityRegistry = normalizeAiEntityRegistry(window.AI_ENTITY_REGISTRY || {});
     const aiQueryTaxonomy = normalizeAiQueryTaxonomy({
         ...(window.AI_QUERY_TAXONOMY || {}),
@@ -145,7 +147,8 @@
     const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 24;
     const AI_RESULT_HIGHLIGHT_LIMIT = 4;
     const AI_INTERPRETATION_TAG_LIMIT = 6;
-    const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v9';
+const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v21';
+const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
@@ -219,6 +222,27 @@
 
     function uniqueItems(items) {
         return [...new Set(items)];
+    }
+
+    function getAiWorkerVersionMessage(payload = {}) {
+        const actualSchema = compactSearchText(payload.workerSchemaVersion || 'unknown');
+        const actualBuild = compactSearchText(payload.workerBuildId || 'unknown');
+        return `AI 後端版本仍是 ${actualSchema} (${actualBuild})，目前前端 build ${APP_BUILD_ID} 期待 ${EXPECTED_WORKER_SCHEMA_VERSION}。已改用本地 fallback 文章模式補齊，但正式一致性仍需重新部署 Cloudflare Worker。`;
+    }
+
+    function annotateAiWorkerVersionStatus(payload) {
+        if (!payload || typeof payload !== 'object') {
+            return payload;
+        }
+
+        const actualSchema = compactSearchText(payload.workerSchemaVersion || '');
+        const actualBuild = compactSearchText(payload.workerBuildId || '');
+        const mismatch = !actualSchema || actualSchema !== EXPECTED_WORKER_SCHEMA_VERSION;
+        payload.workerBuildId = actualBuild || 'unknown';
+        payload.workerSchemaVersion = actualSchema || 'unknown';
+        payload.workerVersionMismatch = mismatch;
+        payload.workerVersionMessage = mismatch ? getAiWorkerVersionMessage(payload) : '';
+        return payload;
     }
 
     function simpleHash(text) {
@@ -6207,6 +6231,694 @@
         };
     }
 
+    function getAiArticleSectionMeta(sectionKey = 'deckShow') {
+        const meta = {
+            schedule: {
+                sectionKey: 'schedule',
+                sectionTitle: '行程安排攻略'
+            },
+            deckShow: {
+                sectionKey: 'deckShow',
+                sectionTitle: '甲板設施與表演攻略'
+            },
+            playbook: {
+                sectionKey: 'playbook',
+                sectionTitle: '攻略心得與注意事項'
+            }
+        };
+        return meta[sectionKey] || meta.deckShow;
+    }
+
+    function getAiArticleSectionKey(item = {}) {
+        const sourceType = String(item.sourceType || '').toLowerCase();
+        const cardType = String(item.cardType || '').toLowerCase();
+        if (sourceType === 'schedule' || cardType === 'schedule') {
+            return 'schedule';
+        }
+        if (sourceType === 'playbook' || cardType === 'playbook') {
+            return 'playbook';
+        }
+        return 'deckShow';
+    }
+
+    function splitAiArticleDetailBuckets(detailBullets = []) {
+        const buckets = {
+            time: [],
+            location: [],
+            content: [],
+            insight: [],
+            caution: []
+        };
+        const timePattern = /^(時段|日期|時間|最佳時機|時段提示|開演前|集合時間|時機|day\s*\d+)/i;
+        const locationPattern = /^(地點|位置|相關位置|樓層|甲板|Deck|場館|區域|船頭|船尾)/i;
+        const cautionPattern = /^(注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒)/i;
+        const insightPattern = /^(心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順)/i;
+
+        (Array.isArray(detailBullets) ? detailBullets : []).forEach((detail) => {
+            const line = compactSearchText(detail || '');
+            if (!line) return;
+            const normalized = line.toLowerCase();
+            if (timePattern.test(line) || /(上午|下午|晚上|海上日|登船日|晚餐前|開演前|每次主秀|day\s*\d+)/i.test(line)) {
+                buckets.time.push(line);
+                return;
+            }
+            if (locationPattern.test(line) || /(deck\s*\d+|甲板|樓層|forward|aft|midship|劇院|酒廊|泳池|花園|餐廳)/i.test(normalized)) {
+                buckets.location.push(line);
+                return;
+            }
+            if (cautionPattern.test(line) || /(注意|提醒|限制|風險|避免|踩雷|壓縮|錯過|晚到|以當晚通知為主|仍以)/i.test(line)) {
+                buckets.caution.push(line);
+                return;
+            }
+            if (insightPattern.test(line) || /(心得|亮點|旅程連結|適合|值得|加值|最順|推薦|這趟)/i.test(line)) {
+                buckets.insight.push(line);
+                return;
+            }
+            buckets.content.push(line);
+        });
+
+        return buckets;
+    }
+
+    function joinAiArticleBucketLines(lines = [], maxItems = 2) {
+        const items = uniqueItems((Array.isArray(lines) ? lines : []).filter(Boolean)).slice(0, maxItems);
+        return items.join('； ');
+    }
+
+    function normalizeAiArticleFactText(value = '') {
+        return compactSearchText(value || '')
+            .replace(/^(時段|日期|時間|時間\s*\/\s*時段|最佳時機|時段提示|開演前|集合時間|時機|地點|位置|相關位置|樓層|甲板|場館|區域|船頭|船尾|心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順|注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒|行程重點|活動標籤|目的|節奏判斷|點心補給|重點摘要|適用時機)\s*[：:]\s*/i, '')
+            .replace(/\s*[|｜]\s*/g, '，')
+            .replace(/\s*\/\s*/g, '／')
+            .replace(/[?？]{2,}/g, ' ')
+            .trim();
+    }
+
+    function isAiNarrativeNoise(text = '') {
+        const normalized = compactSearchText(text || '').trim();
+        if (!normalized) return true;
+        if (normalized.length <= 2) return true;
+        if (/^(day\s*\d+|deck\s*\d+)$/i.test(normalized)) return true;
+        if (/^(行程重點|活動標籤|時間|日期|地點|位置|樓層|甲板|注意事項|提醒|限制)$/i.test(normalized)) return true;
+        if ((normalized.match(/[、；]/g) || []).length >= 4 && /(deck\s*\d+|day\s*\d+|登船|海上|下船)/i.test(normalized)) return true;
+        return false;
+    }
+
+    function condenseAiNarrativeFact(text = '', maxClauses = 2) {
+        const normalized = normalizeAiArticleFactText(text);
+        if (!normalized) return '';
+        const clauses = normalized
+            .split(/[；。]/)
+            .map((item) => compactSearchText(item || '').trim())
+            .filter(Boolean);
+        if (!clauses.length) return '';
+        const limited = clauses.slice(0, maxClauses).join('，');
+        return compactSearchText(limited).trim();
+    }
+
+    function buildAiArticleParagraphsFromBuckets(buckets = {}, detailBullets = []) {
+        const toFacts = (items = [], maxItems = 3) => uniqueItems((Array.isArray(items) ? items : [])
+            .map(item => normalizeAiArticleFactText(item))
+            .filter(Boolean))
+            .slice(0, maxItems);
+
+        const fallbackFacts = toFacts(detailBullets, 4);
+        const contentFacts = toFacts((Array.isArray(buckets.content) && buckets.content.length) ? buckets.content : fallbackFacts, 3);
+        const locationFacts = toFacts(buckets.location, 2);
+        const timeFacts = toFacts(buckets.time, 2);
+        const insightFacts = toFacts(buckets.insight, 2);
+        const cautionFacts = toFacts(buckets.caution, 2);
+
+        const summarySentences = [];
+        if (contentFacts.length) {
+            summarySentences.push(contentFacts.join('； '));
+        }
+        if (locationFacts.length) {
+            summarySentences.push(`位置可先記 ${locationFacts.join('； ')}`);
+        }
+        if (timeFacts.length) {
+            summarySentences.push(`如果要抓時段，${timeFacts.join('； ')}`);
+        }
+
+        const supportSentences = [];
+        if (insightFacts.length) {
+            supportSentences.push(insightFacts.join('； '));
+        }
+        if (cautionFacts.length) {
+            supportSentences.push(`另外要留意 ${cautionFacts.join('； ')}`);
+        }
+
+        const summaryParagraph = compactSearchText(summarySentences.join('。 ').replace(/。+/g, '。')).trim();
+        const supportParagraph = compactSearchText(supportSentences.join('。 ').replace(/。+/g, '。')).trim();
+
+        return {
+            summaryParagraph,
+            supportParagraph
+        };
+    }
+
+    function buildAiArticleCardDossier(item = {}) {
+        const buckets = splitAiArticleDetailBuckets(item.detailBullets || []);
+        const paragraphs = buildAiArticleParagraphsFromBuckets(buckets, item.detailBullets || []);
+        return {
+            parentId: item.parentId,
+            title: item.title,
+            cardType: item.cardType || 'mixed',
+            sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels.slice(0, 5) : [],
+            detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets.slice(0, 10) : [],
+            summaryParagraph: paragraphs.summaryParagraph,
+            supportParagraph: paragraphs.supportParagraph,
+            citationIds: Array.isArray(item.citationIds) ? item.citationIds.slice(0, AI_REPORT_MAX_RESULTS) : [],
+            renderOrigin: 'backfill'
+        };
+    }
+
+    function buildAiArticleCardFromInventoryItem(item = {}) {
+        const dossier = buildAiArticleCardDossier({
+            parentId: item.parentId || item.id || item.title,
+            title: item.title,
+            cardType: item.cardType || item.sourceType || 'mixed',
+            sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels : [],
+            detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets : [],
+            citationIds: Array.isArray(item.citationIds) ? item.citationIds : []
+        });
+        const renderOrigin = typeof item.renderOrigin === 'string' && item.renderOrigin
+            ? item.renderOrigin
+            : (item.coverageTier === 'visible' ? 'visible-backfill' : item.coverageTier === 'derived' ? 'derived-backfill' : 'backfill');
+        return {
+            ...dossier,
+            renderOrigin
+        };
+    }
+
+    function buildAiSectionFactCollection(cards = []) {
+        const titles = [];
+        const timeFacts = [];
+        const locationFacts = [];
+        const contentFacts = [];
+        const insightFacts = [];
+        const cautionFacts = [];
+        const seenFacts = new Set();
+
+        const pushFact = (target, value) => {
+            const text = condenseAiNarrativeFact(value || '');
+            if (!text) return;
+            if (isAiNarrativeNoise(text)) return;
+            const key = text.toLowerCase();
+            if (!key || seenFacts.has(key)) return;
+            seenFacts.add(key);
+            target.push(text);
+        };
+
+        const pushBucketFacts = (bucket = {}, maxItems = 3) => {
+            uniqueItems((Array.isArray(bucket.time) ? bucket.time : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(timeFacts, item));
+            uniqueItems((Array.isArray(bucket.location) ? bucket.location : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(locationFacts, item));
+            uniqueItems((Array.isArray(bucket.content) ? bucket.content : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(contentFacts, item));
+            uniqueItems((Array.isArray(bucket.insight) ? bucket.insight : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(insightFacts, item));
+            uniqueItems((Array.isArray(bucket.caution) ? bucket.caution : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(cautionFacts, item));
+        };
+
+        (Array.isArray(cards) ? cards : []).forEach((rawCard) => {
+            const card = rawCard && typeof rawCard === 'object' ? rawCard : {};
+            const title = compactSearchText(card.title || '').trim();
+            if (title && !isAiNarrativeNoise(title) && !titles.includes(title)) {
+                titles.push(title);
+            }
+
+            const detailBullets = Array.isArray(card.detailBullets) ? card.detailBullets : [];
+            if (detailBullets.length) {
+                pushBucketFacts(splitAiArticleDetailBuckets(detailBullets));
+            }
+
+            const summaryParagraph = compactSearchText(card.summaryParagraph || '').trim();
+            if (summaryParagraph) {
+                pushFact(contentFacts, summaryParagraph);
+            }
+
+            const supportParagraph = compactSearchText(card.supportParagraph || '').trim();
+            if (supportParagraph) {
+                const supportBucket = splitAiArticleDetailBuckets([supportParagraph]);
+                if ((supportBucket.caution || []).length) {
+                    pushBucketFacts({ caution: supportBucket.caution }, 2);
+                } else if ((supportBucket.insight || []).length) {
+                    pushBucketFacts({ insight: supportBucket.insight }, 2);
+                } else {
+                    pushFact(insightFacts, supportParagraph);
+                }
+            }
+        });
+
+        return {
+            titles: titles.slice(0, 3),
+            timeFacts: timeFacts.slice(0, 3),
+            locationFacts: locationFacts.slice(0, 3),
+            contentFacts: contentFacts.slice(0, 4),
+            insightFacts: insightFacts.slice(0, 3),
+            cautionFacts: cautionFacts.slice(0, 3)
+        };
+    }
+
+    function joinAiNaturalList(items = []) {
+        const safeItems = uniqueItems((Array.isArray(items) ? items : []).map((item) => compactSearchText(item || '').trim()).filter(Boolean));
+        if (!safeItems.length) return '';
+        if (safeItems.length === 1) return safeItems[0];
+        if (safeItems.length === 2) return `${safeItems[0]}和${safeItems[1]}`;
+        if (safeItems.length > 3) return `${safeItems.slice(0, 2).join('、')}等重點`;
+        return `${safeItems.slice(0, -1).join('、')}，以及${safeItems[safeItems.length - 1]}`;
+    }
+
+    function composeAiGuideSectionParagraphs(sectionKey = 'deckShow', facts = {}) {
+        const titles = Array.isArray(facts.titles) ? facts.titles : [];
+        const timeFacts = Array.isArray(facts.timeFacts) ? facts.timeFacts : [];
+        const locationFacts = Array.isArray(facts.locationFacts) ? facts.locationFacts : [];
+        const contentFacts = Array.isArray(facts.contentFacts) ? facts.contentFacts : [];
+        const insightFacts = Array.isArray(facts.insightFacts) ? facts.insightFacts : [];
+        const cautionFacts = Array.isArray(facts.cautionFacts) ? facts.cautionFacts : [];
+
+        const paragraphs = [];
+        const titleLead = joinAiNaturalList(titles);
+        const takeFacts = (items, maxItems = 2) => uniqueItems((Array.isArray(items) ? items : [])
+            .map((item) => compactSearchText(item || '').trim())
+            .filter((item) => item && !isAiNarrativeNoise(item)))
+            .slice(0, maxItems);
+        const joinGuideFacts = (items, maxItems = 2) => {
+            const picked = takeFacts(items, maxItems);
+            if (!picked.length) return '';
+            if (picked.length === 1) return picked[0];
+            if (picked.length === 2) return `${picked[0]}，也可以順手處理 ${picked[1]}`;
+            return `${picked[0]}，再搭配 ${picked[1]}，最後留意 ${picked[2]}`;
+        };
+        const pushParagraph = (sentences = []) => {
+            const paragraph = compactSearchText((Array.isArray(sentences) ? sentences : [])
+                .map((item) => compactSearchText(item || '').trim())
+                .filter(Boolean)
+                .join(' '))
+                .trim();
+            if (paragraph) {
+                paragraphs.push(paragraph);
+            }
+        };
+
+        if (sectionKey === 'schedule') {
+            pushParagraph([
+                titleLead ? `如果你是為了把這題的節奏排順，先把 ${titleLead} 當成主要安排順序。` : '',
+                timeFacts.length ? `排程上最值得先抓的是 ${joinGuideFacts(timeFacts)}。` : '',
+                contentFacts.length ? `把 ${joinGuideFacts(contentFacts)} 串起來看，整體節奏會更清楚。` : ''
+            ]);
+
+            pushParagraph([
+                locationFacts.length ? `移動路線上可以先記 ${joinGuideFacts(locationFacts)}。` : '',
+                insightFacts.length ? `實際執行時，${joinGuideFacts(insightFacts)}。` : '',
+                cautionFacts.length ? `另外要避開的點是 ${joinGuideFacts(cautionFacts)}。` : ''
+            ]);
+        } else if (sectionKey === 'deckShow') {
+            pushParagraph([
+                titleLead ? `就設施與表演本體來看，先認識 ${titleLead} 這幾個重點最有幫助。` : '',
+                contentFacts.length ? `真正能用上的內容，重點是 ${joinGuideFacts(contentFacts, 3)}。` : '',
+                locationFacts.length ? `位置上主要會落在 ${joinGuideFacts(locationFacts)}。` : ''
+            ]);
+
+            pushParagraph([
+                timeFacts.length ? `如果要抓什麼時候去最順，可以先看 ${joinGuideFacts(timeFacts)}。` : '',
+                insightFacts.length ? `比較值得提前知道的是 ${joinGuideFacts(insightFacts)}。` : '',
+                cautionFacts.length ? `實際去用時要特別留意 ${joinGuideFacts(cautionFacts)}。` : ''
+            ]);
+        } else {
+            pushParagraph([
+                titleLead ? `如果把這題整理成一版真的好執行的攻略，先抓 ${titleLead} 這幾個重點就夠用了。` : '',
+                insightFacts.length ? `比較有幫助的做法是 ${joinGuideFacts(insightFacts, 3)}。` : '',
+                !insightFacts.length && contentFacts.length ? `可以先記 ${joinGuideFacts(contentFacts)}。` : ''
+            ]);
+
+            pushParagraph([
+                timeFacts.length ? `排進行程時，${joinGuideFacts(timeFacts)} 會比較順。` : '',
+                locationFacts.length ? `切換位置或動線時，也可以一起記 ${joinGuideFacts(locationFacts)}。` : '',
+                cautionFacts.length ? `最後最容易被忽略的是 ${joinGuideFacts(cautionFacts)}。` : ''
+            ]);
+        }
+
+        const cleanedParagraphs = uniqueItems(paragraphs.map((item) => compactSearchText(item || '').trim()).filter(Boolean));
+        const maxParagraphs = sectionKey === 'schedule' ? 2 : (sectionKey === 'deckShow' ? 2 : 3);
+        if (cleanedParagraphs.length <= maxParagraphs) {
+            return cleanedParagraphs;
+        }
+
+        const merged = cleanedParagraphs.slice(0, maxParagraphs - 1);
+        const trailing = compactSearchText(cleanedParagraphs.slice(maxParagraphs - 1).join(' ')).trim();
+        if (trailing) {
+            merged.push(trailing);
+        }
+        return uniqueItems(merged).slice(0, maxParagraphs);
+    }
+
+    function buildAiSectionNarrativeParagraphs(sectionKey = 'deckShow', cards = []) {
+        const sectionMeta = getAiArticleSectionMeta(sectionKey);
+        const facts = buildAiSectionFactCollection(cards);
+        const paragraphs = composeAiGuideSectionParagraphs(sectionKey, facts);
+        if (paragraphs.length) {
+            return paragraphs;
+        }
+
+        const fallbackSummary = compactSearchText(sectionMeta.sectionSummary || '').trim();
+        return fallbackSummary ? [fallbackSummary] : [];
+    }
+
+    function buildAiSectionNarrative(sectionKey = 'deckShow', cards = []) {
+        const meta = getAiArticleSectionMeta(sectionKey);
+        const safeCards = Array.isArray(cards) ? cards.filter(Boolean) : [];
+        const narrativeParagraphs = buildAiSectionNarrativeParagraphs(sectionKey, safeCards);
+        const citationIds = uniqueItems(safeCards.flatMap((card) => Array.isArray(card?.citationIds) ? card.citationIds : [])).slice(0, AI_REPORT_MAX_RESULTS);
+        const renderOrigin = safeCards.some((card) => String(card?.renderOrigin || '').endsWith('backfill'))
+            ? 'backfill'
+            : 'model';
+        if (!narrativeParagraphs.length) {
+            return null;
+        }
+
+        return {
+            sectionKey: meta.sectionKey,
+            sectionTitle: meta.sectionTitle,
+            sectionSummary: '',
+            narrativeParagraphs,
+            citationIds,
+            renderOrigin,
+            cards: safeCards
+        };
+    }
+
+    function buildAiLongformArticleFallbackFromReport(report = {}) {
+        const inventory = Array.isArray(report?.fullCardInventory) ? report.fullCardInventory : [];
+        if (!inventory.length) {
+            return null;
+        }
+
+        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
+        const sections = sectionOrder.map((sectionKey) => {
+            const cards = inventory
+                .filter((item) => getAiArticleSectionKey(item) === sectionKey)
+                .map((item) => buildAiArticleCardFromInventoryItem(item))
+                .filter((card) => card.parentId && card.title && (card.summaryParagraph || card.supportParagraph));
+
+            return buildAiSectionNarrative(sectionKey, cards);
+        }).filter(Boolean);
+
+        if (!sections.length) {
+            return null;
+        }
+
+        return {
+            headline: typeof report?.headline === 'string' ? report.headline : '',
+            introSummary: Array.isArray(report?.executiveSummary) && report.executiveSummary.length
+                ? report.executiveSummary.join(' ')
+                : '',
+            sections,
+            sourceComparison: Array.isArray(report?.sourceComparison) ? report.sourceComparison : [],
+            unansweredQuestions: Array.isArray(report?.unansweredQuestions) ? report.unansweredQuestions : []
+        };
+    }
+
+    function buildAiInventoryItemsFromParentBriefs(parentBriefs = []) {
+        return (Array.isArray(parentBriefs) ? parentBriefs : [])
+            .map((item) => ({
+                parentId: item.parentId,
+                title: item.title,
+                cardType: item.cardType || item.sourceType || 'mixed',
+                groupLabel: item.groupLabel || '',
+                sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels.slice(0, 4) : [],
+                categoryFamilies: Array.isArray(item.categoryFamilies) ? item.categoryFamilies.slice(0, 6) : [],
+                detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets.slice(0, 10) : [],
+                citationIds: Array.isArray(item.citationIds) ? item.citationIds.slice(0, AI_REPORT_MAX_RESULTS) : [],
+                coverageTier: item.coverageTier || 'support',
+                renderOrigin: item.coverageTier === 'visible'
+                    ? 'visible-backfill'
+                    : item.coverageTier === 'derived'
+                        ? 'derived-backfill'
+                        : 'support-backfill'
+            }))
+            .filter((item) => item.parentId && item.title && item.detailBullets.length);
+    }
+
+    function buildAiInventoryItemsFromChunks(chunks = []) {
+        const seen = new Set();
+        return (Array.isArray(chunks) ? chunks : [])
+            .map((chunk) => {
+                const parentId = compactSearchText(chunk?.parentId || chunk?.id || '').trim();
+                const title = compactSearchText(chunk?.title || '').trim();
+                if (!parentId || !title || seen.has(parentId)) {
+                    return null;
+                }
+                seen.add(parentId);
+
+                const detailText = uniqueItems([
+                    compactSearchText(chunk?.structuredText || '').trim(),
+                    compactSearchText(chunk?.text || '').trim(),
+                    compactSearchText(chunk?.locationLabel || '').trim(),
+                    compactSearchText(chunk?.timeHint || '').trim(),
+                    compactSearchText(chunk?.bestTimeHint || '').trim()
+                ].filter(Boolean))
+                    .slice(0, 4)
+                    .map((item) => item.length > 240 ? `${item.slice(0, 237)}...` : item);
+
+                return {
+                    parentId,
+                    title,
+                    cardType: chunk?.cardType || chunk?.sourceType || 'mixed',
+                    groupLabel: '',
+                    sourceLabels: uniqueItems([
+                        getAiAnswerSourceLabel(chunk?.sourceType || 'static'),
+                        getAiSourceDetailLabel(chunk?.sourceDetailType || 'general')
+                    ].filter(Boolean)).slice(0, 4),
+                    categoryFamilies: Array.isArray(chunk?.categoryFamilies) ? chunk.categoryFamilies.slice(0, 6) : [],
+                    detailBullets: detailText,
+                    citationIds: chunk?.id ? [chunk.id] : [],
+                    coverageTier: 'support',
+                    renderOrigin: 'support-backfill'
+                };
+            })
+            .filter((item) => item && item.detailBullets.length);
+    }
+
+    function mergeAiInventoryItems(primaryItems = [], fallbackItems = []) {
+        const merged = [];
+        const seen = new Set();
+        [...(Array.isArray(primaryItems) ? primaryItems : []), ...(Array.isArray(fallbackItems) ? fallbackItems : [])].forEach((item) => {
+            if (!item?.parentId || seen.has(item.parentId)) return;
+            seen.add(item.parentId);
+            merged.push(item);
+        });
+        return merged;
+    }
+
+    function buildAiCoverageSummaryFallback(fullCardInventory = [], queryData = {}, coverageStats = {}, coverageContract = null) {
+        const items = Array.isArray(fullCardInventory) ? fullCardInventory : [];
+        const targetParentCount = Number(coverageStats?.targetParentCount || coverageContract?.targetCoverageCount || items.length || 0);
+        const visibleTargetCount = Number(coverageStats?.visibleTargetCount || coverageContract?.targetVisibleCoverageCount || (coverageContract?.mustRenderVisibleParentIds || []).length || 0);
+        const renderedParentCount = items.length;
+        const backfilledParentCount = items.filter((item) => String(item?.renderOrigin || '').endsWith('backfill')).length;
+        const visibleRenderedCount = items.filter((item) => item?.coverageTier === 'visible').length;
+        const visibleBackfilledCount = items.filter((item) => item?.coverageTier === 'visible' && String(item?.renderOrigin || '').endsWith('backfill')).length;
+        return {
+            selectedParentCount: Number(coverageStats?.selectedParentCount || items.length || 0),
+            targetParentCount,
+            renderedParentCount,
+            backfilledParentCount,
+            visibleTargetCount,
+            visibleRenderedCount,
+            visibleBackfilledCount,
+            visibleCoverageRatio: visibleTargetCount ? visibleRenderedCount / visibleTargetCount : 0,
+            coverageRatio: targetParentCount ? renderedParentCount / targetParentCount : 0,
+            primarySubject: compactSearchText(coverageStats?.primarySubject || (Array.isArray(queryData?.canonicalEntities) ? queryData.canonicalEntities.join(' / ') : '') || queryData?.normalizedQuery || ''),
+            sourceCounts: coverageStats?.sourceCounts && typeof coverageStats.sourceCounts === 'object'
+                ? coverageStats.sourceCounts
+                : {}
+        };
+    }
+
+    function buildAiClientEmergencyReport(payload = {}, options = {}) {
+        const fallbackInventory = mergeAiInventoryItems(
+            buildAiInventoryItemsFromParentBriefs(options.parentBriefs || []),
+            buildAiInventoryItemsFromChunks(options.chunks || [])
+        );
+        if (!fallbackInventory.length) {
+            return null;
+        }
+
+        const executiveSummary = uniqueItems([
+            compactSearchText(payload.answer || '').trim(),
+            ...((Array.isArray(payload.bullets) ? payload.bullets : [])
+                .map((item) => compactSearchText(item || '').trim())
+                .filter(Boolean))
+        ]).slice(0, 4);
+
+        const report = {
+            headline: compactSearchText(payload.answer || '我先用目前命中的站內卡片整理一版文章。').trim(),
+            executiveSummary,
+            fullCardInventory: fallbackInventory,
+            sourceComparison: Array.isArray(payload.report?.sourceComparison) ? payload.report.sourceComparison : [],
+            unansweredQuestions: payload.missingReason ? [payload.missingReason] : []
+        };
+        report.coverageSummary = buildAiCoverageSummaryFallback(
+            report.fullCardInventory,
+            options.queryData || {},
+            options.coverageStats || {},
+            options.coverageContract || null
+        );
+        report.longformArticle = buildAiLongformArticleFallbackFromReport(report);
+
+        return report.longformArticle ? report : null;
+    }
+
+    function materializeAiClientReportFallback(payload, options = {}) {
+        if (!payload || typeof payload !== 'object') {
+            return payload;
+        }
+
+        annotateAiWorkerVersionStatus(payload);
+
+        const parentBriefs = Array.isArray(options.parentBriefs) ? options.parentBriefs : [];
+        const shouldBeReport = options.responseMode === 'report' || payload.responseMode === 'report';
+        if (!shouldBeReport || !parentBriefs.length) {
+            if (!shouldBeReport) return payload;
+            const emergencyReport = buildAiClientEmergencyReport(payload, options);
+            if (emergencyReport) {
+                payload.report = emergencyReport;
+                payload.responseMode = 'report';
+            }
+            return payload;
+        }
+
+        const fallbackInventory = buildAiInventoryItemsFromParentBriefs(parentBriefs);
+        if (!fallbackInventory.length) {
+            return payload;
+        }
+
+        const report = payload.report && typeof payload.report === 'object'
+            ? { ...payload.report }
+            : {};
+
+        report.fullCardInventory = mergeAiInventoryItems(report.fullCardInventory, fallbackInventory);
+        if (!Array.isArray(report.executiveSummary) || !report.executiveSummary.length) {
+            report.executiveSummary = uniqueItems([
+                compactSearchText(payload.answer || ''),
+                ...((Array.isArray(payload.bullets) ? payload.bullets : []).map((item) => compactSearchText(item || '')))
+            ].filter(Boolean)).slice(0, 4);
+        }
+        if (!Array.isArray(report.unansweredQuestions) || !report.unansweredQuestions.length) {
+            report.unansweredQuestions = payload.missingReason ? [payload.missingReason] : [];
+        }
+        if (!report.coverageSummary || typeof report.coverageSummary !== 'object') {
+            report.coverageSummary = buildAiCoverageSummaryFallback(
+                report.fullCardInventory,
+                options.queryData || {},
+                options.coverageStats || {},
+                options.coverageContract || null
+            );
+        }
+
+        const resolvedLongform = resolveAiRenderableLongformArticle(report);
+        if (resolvedLongform) {
+            report.longformArticle = resolvedLongform;
+        }
+
+        payload.report = report;
+        payload.responseMode = 'report';
+        return payload;
+    }
+
+    function resolveAiRenderableLongformArticle(report = {}) {
+        const article = report?.longformArticle && typeof report.longformArticle === 'object'
+            ? report.longformArticle
+            : null;
+        const sections = Array.isArray(article?.sections)
+            ? article.sections
+                .map((section) => {
+                    const cards = Array.isArray(section?.cards) ? section.cards.filter(Boolean) : [];
+                    const narrativeParagraphs = uniqueItems((Array.isArray(section?.narrativeParagraphs) ? section.narrativeParagraphs : [])
+                        .map((item) => compactSearchText(item || '').trim())
+                        .filter(Boolean));
+                    const derivedNarratives = narrativeParagraphs.length
+                        ? narrativeParagraphs
+                        : buildAiSectionNarrativeParagraphs(section?.sectionKey || 'deckShow', cards);
+                    if (!derivedNarratives.length) {
+                        return null;
+                    }
+                    return {
+                        sectionKey: section?.sectionKey || 'deckShow',
+                        sectionTitle: compactSearchText(section?.sectionTitle || '').trim() || getAiArticleSectionMeta(section?.sectionKey || 'deckShow').sectionTitle,
+                        sectionSummary: compactSearchText(section?.sectionSummary || '').trim(),
+                        narrativeParagraphs: derivedNarratives,
+                        citationIds: uniqueItems([
+                            ...(Array.isArray(section?.citationIds) ? section.citationIds : []),
+                            ...cards.flatMap((card) => Array.isArray(card?.citationIds) ? card.citationIds : [])
+                        ]).slice(0, AI_REPORT_MAX_RESULTS),
+                        renderOrigin: typeof section?.renderOrigin === 'string' && section.renderOrigin
+                            ? section.renderOrigin
+                            : (cards.some((card) => String(card?.renderOrigin || '').endsWith('backfill')) ? 'backfill' : 'model'),
+                        cards
+                    };
+                })
+                .filter(Boolean)
+            : [];
+        if (article && sections.length) {
+            return {
+                ...article,
+                sections
+            };
+        }
+        return buildAiLongformArticleFallbackFromReport(report);
+    }
+
+    function buildAiLongformArticlePlan(parentBriefs = []) {
+        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
+        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
+        return {
+            articleMode: 'longform-by-section',
+            sections: sectionOrder.map((sectionKey) => {
+                const meta = getAiArticleSectionMeta(sectionKey);
+                const sectionCards = safeBriefs.filter((item) => getAiArticleSectionKey(item) === sectionKey);
+                return {
+                    sectionKey: meta.sectionKey,
+                    sectionTitle: meta.sectionTitle,
+                    parentIds: sectionCards.map((item) => item.parentId)
+                };
+            })
+        };
+    }
+
+    function buildAiSectionDossiers(parentBriefs = []) {
+        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
+        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
+        return sectionOrder.map((sectionKey) => {
+            const meta = getAiArticleSectionMeta(sectionKey);
+            const cards = safeBriefs
+                .filter((item) => getAiArticleSectionKey(item) === sectionKey)
+                .map((item) => buildAiArticleCardDossier(item));
+            return {
+                sectionKey: meta.sectionKey,
+                sectionTitle: meta.sectionTitle,
+                cards
+            };
+        });
+    }
+
+    function buildAiSectionWritingRules() {
+        return {
+            mode: 'section-first-guide',
+            targetParagraphsPerSection: {
+                schedule: [1, 2],
+                deckShow: [2, 4],
+                playbook: [2, 4]
+            },
+            priorities: {
+                schedule: '只交代時段、順序與安排脈絡，不主導全文。',
+                deckShow: '優先整合設施、服務、表演、位置與內容細節。',
+                playbook: '整合做法、心得、限制、小技巧與注意事項。'
+            },
+            dedupeRule: '相同事實只保留在最合適區塊一次，支援卡只補差異。',
+            proseStyle: '寫成像旅伴直接整理給你的通順攻略文章，先消化資料再開口，不要照抄行程標籤、不要堆原始欄位詞、不要用分號把 facts 直接串起來，也不要把多張卡平行摘要後直接貼上。先整合，再敘述，讓人一眼看懂怎麼安排。'
+        };
+    }
+
     function buildAiCapabilityCoveragePlan(parentBriefs = [], queryData = {}) {
         const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
         const coverage = requiredCapabilities.map(capabilityId => {
@@ -6416,6 +7128,100 @@
             mixed: '綜合整理'
         };
         return mapping[cardType] || '綜合整理';
+    }
+
+    function getAiLongformArticleSectionEntries(article = {}) {
+        const sections = Array.isArray(article?.sections) ? article.sections : [];
+        const entries = sections
+            .filter(section => Array.isArray(section?.narrativeParagraphs) && section.narrativeParagraphs.length)
+            .map(section => ({
+                key: `article-${section.sectionKey}`,
+                title: section.sectionTitle || section.sectionKey
+            }));
+
+        if (Array.isArray(article?.sourceComparison) && article.sourceComparison.length) {
+            entries.push({
+                key: 'article-sourceComparison',
+                title: '來源差異'
+            });
+        }
+        if (Array.isArray(article?.unansweredQuestions) && article.unansweredQuestions.length) {
+            entries.push({
+                key: 'article-unansweredQuestions',
+                title: '還缺什麼'
+            });
+        }
+
+        return entries;
+    }
+
+    function renderAiLongformArticle(report = {}) {
+        const article = resolveAiRenderableLongformArticle(report);
+        const sections = Array.isArray(article?.sections)
+            ? article.sections.filter(section => Array.isArray(section?.narrativeParagraphs) && section.narrativeParagraphs.length)
+            : [];
+        if (!article || !sections.length) return '';
+
+        return `
+            <div class="search-ai-longform-article">
+                <div class="search-ai-longform-sections">
+                    ${sections.map(section => `
+                        <section class="search-ai-report-section search-ai-article-section" data-ai-report-section="article-${section.sectionKey}">
+                            <div class="search-ai-report-section-header">
+                                <h3 class="search-ai-section-title">${escapeHtml(section.sectionTitle || section.sectionKey)}</h3>
+                            </div>
+                            <div class="search-ai-article-section-body">
+                                ${(Array.isArray(section.narrativeParagraphs) ? section.narrativeParagraphs : []).map(paragraph => `
+                                    <p>${escapeHtml(paragraph)}</p>
+                                `).join('')}
+                            </div>
+                            ${Array.isArray(section.citationIds) && section.citationIds.length ? `
+                                <div class="search-ai-inline-citations">
+                                    ${section.citationIds.map(citationId => {
+                                        const citation = searchState.aiCitationsById.get(citationId);
+                                        return citation ? `
+                                            <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
+                                                <i class="fa-solid fa-link"></i>
+                                                <span>${escapeHtml(citation.title)}</span>
+                                            </button>
+                                        ` : '';
+                                    }).join('')}
+                                </div>
+                            ` : ''}
+                        </section>
+                    `).join('')}
+                    ${Array.isArray(article?.sourceComparison) && article.sourceComparison.length ? `
+                        <section class="search-ai-report-section" data-ai-report-section="article-sourceComparison">
+                            <div class="search-ai-report-section-header">
+                                <h3 class="search-ai-section-title">來源差異</h3>
+                            </div>
+                            <div class="search-ai-source-comparison">
+                                ${article.sourceComparison.map(item => `
+                                    <article class="search-ai-source-comparison-item">
+                                        <div class="search-ai-source-comparison-top">
+                                            <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
+                                            ${item?.stance ? `<span class="search-ai-source-comparison-stance">${escapeHtml(item.stance)}</span>` : ''}
+                                        </div>
+                                        <p>${escapeHtml(item?.summary || '')}</p>
+                                        ${item?.confidenceNote ? `<p class="search-ai-note">${escapeHtml(item.confidenceNote)}</p>` : ''}
+                                    </article>
+                                `).join('')}
+                            </div>
+                        </section>
+                    ` : ''}
+                    ${Array.isArray(article?.unansweredQuestions) && article.unansweredQuestions.length ? `
+                        <section class="search-ai-report-section" data-ai-report-section="article-unansweredQuestions">
+                            <div class="search-ai-report-section-header">
+                                <h3 class="search-ai-section-title">還缺什麼</h3>
+                            </div>
+                            <ul class="search-ai-report-list">
+                                ${article.unansweredQuestions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                            </ul>
+                        </section>
+                    ` : ''}
+                </div>
+            </div>
+        `;
     }
 
     function renderAiReportOutline(sectionEntries = []) {
@@ -6711,12 +7517,14 @@
 
     function renderAiAnswerState(state) {
         const container = document.getElementById('search-ai-answer');
+        const panel = document.querySelector('#search-overlay .search-panel');
         if (!container) return;
 
         if (!state) {
             container.hidden = true;
             container.innerHTML = '';
             searchState.aiCitationsById = new Map();
+            panel?.classList.remove('reading-mode');
             updateSearchWorkspaceLayout();
             return;
         }
@@ -6725,6 +7533,7 @@
         updateSearchWorkspaceLayout();
 
         if (state.type === 'loading') {
+            panel?.classList.remove('reading-mode');
             container.innerHTML = `
                 <div class="search-ai-card loading">
                     <div class="search-ai-header">
@@ -6745,6 +7554,7 @@
         }
 
         if (state.type === 'info') {
+            panel?.classList.remove('reading-mode');
             container.innerHTML = `
                 <div class="search-ai-card info">
                     <div class="search-ai-header">
@@ -6759,6 +7569,7 @@
         }
 
         if (state.type === 'error') {
+            panel?.classList.remove('reading-mode');
             container.innerHTML = `
                 <div class="search-ai-card error">
                     <div class="search-ai-header">
@@ -6789,12 +7600,42 @@
         const watchOuts = Array.isArray(sections.watchOuts) ? sections.watchOuts : [];
         const sourceBreakdown = Array.isArray(state.sourceBreakdown) ? state.sourceBreakdown : [];
         const report = state.report && typeof state.report === 'object' ? state.report : null;
+        const longformArticle = resolveAiRenderableLongformArticle(report);
         const reportSections = report ? getAiReportSectionEntries(report) : [];
-        const isReportMode = Boolean(report && reportSections.length);
+        const articleSectionEntries = longformArticle ? getAiLongformArticleSectionEntries(longformArticle) : [];
+        const isLongformArticleMode = Boolean(longformArticle && articleSectionEntries.length);
+        const isReportMode = Boolean(report && (reportSections.length || isLongformArticleMode));
         const sourceMixLabels = uniqueItems(sourceBreakdown
             .map(item => getAiSourceDetailLabel(item?.type || item?.sourceDetailType || 'general'))
             .filter(Boolean));
         const interpretationTags = Array.isArray(state.interpretationTags) ? state.interpretationTags.filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT) : [];
+        panel?.classList.toggle('reading-mode', isLongformArticleMode);
+
+        if (isLongformArticleMode) {
+            container.innerHTML = `
+                <div class="search-ai-card longform-mode">
+                    ${interpretationTags.length ? `
+                        <div class="search-ai-interpretation compact">
+                            <div class="search-ai-interpretation-tags">
+                                ${interpretationTags.map(tag => `<span class="search-ai-interpretation-chip">${escapeHtml(tag)}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${state.workerVersionMismatch ? `
+                        <div class="search-ai-worker-warning compact">
+                            <div class="search-ai-worker-warning-title">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span>AI 後端版本落後，已用前端文章模式補齊</span>
+                            </div>
+                            <p>${escapeHtml(state.workerVersionMessage || '')}</p>
+                        </div>
+                    ` : ''}
+                    ${renderAiLongformArticle({ ...report, longformArticle })}
+                </div>
+            `;
+            updateSearchWorkspaceLayout();
+            return;
+        }
 
         container.innerHTML = `
             <div class="search-ai-card">
@@ -6821,17 +7662,26 @@
                         </div>
                     </div>
                 ` : ''}
+                ${state.workerVersionMismatch ? `
+                    <div class="search-ai-worker-warning">
+                        <div class="search-ai-worker-warning-title">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>AI 後端版本落後，已改用前端 fallback 補齊新版文章模式</span>
+                        </div>
+                        <p>${escapeHtml(state.workerVersionMessage || '')}</p>
+                    </div>
+                ` : ''}
                 ${state.rewriteInfo?.hintTerms?.length ? `
                     <div class="search-ai-rewrite-note">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                         <span>已依站內資料常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
                     </div>
                 ` : ''}
-                ${isReportMode && report?.headline ? `<h3 class="search-ai-report-headline">${escapeHtml(report.headline)}</h3>` : ''}
+                ${isReportMode && report?.headline && !isLongformArticleMode ? `<h3 class="search-ai-report-headline">${escapeHtml(report.headline)}</h3>` : ''}
                 <p class="search-ai-summary">${escapeHtml(directAnswer)}</p>
                 ${isReportMode ? renderAiCoverageSummary(report) : ''}
-                ${isReportMode ? renderAiReportOutline(reportSections) : ''}
-                ${isReportMode ? `
+                ${isReportMode ? renderAiReportOutline(isLongformArticleMode ? articleSectionEntries : reportSections) : ''}
+                ${isLongformArticleMode ? renderAiLongformArticle({ ...report, longformArticle }) : isReportMode ? `
                     <div class="search-ai-report-sections">
                         ${reportSections.map(section => renderAiReportSection(section, report)).join('')}
                     </div>
@@ -6863,7 +7713,7 @@
                         ` : ''}
                     </div>
                 ` : ''}
-                ${sourceBreakdown.length ? `
+                ${sourceBreakdown.length && !isLongformArticleMode ? `
                     <div class="search-ai-source-breakdown">
                         ${sourceBreakdown.map(item => `
                             <div class="search-ai-source-breakdown-item">
@@ -7068,11 +7918,15 @@
                 parentDossiers: options.parentDossiers || options.parentBriefs || null,
                 primaryEntityParents: options.primaryEntityParents || null,
                 supportEntityParents: options.supportEntityParents || null,
+                articleMode: (options.articleMode === 'longform-by-block' || options.articleMode === 'longform-by-section') ? options.articleMode : 'standard',
+                articlePlan: options.articlePlan || null,
+                cardDossiersByBlock: options.cardDossiersByBlock || null,
                 capabilityCoveragePlan: options.capabilityCoveragePlan || null,
                 categoryCoveragePlan: options.categoryCoveragePlan || null,
                 categoryDossiers: options.categoryDossiers || null,
                 answerDepthMode: options.answerDepthMode === 'exhaustive' ? 'exhaustive' : 'broad',
                 coverageStats: options.coverageStats || null,
+                expectedWorkerSchemaVersion: EXPECTED_WORKER_SCHEMA_VERSION,
                 chunks
             })
         });
@@ -7082,7 +7936,7 @@
             throw new Error(payload?.error || 'AI 解答服務暫時無法使用。');
         }
 
-        return payload;
+        return annotateAiWorkerVersionStatus(payload);
     }
 
     async function askAiQueryInterpretation(query) {
@@ -7378,6 +8232,9 @@
             categoryCoveragePlan
         });
         const interpretationTags = buildAiInterpretationTags(queryData, reportPlan);
+        const articlePlan = buildAiLongformArticlePlan(parentBriefs);
+        const sectionDossiers = buildAiSectionDossiers(parentBriefs);
+        const sectionWritingRules = buildAiSectionWritingRules();
         const chunks = buildAnswerContext(answerCoverageResults, queryData, {
             responseMode: reportPlan.responseMode,
             reportPlan
@@ -7398,6 +8255,13 @@
             if (!cachedAnswer.interpretationTags?.length) {
                 cachedAnswer.interpretationTags = interpretationTags;
             }
+            materializeAiClientReportFallback(cachedAnswer, {
+                responseMode: reportPlan.responseMode,
+                parentBriefs,
+                coverageStats,
+                coverageContract,
+                queryData
+            });
             renderAiAnswerState(cachedAnswer);
             return;
         }
@@ -7435,6 +8299,11 @@
                 parentDossiers: parentBriefs,
                 primaryEntityParents,
                 supportEntityParents,
+                articleMode: 'longform-by-section',
+                articlePlan,
+                sectionDossiers,
+                sectionWritingRules,
+                cardDossiersByBlock: sectionDossiers,
                 capabilityCoveragePlan,
                 categoryCoveragePlan,
                 categoryDossiers: categoryCoveragePlan,
@@ -7449,9 +8318,56 @@
             }
             payload.responseMode = reportPlan.responseMode;
             payload.interpretationTags = interpretationTags;
+            materializeAiClientReportFallback(payload, {
+                responseMode: reportPlan.responseMode,
+                parentBriefs,
+                coverageStats,
+                coverageContract,
+                queryData
+            });
             renderAiAnswerState(payload);
             writeAiCache(cacheKey, payload);
         } catch (error) {
+            const fallbackCitations = chunks.map((chunk) => ({
+                id: chunk.id,
+                title: chunk.title,
+                locationLabel: chunk.locationLabel || '',
+                navTarget: chunk.navTarget || ''
+            }));
+            const fallbackPayload = {
+                answer: `我先根據目前命中的站內卡片整理一版可讀文章：關於「${queryData.normalizedQuery || rawQuery}」，先把最相關的設施、時段與攻略串成同一篇攻略。`,
+                bullets: [],
+                citations: fallbackCitations,
+                confidence: 'low',
+                primarySourceType: answerCoverageResults[0]?.sourceType || '',
+                missingReason: '',
+                insufficientData: false,
+                sections: {
+                    directAnswer: `AI 生成暫時失敗，但我已改用目前命中的站內卡片直接補成文章版整理。`,
+                    recommendedSteps: [],
+                    whyThisWorks: [],
+                    watchOuts: []
+                },
+                sourceBreakdown: [],
+                followUpHint: '',
+                responseMode: reportPlan.responseMode,
+                interpretationTags,
+                workerFallbackReason: error.message || 'client-local-longform-fallback'
+            };
+            materializeAiClientReportFallback(fallbackPayload, {
+                responseMode: reportPlan.responseMode,
+                parentBriefs,
+                chunks,
+                coverageStats,
+                coverageContract,
+                queryData
+            });
+
+            if (reportPlan.responseMode === 'report' && fallbackPayload.report && resolveAiRenderableLongformArticle(fallbackPayload.report)) {
+                renderAiAnswerState(fallbackPayload);
+                return;
+            }
+
             renderAiAnswerState({
                 type: 'error',
                 message: 'AI 解答目前沒有成功回應，但原本的關鍵字搜尋結果仍可用。',
@@ -7885,6 +8801,11 @@
             buildAiParentBriefResults,
             buildAiParentBriefs,
             buildAnswerContext,
+            buildAiLongformArticleFallbackFromReport,
+            resolveAiRenderableLongformArticle,
+            renderAiLongformArticle,
+            materializeAiClientReportFallback,
+            annotateAiWorkerVersionStatus,
             runAiCoverageSimulation,
             getSearchDocuments: () => searchState.documents.slice()
         });
