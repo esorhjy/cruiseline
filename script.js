@@ -27,21 +27,7 @@
         ['甲板', 'deck'],
         ['酒吧', 'bar']
     ];
-    const AI_QUERY_EXTRA_SYNONYM_GROUPS = [
-        ['第一天', 'day 1', 'day1', '登船日', '提早登船', '登船後'],
-        ['第二天', 'day 2', 'day2'],
-        ['第三天', 'day 3', 'day3'],
-        ['第四天', 'day 4', 'day4', '下船日'],
-        ['孩子', '小孩', '兒童', '親子'],
-        ['open house', 'openhouse', '開放參觀'],
-        ['早餐', '早上', 'morning'],
-        ['下午', '午後', 'afternoon'],
-        ['晚上', '今晚', 'night'],
-        ['主秀', '看秀', '劇院提前入場'],
-        ['玩水', '泳池', 'splash pad', 'toy story pool'],
-        ['補給', '點心', '快餐']
-    ];
-    const AI_QUERY_CAPABILITY_PROFILES = [
+    const SEARCH_CAPABILITY_PROFILES = [
         {
             id: 'swim',
             label: '游泳 / 玩水',
@@ -115,56 +101,87 @@
             disallowedCategories: ['表演']
         }
     ];
-    const AI_QUERY_STOP_WORDS = [
-        '什麼', '怎麼', '如何', '請問', '一下', '值得', '推薦', '安排', '有沒有',
-        '可以', '是否', '會不會', '需要', '想問', '最', '先', '去', '做', '呢', '嗎',
-        '流程', '注意事項', '要不要', '值不值得', '該不該', '比較', '順序', '先後', '限制', '規則'
-    ];
     const searchSynonymMap = buildSynonymMap(SEARCH_SYNONYM_GROUPS);
     const searchDisplayMap = buildDisplayMap(SEARCH_SYNONYM_GROUPS);
-    const aiSearchSynonymMap = buildSynonymMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
-    const aiSearchDisplayMap = buildDisplayMap([...SEARCH_SYNONYM_GROUPS, ...AI_QUERY_EXTRA_SYNONYM_GROUPS]);
     const APP_BUILD_ID = document.documentElement?.dataset?.appBuild || window.__DCL_GUIDE_BUILD__ || 'local-dev';
     window.__DCL_GUIDE_BUILD__ = APP_BUILD_ID;
-    const aiEntityRegistry = normalizeAiEntityRegistry(window.AI_ENTITY_REGISTRY || {});
-    const aiQueryTaxonomy = normalizeAiQueryTaxonomy({
-        ...(window.AI_QUERY_TAXONOMY || {}),
+    const searchEntityRegistry = normalizeAiEntityRegistry(window.SEARCH_ENTITY_REGISTRY || {});
+    const searchKeywordTaxonomy = normalizeAiQueryTaxonomy({
+        ...(window.SEARCH_KEYWORD_TAXONOMY || {}),
         capabilityProfiles: [
-            ...(((window.AI_QUERY_TAXONOMY || {}).capabilityProfiles) || []),
-            ...AI_QUERY_CAPABILITY_PROFILES
+            ...(((window.SEARCH_KEYWORD_TAXONOMY || {}).capabilityProfiles) || []),
+            ...SEARCH_CAPABILITY_PROFILES
         ]
     });
-    const AI_SEARCH_MIN_LENGTH = 6;
-    const AI_CACHE_TTL = 1000 * 60 * 60 * 12;
-    const AI_REWRITE_MAX_ATTEMPTS = 1;
-    const AI_REWRITE_MAX_RESULTS = 4;
-    const AI_REPORT_DEFAULT_MODE = 'report';
-    const AI_REPORT_MAX_RESULTS = 72;
-    const AI_REPORT_MAX_PARENTS = 32;
-    const AI_REPORT_MAX_PER_PARENT = 6;
-    const AI_REPORT_STRONG_EVIDENCE_MIN = 4;
-    const AI_REPORT_RANKED_POOL_LIMIT = 180;
-    const AI_REPORT_VISIBLE_ASSIMILATION_LIMIT = 24;
-    const AI_RESULT_HIGHLIGHT_LIMIT = 4;
-    const AI_INTERPRETATION_TAG_LIMIT = 6;
-const SITE_SEARCH_SCHEMA_VERSION = 'site-search-v21';
-const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
+    const aiEntityRegistry = searchEntityRegistry;
+    const aiQueryTaxonomy = searchKeywordTaxonomy;
+    const SEARCH_RESULT_HIGHLIGHT_LIMIT = 4;
+    const SEARCH_MAX_RESULTS = 10;
+    const SEARCH_PRIMARY_RESULT_LIMIT = 6;
+    const SEARCH_PLAYBOOK_RESULT_LIMIT = 3;
+    const SEARCH_SCHEDULE_RESULT_LIMIT = 1;
+    const SEARCH_SUPPORT_RESULT_LIMIT = 1;
+    const SEARCH_SCHEDULE_INTENT_TERMS = [
+        'day',
+        'days',
+        '行程',
+        '排程',
+        '安排',
+        '時段',
+        '時間',
+        '什麼時候',
+        '何時',
+        '上午',
+        '下午',
+        '晚間',
+        '晚上',
+        '早上',
+        '早／中午',
+        '中午',
+        '登船',
+        '下船',
+        'schedule',
+        'itinerary',
+        'when'
+    ];
+    const SEARCH_BROAD_QUERY_TERMS = [
+        '有哪些',
+        '有什麼',
+        '哪些',
+        '設施',
+        '服務',
+        '表演',
+        '活動',
+        '餐廳',
+        '商店',
+        '劇院',
+        '泳池',
+        '游泳',
+        '玩水',
+        '可以玩',
+        '能玩',
+        'facility',
+        'facilities',
+        'service',
+        'services',
+        'show',
+        'shows',
+        'restaurant',
+        'restaurants',
+        'shop',
+        'shops'
+    ];
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
         documents: [],
         resultsById: new Map(),
-        aiCitationsById: new Map(),
         debounceTimer: null,
         isComposing: false,
         pendingSubmit: false,
-        aiPending: false,
-        activeMode: 'keyword',
         lastQuery: '',
         lastResults: [],
-        lastQueryData: null,
-        documentVersion: 'base',
-        aiConceptGraph: null
+        lastQueryData: null
     };
     const runtimeState = {
         bubbleTimer: null,
@@ -224,25 +241,52 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         return [...new Set(items)];
     }
 
-    function getAiWorkerVersionMessage(payload = {}) {
-        const actualSchema = compactSearchText(payload.workerSchemaVersion || 'unknown');
-        const actualBuild = compactSearchText(payload.workerBuildId || 'unknown');
-        return `AI 後端版本仍是 ${actualSchema} (${actualBuild})，目前前端 build ${APP_BUILD_ID} 期待 ${EXPECTED_WORKER_SCHEMA_VERSION}。已改用本地 fallback 文章模式補齊，但正式一致性仍需重新部署 Cloudflare Worker。`;
+    function truncateSearchPreview(text, maxLength = 180) {
+        const normalized = compactSearchText(text);
+        if (!normalized) return '';
+        if (normalized.length <= maxLength) return normalized;
+        return `${normalized.slice(0, Math.max(1, maxLength - 1)).trimEnd()}…`;
     }
 
-    function annotateAiWorkerVersionStatus(payload) {
-        if (!payload || typeof payload !== 'object') {
-            return payload;
+    function highlightSnippet(text, terms = []) {
+        const source = String(text || '');
+        if (!source) return '';
+
+        const candidates = uniqueItems((Array.isArray(terms) ? terms : [])
+            .map(term => String(term || '').trim())
+            .filter(Boolean))
+            .sort((a, b) => b.length - a.length);
+
+        if (!candidates.length) {
+            return escapeHtml(source);
         }
 
-        const actualSchema = compactSearchText(payload.workerSchemaVersion || '');
-        const actualBuild = compactSearchText(payload.workerBuildId || '');
-        const mismatch = !actualSchema || actualSchema !== EXPECTED_WORKER_SCHEMA_VERSION;
-        payload.workerBuildId = actualBuild || 'unknown';
-        payload.workerSchemaVersion = actualSchema || 'unknown';
-        payload.workerVersionMismatch = mismatch;
-        payload.workerVersionMessage = mismatch ? getAiWorkerVersionMessage(payload) : '';
-        return payload;
+        const pattern = candidates.map(escapeRegExp).join('|');
+        if (!pattern) {
+            return escapeHtml(source);
+        }
+
+        const regex = new RegExp(pattern, 'gi');
+        let cursor = 0;
+        let html = '';
+        let match = regex.exec(source);
+
+        while (match) {
+            const [matched] = match;
+            const start = match.index;
+            if (start > cursor) {
+                html += escapeHtml(source.slice(cursor, start));
+            }
+            html += `<mark>${escapeHtml(matched)}</mark>`;
+            cursor = start + matched.length;
+            match = regex.exec(source);
+        }
+
+        if (cursor < source.length) {
+            html += escapeHtml(source.slice(cursor));
+        }
+
+        return html;
     }
 
     function simpleHash(text) {
@@ -273,40 +317,36 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             .sort((a, b) => b.length - a.length);
     }
 
-    function stripAiStopWords(normalizedQuery) {
-        let stripped = normalizedQuery;
-        AI_QUERY_STOP_WORDS
-            .map(word => normalizeSearchText(word))
-            .filter(Boolean)
-            .sort((a, b) => b.length - a.length)
-            .forEach(word => {
-                stripped = stripped.replace(new RegExp(escapeRegExp(word), 'g'), ' ');
-            });
-
-        return stripped.replace(/\s+/g, ' ').trim();
-    }
-
-    function extractChineseNgrams(text, min = 2, max = 4) {
-        const compact = String(text || '').replace(/[^\u4e00-\u9fff]/g, '');
-        if (compact.length < min) return [];
-
-        const grams = [];
-        for (let size = Math.min(max, compact.length); size >= min; size -= 1) {
-            for (let index = 0; index <= compact.length - size; index += 1) {
-                const gram = compact.slice(index, index + size);
-                if (AI_QUERY_STOP_WORDS.includes(gram)) continue;
-                grams.push(gram);
-            }
-        }
-
-        return uniqueItems(grams).slice(0, 10);
-    }
-
     function hasQueryHint(normalizedQuery, terms = []) {
         return terms.some(term => {
             const normalizedTerm = normalizeSearchText(term);
             return normalizedTerm && normalizedQuery.includes(normalizedTerm);
         });
+    }
+
+    function hasAnyNormalizedTerm(normalizedField = '', terms = []) {
+        if (!normalizedField || !Array.isArray(terms) || !terms.length) return false;
+        return terms.some(term => {
+            const normalizedTerm = normalizeSearchText(term);
+            return normalizedTerm && normalizedField.includes(normalizedTerm);
+        });
+    }
+
+    function countNormalizedTermMatches(normalizedField = '', terms = []) {
+        if (!normalizedField || !Array.isArray(terms) || !terms.length) return 0;
+        return uniqueItems(terms
+            .map(term => normalizeSearchText(term))
+            .filter(Boolean))
+            .filter(term => normalizedField.includes(term))
+            .length;
+    }
+
+    function detectSearchScheduleIntent(normalizedQuery = '') {
+        return hasQueryHint(normalizedQuery, SEARCH_SCHEDULE_INTENT_TERMS);
+    }
+
+    function detectBroadSearchIntent(normalizedQuery = '') {
+        return hasQueryHint(normalizedQuery, SEARCH_BROAD_QUERY_TERMS);
     }
 
     function getScheduleEventId(dayId, periodIndex, eventIndex) {
@@ -365,11 +405,6 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         };
 
         attemptScroll();
-    }
-
-    function getAiAnswerEndpoint() {
-        const endpointMeta = document.querySelector('meta[name="ai-answer-endpoint"]');
-        return endpointMeta?.content?.trim() || '/api/ai-answer';
     }
 
     // 1. 捲動相關 UI
@@ -512,6 +547,11 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         const tempEl = document.getElementById('w-temp');
         const descEl = document.getElementById('w-desc');
         if (!tempEl || !descEl) return;
+        if (window.location?.protocol === 'file:') {
+            tempEl.innerText = '--°C';
+            descEl.innerHTML = "<i class='fa-solid fa-location-dot'></i> 本機模式不載入即時天氣";
+            return;
+        }
 
         try {
             const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=1.2897&longitude=103.8501&current_weather=true');
@@ -1722,6 +1762,43 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         return Array.from(matched);
     }
 
+    function collectTaxonomyContextualTerms(normalizedQuery = '') {
+        if (!normalizedQuery) return [];
+
+        const terms = new Set();
+        const matchedTerms = collectMatchingTerms(normalizedQuery, searchDisplayMap);
+        const splitUnits = normalizedQuery.split(' ').filter(Boolean);
+
+        uniqueItems([normalizedQuery, ...matchedTerms, ...splitUnits]).forEach((term) => {
+            const compactTerm = compactSearchText(term);
+            const entityName = resolveTaxonomyEntityName(term);
+            const genericClass = resolveTaxonomyGenericClassName(term);
+            const categoryLabel = resolveTaxonomyCategoryLabel(term);
+            const capabilityId = resolveTaxonomyCapabilityId(term);
+            const clusterKeys = getTaxonomyClusterKeysForTerm(term);
+
+            if (compactTerm) terms.add(compactTerm);
+            if (entityName) terms.add(entityName);
+            if (genericClass) {
+                terms.add(genericClass);
+                expandTaxonomyCategoryTerms(getTaxonomyGenericClassEntry(genericClass)?.expandsTo || []).forEach((value) => terms.add(value));
+            }
+            if (categoryLabel) {
+                terms.add(categoryLabel);
+                expandTaxonomyCategoryTerms([categoryLabel]).forEach((value) => terms.add(value));
+            }
+            if (capabilityId) {
+                terms.add(capabilityId);
+                const capabilityEntry = getTaxonomyCapabilityEntry(capabilityId);
+                (capabilityEntry?.categoryFamilies || []).forEach((value) => terms.add(value));
+            }
+            expandTaxonomyClusterTerms(clusterKeys).forEach((value) => terms.add(value));
+            expandTaxonomyRelatedTerms([term, entityName, genericClass, categoryLabel].filter(Boolean)).forEach((value) => terms.add(value));
+        });
+
+        return uniqueItems(Array.from(terms).map(compactSearchText).filter(Boolean)).slice(0, 32);
+    }
+
     function expandTaxonomyCategoryTerms(labels = []) {
         return uniqueItems(labels.flatMap(label => {
             const entry = getTaxonomyCategoryEntry(label);
@@ -1947,512 +2024,6 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         return Array.from(categories).slice(0, 6);
     }
 
-    function buildAiConceptGraph(documents = []) {
-        const relatedTermsLookup = new Map();
-        const categoryLookup = new Map();
-        const clusterLookup = new Map();
-
-        const pushLookup = (lookup, key, value) => {
-            const normalizedKey = normalizeSearchText(key);
-            const compactValue = compactSearchText(value);
-            if (!normalizedKey || !compactValue) return;
-            if (!lookup.has(normalizedKey)) {
-                lookup.set(normalizedKey, new Set());
-            }
-            lookup.get(normalizedKey).add(compactValue);
-        };
-
-        documents
-            .filter(doc => (doc.fieldType || 'parent') === 'parent')
-            .forEach(doc => {
-                const seeds = uniqueItems([
-                    doc.title,
-                    doc.groupLabel,
-                    ...(doc.keywords || []).slice(0, 6),
-                    ...(doc.properNounTokens || []).slice(0, 6),
-                    ...(doc.canonicalEntityIds || []).slice(0, 6),
-                    ...(doc.categoryFamilies || []),
-                    doc.entityKey,
-                    doc.venueKey,
-                    doc.seriesKey,
-                    doc.sourceClusterKey
-                ]).filter(Boolean);
-                const relatedTerms = uniqueItems([
-                    doc.title,
-                    ...(doc.properNounTokens || []).slice(0, 8),
-                    ...(doc.aliasTokens || []).slice(0, 8),
-                    ...(doc.keywords || []).slice(0, 8),
-                    ...(doc.categoryFamilies || []),
-                    doc.groupLabel,
-                    doc.locationLabel,
-                    ...(doc.sourceType === 'show' ? ['表演', '劇院', '看秀'] : []),
-                    ...(doc.sourceType === 'playbook' ? ['攻略', '流程', '注意事項'] : []),
-                    ...(doc.sourceType === 'deck' ? ['設施', '場館'] : []),
-                    ...(doc.sourceType === 'schedule' ? ['時間', '時段', '行程'] : [])
-                ]).filter(Boolean);
-
-                seeds.forEach(seed => {
-                    relatedTerms.forEach(term => pushLookup(relatedTermsLookup, seed, term));
-                    (doc.categoryFamilies || []).forEach(categoryLabel => pushLookup(categoryLookup, seed, categoryLabel));
-                    [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey]
-                        .filter(Boolean)
-                        .forEach(clusterKey => pushLookup(clusterLookup, seed, clusterKey));
-                });
-            });
-
-        return {
-            relatedTermsLookup,
-            categoryLookup,
-            clusterLookup
-        };
-    }
-
-    function expandAiConceptGraph(seedTerms = []) {
-        const graph = searchState.aiConceptGraph;
-        if (!graph) {
-            return {
-                relatedTerms: [],
-                relatedCategories: [],
-                preferredClusters: []
-            };
-        }
-
-        const normalizedSeeds = uniqueItems((Array.isArray(seedTerms) ? seedTerms : [])
-            .map(term => normalizeSearchText(term))
-            .filter(Boolean));
-        const relatedTerms = new Set();
-        const relatedCategories = new Set();
-        const preferredClusters = new Set();
-
-        normalizedSeeds.forEach(seed => {
-            (graph.relatedTermsLookup.get(seed) || new Set()).forEach(term => relatedTerms.add(term));
-            (graph.categoryLookup.get(seed) || new Set()).forEach(category => relatedCategories.add(category));
-            (graph.clusterLookup.get(seed) || new Set()).forEach(clusterKey => preferredClusters.add(clusterKey));
-        });
-
-        if (!relatedTerms.size && normalizedSeeds.length) {
-            searchState.documents
-                .filter(doc => (doc.fieldType || 'parent') === 'parent')
-                .filter(doc => normalizedSeeds.some(seed => (doc.normalizedCombined || '').includes(seed)))
-                .slice(0, 20)
-                .forEach(doc => {
-                    relatedTerms.add(doc.title);
-                    (doc.keywords || []).slice(0, 6).forEach(keyword => relatedTerms.add(keyword));
-                    (doc.categoryFamilies || []).forEach(category => relatedCategories.add(category));
-                    [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey]
-                        .filter(Boolean)
-                        .forEach(clusterKey => preferredClusters.add(clusterKey));
-                });
-        }
-
-        return {
-            relatedTerms: Array.from(relatedTerms).slice(0, 32),
-            relatedCategories: Array.from(relatedCategories).slice(0, 10),
-            preferredClusters: Array.from(preferredClusters).slice(0, 10)
-        };
-    }
-
-    function detectAiCoverageHints(normalizedQuery) {
-        return uniqueItems([
-            ...(hasQueryHint(normalizedQuery, ['全部', '所有', '細節', '完整', '完整整理']) ? ['all-details'] : []),
-            ...(hasQueryHint(normalizedQuery, ['流程', '步驟', '怎麼做', '所有流程']) ? ['all-processes'] : []),
-            ...(hasQueryHint(normalizedQuery, ['哪些', '有哪些', '有什麼', '清單', '盤點', '各項', '總表']) ? ['inventory'] : []),
-            ...(hasQueryHint(normalizedQuery, ['注意事項', '風險', '限制', '規則']) ? ['risks'] : []),
-            ...(hasQueryHint(normalizedQuery, ['比較', '還是', '要不要', '值不值得']) ? ['comparison'] : [])
-        ]);
-    }
-
-    function detectAiNegativeTerms(normalizedQuery) {
-        return uniqueItems([
-            ...(hasQueryHint(normalizedQuery, ['不要', '不用', '不是']) ? ['不要', '不是'] : []),
-            ...(hasQueryHint(normalizedQuery, ['排除', '扣掉']) ? ['排除'] : [])
-        ]);
-    }
-
-    function collectTaxonomyContextualTerms(normalizedQuery) {
-        const terms = [];
-
-        aiQueryTaxonomy.aliases.forEach(entry => {
-            if (entry.normalizedTerms.some(term => normalizedQuery.includes(term))) {
-                terms.push(...entry.terms);
-            }
-        });
-
-        aiQueryTaxonomy.categoryFamilies.forEach(entry => {
-            if (entry.normalizedTerms.some(term => normalizedQuery.includes(term))) {
-                terms.push(...entry.keywords);
-            }
-        });
-
-        aiQueryTaxonomy.clusterRelations.forEach(entry => {
-            if (entry.normalizedTriggers.some(term => normalizedQuery.includes(term))) {
-                terms.push(...entry.relatedEntities, ...entry.relatedTerms);
-            }
-        });
-
-        return uniqueItems(terms.map(term => compactSearchText(term)).filter(Boolean)).slice(0, 24);
-    }
-
-    function buildFallbackQueryInterpretation(rawQuery) {
-        const normalizedQuery = normalizeSearchText(rawQuery);
-        const literalAnchors = uniqueItems([
-            ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
-            ...collectMatchingTerms(normalizedQuery, searchDisplayMap)
-        ]).slice(0, 12);
-        const canonicalEntities = uniqueItems(aiQueryTaxonomy.aliases
-            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
-            .map(entry => entry.canonical))
-            .slice(0, 10);
-        const genericClasses = uniqueItems(aiQueryTaxonomy.genericClasses
-            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
-            .map(entry => entry.canonical))
-            .slice(0, 8);
-        const categoryMatches = uniqueItems(aiQueryTaxonomy.categoryFamilies
-            .filter(entry => entry.normalizedTerms.some(term => normalizedQuery.includes(term)))
-            .map(entry => entry.label))
-            .slice(0, 10);
-        const clusterKeys = uniqueItems([
-            ...canonicalEntities.flatMap(entity => getTaxonomyClusterKeysForTerm(entity)),
-            ...literalAnchors.flatMap(term => getTaxonomyClusterKeysForTerm(term)),
-            ...categoryMatches.flatMap(label => getTaxonomyClusterKeysForTerm(label))
-        ]).slice(0, 8);
-        const expandedCategories = uniqueItems([
-            ...genericClasses.flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
-            ...categoryMatches,
-            ...clusterKeys.flatMap(key => getTaxonomyClusterEntry(key)?.relatedCategories || [])
-        ]).slice(0, 12);
-        const expandedAliases = uniqueItems([
-            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity]),
-            ...collectTaxonomyContextualTerms(normalizedQuery),
-            ...expandTaxonomyRelatedTerms([...canonicalEntities, ...genericClasses, ...categoryMatches])
-        ]).slice(0, 28);
-        const expandedCategoryTerms = expandTaxonomyCategoryTerms(expandedCategories);
-        const conceptExpansions = expandAiConceptGraph([
-            ...literalAnchors,
-            ...canonicalEntities,
-            ...genericClasses,
-            ...expandedAliases,
-            ...expandedCategories
-        ]);
-        const clusterExpansions = uniqueItems([
-            ...expandTaxonomyClusterTerms(clusterKeys),
-            ...conceptExpansions.relatedTerms
-        ]).slice(0, 32);
-        const coverageHints = detectAiCoverageHints(normalizedQuery);
-        const negativeTerms = detectAiNegativeTerms(normalizedQuery);
-        const requiredCapabilities = detectAiRequiredCapabilities(normalizedQuery, {
-            literalAnchors,
-            canonicalEntities,
-            genericClasses,
-            expandedAliases,
-            expandedCategories
-        });
-        const disallowedCategories = detectAiDisallowedCategories(normalizedQuery, requiredCapabilities);
-        const breadthProfile = coverageHints.includes('all-details') || coverageHints.includes('inventory')
-            ? 'maximum-expansion'
-            : (genericClasses.length || expandedCategories.length ? 'broad-expansion' : 'guided-expansion');
-        const expansionReasons = uniqueItems([
-            ...genericClasses.map(item => `泛稱展開：${item}`),
-            ...expandedCategories.slice(0, 4).map(item => `類別補全：${item}`),
-            ...clusterKeys.slice(0, 4).map(item => `主題群組：${item}`),
-            ...requiredCapabilities.map(item => `能力條件：${getTaxonomyCapabilityLabel(item)}`)
-        ]).slice(0, 10);
-
-        return {
-            canonicalQuery: compactSearchText(rawQuery),
-            literalAnchors,
-            canonicalEntities,
-            genericClasses,
-            expandedAliases,
-            expandedCategories,
-            expandedCategoryTerms,
-            clusterKeys,
-            clusterExpansions,
-            coverageHints,
-            negativeTerms,
-            requiredCapabilities,
-            disallowedCategories,
-            answerIntent: inferAiAnswerIntent(normalizedQuery, coverageHints),
-            breadthProfile,
-            expansionReasons,
-            preferredClusters: conceptExpansions.preferredClusters,
-            confidence: canonicalEntities.length
-                ? 'high'
-                : (genericClasses.length || expandedCategories.length || literalAnchors.length ? 'medium' : 'low')
-        };
-    }
-
-    function sanitizeAiInterpreterResult(result = {}) {
-        const safeResult = result && typeof result === 'object' ? result : {};
-        const canonicalEntities = uniqueItems((Array.isArray(safeResult.canonicalEntities) ? safeResult.canonicalEntities : [])
-            .map(term => resolveTaxonomyEntityName(term) || compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 10);
-        const genericClasses = uniqueItems((Array.isArray(safeResult.genericClasses) ? safeResult.genericClasses : [])
-            .map(term => resolveTaxonomyGenericClassName(term) || compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 8);
-        const expandedCategories = uniqueItems((Array.isArray(safeResult.expandedCategories) ? safeResult.expandedCategories : [])
-            .map(term => resolveTaxonomyCategoryLabel(term) || compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 12);
-        const clusterKeys = uniqueItems((Array.isArray(safeResult.clusterExpansions) ? safeResult.clusterExpansions : [])
-            .flatMap(term => {
-                const normalized = normalizeSearchText(term);
-                const directCluster = getTaxonomyClusterEntry(term);
-                if (directCluster) return [directCluster.key];
-                return normalized ? getTaxonomyClusterKeysForTerm(normalized) : [];
-            }))
-            .slice(0, 8);
-        const expandedAliases = uniqueItems((Array.isArray(safeResult.expandedAliases) ? safeResult.expandedAliases : [])
-            .map(term => compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 20);
-        const coverageHints = uniqueItems((Array.isArray(safeResult.coverageHints) ? safeResult.coverageHints : [])
-            .map(term => normalizeSearchText(term))
-            .filter(term => ['all-details', 'all-processes', 'inventory', 'risks', 'comparison'].includes(term)))
-            .slice(0, 8);
-        const negativeTerms = uniqueItems((Array.isArray(safeResult.negativeTerms) ? safeResult.negativeTerms : [])
-            .map(term => compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 6);
-        const requiredCapabilities = uniqueItems((Array.isArray(safeResult.requiredCapabilities) ? safeResult.requiredCapabilities : [])
-            .map(term => resolveTaxonomyCapabilityId(term) || compactSearchText(term).toLowerCase())
-            .filter(Boolean))
-            .slice(0, 4);
-        const disallowedCategories = uniqueItems((Array.isArray(safeResult.disallowedCategories) ? safeResult.disallowedCategories : [])
-            .map(term => resolveTaxonomyCategoryLabel(term) || compactSearchText(term))
-            .filter(Boolean))
-            .slice(0, 8);
-        const breadthProfile = compactSearchText(safeResult.breadthProfile) || 'guided-expansion';
-        const expansionReasons = sanitizeSearchTextArray(safeResult.expansionReasons, 10, 120);
-        const confidence = ['high', 'medium', 'low'].includes(safeResult.confidence) ? safeResult.confidence : 'low';
-        const answerIntent = ['answer', 'inventory', 'process', 'comparison'].includes(compactSearchText(safeResult.answerIntent))
-            ? compactSearchText(safeResult.answerIntent)
-            : inferAiAnswerIntent('', coverageHints);
-
-        return {
-            canonicalQuery: compactSearchText(safeResult.canonicalQuery),
-            literalAnchors: sanitizeSearchTextArray(safeResult.literalAnchors, 12, 80),
-            canonicalEntities,
-            genericClasses,
-            expandedAliases,
-            expandedCategories,
-            expandedCategoryTerms: expandTaxonomyCategoryTerms(expandedCategories),
-            clusterKeys,
-            clusterExpansions: expandTaxonomyClusterTerms(clusterKeys),
-            coverageHints,
-            negativeTerms,
-            requiredCapabilities,
-            disallowedCategories,
-            answerIntent,
-            breadthProfile,
-            expansionReasons,
-            preferredClusters: sanitizeSearchTextArray(safeResult.preferredClusters, 10, 80),
-            confidence
-        };
-    }
-
-    function mergeAiInterpreterResult(rawQuery, aiResult = null) {
-        const fallback = buildFallbackQueryInterpretation(rawQuery);
-        const interpreted = sanitizeAiInterpreterResult(aiResult);
-        const canonicalEntities = uniqueItems([
-            ...fallback.canonicalEntities,
-            ...interpreted.canonicalEntities
-        ]).slice(0, 10);
-        const genericClasses = uniqueItems([
-            ...fallback.genericClasses,
-            ...interpreted.genericClasses
-        ]).slice(0, 8);
-        const clusterKeys = uniqueItems([
-            ...fallback.clusterKeys,
-            ...interpreted.clusterKeys,
-            ...canonicalEntities.flatMap(entity => getTaxonomyClusterKeysForTerm(entity)),
-            ...genericClasses.flatMap(className => getTaxonomyClusterKeysForTerm(className))
-        ]).slice(0, 8);
-        const expandedCategories = uniqueItems([
-            ...fallback.expandedCategories,
-            ...interpreted.expandedCategories,
-            ...genericClasses.flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
-            ...clusterKeys.flatMap(key => getTaxonomyClusterEntry(key)?.relatedCategories || [])
-        ]).slice(0, 14);
-        const conceptExpansions = expandAiConceptGraph([
-            ...fallback.literalAnchors,
-            ...interpreted.literalAnchors,
-            ...canonicalEntities,
-            ...genericClasses,
-            ...expandedCategories,
-            ...clusterKeys
-        ]);
-        const expandedAliases = uniqueItems([
-            ...fallback.expandedAliases,
-            ...interpreted.expandedAliases,
-            ...canonicalEntities.flatMap(entity => getTaxonomyEntityEntry(entity)?.terms || [entity]),
-            ...expandTaxonomyRelatedTerms([...canonicalEntities, ...genericClasses, ...expandedCategories]),
-            ...conceptExpansions.relatedTerms
-        ]).slice(0, 36);
-        const coverageHints = uniqueItems([
-            ...fallback.coverageHints,
-            ...interpreted.coverageHints
-        ]).slice(0, 8);
-        const normalizedQuery = normalizeSearchText(rawQuery);
-        if (!coverageHints.includes('inventory') && (genericClasses.length || hasQueryHint(normalizedQuery, ['各項', '設施', '有什麼', '有哪些', '哪些']))) {
-            coverageHints.push('inventory');
-        }
-        const negativeTerms = uniqueItems([
-            ...fallback.negativeTerms,
-            ...interpreted.negativeTerms
-        ]).slice(0, 6);
-        const requiredCapabilities = uniqueItems([
-            ...(fallback.requiredCapabilities || []),
-            ...(interpreted.requiredCapabilities || []),
-            ...detectAiRequiredCapabilities(normalizedQuery, {
-                literalAnchors: fallback.literalAnchors,
-                canonicalEntities,
-                genericClasses,
-                expandedAliases,
-                expandedCategories
-            })
-        ]).slice(0, 4);
-        const disallowedCategories = uniqueItems([
-            ...(fallback.disallowedCategories || []),
-            ...(interpreted.disallowedCategories || []),
-            ...detectAiDisallowedCategories(normalizedQuery, requiredCapabilities)
-        ]).slice(0, 8);
-        const expandedCategoryTerms = uniqueItems([
-            ...fallback.expandedCategoryTerms,
-            ...interpreted.expandedCategoryTerms,
-            ...expandTaxonomyCategoryTerms(expandedCategories)
-        ]).slice(0, 32);
-        const clusterExpansions = uniqueItems([
-            ...fallback.clusterExpansions,
-            ...interpreted.clusterExpansions,
-            ...expandTaxonomyClusterTerms(clusterKeys),
-            ...conceptExpansions.relatedTerms
-        ]).slice(0, 36);
-        const literalAnchors = uniqueItems([
-            ...fallback.literalAnchors,
-            ...interpreted.literalAnchors,
-            ...canonicalEntities
-        ]).slice(0, 12);
-        const preferredClusters = uniqueItems([
-            ...(fallback.preferredClusters || []),
-            ...(interpreted.preferredClusters || []),
-            ...clusterKeys,
-            ...conceptExpansions.preferredClusters
-        ]).slice(0, 10);
-        const breadthProfile = interpreted.breadthProfile && interpreted.breadthProfile !== 'guided-expansion'
-            ? interpreted.breadthProfile
-            : (coverageHints.includes('all-details') || coverageHints.includes('inventory')
-                ? 'maximum-expansion'
-                : ((genericClasses.length || expandedCategories.length >= 3) ? 'broad-expansion' : fallback.breadthProfile));
-        const expansionReasons = uniqueItems([
-            ...(fallback.expansionReasons || []),
-            ...(interpreted.expansionReasons || []),
-            ...genericClasses.slice(0, 4).map(item => `泛稱展開：${item}`),
-            ...expandedCategories.slice(0, 4).map(item => `類別擴張：${item}`),
-            ...preferredClusters.slice(0, 4).map(item => `主題補強：${item}`),
-            ...requiredCapabilities.map(item => `能力條件：${getTaxonomyCapabilityLabel(item)}`)
-        ]).slice(0, 12);
-        const confidence = interpreted.confidence === 'high'
-            ? 'high'
-            : ((canonicalEntities.length || genericClasses.length || expandedCategories.length) ? 'medium' : fallback.confidence);
-        const answerIntent = interpreted.answerIntent
-            || fallback.answerIntent
-            || inferAiAnswerIntent(normalizedQuery, coverageHints);
-
-        return {
-            canonicalQuery: interpreted.canonicalQuery || fallback.canonicalQuery,
-            literalAnchors,
-            canonicalEntities,
-            genericClasses,
-            expandedAliases,
-            expandedCategories,
-            expandedCategoryTerms,
-            clusterKeys,
-            clusterExpansions,
-            coverageHints,
-            negativeTerms,
-            requiredCapabilities,
-            disallowedCategories,
-            answerIntent,
-            breadthProfile,
-            expansionReasons,
-            preferredClusters,
-            confidence,
-            usedAiInterpreter: Boolean(aiResult)
-        };
-    }
-
-    function resolveAiCoverageMode(interpreterResult = {}, normalizedQuery = '') {
-        const hints = interpreterResult.coverageHints || [];
-        if (hints.includes('all-details') || hints.includes('all-processes')) {
-            return 'exhaustive';
-        }
-        if (interpreterResult.breadthProfile === 'maximum-expansion') {
-            return 'exhaustive';
-        }
-        if (hints.includes('inventory') && (
-            !interpreterResult.canonicalEntities?.length
-            || interpreterResult.genericClasses?.length
-            || hasQueryHint(normalizedQuery, ['全部', '所有', '完整', '細節', '清單', '各項'])
-        )) {
-            return 'exhaustive';
-        }
-        return 'broad';
-    }
-
-    function detectAiBreadthSignals(normalizedQuery = '') {
-        if (!normalizedQuery) return [];
-
-        const signalGroups = [
-            ['哪些樓層', ['哪些樓層', '哪些甲板', '哪幾層', '哪層']],
-            ['有哪些設施', ['有哪些設施', '哪些設施', '有哪些地方', '哪些地方', '各項設施']],
-            ['有哪些內容', ['有哪些內容', '有什麼內容', '有什麼可以用', '有什麼可用', '有哪些可以用']],
-            ['所有細節', ['所有細節', '全部細節', '完整細節', '完整整理', '完整清單']],
-            ['有哪些表演', ['有哪些表演', '有什麼表演', 'show', 'shows']]
-        ];
-
-        return signalGroups
-            .filter(([, terms]) => hasQueryHint(normalizedQuery, terms))
-            .map(([label]) => label)
-            .slice(0, 6);
-    }
-
-    function isAiFacilityBreadthMode(queryData = {}) {
-        const breadthSignals = Array.isArray(queryData.breadthSignals) ? queryData.breadthSignals : [];
-        if (!breadthSignals.length && !(Array.isArray(queryData.requiredCapabilities) && queryData.requiredCapabilities.length)) return false;
-
-        if (queryData.intents?.deckFocus || queryData.intents?.conciergeFocus || queryData.intents?.theatreFocus) {
-            return true;
-        }
-
-        return uniqueItems([
-            ...(queryData.mustCoverCategories || []),
-            ...(queryData.expandedCategories || []),
-            ...(queryData.genericClasses || []),
-            ...(queryData.requiredCapabilities || []).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId))
-        ]).some((label) => ['場館', '服務', '表演', '酒廊', '泳池', '甲板', '設施'].includes(label));
-    }
-
-    function buildAiInterpretationTags(queryData = {}, reportPlan = null) {
-        const interpreter = queryData.interpreterResult || {};
-        const coverageMode = reportPlan?.coverageMode === 'exhaustive'
-            || queryData.coverageMode === 'exhaustive'
-            ? '完整盤點'
-            : '廣泛展開';
-
-        return uniqueItems([
-            ...(interpreter.canonicalEntities || []).slice(0, 3),
-            ...(interpreter.requiredCapabilities || []).slice(0, 2).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId)),
-            ...(interpreter.expandedAliases || []).filter(term => /^[A-Za-z][A-Za-z\s]{2,}$/u.test(term)).slice(0, 1),
-            ...(interpreter.expandedCategories || []).slice(0, 2),
-            ...(interpreter.disallowedCategories || []).slice(0, 1).map(label => `排除 ${label}`),
-            ...(interpreter.breadthProfile === 'maximum-expansion' ? ['最大擴張'] : []),
-            coverageMode
-        ]).filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT);
-    }
-
     function joinSearchTextParts(parts = []) {
         return parts
             .map(part => compactSearchText(part))
@@ -2468,6 +2039,38 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             })
             .filter(Boolean)
             .join(' ');
+    }
+
+    function extractStructuredSearchPairs(text) {
+        const normalized = String(text || '')
+            .replace(/\r\n/g, '\n')
+            .replace(/\u3000/g, ' ')
+            .trim();
+
+        if (!normalized) return [];
+
+        const pairs = [];
+        const seen = new Set();
+        const segments = normalized
+            .split(/\n|；|;/)
+            .map(segment => segment.trim())
+            .filter(Boolean);
+
+        segments.forEach(segment => {
+            const match = segment.match(/^([^:：]{1,24})\s*[:：]\s*(.+)$/);
+            if (!match) return;
+
+            const label = compactSearchText(match[1]);
+            const value = compactSearchText(match[2]);
+            if (!label || !value) return;
+
+            const key = `${label}::${value}`;
+            if (seen.has(key)) return;
+            seen.add(key);
+            pairs.push([label, value]);
+        });
+
+        return pairs;
     }
 
     function getAiFieldLabel(fieldType) {
@@ -2644,6 +2247,12 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             structuredText,
             keywords
         });
+        const normalizedLocationLabel = compactSearchText(config.locationLabel);
+        const themeEntityId = entityRefs[0] || config.entityKey || anchorKeys.entityKey || (config.parentId || id);
+        const entityBreadth = Math.max(1, entityRefs.length || 0);
+        const isSupportLike = ['schedule', 'static'].includes(config.sourceType)
+            || compactSearchText(config.contentRole) === 'support';
+        const anchorStrength = themeEntityId && entityRefs[0] === themeEntityId ? 2 : 1;
 
         return {
             id,
@@ -2662,6 +2271,7 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             fieldLabel: config.fieldLabel || getAiFieldLabel(config.fieldType || 'parent'),
             timeHint: compactSearchText(config.timeHint),
             bestTimeHint: compactSearchText(config.bestTimeHint),
+            normalizedLocationLabel,
             categoryFamilies: mergedCategoryFamilies,
             capabilityTags: mergedCapabilityTags,
             entityFamilies: mergedEntityFamilies,
@@ -2676,6 +2286,11 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             seriesKey: config.seriesKey || anchorKeys.seriesKey,
             sourceClusterKey: config.sourceClusterKey || anchorKeys.sourceClusterKey,
             contentRole: compactSearchText(config.contentRole) || (supportForEntityRefs.length ? 'support' : 'primary'),
+            dedupeKey: `${config.sourceType || 'content'}:${config.parentId || id}`,
+            themeEntityId,
+            isSupportLike,
+            anchorStrength,
+            entityBreadth,
             aiOnly: Boolean(config.aiOnly)
         };
     }
@@ -3132,1517 +2747,371 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             };
         });
 
-        searchState.aiConceptGraph = buildAiConceptGraph(searchState.documents);
-        searchState.documentVersion = simpleHash(searchState.documents
-            .map(doc => `${doc.id}::${doc.normalizedCombined}::${(doc.canonicalEntityIds || []).join(',')}::${(doc.categoryFamilies || []).join(',')}::${(doc.capabilityTags || []).join(',')}::${(doc.supportOfParentIds || []).join(',')}`)
-            .join('||'));
+        
     }
 
     function getSearchUnits(rawQuery) {
         const normalizedQuery = normalizeSearchText(rawQuery);
         if (!normalizedQuery) {
-            return { normalizedQuery: '', units: [], highlightTerms: [] };
-        }
-
-        const splitUnits = normalizedQuery.split(' ').filter(Boolean);
-        const units = uniqueItems(normalizedQuery.includes(' ') ? [normalizedQuery, ...splitUnits] : splitUnits);
-        const highlightTerms = uniqueItems(units.map(unit => searchDisplayMap.get(unit) || unit));
-
-        return { normalizedQuery, units, highlightTerms };
-    }
-
-    function buildAiIntents(normalizedQuery) {
-        return {
-            day1Focus: hasQueryHint(normalizedQuery, ['第一天', 'day 1', 'day1', '登船日', '登船後', '提早登船']),
-            day2Focus: hasQueryHint(normalizedQuery, ['第二天', 'day 2', 'day2']),
-            day3Focus: hasQueryHint(normalizedQuery, ['第三天', 'day 3', 'day3']),
-            day4Focus: hasQueryHint(normalizedQuery, ['第四天', 'day 4', 'day4', '下船日']),
-            scheduleFocus: hasQueryHint(normalizedQuery, [
-                '第一天', '第二天', '第三天', '第四天', 'day 1', 'day 2', 'day 3', 'day 4',
-                '登船日', '下船日', '登船後', '早餐', '早上', '下午', '晚上', '今晚'
-            ]),
-            actionFocus: hasQueryHint(normalizedQuery, ['怎麼', '如何', '先做什麼', '怎麼安排', '值得先去', '值得先做']),
-            deckFocus: hasQueryHint(normalizedQuery, [
-                'deck', '甲板', '劇院', 'baymax', 'pizza', 'pool', 'lounge', 'concierge', 'open house', 'oceaneer'
-            ]),
-            conciergeFocus: hasQueryHint(normalizedQuery, ['禮賓', 'concierge', 'lounge', '酒廊']),
-            theatreFocus: hasQueryHint(normalizedQuery, ['劇院', 'theatre', 'theater', '主秀', '看秀', 'remember', '提早入場']),
-            roomServiceFocus: hasQueryHint(normalizedQuery, ['room service', '房務', '客房服務']),
-            foodFocus: hasQueryHint(normalizedQuery, ['補給', '點心', '快餐', '餐廳', 'pizza', '披薩', '吃什麼']),
-            kidFocus: hasQueryHint(normalizedQuery, ['孩子', '小孩', '兒童', '親子', 'kids']),
-            comparisonFocus: hasQueryHint(normalizedQuery, ['還是', '比較', '要不要', '先', '優先'])
-        };
-    }
-
-    function mergeAiIntents(...intentMaps) {
-        const merged = {};
-        intentMaps.forEach(intentMap => {
-            Object.entries(intentMap || {}).forEach(([key, value]) => {
-                merged[key] = merged[key] || Boolean(value);
-            });
-        });
-        return merged;
-    }
-
-    function getAiSourceGroup(sourceType) {
-        return sourceType === 'deck' || sourceType === 'show' ? 'deck-show' : sourceType;
-    }
-
-    function getAiSourcePriority(profileType) {
-        const priorityMap = {
-            sequence: ['schedule', 'playbook', 'deck-show', 'static'],
-            'facility-detail': ['deck-show', 'playbook', 'schedule', 'static'],
-            'operational-detail': ['playbook', 'deck-show', 'schedule', 'static'],
-            'policy-or-tip': ['playbook', 'schedule', 'deck-show', 'static']
-        };
-
-        return priorityMap[profileType] || priorityMap['operational-detail'];
-    }
-
-    function getAiAnswerSourceLabel(sourceType) {
-        const labels = {
-            schedule: '行程',
-            deck: '甲板 / 設施卡',
-            show: '表演 / 場館卡',
-            playbook: '攻略本',
-            static: '其他資訊'
-        };
-
-        return labels[sourceType] || '站內內容';
-    }
-
-    function getAiEntityTypeLabel(entityType) {
-        const labels = {
-            facility: '設施',
-            service: '服務',
-            schedule: '行程',
-            show: '表演',
-            playbook: '攻略',
-            mixed: '綜合整理'
-        };
-
-        return labels[entityType] || '主題';
-    }
-
-    function buildAiSlots(normalizedQuery, intents = {}, highlightTerms = [], interpreter = {}) {
-        const day = uniqueItems([
-            ...(intents.day1Focus ? ['第一天', 'day 1', '登船日', '登船後'] : []),
-            ...(intents.day2Focus ? ['第二天', 'day 2'] : []),
-            ...(intents.day3Focus ? ['第三天', 'day 3'] : []),
-            ...(intents.day4Focus ? ['第四天', 'day 4', '下船日'] : [])
-        ]).slice(0, 6);
-
-        const timeWindow = uniqueItems([
-            ...(hasQueryHint(normalizedQuery, ['早餐', '早上', 'morning', '晨間', '上午']) ? ['早餐', '早上', '晨間'] : []),
-            ...(hasQueryHint(normalizedQuery, ['中午', '午餐', 'afternoon', '下午', '午後']) ? ['中午', '午餐', '下午'] : []),
-            ...(hasQueryHint(normalizedQuery, ['晚餐前', '晚上', '夜間', '秀前', '秀後', '晚餐後', '今晚']) ? ['晚上', '夜間', '晚餐前', '秀前', '秀後'] : []),
-            ...(hasQueryHint(normalizedQuery, ['半夜', '宵夜', '深夜']) ? ['半夜', '宵夜', '深夜'] : [])
-        ]).slice(0, 6);
-
-        const audience = uniqueItems([
-            ...(intents.kidFocus ? ['孩子', '親子', '兒童'] : []),
-            ...(hasQueryHint(normalizedQuery, ['全家', '多人', '兩家', '同行']) ? ['全家', '同行'] : []),
-            ...(intents.conciergeFocus ? ['禮賓'] : [])
-        ]).slice(0, 6);
-
-        const goal = uniqueItems([
-            ...(hasQueryHint(normalizedQuery, ['先做什麼', '先去', '順序', '安排', '路線']) ? ['順序', '先做什麼', '安排'] : []),
-            ...(hasQueryHint(normalizedQuery, ['省力', '省時', '最順', '方便', '輕鬆']) ? ['省力', '省時', '最順'] : []),
-            ...(hasQueryHint(normalizedQuery, ['避排隊', '排隊', '不用排隊']) ? ['避排隊', '排隊'] : []),
-            ...(hasQueryHint(normalizedQuery, ['帶什麼', '要帶', '準備什麼']) ? ['要帶什麼', '準備'] : []),
-            ...((interpreter.coverageHints || []).includes('all-processes') ? ['流程', '步驟'] : [])
-        ]).slice(0, 8);
-
-        const risk = uniqueItems([
-            ...(hasQueryHint(normalizedQuery, ['來不及', '晚到', '錯過', '壓線', '趕不上']) ? ['來不及', '晚到', '錯過', '壓線'] : []),
-            ...(hasQueryHint(normalizedQuery, ['排隊', '等太久', '卡住']) ? ['排隊', '等太久', '卡住'] : []),
-            ...(hasQueryHint(normalizedQuery, ['踩雷', '風險', '注意', '規則', '限制', '要不要']) ? ['踩雷', '注意', '規則', '限制'] : []),
-            ...((interpreter.coverageHints || []).includes('risks') ? ['注意事項', '規則', '限制'] : [])
-        ]).slice(0, 8);
-
-        const comparison = uniqueItems([
-            ...(intents.comparisonFocus || hasQueryHint(normalizedQuery, ['還是', '比較']) ? ['比較', '取捨'] : []),
-            ...(hasQueryHint(normalizedQuery, ['要不要', '該不該']) ? ['要不要'] : []),
-            ...(hasQueryHint(normalizedQuery, ['先', '優先']) ? ['優先順序'] : []),
-            ...((interpreter.coverageHints || []).includes('comparison') ? ['比較', '取捨'] : [])
-        ]).slice(0, 6);
-
-        const entity = uniqueItems([
-            ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
-            ...(interpreter.literalAnchors || []),
-            ...(interpreter.canonicalEntities || []),
-            ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge'] : []),
-            ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀'] : []),
-            ...(intents.roomServiceFocus ? ['room service', '客房服務', '房務'] : []),
-            ...(intents.foodFocus ? ['補給', '披薩', '點心', '飲料'] : []),
-            ...(intents.kidFocus ? ['open house', 'oceaneer', 'kids club', '孩子'] : []),
-            ...(interpreter.expandedAliases || []).slice(0, 8),
-            ...highlightTerms
-        ]).filter(Boolean).slice(0, 10);
-
-        return {
-            day,
-            timeWindow,
-            audience,
-            goal,
-            risk,
-            comparison,
-            entity
-        };
-    }
-
-    function flattenAiSlots(slots = {}) {
-        return uniqueItems([
-            ...(slots.day || []),
-            ...(slots.timeWindow || []),
-            ...(slots.audience || []),
-            ...(slots.goal || []),
-            ...(slots.risk || []),
-            ...(slots.comparison || []),
-            ...(slots.entity || [])
-        ]).filter(Boolean).slice(0, 18);
-    }
-
-    function buildAiAnchorProfile(normalizedQuery, intents = {}, slots = {}, highlightTerms = [], interpreter = {}) {
-        const hardAnchors = uniqueItems([
-            ...(interpreter.literalAnchors || []),
-            ...(interpreter.canonicalEntities || []),
-            ...(slots.entity || []),
-            ...(slots.day || []),
-            ...(slots.timeWindow || []),
-            ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge'] : []),
-            ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀'] : []),
-            ...(intents.roomServiceFocus ? ['room service', '客房服務'] : []),
-            ...(intents.kidFocus ? ['open house', 'oceaneer', 'kids club'] : []),
-            ...(intents.foodFocus ? ['補給', '點心', '披薩', 'pizza'] : []),
-            ...highlightTerms
-        ]).filter(Boolean).slice(0, 14);
-
-        const softModifiers = uniqueItems([
-            ...(slots.goal || []),
-            ...(slots.risk || []),
-            ...(slots.comparison || []),
-            ...(slots.audience || []).filter(item => item !== '禮賓'),
-            ...((interpreter.coverageHints || []).includes('all-details') ? ['所有細節', '完整整理'] : []),
-            ...((interpreter.coverageHints || []).includes('all-processes') ? ['流程', '步驟'] : []),
-            ...((interpreter.coverageHints || []).includes('inventory') ? ['完整盤點', '清單'] : []),
-            ...((interpreter.coverageHints || []).includes('risks') ? ['注意事項', '限制', '規則'] : []),
-            ...((interpreter.coverageHints || []).includes('comparison') ? ['比較', '先後順序'] : []),
-            ...(hasQueryHint(normalizedQuery, ['流程', '步驟', '怎麼做']) ? ['流程', '步驟'] : []),
-            ...(hasQueryHint(normalizedQuery, ['注意事項', '注意', '限制', '規則']) ? ['注意事項', '限制', '規則'] : []),
-            ...(hasQueryHint(normalizedQuery, ['要不要', '值不值得', '該不該']) ? ['要不要', '值不值得'] : []),
-            ...(hasQueryHint(normalizedQuery, ['比較', '還是', '先後順序']) ? ['比較', '先後順序'] : [])
-        ]).filter(Boolean).slice(0, 14);
-
-        const subjectClusters = uniqueItems([
-            ...hardAnchors,
-            ...(interpreter.expandedAliases || []),
-            ...(interpreter.expandedCategoryTerms || []),
-            ...(interpreter.clusterExpansions || []),
-            ...(slots.entity || []).map(term => aiSearchDisplayMap.get(normalizeSearchText(term)) || term),
-            ...(intents.conciergeFocus ? ['Lounge', '禮賓酒廊', '優先入場'] : []),
-            ...(intents.theatreFocus ? ['劇院', '主秀', '晚秀'] : []),
-            ...(intents.roomServiceFocus ? ['Room Service', '宵夜', '早餐'] : []),
-            ...(intents.kidFocus ? ['Open House', 'Kids Club', 'Oceaneer'] : [])
-        ]).filter(Boolean).slice(0, 16);
-
-        return {
-            hardAnchors,
-            softModifiers,
-            subjectClusters
-        };
-    }
-
-    function buildAiEvidenceLayers(queryData = {}) {
-        const slots = queryData.slots || {};
-        const hardAnchors = queryData.hardAnchors || [];
-        const softModifiers = queryData.softModifiers || [];
-        return {
-            core: uniqueItems([
-                ...hardAnchors.slice(0, 8),
-                ...(queryData.requiredCapabilities || []).map(capabilityId => getTaxonomyCapabilityLabel(capabilityId)),
-                ...(slots.day || []).slice(0, 2),
-                ...(slots.timeWindow || []).slice(0, 2)
-            ]).slice(0, 12),
-            extension: uniqueItems([
-                ...(queryData.subjectClusters || []).slice(0, 8),
-                ...(queryData.expandedCategories || []).slice(0, 6),
-                ...(queryData.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || []),
-                ...(queryData.clusterExpansions || []).slice(0, 6),
-                ...(queryData.preferredClusters || []).slice(0, 4),
-                ...(slots.goal || []).slice(0, 3),
-                ...(slots.audience || []).slice(0, 3),
-                ...softModifiers.slice(0, 4)
-            ]).slice(0, 16),
-            rulesLimits: uniqueItems([
-                ...(slots.risk || []).slice(0, 4),
-                ...softModifiers.filter(item => ['注意事項', '限制', '規則', '要不要', '值不值得'].includes(item))
-            ]).slice(0, 10),
-            timingContext: uniqueItems([
-                ...(slots.day || []),
-                ...(slots.timeWindow || [])
-            ]).slice(0, 8),
-            sourceContrast: uniqueItems([
-                ...(queryData.intentProfile?.sourceDetailPriority || []),
-                ...(queryData.subjectClusters || []).slice(0, 4)
-            ]).slice(0, 8)
-        };
-    }
-
-    function buildAiSourceDetailPriority(queryData = {}, profileType = 'operational-detail') {
-        if (queryData.intents?.conciergeFocus && queryData.intents?.theatreFocus) {
-            return ['concierge', 'official', 'community', 'general'];
-        }
-
-        if (queryData.intents?.roomServiceFocus) {
-            return ['community', 'official', 'concierge', 'general'];
-        }
-
-        if (profileType === 'policy-or-tip' || (queryData.slots?.risk || []).length) {
-            return ['official', 'concierge', 'community', 'general'];
-        }
-
-        if (profileType === 'facility-detail') {
-            return ['official', 'concierge', 'community', 'general'];
-        }
-
-        if (profileType === 'sequence') {
-            return ['community', 'concierge', 'official', 'general'];
-        }
-
-        return ['community', 'official', 'concierge', 'general'];
-    }
-
-    function buildAiIntentProfile(queryData = {}) {
-        const normalizedQuery = queryData.normalizedQuery || '';
-        const intents = queryData.intents || {};
-        const slots = queryData.slots || {};
-        const hardAnchors = queryData.hardAnchors || [];
-        const softModifiers = queryData.softModifiers || [];
-        const coverageHints = Array.isArray(queryData.coverageHints) ? queryData.coverageHints : [];
-        const genericClasses = Array.isArray(queryData.genericClasses) ? queryData.genericClasses : [];
-        const expandedCategories = Array.isArray(queryData.expandedCategories) ? queryData.expandedCategories : [];
-        const inventorySignal = coverageHints.includes('inventory')
-            || coverageHints.includes('all-details')
-            || coverageHints.includes('all-processes')
-            || hasQueryHint(normalizedQuery, [
-            '哪些', '有哪些', '有什麼', '可享受', '包含', '服務', '設施', '活動', '餐點', '攻略',
-            '內容', '細節', '整理', '完整', '總表', '清單'
-        ]) || (
-            (intents.conciergeFocus || intents.roomServiceFocus || intents.deckFocus || intents.foodFocus || intents.kidFocus)
-            && hasQueryHint(normalizedQuery, ['什麼', '哪些', '有哪些', '有什麼'])
-        );
-        const sequenceSignal = intents.scheduleFocus && (
-            intents.actionFocus
-            || hasQueryHint(normalizedQuery, ['順序', '第一步', '先去', '先做', '先做什麼', '怎麼安排', '路線'])
-            || (slots.goal || []).includes('順序')
-        );
-        const facilitySignal = intents.deckFocus
-            || intents.theatreFocus
-            || genericClasses.includes('設施')
-            || expandedCategories.some(item => ['場館', '表演', '餐廳', '快餐', '商店', '遊戲', '泳池', '兒童俱樂部', '酒廊'].includes(item))
-            || hasQueryHint(normalizedQuery, [
-                '哪個設施', '什麼設施', '哪一層', '在哪裡', '哪裡', '電影院', '劇院', '字幕',
-                '泳池', '酒廊', '餐廳', '披薩', 'baymax', 'deck'
-            ]);
-        const operationalSignal = intents.conciergeFocus
-            || intents.roomServiceFocus
-            || genericClasses.includes('服務')
-            || expandedCategories.some(item => ['服務', '禮賓服務'].includes(item))
-            || hasQueryHint(normalizedQuery, [
-                '特殊服務', '怎麼用', '怎麼做', '技巧', '攻略', '優先入場', '提早進', '怎麼點'
-            ]);
-        const policySignal = hasQueryHint(normalizedQuery, [
-            '注意', '限制', '規則', '該不該', '要不要', '可不可以', '能不能', '多久', '幾點', '會不會', '值得嗎'
-        ]) || Boolean((slots.risk || []).length);
-
-        let type = 'operational-detail';
-        if (sequenceSignal) {
-            type = 'sequence';
-        } else if (operationalSignal) {
-            type = 'operational-detail';
-        } else if (facilitySignal || intents.foodFocus || intents.kidFocus) {
-            type = 'facility-detail';
-        } else if (policySignal) {
-            type = 'policy-or-tip';
-        } else if (intents.scheduleFocus) {
-            type = 'sequence';
-        }
-
-        const focusTerms = uniqueItems([
-            ...hardAnchors.slice(0, 10),
-            ...(queryData.highlightTerms || []).slice(0, 6),
-            ...(queryData.subjectClusters || []).slice(0, 8),
-            ...(queryData.expandedCategories || []).slice(0, 4),
-            ...(queryData.clusterExpansions || []).slice(0, 6),
-            ...(intents.conciergeFocus ? ['禮賓', 'concierge', 'lounge', '酒廊', '劇院優先入場'] : []),
-            ...(intents.roomServiceFocus ? ['room service', '房務', '客房服務', '早餐', '宵夜'] : []),
-            ...(intents.theatreFocus ? ['劇院', 'theatre', '主秀', 'remember', '提早入場', '優先入場'] : []),
-            ...(intents.foodFocus ? ['補給', '點心', '快餐', '餐廳', '披薩', 'pizza', '漢堡'] : []),
-            ...(intents.kidFocus ? ['孩子', '小孩', '兒童', '親子', 'open house', 'oceaneer'] : []),
-            ...(sequenceSignal ? ['第一天', '登船日', 'day 1', '順序', '先做什麼'] : []),
-            ...softModifiers.slice(0, 4)
-        ]).filter(Boolean).slice(0, 12);
-
-        return {
-            type,
-            sourcePriority: getAiSourcePriority(type),
-            sourceDetailPriority: buildAiSourceDetailPriority(queryData, type),
-            focusTerms,
-            hardAnchors: hardAnchors.slice(0, 12),
-            softModifiers: softModifiers.slice(0, 12),
-            inventoryIntent: inventorySignal,
-            prefersScheduleContext: type === 'sequence'
-                || Boolean(intents.scheduleFocus)
-                || Boolean((slots.day || []).length)
-                || Boolean((slots.timeWindow || []).length),
-            requiresDetailSupport: inventorySignal || type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
-            requiresActionChunk: inventorySignal || type === 'sequence' || type === 'operational-detail' || type === 'policy-or-tip',
-            requiresCautionChunk: type === 'operational-detail' || type === 'policy-or-tip' || Boolean((slots.risk || []).length)
-        };
-    }
-
-    function buildAiExpansionUnits(text) {
-        const normalized = normalizeSearchText(text);
-        if (!normalized) return [];
-
-        const phraseMatches = collectMatchingTerms(normalized, aiSearchDisplayMap);
-        const strippedQuery = stripAiStopWords(normalized);
-        const splitUnits = strippedQuery.split(' ').filter(unit => unit.length >= 2);
-        const chineseNgrams = extractChineseNgrams(strippedQuery);
-
-        return uniqueItems([
-            ...phraseMatches,
-            ...splitUnits,
-            ...chineseNgrams
-        ]).filter(Boolean);
-    }
-
-    function normalizeAiRewriteMeta(rewriteMeta = {}) {
-        const safeRewriteMeta = rewriteMeta && typeof rewriteMeta === 'object' ? rewriteMeta : {};
-        const rewrittenQuery = String(safeRewriteMeta.rewrittenQuery || '').trim();
-        const keywords = uniqueItems((safeRewriteMeta.keywords || [])
-            .map(item => String(item || '').trim())
-            .filter(Boolean))
-            .slice(0, 6);
-        const alternates = uniqueItems((safeRewriteMeta.alternates || [])
-            .map(item => String(item || '').trim())
-            .filter(Boolean))
-            .slice(0, 4);
-        const confidence = ['high', 'medium', 'low'].includes(safeRewriteMeta.confidence) ? safeRewriteMeta.confidence : 'low';
-
-        return {
-            rewrittenQuery,
-            keywords,
-            alternates,
-            confidence,
-            hintTerms: uniqueItems([...keywords, ...alternates]).slice(0, 4)
-        };
-    }
-
-    function buildAiQueryBundles(normalizedQuery, rewriteMeta = null, slots = {}, highlightTerms = [], interpreter = {}) {
-        const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
-        const anchorProfile = buildAiAnchorProfile(normalizedQuery, buildAiIntents(normalizedQuery), slots, highlightTerms, interpreter);
-        const conceptExpansions = expandAiConceptGraph([
-            ...(interpreter.literalAnchors || []),
-            ...(interpreter.canonicalEntities || []),
-            ...(interpreter.expandedCategories || []),
-            ...(interpreter.preferredClusters || []),
-            ...highlightTerms
-        ]);
-        const aliasSeed = uniqueItems([
-            ...(anchorProfile.hardAnchors || []),
-            ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap),
-            ...highlightTerms,
-            ...normalizedRewrite.keywords,
-            ...normalizedRewrite.alternates,
-            ...(interpreter.expandedAliases || []),
-            ...conceptExpansions.relatedTerms,
-            ...deriveContextualKeywords(normalizedQuery)
-        ]).slice(0, 20);
-        const classSeed = uniqueItems([
-            ...(interpreter.expandedCategories || []),
-            ...(interpreter.expandedCategoryTerms || []),
-            ...(interpreter.genericClasses || []),
-            ...conceptExpansions.relatedCategories
-        ]).slice(0, 20);
-        const capabilitySeed = uniqueItems([
-            ...(interpreter.requiredCapabilities || []).flatMap(capabilityId => {
-                const capability = getTaxonomyCapabilityEntry(capabilityId);
-                return capability
-                    ? [capability.label, ...capability.terms, ...(capability.categoryFamilies || [])]
-                    : [capabilityId];
-            }),
-            ...(interpreter.disallowedCategories || []).slice(0, 4)
-        ]).slice(0, 20);
-        const clusterSeed = uniqueItems([
-            ...(interpreter.canonicalEntities || []),
-            ...(interpreter.clusterExpansions || []),
-            ...(interpreter.preferredClusters || []),
-            ...(anchorProfile.subjectClusters || []).slice(0, 8)
-        ]).slice(0, 22);
-        const taskSeed = uniqueItems([
-            ...(anchorProfile.hardAnchors || []).slice(0, 8),
-            ...(anchorProfile.softModifiers || []).slice(0, 8),
-            ...(slots.day || []),
-            ...(slots.timeWindow || []),
-            ...(slots.audience || []),
-            ...(slots.entity || []).slice(0, 4),
-            ...(slots.comparison || []),
-            ...(interpreter.coverageHints || [])
-        ]).slice(0, 16);
-
-        return {
-            precision: buildAiExpansionUnits(uniqueItems([
-                ...(interpreter.literalAnchors || []).slice(0, 6),
-                ...(anchorProfile.hardAnchors || []).slice(0, 8),
-                ...collectMatchingTerms(normalizedQuery, aiSearchDisplayMap).slice(0, 6)
-            ]).join(' ')).slice(0, 12),
-            alias: buildAiExpansionUnits(aliasSeed.join(' ')).slice(0, 18),
-            capability: buildAiExpansionUnits(capabilitySeed.join(' ')).slice(0, 18),
-            class: buildAiExpansionUnits(classSeed.join(' ')).slice(0, 18),
-            cluster: buildAiExpansionUnits(clusterSeed.join(' ')).slice(0, 18),
-            task: buildAiExpansionUnits(taskSeed.join(' ')).slice(0, 16)
-        };
-    }
-
-    function getAiSearchUnits(rawQuery, rewriteMeta = null, interpreterResult = null) {
-        const normalizedQuery = normalizeSearchText(rawQuery);
-        if (!normalizedQuery) {
             return {
-                rawQuery: String(rawQuery || '').trim(),
                 normalizedQuery: '',
-                units: [],
-                queryBundles: {},
-                bundleTerms: [],
-                highlightTerms: [],
-                signalLength: 0,
-                intents: {},
-                slots: {},
-                slotTerms: [],
-                interpreterResult: null,
                 literalAnchors: [],
+                units: [],
+                highlightTerms: [],
+                contextualKeywords: [],
                 canonicalEntities: [],
-                genericClasses: [],
                 requiredCapabilities: [],
                 disallowedCategories: [],
-                answerIntent: 'answer',
-                expandedAliases: [],
-                expandedCategories: [],
-                clusterExpansions: [],
-                coverageHints: [],
-                negativeTerms: [],
-                coverageMode: 'broad',
-                breadthProfile: 'guided-expansion',
-                expansionReasons: [],
-                preferredClusters: [],
-                mustCoverCategories: [],
-                mustCoverCapabilities: [],
-                categoryCoveragePlan: [],
-                rewriteMeta: null
+                categoryHints: [],
+                broadIntent: false,
+                scheduleIntent: false
             };
         }
 
-        const normalizedRewrite = normalizeAiRewriteMeta(rewriteMeta);
-        const rewriteSeed = [
-            normalizedRewrite.rewrittenQuery,
-            ...normalizedRewrite.keywords,
-            ...normalizedRewrite.alternates
-        ].join(' ');
-
-        const baseUnits = buildAiExpansionUnits(normalizedQuery);
-        const rewriteUnits = buildAiExpansionUnits(rewriteSeed);
-        const mergedInterpreter = mergeAiInterpreterResult(rawQuery, interpreterResult);
-        const interpreterUnits = buildAiExpansionUnits(uniqueItems([
-            ...(mergedInterpreter.literalAnchors || []),
-            ...(mergedInterpreter.canonicalEntities || []),
-            ...(mergedInterpreter.expandedAliases || []),
-            ...(mergedInterpreter.expandedCategoryTerms || []).slice(0, 12),
-            ...(mergedInterpreter.clusterExpansions || []).slice(0, 12)
-        ]).join(' '));
+        const splitUnits = normalizedQuery.split(' ').filter(Boolean);
+        const matchingTerms = collectMatchingTerms(normalizedQuery, searchDisplayMap);
+        const literalAnchors = uniqueItems([
+            ...(normalizedQuery.includes(' ') ? [normalizedQuery] : []),
+            ...matchingTerms,
+            ...splitUnits.filter(unit => unit.length >= 2)
+        ]).slice(0, 12);
+        const canonicalEntities = inferEntityRefsFromText([rawQuery], 6);
+        const requiredCapabilities = detectAiRequiredCapabilities(normalizedQuery, {
+            literalAnchors: matchingTerms,
+            canonicalEntities
+        });
+        const scheduleIntent = detectSearchScheduleIntent(normalizedQuery);
+        const broadIntent = detectBroadSearchIntent(normalizedQuery);
+        const entityContextualKeywords = uniqueItems([
+            ...collectEntityRegistryProperNounTokens(canonicalEntities),
+            ...collectEntityRegistryAliasTokens(canonicalEntities)
+        ]
+            .map(term => normalizeSearchText(term))
+            .filter(term => term && term.length >= 2))
+            .slice(0, 12);
+        const derivedContextualKeywords = uniqueItems(deriveContextualKeywords(rawQuery)
+            .map(term => normalizeSearchText(term))
+            .filter(term => term && term.length >= 2))
+            .slice(0, 16);
+        const contextualKeywords = uniqueItems([
+            ...entityContextualKeywords,
+            ...((!canonicalEntities.length || requiredCapabilities.length || scheduleIntent || broadIntent)
+                ? derivedContextualKeywords
+                : [])
+        ]).slice(0, 16);
+        const disallowedCategories = detectAiDisallowedCategories(normalizedQuery, requiredCapabilities);
+        const categoryHints = uniqueItems([
+            ...literalAnchors
+                .map(term => resolveTaxonomyCategoryLabel(term))
+                .filter(Boolean),
+            ...matchingTerms
+                .map(term => resolveTaxonomyCategoryLabel(term))
+                .filter(Boolean),
+            ...((!canonicalEntities.length || requiredCapabilities.length || broadIntent)
+                ? contextualKeywords
+                .map(term => resolveTaxonomyCategoryLabel(term))
+                .filter(Boolean)
+                : []),
+            ...requiredCapabilities.flatMap(capabilityId => {
+                const capabilityEntry = getTaxonomyCapabilityEntry(capabilityId);
+                return getCapabilitySignalCategoryFamilies(capabilityEntry);
+            })
+        ]).slice(0, 8);
         const units = uniqueItems([
-            ...baseUnits,
-            ...rewriteUnits,
-            ...interpreterUnits
-        ]).slice(0, 24);
+            ...(normalizedQuery.includes(' ') ? [normalizedQuery] : []),
+            ...splitUnits,
+            ...matchingTerms,
+            ...entityContextualKeywords,
+            ...((!canonicalEntities.length || requiredCapabilities.length || scheduleIntent || broadIntent)
+                ? contextualKeywords
+                : [])
+        ]);
+        const highlightTerms = uniqueItems([
+            ...units,
+            ...literalAnchors,
+            ...collectEntityRegistryProperNounTokens(canonicalEntities),
+            ...collectEntityRegistryAliasTokens(canonicalEntities).slice(0, 6)
+        ].map(unit => searchDisplayMap.get(unit) || unit));
 
-        const highlightTerms = uniqueItems(
-            [
-                ...units.map(unit => aiSearchDisplayMap.get(unit) || searchDisplayMap.get(unit) || unit),
-                ...(mergedInterpreter.canonicalEntities || []),
-                ...(mergedInterpreter.expandedCategories || []).slice(0, 4)
-            ]
-        );
-
-        const intents = mergeAiIntents(
-            buildAiIntents(normalizedQuery),
-            rewriteSeed ? buildAiIntents(normalizeSearchText(rewriteSeed)) : {},
-            buildAiIntents(uniqueItems([
-                ...(mergedInterpreter.canonicalEntities || []),
-                ...(mergedInterpreter.expandedAliases || []).slice(0, 8),
-                ...(mergedInterpreter.clusterExpansions || []).slice(0, 8)
-            ]).join(' '))
-        );
-        const slots = buildAiSlots(normalizedQuery, intents, highlightTerms, mergedInterpreter);
-        const anchorProfile = buildAiAnchorProfile(normalizedQuery, intents, slots, highlightTerms, mergedInterpreter);
-        const queryBundles = buildAiQueryBundles(normalizedQuery, normalizedRewrite, slots, highlightTerms, mergedInterpreter);
-        const bundleTerms = uniqueItems([
-            ...(queryBundles.precision || []),
-            ...(queryBundles.alias || []),
-            ...(queryBundles.capability || []),
-            ...(queryBundles.class || []),
-            ...(queryBundles.cluster || []),
-            ...(queryBundles.task || [])
-        ]).slice(0, 40);
-        const slotTerms = flattenAiSlots(slots);
-        const coverageMode = resolveAiCoverageMode(mergedInterpreter, normalizedQuery);
-        const breadthSignals = detectAiBreadthSignals(normalizedQuery);
-        const mustCoverCategories = uniqueItems([
-            ...(mergedInterpreter.expandedCategories || []),
-            ...(mergedInterpreter.genericClasses || []).flatMap(className => getTaxonomyGenericClassEntry(className)?.expandsTo || []),
-            ...(mergedInterpreter.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || [])
-        ]).slice(0, 10);
-        const mustCoverCapabilities = uniqueItems(mergedInterpreter.requiredCapabilities || []).slice(0, 4);
-        const intentProfile = buildAiIntentProfile({
+        return {
             normalizedQuery,
+            literalAnchors,
+            units,
             highlightTerms,
-            intents,
-            slots,
-            slotTerms,
-            bundleTerms,
-            hardAnchors: anchorProfile.hardAnchors,
-            softModifiers: anchorProfile.softModifiers,
-            subjectClusters: anchorProfile.subjectClusters,
-            preferredClusters: mergedInterpreter.preferredClusters,
-            coverageHints: mergedInterpreter.coverageHints,
-            expandedCategories: mergedInterpreter.expandedCategories,
-            clusterExpansions: mergedInterpreter.clusterExpansions
-        });
-        const evidenceLayers = buildAiEvidenceLayers({
-            normalizedQuery,
-            intents,
-            slots,
-            hardAnchors: anchorProfile.hardAnchors,
-            softModifiers: anchorProfile.softModifiers,
-            subjectClusters: anchorProfile.subjectClusters,
-            intentProfile,
-            expandedCategories: mergedInterpreter.expandedCategories,
-            clusterExpansions: mergedInterpreter.clusterExpansions
-        });
-        const facilityBreadthMode = isAiFacilityBreadthMode({
-            breadthSignals,
-            intents,
-            mustCoverCategories,
-            expandedCategories: mergedInterpreter.expandedCategories,
-            genericClasses: mergedInterpreter.genericClasses
-        });
-
-        return {
-            rawQuery: String(rawQuery || '').trim(),
-            normalizedQuery,
-            units: units.length ? units : normalizedQuery.split(' ').filter(Boolean),
-            queryBundles,
-            bundleTerms,
-            highlightTerms,
-            signalLength: getSearchSignalLength(normalizedQuery),
-            intents,
-            slots,
-            slotTerms,
-            interpreterResult: mergedInterpreter,
-            literalAnchors: mergedInterpreter.literalAnchors,
-            canonicalEntities: mergedInterpreter.canonicalEntities,
-            genericClasses: mergedInterpreter.genericClasses,
-            requiredCapabilities: mergedInterpreter.requiredCapabilities,
-            disallowedCategories: mergedInterpreter.disallowedCategories,
-            answerIntent: mergedInterpreter.answerIntent,
-            expandedAliases: mergedInterpreter.expandedAliases,
-            expandedCategories: mergedInterpreter.expandedCategories,
-            clusterExpansions: mergedInterpreter.clusterExpansions,
-            coverageHints: mergedInterpreter.coverageHints,
-            negativeTerms: mergedInterpreter.negativeTerms,
-            coverageMode,
-            breadthSignals,
-            facilityBreadthMode,
-            breadthProfile: mergedInterpreter.breadthProfile,
-            expansionReasons: mergedInterpreter.expansionReasons,
-            preferredClusters: mergedInterpreter.preferredClusters,
-            mustCoverCategories,
-            mustCoverCapabilities,
-            categoryCoveragePlan: [],
-            hardAnchors: anchorProfile.hardAnchors,
-            softModifiers: anchorProfile.softModifiers,
-            subjectClusters: anchorProfile.subjectClusters,
-            evidenceLayers,
-            intentProfile,
-            rewriteMeta: normalizedRewrite.keywords.length || normalizedRewrite.alternates.length || normalizedRewrite.rewrittenQuery
-                ? normalizedRewrite
-                : null
-        };
-    }
-
-    function buildAiAlternativeFacet(rawQuery, entityTerms = []) {
-        const normalizedQuery = normalizeSearchText(rawQuery);
-        if (!normalizedQuery) return [];
-
-        const alternatives = [];
-        if (normalizedQuery.includes('還是')) {
-            normalizedQuery.split('還是')
-                .map(part => part.trim())
-                .filter(Boolean)
-                .forEach(part => {
-                    const matchedTerms = collectMatchingTerms(part, aiSearchDisplayMap);
-                    if (matchedTerms.length) {
-                        alternatives.push(matchedTerms[0]);
-                        return;
-                    }
-
-                    part.split(' ')
-                        .filter(unit => unit.length >= 2)
-                        .slice(-2)
-                        .forEach(unit => alternatives.push(unit));
-                });
-        }
-
-        if (normalizedQuery.includes('比較')) {
-            collectMatchingTerms(normalizedQuery, aiSearchDisplayMap)
-                .slice(0, 4)
-                .forEach(term => alternatives.push(term));
-        }
-
-        if (normalizedQuery.includes('要不要')) {
-            entityTerms
-                .map(term => normalizeSearchText(term))
-                .filter(Boolean)
-                .slice(0, 2)
-                .forEach(term => alternatives.push(term));
-        }
-
-        return uniqueItems(alternatives
-            .map(term => aiSearchDisplayMap.get(term) || searchDisplayMap.get(term) || term)
-            .filter(Boolean))
-            .slice(0, 6);
-    }
-
-    function buildAiReportFacets(queryData = {}) {
-        const slots = queryData.slots || {};
-        return {
-            goal: uniqueItems(slots.goal || []).slice(0, 8),
-            time: uniqueItems([
-                ...(slots.day || []),
-                ...(slots.timeWindow || [])
-            ]).slice(0, 8),
-            entityPlace: uniqueItems([
-                ...(slots.entity || []),
-                ...(queryData.canonicalEntities || [])
-            ]).slice(0, 10),
-            audience: uniqueItems(slots.audience || []).slice(0, 6),
-            risk: uniqueItems(slots.risk || []).slice(0, 8),
-            alternatives: buildAiAlternativeFacet(queryData.rawQuery || queryData.normalizedQuery || '', slots.entity || [])
-        };
-    }
-
-    function countActiveAiFacetNames(facets = {}) {
-        return Object.entries(facets)
-            .filter(([, values]) => Array.isArray(values) && values.length)
-            .map(([facetName]) => facetName);
-    }
-
-    function buildAiAnalysisPlanPayload(reportPlan = {}) {
-        const facets = reportPlan.facets || {};
-        return {
-            responseMode: reportPlan.responseMode === 'report' ? 'report' : 'compact',
-            intentType: reportPlan.intentType || 'operational-detail',
-            inventoryIntent: Boolean(reportPlan.inventoryIntent),
-            visibleInventoryMode: Boolean(reportPlan.visibleInventoryMode),
-            coverageMode: reportPlan.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
-            facetSummary: {
-                goal: Array.isArray(facets.goal) ? facets.goal.slice(0, 8) : [],
-                time: Array.isArray(facets.time) ? facets.time.slice(0, 8) : [],
-                entityPlace: Array.isArray(facets.entityPlace) ? facets.entityPlace.slice(0, 10) : [],
-                audience: Array.isArray(facets.audience) ? facets.audience.slice(0, 6) : [],
-                risk: Array.isArray(facets.risk) ? facets.risk.slice(0, 8) : [],
-                alternatives: Array.isArray(facets.alternatives) ? facets.alternatives.slice(0, 6) : []
-            },
-            activeFacetNames: Array.isArray(reportPlan.activeFacetNames) ? reportPlan.activeFacetNames.slice(0, 6) : [],
-            activeFacetCount: Number(reportPlan.activeFacetCount || 0),
-            triggerReasons: Array.isArray(reportPlan.triggerReasons) ? reportPlan.triggerReasons.slice(0, 6) : [],
-            isComparisonQuery: Boolean(reportPlan.isComparisonQuery),
-            hasRiskJudgment: Boolean(reportPlan.hasRiskJudgment),
-            needsSourceComparison: Boolean(reportPlan.needsSourceComparison),
-            rewriteTriggered: Boolean(reportPlan.rewriteTriggered),
-            evidenceBudget: Number(reportPlan.evidenceBudget || AI_REPORT_MAX_RESULTS),
-            maxParentCards: Number(reportPlan.maxParentCards || AI_REPORT_MAX_PARENTS),
-            hardAnchors: Array.isArray(reportPlan.hardAnchors) ? reportPlan.hardAnchors.slice(0, 14) : [],
-            softModifiers: Array.isArray(reportPlan.softModifiers) ? reportPlan.softModifiers.slice(0, 14) : [],
-            subjectClusters: Array.isArray(reportPlan.subjectClusters) ? reportPlan.subjectClusters.slice(0, 16) : [],
-            evidenceLayers: reportPlan.evidenceLayers && typeof reportPlan.evidenceLayers === 'object'
-                ? {
-                    core: Array.isArray(reportPlan.evidenceLayers.core) ? reportPlan.evidenceLayers.core.slice(0, 12) : [],
-                    extension: Array.isArray(reportPlan.evidenceLayers.extension) ? reportPlan.evidenceLayers.extension.slice(0, 16) : [],
-                    rulesLimits: Array.isArray(reportPlan.evidenceLayers.rulesLimits) ? reportPlan.evidenceLayers.rulesLimits.slice(0, 10) : [],
-                    timingContext: Array.isArray(reportPlan.evidenceLayers.timingContext) ? reportPlan.evidenceLayers.timingContext.slice(0, 8) : [],
-                    sourceContrast: Array.isArray(reportPlan.evidenceLayers.sourceContrast) ? reportPlan.evidenceLayers.sourceContrast.slice(0, 8) : []
-                }
-                : {
-                    core: [],
-                    extension: [],
-                    rulesLimits: [],
-                    timingContext: [],
-                    sourceContrast: []
-                },
-            evidenceSummary: {
-                selectedChunkCount: Number(reportPlan.selectedChunkCount || 0),
-                parentCardCount: Number(reportPlan.parentCardCount || 0),
-                sourceTypes: Array.isArray(reportPlan.sourceTypes) ? reportPlan.sourceTypes.slice(0, 6) : [],
-                sourceDetailTypes: Array.isArray(reportPlan.sourceDetailTypes) ? reportPlan.sourceDetailTypes.slice(0, 4) : []
-            },
-            literalAnchors: Array.isArray(reportPlan.literalAnchors) ? reportPlan.literalAnchors.slice(0, 12) : [],
-            canonicalEntities: Array.isArray(reportPlan.canonicalEntities) ? reportPlan.canonicalEntities.slice(0, 8) : [],
-            genericClasses: Array.isArray(reportPlan.genericClasses) ? reportPlan.genericClasses.slice(0, 6) : [],
-            requiredCapabilities: Array.isArray(reportPlan.requiredCapabilities) ? reportPlan.requiredCapabilities.slice(0, 4) : [],
-            disallowedCategories: Array.isArray(reportPlan.disallowedCategories) ? reportPlan.disallowedCategories.slice(0, 8) : [],
-            answerIntent: compactSearchText(reportPlan.answerIntent || 'answer'),
-            expandedCategories: Array.isArray(reportPlan.expandedCategories) ? reportPlan.expandedCategories.slice(0, 8) : [],
-            clusterExpansions: Array.isArray(reportPlan.clusterExpansions) ? reportPlan.clusterExpansions.slice(0, 12) : [],
-            coverageHints: Array.isArray(reportPlan.coverageHints) ? reportPlan.coverageHints.slice(0, 6) : [],
-            breadthSignals: Array.isArray(reportPlan.breadthSignals) ? reportPlan.breadthSignals.slice(0, 6) : [],
-            facilityBreadthMode: Boolean(reportPlan.facilityBreadthMode),
-            breadthProfile: compactSearchText(reportPlan.breadthProfile || 'guided-expansion'),
-            expansionReasons: Array.isArray(reportPlan.expansionReasons) ? reportPlan.expansionReasons.slice(0, 10) : [],
-            preferredClusters: Array.isArray(reportPlan.preferredClusters) ? reportPlan.preferredClusters.slice(0, 10) : [],
-            mustCoverCategories: Array.isArray(reportPlan.mustCoverCategories) ? reportPlan.mustCoverCategories.slice(0, 10) : [],
-            mustCoverCapabilities: Array.isArray(reportPlan.mustCoverCapabilities) ? reportPlan.mustCoverCapabilities.slice(0, 4) : [],
-            categoryCoveragePlan: Array.isArray(reportPlan.categoryCoveragePlan) ? reportPlan.categoryCoveragePlan.slice(0, 12).map(item => ({
-                categoryId: item.categoryId,
-                label: item.label,
-                parentCount: Number(item.parentCount || 0),
-                sourceMix: Array.isArray(item.sourceMix) ? item.sourceMix.slice(0, 4) : [],
-                detailHints: Array.isArray(item.detailHints) ? item.detailHints.slice(0, 6) : []
-            })) : []
+            contextualKeywords,
+            canonicalEntities,
+            requiredCapabilities,
+            disallowedCategories,
+            categoryHints,
+            broadIntent,
+            scheduleIntent
         };
     }
 
     function resultMatchesCategory(result, categoryLabel) {
-        if (!result || !categoryLabel) return false;
-        const normalizedCategory = normalizeSearchText(categoryLabel);
-        if (!normalizedCategory) return false;
+        const normalizedLabel = compactSearchText(categoryLabel);
+        if (!result || !normalizedLabel) return false;
+
+        if ((result.categoryFamilies || []).includes(normalizedLabel)) {
+            return true;
+        }
+
         const categoryEntry = getTaxonomyCategoryEntry(categoryLabel);
-        const categoryTerms = uniqueItems([
-            categoryLabel,
-            ...(categoryEntry?.terms || []),
-            ...(categoryEntry?.keywords || []),
+        if (!categoryEntry) return false;
+
+        const sourceText = result.normalizedCombined || normalizeSearchText([
+            result.title,
+            result.text,
+            result.structuredText,
+            ...(result.keywords || []),
             ...(result.categoryFamilies || [])
-        ])
-            .map(term => normalizeSearchText(term))
-            .filter(Boolean);
-        return categoryTerms.some(term =>
-            (result.normalizedCategories || '').includes(term)
-            || (result.normalizedCombined || '').includes(term)
-        );
-    }
-
-    function getAiCapabilityMatchCount(result, queryData = {}) {
-        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
-        if (!requiredCapabilities.length) return 0;
-        return requiredCapabilities.filter(capabilityId => resultMatchesCapability(result, capabilityId)).length;
-    }
-
-    function isAiCapabilityGatedQuery(queryData = {}) {
-        return Array.isArray(queryData.requiredCapabilities) && queryData.requiredCapabilities.length > 0;
-    }
-
-    function briefMatchesCapability(item, capabilityId) {
-        if (!item || !capabilityId) return false;
-        const capability = getTaxonomyCapabilityEntry(capabilityId);
-        if (!capability) return false;
-
-        if ((item.capabilityTags || []).includes(capability.id)) {
-            return true;
-        }
-
-        if ((item.categoryFamilies || []).some(label => getCapabilitySignalCategoryFamilies(capability).includes(label))) {
-            return true;
-        }
-
-        if ((item.entityFamilies || []).includes(capability.id)) {
-            return true;
-        }
-
-        if (Array.isArray(item.canonicalEntityIds) && item.canonicalEntityIds.length) {
-            return false;
-        }
-
-        const sourceText = normalizeSearchText([
-            item.title,
-            item.groupLabel,
-            ...(item.detailBullets || [])
         ].join(' '));
 
-        return capability.normalizedTerms.some(term => sourceText.includes(term));
-    }
-
-    function classifyAiPrimarySuitability(result, queryData = {}) {
-        if (!result) return 'reject';
-        if (!isAiCapabilityGatedQuery(queryData)) {
-            return result.sourceType === 'schedule' || result.sourceType === 'static' ? 'support' : 'primary';
-        }
-
-        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
-        const capabilityMatchCount = getAiCapabilityMatchCount(result, queryData);
-        const satisfiesRequiredCapabilities = requiredCapabilities.length
-            ? requiredCapabilities.every(capabilityId => resultMatchesCapability(result, capabilityId))
-            : capabilityMatchCount >= 1;
-        const disallowedMatch = resultMatchesDisallowedCategory(result, queryData.disallowedCategories || []);
-
-        if (satisfiesRequiredCapabilities) {
-            if (['deck', 'show', 'playbook'].includes(result.sourceType)) {
-                return 'primary';
-            }
-            return 'support';
-        }
-
-        if ((result.supportOfParentIds || []).length || result.sourceType === 'schedule') {
-            return 'support';
-        }
-
-        if (disallowedMatch) {
-            return 'reject';
-        }
-
-        return 'reject';
-    }
-
-    function buildAiCategoryCoveragePlan(results = [], queryData = {}, reportPlan = {}) {
-        const requiredCategories = uniqueItems([
-            ...(queryData.mustCoverCategories || []),
-            ...(queryData.expandedCategories || []).slice(0, 8),
-            ...(queryData.requiredCapabilities || []).flatMap(capabilityId => getTaxonomyCapabilityEntry(capabilityId)?.categoryFamilies || []),
-            ...(reportPlan.inventoryIntent ? ['場館', '服務'] : []),
-            ...(queryData.intents?.theatreFocus ? ['表演', '場館', '服務', '時間脈絡'] : []),
-            ...(queryData.intents?.conciergeFocus ? ['服務', '酒廊', '表演'] : []),
-            ...(queryData.intents?.foodFocus ? ['餐廳', '快餐', '酒廊'] : []),
-            ...(queryData.intents?.kidFocus ? ['兒童俱樂部', '遊戲', '場館'] : []),
-            ...(queryData.intents?.roomServiceFocus ? ['服務', '餐廳', '時間脈絡'] : [])
-        ]).slice(0, 10);
-        const plan = requiredCategories.map(label => {
-            const matchedResults = results.filter(result => resultMatchesCategory(result, label));
-            const matchedParents = uniqueItems(matchedResults.map(result => result.parentId || result.id).filter(Boolean));
-            return {
-                categoryId: getTaxonomyCategoryEntry(label)?.id || toCoverageAnchorKey(label, label),
-                label,
-                parentCount: matchedParents.length,
-                sourceMix: uniqueItems(matchedResults.map(result => result.sourceDetailType || 'general')).slice(0, 4),
-                preferredParentIds: matchedParents.slice(0, 8),
-                detailHints: uniqueItems(matchedResults.flatMap(result => [
-                    result.title,
-                    result.timeHint,
-                    result.bestTimeHint,
-                    ...(result.categoryFamilies || [])
-                ].filter(Boolean))).slice(0, 6)
-            };
-        });
-
-        return plan.filter(item => item.label);
-    }
-
-    function buildAiReportPlanner(queryData = {}, results = [], selectedResults = [], options = {}) {
-        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const facets = buildAiReportFacets(queryData);
-        const activeFacetNames = countActiveAiFacetNames(facets);
-        const hardAnchors = uniqueItems(queryData.hardAnchors || []).slice(0, 14);
-        const softModifiers = uniqueItems(queryData.softModifiers || []).slice(0, 14);
-        const subjectClusters = uniqueItems(queryData.subjectClusters || hardAnchors).slice(0, 16);
-        const preferredClusters = uniqueItems(queryData.preferredClusters || []).slice(0, 10);
-        const mustCoverCategories = uniqueItems(queryData.mustCoverCategories || []).slice(0, 10);
-        const evidenceLayers = buildAiEvidenceLayers({
-            ...queryData,
-            intentProfile,
-            hardAnchors,
-            softModifiers,
-            subjectClusters
-        });
-        const normalizedQuery = queryData.normalizedQuery || normalizeSearchText(queryData.rawQuery || '');
-        const selectedPool = selectedResults.length ? selectedResults : results.slice(0, 6);
-        const parentIds = uniqueItems(selectedPool.map(result => result.parentId || result.id).filter(Boolean));
-        const sourceTypes = uniqueItems(selectedPool.map(result => result.sourceType).filter(Boolean));
-        const sourceDetailTypes = uniqueItems(selectedPool
-            .map(result => result.sourceDetailType || 'general')
-            .filter(type => type && type !== 'general'));
-        const strongEvidenceCount = selectedResults.filter(result => (result.score || 0) >= 18).length;
-        const comparisonSignal = normalizedQuery.includes('還是')
-            || normalizedQuery.includes('比較')
-            || /先.+還是/.test(normalizedQuery);
-        const decisionSignal = normalizedQuery.includes('要不要')
-            && (facets.alternatives.length >= 2 || parentIds.length >= 3 || sourceDetailTypes.length >= 2);
-        const rewriteTriggered = Boolean(options.rewriteTriggered);
-        const hasRiskJudgment = Boolean(facets.risk.length) || intentProfile.type === 'policy-or-tip';
-        const inventoryIntent = Boolean(intentProfile.inventoryIntent);
-        const breadthSignals = uniqueItems(queryData.breadthSignals || []).slice(0, 6);
-        const facilityBreadthMode = Boolean(queryData.facilityBreadthMode);
-        const visibleInventoryMode = inventoryIntent && facilityBreadthMode;
-        const triggerReasons = [];
-
-        if (activeFacetNames.length >= 2) {
-            triggerReasons.push('多面向問題');
-        }
-        if (comparisonSignal || decisionSignal) {
-            triggerReasons.push('需要比較或取捨');
-        }
-        if (parentIds.length >= 3) {
-            triggerReasons.push('證據橫跨多張卡片');
-        }
-        if (sourceDetailTypes.length >= 2) {
-            triggerReasons.push('來源層級需要對照');
-        }
-        if (rewriteTriggered) {
-            triggerReasons.push('第一輪召回不足，已做受控改寫');
-        }
-        if (hasRiskJudgment && strongEvidenceCount >= AI_REPORT_STRONG_EVIDENCE_MIN) {
-            triggerReasons.push('涉及風險判斷且證據足夠');
-        }
-        if (inventoryIntent) {
-            triggerReasons.push('需要完整盤點同主題卡片');
-        }
-        if (visibleInventoryMode) {
-            triggerReasons.push('需要優先覆蓋右欄可見設施卡');
-        }
-
-        if (!triggerReasons.length && options.defaultResponseMode === 'report') {
-            triggerReasons.push('預設詳細報告模式');
-        }
-
-        const responseMode = options.defaultResponseMode === 'report'
-            ? 'report'
-            : (triggerReasons.length ? 'report' : 'compact');
-        const categoryCoveragePlan = buildAiCategoryCoveragePlan(selectedPool.length ? selectedPool : results.slice(0, 24), queryData, {
-            inventoryIntent,
-            intents: queryData.intents || {}
-        });
-
-        return {
-            responseMode,
-            intentType: intentProfile.type,
-            inventoryIntent,
-            visibleInventoryMode,
-            coverageMode: responseMode === 'report'
-                ? (queryData.coverageMode === 'exhaustive' ? 'exhaustive' : 'broad')
-                : 'broad',
-            facets,
-            activeFacetNames,
-            activeFacetCount: activeFacetNames.length,
-            isComparisonQuery: comparisonSignal || decisionSignal,
-            hasRiskJudgment,
-            rewriteTriggered,
-            triggerReasons,
-            selectedChunkCount: selectedResults.length,
-            parentCardCount: parentIds.length,
-            sourceTypes,
-            sourceDetailTypes,
-            literalAnchors: Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors.slice(0, 12) : [],
-            canonicalEntities: Array.isArray(queryData.canonicalEntities) ? queryData.canonicalEntities.slice(0, 8) : [],
-            genericClasses: Array.isArray(queryData.genericClasses) ? queryData.genericClasses.slice(0, 6) : [],
-            requiredCapabilities: Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities.slice(0, 4) : [],
-            disallowedCategories: Array.isArray(queryData.disallowedCategories) ? queryData.disallowedCategories.slice(0, 8) : [],
-            answerIntent: queryData.answerIntent || 'answer',
-            expandedCategories: Array.isArray(queryData.expandedCategories) ? queryData.expandedCategories.slice(0, 8) : [],
-            clusterExpansions: Array.isArray(queryData.clusterExpansions) ? queryData.clusterExpansions.slice(0, 12) : [],
-            coverageHints: Array.isArray(queryData.coverageHints) ? queryData.coverageHints.slice(0, 6) : [],
-            breadthSignals,
-            facilityBreadthMode,
-            breadthProfile: queryData.breadthProfile || 'guided-expansion',
-            expansionReasons: Array.isArray(queryData.expansionReasons) ? queryData.expansionReasons.slice(0, 10) : [],
-            preferredClusters,
-            mustCoverCategories,
-            mustCoverCapabilities: Array.isArray(queryData.mustCoverCapabilities) ? queryData.mustCoverCapabilities.slice(0, 4) : [],
-            categoryCoveragePlan,
-            hardAnchors,
-            softModifiers,
-            subjectClusters,
-            evidenceLayers,
-            strongEvidenceCount,
-            needsSourceComparison: sourceDetailTypes.length >= 2
-                || Boolean(queryData.intents?.conciergeFocus)
-                || intentProfile.type === 'policy-or-tip'
-                || (hasRiskJudgment && sourceDetailTypes.length >= 1),
-            evidenceBudget: responseMode === 'report' ? AI_REPORT_MAX_RESULTS : 8,
-            maxParentCards: responseMode === 'report' ? AI_REPORT_MAX_PARENTS : 4
-        };
-    }
-
-    function sourceTextMatchesUnit(sourceText, unit) {
-        if (!sourceText || !unit) return false;
-        if (sourceText.includes(unit)) return true;
-        const synonyms = searchSynonymMap.get(unit) || [];
-        return synonyms.some(synonym => sourceText.includes(synonym));
-    }
-
-    function countMatchedUnits(sourceText, units = []) {
-        return uniqueItems(units).filter(unit => sourceTextMatchesUnit(sourceText, unit)).length;
-    }
-
-    function countMatchedTerms(sourceText, terms = []) {
-        return uniqueItems(terms)
+        return uniqueItems([categoryEntry.label, ...categoryEntry.terms, ...categoryEntry.keywords])
             .map(term => normalizeSearchText(term))
             .filter(Boolean)
-            .filter(term => sourceText.includes(term))
-            .length;
+            .some(term => sourceText.includes(term));
     }
 
-    function scoreMatch(sourceText, term, synonyms, baseWeight, synonymWeight) {
-        let score = 0;
-        if (!sourceText) return score;
+    function scoreNormalizedField(normalizedField = '', terms = [], weight = 0) {
+        if (!normalizedField || !Array.isArray(terms) || !terms.length || !weight) return 0;
+        return terms.reduce((total, term) => {
+            const normalizedTerm = normalizeSearchText(term);
+            if (!normalizedTerm) return total;
+            if (normalizedField === normalizedTerm) return total + (weight * 1.4);
+            if (normalizedField.includes(normalizedTerm)) return total + weight;
+            return total;
+        }, 0);
+    }
 
-        if (sourceText.includes(term)) {
-            score += baseWeight + Math.min(term.length, 8);
+    function getSearchResultSourceBucket(doc) {
+        if (!doc) return 'support';
+        if (doc.sourceType === 'schedule' || doc.sourceType === 'static' || doc.isSupportLike) {
+            return 'support';
+        }
+        if (doc.sourceType === 'playbook') {
+            return 'playbook';
+        }
+        return 'primary';
+    }
+
+    function countCanonicalEntityMatches(doc, canonicalEntities = []) {
+        if (!doc || !Array.isArray(canonicalEntities) || !canonicalEntities.length) return 0;
+        return canonicalEntities.filter(entityId => (doc.canonicalEntityIds || []).includes(entityId)).length;
+    }
+
+    function countSupportEntityMatches(doc, canonicalEntities = []) {
+        if (!doc || !Array.isArray(canonicalEntities) || !canonicalEntities.length) return 0;
+        return canonicalEntities.filter(entityId => (doc.supportOfEntityIds || []).includes(entityId)).length;
+    }
+
+    function documentHasLiteralAnchorHit(doc, literalAnchors = []) {
+        if (!doc || !Array.isArray(literalAnchors) || !literalAnchors.length) return false;
+        return [
+            doc.normalizedTitle,
+            doc.normalizedProperNouns,
+            doc.normalizedAliases,
+            doc.normalizedKeywords
+        ].some(field => hasAnyNormalizedTerm(field, literalAnchors));
+    }
+
+    function documentHasStrongLiteralAnchorHit(doc, literalAnchors = []) {
+        if (!doc || !Array.isArray(literalAnchors) || !literalAnchors.length) return false;
+        return [
+            doc.normalizedTitle,
+            doc.normalizedProperNouns,
+            doc.normalizedAliases
+        ].some(field => hasAnyNormalizedTerm(field, literalAnchors));
+    }
+
+    function extractScheduleDayKey(result) {
+        const normalized = normalizeSearchText([
+            result?.timeHint,
+            result?.locationLabel,
+            result?.title
+        ].join(' '));
+        if (!normalized) return 'general';
+
+        const dayMatch = normalized.match(/day\s*\d+/);
+        if (dayMatch) {
+            return dayMatch[0].replace(/\s+/g, '');
+        }
+        if (normalized.includes('登船')) return 'embark';
+        if (normalized.includes('下船')) return 'disembark';
+        if (normalized.includes('海上')) return 'sea-day';
+        return normalized.split(' ')[0] || 'general';
+    }
+
+    function scoreDocument(doc, queryData = {}) {
+        if (!doc || !queryData.normalizedQuery) return 0;
+
+        const literalAnchors = Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors : [];
+        const units = Array.isArray(queryData.units) ? queryData.units : [];
+        const contextualKeywords = Array.isArray(queryData.contextualKeywords)
+            ? queryData.contextualKeywords.filter(term => !units.includes(term))
+            : [];
+        const canonicalEntities = Array.isArray(queryData.canonicalEntities) ? queryData.canonicalEntities : [];
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+        const disallowedCategories = Array.isArray(queryData.disallowedCategories) ? queryData.disallowedCategories : [];
+        const categoryHints = Array.isArray(queryData.categoryHints) ? queryData.categoryHints : [];
+        const scheduleIntent = Boolean(queryData.scheduleIntent);
+        const entityBreadth = Math.max(1, Number(doc.entityBreadth) || 1);
+        const literalTitleHit = hasAnyNormalizedTerm(doc.normalizedTitle, literalAnchors);
+        const literalProperHit = hasAnyNormalizedTerm(doc.normalizedProperNouns, literalAnchors);
+        const literalAliasHit = hasAnyNormalizedTerm(doc.normalizedAliases, literalAnchors);
+        const literalKeywordHit = hasAnyNormalizedTerm(doc.normalizedKeywords, literalAnchors);
+        const strongLiteralAnchorHit = literalTitleHit || literalProperHit || literalAliasHit;
+        const directAnchorHit = literalTitleHit || literalProperHit || literalAliasHit || literalKeywordHit;
+        const canonicalEntityMatchCount = countCanonicalEntityMatches(doc, canonicalEntities);
+        const supportEntityMatchCount = countSupportEntityMatches(doc, canonicalEntities);
+        const capabilityHitCount = requiredCapabilities.filter(capabilityId => resultMatchesCapability(doc, capabilityId)).length;
+        const sourceBucket = getSearchResultSourceBucket(doc);
+        const weakKeywordOnlyHit = literalKeywordHit
+            && !literalTitleHit
+            && !literalProperHit
+            && !literalAliasHit
+            && !canonicalEntityMatchCount
+            && !supportEntityMatchCount;
+
+        let score = 0;
+
+        if (doc.normalizedTitle === queryData.normalizedQuery) score += 240;
+        if (doc.normalizedProperNouns === queryData.normalizedQuery) score += 220;
+        if (doc.normalizedAliases === queryData.normalizedQuery) score += 200;
+
+        score += scoreNormalizedField(doc.normalizedTitle, [queryData.normalizedQuery], 130);
+        score += scoreNormalizedField(doc.normalizedProperNouns, [queryData.normalizedQuery], 120);
+        score += scoreNormalizedField(doc.normalizedAliases, [queryData.normalizedQuery], 110);
+        score += scoreNormalizedField(doc.normalizedKeywords, [queryData.normalizedQuery], 18);
+        score += scoreNormalizedField(doc.normalizedCategories, [queryData.normalizedQuery], 56);
+        score += scoreNormalizedField(doc.normalizedCapabilities, [queryData.normalizedQuery], 56);
+        score += scoreNormalizedField(doc.normalizedEntityFamilies, [queryData.normalizedQuery], 46);
+        score += scoreNormalizedField(doc.normalizedCombined, [queryData.normalizedQuery], 6);
+
+        score += scoreNormalizedField(doc.normalizedTitle, units, 34);
+        score += scoreNormalizedField(doc.normalizedProperNouns, units, 32);
+        score += scoreNormalizedField(doc.normalizedAliases, units, 28);
+        score += scoreNormalizedField(doc.normalizedKeywords, units, 4);
+        score += scoreNormalizedField(doc.normalizedCombined, units, 2);
+
+        score += scoreNormalizedField(doc.normalizedProperNouns, contextualKeywords, 10);
+        score += scoreNormalizedField(doc.normalizedAliases, contextualKeywords, 10);
+        score += scoreNormalizedField(doc.normalizedCategories, contextualKeywords, 8);
+        score += scoreNormalizedField(doc.normalizedCapabilities, contextualKeywords, 8);
+        score += scoreNormalizedField(doc.normalizedCombined, contextualKeywords, 1);
+
+        if (directAnchorHit) {
+            score += 96;
+        }
+        if (literalTitleHit) score += 88;
+        if (literalProperHit) score += 72;
+        if (literalAliasHit) score += 56;
+        if (literalKeywordHit) score += 28;
+
+        if (canonicalEntityMatchCount) {
+            const entityMatchWeight = Math.max(20, 76 - Math.max(0, entityBreadth - 1) * 16);
+            score += canonicalEntityMatchCount * entityMatchWeight;
         }
 
-        synonyms.forEach(synonym => {
-            if (sourceText.includes(synonym)) {
-                score += synonymWeight + Math.min(synonym.length, 6);
+        if (supportEntityMatchCount) {
+            const supportWeight = Math.max(8, 28 - Math.max(0, entityBreadth - 1) * 6);
+            score += supportEntityMatchCount * supportWeight;
+        }
+
+        categoryHints.forEach(categoryLabel => {
+            if (resultMatchesCategory(doc, categoryLabel)) {
+                score += 28;
             }
         });
 
-        return score;
-    }
-
-    function scoreDocument(doc, queryData) {
-        if (!queryData.units.length) return 0;
-
-        let score = 0;
-        let matchedUnits = 0;
-
-        queryData.units.forEach(unit => {
-            const synonyms = searchSynonymMap.get(unit) || [];
-            const unitScore =
-                scoreMatch(doc.normalizedTitle, unit, synonyms, 30, 15) +
-                scoreMatch(doc.normalizedKeywords, unit, synonyms, 22, 10) +
-                scoreMatch(doc.normalizedText, unit, synonyms, 12, 5);
-
-            if (unitScore > 0) {
-                matchedUnits += 1;
-                score += unitScore;
+        if (capabilityHitCount) {
+            score += capabilityHitCount * 52;
+        }
+        requiredCapabilities.forEach(capabilityId => {
+            if (!resultMatchesCapability(doc, capabilityId) && (doc.fieldType || 'parent') === 'parent' && !['schedule', 'static'].includes(doc.sourceType)) {
+                score -= 32;
             }
         });
-
-        if (doc.normalizedTitle.includes(queryData.normalizedQuery)) {
-            score += 28;
-        } else if (doc.normalizedCombined.includes(queryData.normalizedQuery)) {
-            score += 14;
+        if (requiredCapabilities.length && !capabilityHitCount && !literalTitleHit && !literalProperHit && !literalAliasHit) {
+            score -= doc.sourceType === 'playbook' ? 160 : 120;
         }
 
-        if (matchedUnits === queryData.units.length) {
-            score += 16;
-        } else if (matchedUnits > 1) {
-            score += 8;
+        if (disallowedCategories.length && resultMatchesDisallowedCategory(doc, disallowedCategories)) {
+            score -= 96;
         }
 
-        return score;
-    }
-
-    function scoreDocumentForAi(doc, queryData) {
-        const baseScore = scoreDocument(doc, queryData);
-        if (baseScore <= 0) return 0;
-
-        let score = baseScore;
-        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const sourceGroup = getAiSourceGroup(doc.sourceType);
-        const sourcePriorityIndex = intentProfile.sourcePriority.indexOf(sourceGroup);
-        const sourceDetailPriorityIndex = (intentProfile.sourceDetailPriority || []).indexOf(doc.sourceDetailType || 'general');
-        const titleMatches = countMatchedUnits(doc.normalizedTitle, queryData.units);
-        const keywordMatches = countMatchedUnits(doc.normalizedKeywords, queryData.units);
-        const weightedFocusTerms = uniqueItems([
-            ...(intentProfile.focusTerms || []),
-            ...((queryData.bundleTerms || []).slice(0, 10))
-        ]);
-        const hardAnchors = uniqueItems([
-            ...(queryData.hardAnchors || []),
-            ...(intentProfile.hardAnchors || [])
-        ]).slice(0, 12);
-        const softModifiers = uniqueItems([
-            ...(queryData.softModifiers || []),
-            ...(intentProfile.softModifiers || [])
-        ]).slice(0, 12);
-        const focusTitleMatches = countMatchedTerms(doc.normalizedTitle, weightedFocusTerms);
-        const focusBodyMatches = countMatchedTerms(`${doc.normalizedKeywords} ${doc.normalizedText} ${doc.normalizedStructuredText || ''}`, weightedFocusTerms);
-        const hardAnchorTitleMatches = countMatchedTerms(doc.normalizedTitle, hardAnchors);
-        const hardAnchorBodyMatches = countMatchedTerms(doc.normalizedCombined, hardAnchors);
-        const softModifierMatches = countMatchedTerms(doc.normalizedCombined, softModifiers);
-        const slotMatches = countMatchedTerms(doc.normalizedCombined, queryData.slotTerms || []);
-        const precisionBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.precision || []);
-        const aliasBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.alias || []);
-        const capabilityBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.capability || []);
-        const classBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.class || []);
-        const clusterBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.cluster || []);
-        const taskBundleMatches = countMatchedUnits(doc.normalizedCombined, queryData.queryBundles?.task || []);
-        const fieldType = doc.fieldType || 'parent';
-        const roleHints = doc.evidenceRoleHints || [];
-        const capabilityMatchCount = getAiCapabilityMatchCount(doc, queryData);
-        const capabilityGated = isAiCapabilityGatedQuery(queryData);
-        const disallowedCategoryMatch = resultMatchesDisallowedCategory(doc, queryData.disallowedCategories || []);
-
-        if (sourcePriorityIndex === 0) {
+        if ((doc.fieldType || 'parent') === 'parent') {
             score += 18;
-        } else if (sourcePriorityIndex === 1) {
-            score += 10;
-        } else if (sourcePriorityIndex === 2) {
-            score += 4;
-        }
-
-        if (sourceDetailPriorityIndex === 0) {
-            score += 16;
-        } else if (sourceDetailPriorityIndex === 1) {
-            score += 8;
-        } else if (sourceDetailPriorityIndex === 2) {
-            score += 3;
-        }
-
-        if (titleMatches >= 2) {
-            score += 14;
-        } else if (titleMatches === 1) {
-            score += 8;
-        }
-
-        if (keywordMatches >= 2) {
-            score += 8;
-        } else if (keywordMatches === 1) {
-            score += 4;
-        }
-
-        if (focusTitleMatches >= 1) {
-            score += 12;
-        } else if (focusBodyMatches >= 2) {
+        } else {
             score += 6;
         }
 
-        if (hardAnchorTitleMatches >= 2) {
-            score += 26;
-        } else if (hardAnchorTitleMatches === 1) {
-            score += 16;
-        }
+        if (doc.sourceType === 'deck') score += 18;
+        if (doc.sourceType === 'show') score += categoryHints.includes('表演') ? 28 : 14;
+        if (doc.sourceType === 'playbook') score += directAnchorHit ? 14 : 6;
+        if (doc.sourceType === 'schedule') score += scheduleIntent ? 6 : -34;
+        if (doc.sourceType === 'static') score -= 12;
 
-        if (hardAnchorBodyMatches >= 2) {
-            score += 18;
-        } else if (hardAnchorBodyMatches === 1) {
-            score += 10;
-        }
-
-        if (softModifierMatches >= 2) {
-            score += 4;
-        } else if (softModifierMatches === 1) {
-            score += 1;
-        }
-
-        if (slotMatches >= 2) {
-            score += 14;
-        } else if (slotMatches === 1) {
-            score += 8;
-        }
-
-        if (precisionBundleMatches >= 2) {
-            score += 18;
-        } else if (precisionBundleMatches === 1) {
-            score += 10;
-        }
-
-        if (taskBundleMatches >= 2) {
-            score += 14;
-        } else if (taskBundleMatches === 1) {
-            score += 7;
-        }
-
-        if (aliasBundleMatches >= 2) {
-            score += 10;
-        } else if (aliasBundleMatches === 1) {
-            score += 4;
-        }
-
-        if (capabilityBundleMatches >= 2) {
-            score += 18;
-        } else if (capabilityBundleMatches === 1) {
-            score += 10;
-        }
-
-        if (classBundleMatches >= 2) {
-            score += 10;
-        } else if (classBundleMatches === 1) {
-            score += 4;
-        }
-
-        if (clusterBundleMatches >= 2) {
-            score += 12;
-        } else if (clusterBundleMatches === 1) {
-            score += 6;
-        }
-
-        if ((queryData.mustCoverCategories || []).some(categoryLabel => resultMatchesCategory(doc, categoryLabel))) {
-            score += 14;
-        }
-
-        if ((queryData.preferredClusters || []).some(clusterKey => [doc.sourceClusterKey, doc.entityKey, doc.venueKey, doc.seriesKey].includes(clusterKey))) {
-            score += 10;
-        }
-
-        if (doc.aiOnly) {
-            score += 6;
-        } else if (fieldType === 'parent') {
-            score += 4;
-        }
-
-        if (capabilityGated) {
-            if (capabilityMatchCount >= 1) {
-                score += 48 + (capabilityMatchCount * 12);
-                if (doc.sourceType === 'deck') {
-                    score += 16;
-                } else if (doc.sourceType === 'playbook') {
-                    score += 12;
-                } else if (doc.sourceType === 'show') {
-                    score += 8;
-                }
-            } else {
-                score -= doc.sourceType === 'schedule' ? 22 : 84;
-            }
-
-            if (disallowedCategoryMatch && capabilityMatchCount === 0) {
-                score -= 70;
-            }
-
-            if (doc.sourceType === 'schedule' && (doc.supportOfParentIds || []).length) {
-                score += 8;
-            }
-        }
-
-        if (fieldType === 'action' || fieldType === 'desc') {
-            score += 18;
-        } else if (fieldType === 'caution') {
-            score += 16;
-        } else if (fieldType === 'whenToUse' || fieldType === 'time' || fieldType === 'bestTime' || fieldType === 'timingTip') {
-            score += 10;
-        } else if (fieldType === 'tripFit' || fieldType === 'tripUse' || fieldType === 'tripLink') {
-            score += 8;
-        }
-
-        if (roleHints.includes('primary-answer')) {
-            score += 6;
-        }
-
-        if (queryData.intents?.actionFocus) {
-            if (intentProfile.type === 'sequence' && doc.sourceType === 'schedule') {
-                score += 10;
-            }
-            if ((intentProfile.type === 'operational-detail' || intentProfile.type === 'policy-or-tip') && doc.sourceType === 'playbook') {
-                score += 12;
-            }
-        }
-
-        if (queryData.intents?.deckFocus && intentProfile.type === 'facility-detail' && sourceGroup === 'deck-show') {
-            score += 12;
-        }
-
-        if (queryData.intents?.day1Focus && intentProfile.type === 'sequence' && (doc.normalizedKeywords.includes('day 1') || doc.normalizedCombined.includes('登船'))) {
-            score += 18;
-        }
-
-        if (queryData.intents?.day2Focus && intentProfile.type === 'sequence' && doc.normalizedKeywords.includes('day 2')) {
-            score += 14;
-        }
-
-        if (queryData.intents?.conciergeFocus && documentIncludesAny(doc, ['禮賓', 'concierge', 'lounge', '酒廊'])) {
-            if (doc.sourceType === 'playbook') {
-                score += 18;
-            } else if (sourceGroup === 'deck-show') {
-                score += 10;
-            } else if (doc.sourceType === 'schedule') {
-                score += intentProfile.type === 'sequence' ? 6 : 1;
-            }
-        }
-
-        if (queryData.intents?.theatreFocus && documentIncludesAny(doc, ['劇院', 'theatre', 'theater', '主秀', 'remember', '看秀', '提早入場'])) {
-            if (doc.sourceType === 'show') {
-                score += 22;
-            } else if (doc.sourceType === 'playbook') {
-                score += 16;
-            } else if (doc.sourceType === 'schedule') {
-                score += intentProfile.type === 'sequence' ? 12 : 4;
-            }
-        }
-
-        if (queryData.intents?.roomServiceFocus && documentIncludesAny(doc, ['room service', '房務', '客房服務'])) {
-            score += doc.sourceType === 'playbook' ? 22 : 8;
-            if (fieldType === 'action' || fieldType === 'caution') {
-                score += 16;
-            }
-        }
-
-        if (queryData.intents?.foodFocus && documentIncludesAny(doc, ['補給', '點心', '快餐', 'pizza', '披薩', '餐'])) {
-            if (sourceGroup === 'deck-show') {
-                score += 18;
-            } else if (doc.sourceType === 'playbook') {
-                score += 10;
-            } else if (doc.sourceType === 'schedule') {
-                score += intentProfile.type === 'sequence' ? 8 : 2;
-            }
-        }
-
-        if (queryData.intents?.kidFocus && documentIncludesAny(doc, ['孩子', '小孩', '兒童', '親子', 'kids'])) {
-            if (doc.sourceType === 'playbook') {
-                score += 12;
-            } else if (sourceGroup === 'deck-show') {
-                score += 10;
-            } else {
-                score += 6;
-            }
-        }
-
-        if ((queryData.slots?.goal || []).includes('順序')) {
-            if (fieldType === 'time' || fieldType === 'whenToUse' || doc.sourceType === 'schedule') {
-                score += 10;
-            }
-        }
-
-        if ((queryData.slots?.goal || []).includes('省力')) {
-            if (fieldType === 'tripFit' || fieldType === 'tripUse' || fieldType === 'action') {
-                score += 10;
-            }
-        }
-
-        if (capabilityGated && !capabilityMatchCount && classifyAiPrimarySuitability(doc, queryData) === 'reject') {
-            score = Math.max(score - 120, 0);
-        }
-
-        if ((queryData.slots?.goal || []).includes('避排隊')) {
-            if (fieldType === 'action' || fieldType === 'bestTime' || fieldType === 'timingTip') {
-                score += 12;
-            }
-        }
-
-        if ((queryData.slots?.goal || []).includes('要帶什麼') && documentIncludesAny(doc, ['帶', '房卡', '證明', '文件', '包'])) {
-            score += 14;
-        }
-
-        if ((queryData.slots?.comparison || []).length && titleMatches >= 1) {
-            score += 10;
-        }
-
-        if ((queryData.slots?.risk || []).length) {
-            if (fieldType === 'caution') {
-                score += 20;
-            } else if (fieldType === 'bestTime' || fieldType === 'timingTip') {
-                score += 10;
-            }
-            if (doc.sourceDetailType === 'official') {
-                score += 8;
-            }
-        }
-
-        if (intentProfile.type === 'operational-detail' || intentProfile.type === 'policy-or-tip') {
-            if (doc.sourceType === 'playbook' && focusBodyMatches >= 1) {
-                score += 18;
-            }
-            if (intentProfile.requiresActionChunk && (fieldType === 'action' || roleHints.includes('sop-action'))) {
-                score += 14;
-            }
-            if (intentProfile.requiresCautionChunk && (fieldType === 'caution' || roleHints.includes('caution-exception'))) {
-                score += 10;
-            }
-            if (doc.sourceType === 'schedule' && titleMatches === 0 && focusTitleMatches === 0) {
-                score -= 14;
-            }
-        }
-
-        if (intentProfile.type === 'facility-detail') {
-            if (sourceGroup === 'deck-show' && focusBodyMatches >= 1) {
-                score += 18;
-            }
-            if (fieldType === 'summary' || fieldType === 'theme' || fieldType === 'bestTime') {
-                score += 12;
-            }
-            if (doc.sourceType === 'schedule' && titleMatches === 0 && focusTitleMatches === 0) {
-                score -= 12;
-            }
-        }
-
-        if (intentProfile.type === 'sequence') {
-            if (doc.sourceType === 'schedule') {
-                score += 8;
-            }
-            if ((sourceGroup === 'deck-show' || doc.sourceType === 'playbook') && focusBodyMatches >= 1) {
-                score += 8;
-            }
-            if (fieldType === 'action' || fieldType === 'time' || fieldType === 'whenToUse') {
-                score += 12;
-            }
-        }
-
-        if (doc.sourceType === 'schedule' && intentProfile.type !== 'sequence' && doc.normalizedText.length > 260 && titleMatches === 0 && focusTitleMatches === 0) {
-            score -= 8;
-        }
-
-        if (doc.sourceType === 'static') {
-            score -= 6;
-        }
-
-        if (hardAnchors.length && hardAnchorTitleMatches === 0 && hardAnchorBodyMatches === 0 && softModifierMatches >= 1) {
+        if (requiredCapabilities.length && doc.sourceType === 'schedule' && !(doc.supportOfParentIds || []).length) {
             score -= 10;
         }
 
-        return score;
-    }
-
-    function documentIncludesAny(doc, terms = []) {
-        return terms.some(term => {
-            const normalizedTerm = normalizeSearchText(term);
-            return normalizedTerm && (
-                doc.normalizedTitle.includes(normalizedTerm) ||
-                doc.normalizedKeywords.includes(normalizedTerm) ||
-                doc.normalizedText.includes(normalizedTerm) ||
-                (doc.normalizedStructuredText || '').includes(normalizedTerm)
-            );
-        });
-    }
-
-    function documentTitleIncludesAny(doc, terms = []) {
-        return terms.some(term => {
-            const normalizedTerm = normalizeSearchText(term);
-            return normalizedTerm && doc.normalizedTitle.includes(normalizedTerm);
-        });
-    }
-
-    function highlightSnippet(text, terms) {
-        let html = escapeHtml(text);
-        const sortedTerms = uniqueItems(terms.filter(Boolean)).sort((a, b) => b.length - a.length);
-
-        sortedTerms.forEach(term => {
-            const safeTerm = escapeHtml(term);
-            if (!safeTerm) return;
-            html = html.replace(new RegExp(escapeRegExp(safeTerm), 'gi'), match => `<mark>${match}</mark>`);
-        });
-
-        return html;
-    }
-
-    function truncateSearchPreview(text, maxLength = 110) {
-        const normalized = compactSearchText(text);
-        if (!normalized) return '';
-        return normalized.length > maxLength
-            ? `${normalized.slice(0, maxLength - 1).trim()}…`
-            : normalized;
-    }
-
-    function extractStructuredSearchPairs(text = '') {
-        const normalized = compactSearchText(text);
-        if (!normalized) return [];
-
-        const pairs = [];
-        const pairPattern = /(^|\s)([^：]{1,18})：([^：]+?)(?=(?:\s+[^：]{1,18}：)|$)/g;
-        let match;
-        while ((match = pairPattern.exec(normalized)) !== null) {
-            const label = compactSearchText(match[2]);
-            const value = compactSearchText(match[3]);
-            if (!label || !value) continue;
-            pairs.push([label, value]);
+        if (!scheduleIntent && sourceBucket === 'support') {
+            score -= 22;
         }
 
-        return pairs;
+        if (canonicalEntities.length && !strongLiteralAnchorHit && !canonicalEntityMatchCount && !supportEntityMatchCount) {
+            score -= doc.sourceType === 'playbook' ? 180 : 120;
+        }
+
+        if (weakKeywordOnlyHit) {
+            score -= doc.sourceType === 'playbook' ? 280 : 220;
+            if (entityBreadth > 1) {
+                score -= (entityBreadth - 1) * 36;
+            }
+        }
+
+        if (doc.sourceType === 'playbook' && entityBreadth >= 4 && !directAnchorHit) {
+            score -= 140;
+        } else if (entityBreadth >= 6 && !directAnchorHit) {
+            score -= 72;
+        }
+
+        if (doc.sourceType === 'playbook' && entityBreadth >= 3 && canonicalEntityMatchCount && !literalTitleHit && !literalProperHit && !literalAliasHit) {
+            score -= (entityBreadth - 2) * 44;
+        }
+
+        if (doc.sourceType === 'playbook'
+            && canonicalEntityMatchCount
+            && entityBreadth > canonicalEntityMatchCount + 1
+            && !strongLiteralAnchorHit) {
+            score -= (entityBreadth - canonicalEntityMatchCount) * 30;
+        }
+
+        if (doc.sourceType === 'playbook'
+            && entityBreadth >= 5
+            && canonicalEntityMatchCount <= 1
+            && !strongLiteralAnchorHit) {
+            score -= 180 + (entityBreadth - 5) * 20;
+        }
+
+        if (doc.sourceType === 'playbook'
+            && canonicalEntityMatchCount
+            && entityBreadth >= 4
+            && (canonicalEntityMatchCount / entityBreadth) < 0.5
+            && !strongLiteralAnchorHit) {
+            score -= 220;
+        }
+
+        if (doc.sourceType === 'playbook'
+            && canonicalEntities.length
+            && canonicalEntityMatchCount === 1
+            && entityBreadth >= 4
+            && !strongLiteralAnchorHit) {
+            score -= 220;
+        }
+
+        return Math.max(0, Math.round(score));
     }
 
     function buildSearchResultHighlights(result, queryData = {}) {
@@ -4685,7 +3154,7 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         }
 
         pairs.forEach(([label, value]) => {
-            if (highlights.length >= AI_RESULT_HIGHLIGHT_LIMIT) return;
+            if (highlights.length >= SEARCH_RESULT_HIGHLIGHT_LIMIT) return;
             pushHighlight(`${label}：${value}`);
         });
 
@@ -4693,7 +3162,7 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             pushHighlight(createPlainExcerpt(result, queryData, 240));
         }
 
-        return highlights.slice(0, AI_RESULT_HIGHLIGHT_LIMIT);
+        return highlights.slice(0, SEARCH_RESULT_HIGHLIGHT_LIMIT);
     }
 
     function getSearchResultMetaChips(result) {
@@ -4703,17 +3172,15 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             chips.push(getAiSourceDetailLabel(result.sourceDetailType || 'general'));
         }
 
-        if (result.fieldType && result.fieldType !== 'parent') {
-            chips.push(getAiFieldLabel(result.fieldType));
+        if (result.sourceType === 'deck' || result.sourceType === 'show') {
+            if (result.bestTimeHint) {
+                chips.push(truncateSearchPreview(result.bestTimeHint, 36));
+            }
+        } else if (result.sourceType === 'playbook' && result.timeHint) {
+            chips.push(truncateSearchPreview(result.timeHint, 36));
         }
 
-        if (result.timeHint) {
-            chips.push(result.timeHint);
-        } else if (result.bestTimeHint) {
-            chips.push(result.bestTimeHint);
-        }
-
-        return uniqueItems(chips).slice(0, 3);
+        return uniqueItems(chips).slice(0, 2);
     }
 
     function createExcerpt(doc, queryData) {
@@ -4762,3648 +3229,326 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         return `${start > 0 ? '…' : ''}${rawSource.slice(start, end).trim()}${end < rawSource.length ? '…' : ''}`;
     }
 
+    function getStructuredSearchValue(result, labels = []) {
+        const normalizedLabels = uniqueItems((Array.isArray(labels) ? labels : [])
+            .map(label => compactSearchText(label))
+            .filter(Boolean));
+        if (!normalizedLabels.length) return '';
+
+        const pairs = extractStructuredSearchPairs(result?.structuredText || result?.text);
+        const match = pairs.find(([label]) => normalizedLabels.includes(compactSearchText(label)));
+        return compactSearchText(match?.[1] || '');
+    }
+
+    function cleanSearchSummaryFragment(text, options = {}) {
+        let value = compactSearchText(text);
+        if (!value) return '';
+
+        const repeatedTerms = uniqueItems([
+            options.title,
+            options.locationLabel,
+            options.timeHint,
+            options.bestTimeHint
+        ].map(item => compactSearchText(item)).filter(Boolean));
+
+        repeatedTerms.forEach(term => {
+            const normalizedTerm = normalizeSearchText(term);
+            const normalizedValue = normalizeSearchText(value);
+            if (normalizedTerm && normalizedValue.startsWith(normalizedTerm)) {
+                value = value.slice(term.length).trim();
+            }
+        });
+
+        return value
+            .replace(/^(日期|時段|時間 \/ 時段|標籤|活動標籤|重點|行程重點|內容重點|重點摘要|最佳時機|時機提醒|這趟怎麼用|旅程連結|任務|來源層級|適用時機|建議做法|這趟為什麼適合|注意事項)\s*[:：]\s*/g, '')
+            .replace(/\s+/g, ' ')
+            .replace(/[；;]+/g, '；')
+            .trim();
+    }
+
+    function joinSearchSummaryFragments(fragments = [], maxLength = 180) {
+        const cleaned = uniqueItems((Array.isArray(fragments) ? fragments : [])
+            .map(fragment => compactSearchText(fragment))
+            .filter(Boolean));
+        if (!cleaned.length) return '';
+
+        const joined = cleaned
+            .map(fragment => fragment.replace(/[。．]+$/g, '').trim())
+            .filter(Boolean)
+            .join('；');
+
+        return truncateSearchPreview(joined, maxLength);
+    }
+
+    function buildSearchResultSummaryLine(result, queryData = {}) {
+        if (!result) return '';
+
+        if (result.sourceType === 'schedule') {
+            const desc = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['重點', '行程重點', '內容重點']) || result.text,
+                result
+            );
+            const tag = cleanSearchSummaryFragment(getStructuredSearchValue(result, ['標籤', '活動標籤']), result);
+            return joinSearchSummaryFragments([
+                desc,
+                tag && desc && !normalizeSearchText(desc).includes(normalizeSearchText(tag)) ? `主題偏向 ${tag}` : ''
+            ], 150) || createPlainExcerpt(result, queryData, 150);
+        }
+
+        if (result.sourceType === 'deck' || result.sourceType === 'show') {
+            const summary = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['重點摘要', '內容重點', '亮點']) || result.text,
+                result
+            );
+            const timing = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['最佳時機', '時機提醒']) || result.bestTimeHint,
+                result
+            );
+            const usage = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['這趟怎麼用', '旅程連結']),
+                result
+            );
+            return joinSearchSummaryFragments([
+                summary,
+                timing ? `最適合 ${timing}` : '',
+                usage
+            ], 165) || createPlainExcerpt(result, queryData, 165);
+        }
+
+        if (result.sourceType === 'playbook') {
+            const when = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['適用時機']) || result.timeHint,
+                result
+            );
+            const action = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['建議做法', '內容重點']) || result.text,
+                result
+            );
+            const caution = cleanSearchSummaryFragment(
+                getStructuredSearchValue(result, ['注意事項']),
+                result
+            );
+            return joinSearchSummaryFragments([
+                when && action ? `${when} 時最適合這樣做：${action}` : '',
+                !when ? action : '',
+                caution ? `記得 ${caution}` : ''
+            ], 172) || createPlainExcerpt(result, queryData, 172);
+        }
+
+        return createPlainExcerpt(result, queryData, 160);
+    }
+
+    function cleanSearchResultLocationLabel(result) {
+        const sourceLabel = compactSearchText(getSourceLabel(result?.sourceType));
+        let location = compactSearchText(result?.locationLabel);
+        if (!location) return '';
+
+        if (sourceLabel && location.startsWith(`${sourceLabel} · `)) {
+            location = location.slice(sourceLabel.length + 3).trim();
+        }
+
+        const repeatedDeckPattern = location.match(/^([^·•｜|]+)\s*[·•]\s*\1\s*[｜|]\s*(.+)$/);
+        if (repeatedDeckPattern) {
+            location = `${compactSearchText(repeatedDeckPattern[1])}｜${compactSearchText(repeatedDeckPattern[2])}`;
+        }
+
+        return location;
+    }
+
+    function getSearchResultMetaLine(result) {
+        const parts = [getSourceLabel(result.sourceType)];
+        const location = cleanSearchResultLocationLabel(result);
+        if (location) {
+            parts.push(location);
+        }
+        return parts.join(' • ');
+    }
+
+    function getSearchResultSortTier(result, queryData = {}) {
+        const sourceBucket = getSearchResultSourceBucket(result);
+        const literalAnchors = Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors : [];
+        const literalTitleHit = hasAnyNormalizedTerm(result?.normalizedTitle, literalAnchors);
+        const strongLiteralAnchorHit = documentHasStrongLiteralAnchorHit(result, literalAnchors);
+        const entityMatchCount = countCanonicalEntityMatches(result, queryData.canonicalEntities || []);
+        const entityMatchRatio = entityMatchCount / Math.max(1, Number(result.entityBreadth) || 1);
+        const strongEntityHit = entityMatchCount > 0 && ((Number(result.entityBreadth) || 1) <= 2 || entityMatchRatio >= 0.45);
+        const capabilityHit = (queryData.requiredCapabilities || []).some(capabilityId => resultMatchesCapability(result, capabilityId));
+        const effectiveStrongLiteralHit = result?.sourceType === 'playbook' && (Number(result.entityBreadth) || 1) >= 4
+            ? literalTitleHit
+            : strongLiteralAnchorHit;
+        const strongHit = effectiveStrongLiteralHit || strongEntityHit || capabilityHit;
+
+        if (sourceBucket === 'primary' && strongHit) return 0;
+        if (sourceBucket === 'playbook' && strongHit) return 1;
+        if (queryData.scheduleIntent && result.sourceType === 'schedule' && strongHit) return 2;
+        if (sourceBucket === 'primary' && documentHasLiteralAnchorHit(result, literalAnchors)) return 2;
+        if (sourceBucket === 'primary') return 3;
+        if (sourceBucket === 'playbook' && (effectiveStrongLiteralHit || documentHasLiteralAnchorHit(result, literalAnchors))) return 4;
+        if (sourceBucket === 'playbook') return 5;
+        if (result.sourceType === 'schedule') return queryData.scheduleIntent ? 6 : 8;
+        return 8;
+    }
+
+    function compareSearchResults(a, b, queryData = {}) {
+        const tierDiff = getSearchResultSortTier(a, queryData) - getSearchResultSortTier(b, queryData);
+        if (tierDiff !== 0) return tierDiff;
+
+        if (b.score !== a.score) return b.score - a.score;
+
+        if ((a.entityBreadth || 1) !== (b.entityBreadth || 1)) {
+            return (a.entityBreadth || 1) - (b.entityBreadth || 1);
+        }
+
+        return String(a.title || '').localeCompare(String(b.title || ''), 'zh-Hant');
+    }
+
+    function dedupeSearchResults(rankedResults = [], queryData = {}) {
+        const scheduleIntent = Boolean(queryData.scheduleIntent);
+        const broadIntent = Boolean(queryData.broadIntent);
+        const literalAnchors = Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors : [];
+        const canonicalEntities = Array.isArray(queryData.canonicalEntities) ? queryData.canonicalEntities : [];
+        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
+        const strictEntityFocus = canonicalEntities.length > 0 && !broadIntent && !scheduleIntent && !(queryData.requiredCapabilities || []).length;
+        const parentSeen = new Set();
+        const themeBuckets = new Map();
+        const sourceCounts = {
+            primary: 0,
+            playbook: 0,
+            schedule: 0,
+            support: 0
+        };
+        const selected = [];
+        const groupedScheduleKeys = new Set();
+        const sorted = [...rankedResults].sort((a, b) => compareSearchResults(a, b, queryData));
+        const relaxedFillThreshold = sorted.length
+            ? Math.max(110, Math.round((sorted[0].score || 0) * 0.16))
+            : 110;
+
+        const canSelectResult = (result) => {
+            if (parentSeen.has(result.parentId || result.id)) return false;
+
+            const sourceBucket = getSearchResultSourceBucket(result);
+            const themeId = result.themeEntityId || result.parentId || result.id;
+            const literalTitleHit = hasAnyNormalizedTerm(result?.normalizedTitle, literalAnchors);
+            const strongLiteralAnchorHit = documentHasStrongLiteralAnchorHit(result, literalAnchors);
+            const canonicalEntityMatchCount = countCanonicalEntityMatches(result, canonicalEntities);
+            const supportEntityMatchCount = countSupportEntityMatches(result, canonicalEntities);
+            const entityBreadth = Math.max(1, Number(result.entityBreadth) || 1);
+            const entityMatchRatio = canonicalEntityMatchCount / entityBreadth;
+            const effectiveStrongLiteralHit = result.sourceType === 'playbook' && entityBreadth >= 4
+                ? literalTitleHit
+                : strongLiteralAnchorHit;
+            const capabilityHitCount = requiredCapabilities.filter(capabilityId => resultMatchesCapability(result, capabilityId)).length;
+            const themeState = themeBuckets.get(themeId) || { primary: false, playbook: false, support: false };
+
+            if (sourceBucket === 'primary' && themeState.primary) return false;
+            if (sourceBucket === 'playbook' && themeState.playbook) return false;
+            if (sourceBucket === 'support' && result.sourceType !== 'schedule' && themeState.support) return false;
+
+            if (sourceBucket === 'primary' && sourceCounts.primary >= SEARCH_PRIMARY_RESULT_LIMIT) return false;
+            if (sourceBucket === 'playbook' && sourceCounts.playbook >= SEARCH_PLAYBOOK_RESULT_LIMIT) return false;
+            if (sourceBucket === 'support' && result.sourceType === 'schedule' && sourceCounts.schedule >= SEARCH_SCHEDULE_RESULT_LIMIT) return false;
+            if (sourceBucket === 'support' && result.sourceType !== 'schedule' && sourceCounts.support >= SEARCH_SUPPORT_RESULT_LIMIT) return false;
+
+            if (result.sourceType === 'schedule' && !scheduleIntent && (sourceCounts.primary + sourceCounts.playbook) >= 5) {
+                return false;
+            }
+
+            if (requiredCapabilities.some(capabilityId => capabilityId !== 'watch-show')
+                && result.sourceType === 'show'
+                && !effectiveStrongLiteralHit) {
+                return false;
+            }
+
+            if (requiredCapabilities.length && !capabilityHitCount && !effectiveStrongLiteralHit && !canonicalEntityMatchCount) {
+                return false;
+            }
+
+            if (strictEntityFocus) {
+                if (sourceBucket === 'primary' && !effectiveStrongLiteralHit && !canonicalEntityMatchCount && !supportEntityMatchCount) {
+                    return false;
+                }
+
+                if (result.sourceType === 'playbook' && !effectiveStrongLiteralHit) {
+                    if (!canonicalEntityMatchCount) {
+                        return false;
+                    }
+                    if (entityBreadth >= 4 && entityMatchRatio < 0.5) {
+                        return false;
+                    }
+                }
+            }
+
+            if (result.sourceType === 'schedule') {
+                const scheduleClusterKey = scheduleIntent
+                    ? `schedule:${themeId}:${extractScheduleDayKey(result)}`
+                    : `schedule:${themeId}`;
+                if (groupedScheduleKeys.has(scheduleClusterKey)) return false;
+            }
+
+            return true;
+        };
+
+        const markResultSelected = (result) => {
+            const sourceBucket = getSearchResultSourceBucket(result);
+            const themeId = result.themeEntityId || result.parentId || result.id;
+            const themeState = themeBuckets.get(themeId) || { primary: false, playbook: false, support: false };
+
+            if (sourceBucket === 'primary') themeState.primary = true;
+            if (sourceBucket === 'playbook') themeState.playbook = true;
+            if (sourceBucket === 'support' && result.sourceType !== 'schedule') themeState.support = true;
+            themeBuckets.set(themeId, themeState);
+
+            if (sourceBucket === 'primary') sourceCounts.primary += 1;
+            if (sourceBucket === 'playbook') sourceCounts.playbook += 1;
+            if (sourceBucket === 'support' && result.sourceType === 'schedule') sourceCounts.schedule += 1;
+            if (sourceBucket === 'support' && result.sourceType !== 'schedule') sourceCounts.support += 1;
+
+            if (result.sourceType === 'schedule') {
+                const scheduleClusterKey = scheduleIntent
+                    ? `schedule:${themeId}:${extractScheduleDayKey(result)}`
+                    : `schedule:${themeId}`;
+                groupedScheduleKeys.add(scheduleClusterKey);
+            }
+
+            parentSeen.add(result.parentId || result.id);
+            selected.push(result);
+        };
+
+        sorted.forEach(result => {
+            if (selected.length >= SEARCH_MAX_RESULTS) return;
+            if (!canSelectResult(result)) return;
+            markResultSelected(result);
+        });
+
+        if (selected.length < Math.min(SEARCH_MAX_RESULTS, 6)) {
+            sorted.forEach(result => {
+                if (selected.length >= SEARCH_MAX_RESULTS) return;
+                if (parentSeen.has(result.parentId || result.id)) return;
+                if ((result.score || 0) < relaxedFillThreshold) return;
+                parentSeen.add(result.parentId || result.id);
+                selected.push(result);
+            });
+        }
+
+        return selected;
+    }
+
     function getRankedSearchResults(query) {
         const queryData = getSearchUnits(query);
         if (!queryData.normalizedQuery || queryData.normalizedQuery.length < SEARCH_MIN_LENGTH) {
             return { queryData, results: [] };
         }
 
-        const results = searchState.documents
+        const rankedResults = searchState.documents
             .filter(doc => !doc.aiOnly)
             .map(doc => ({ ...doc, score: scoreDocument(doc, queryData) }))
             .filter(doc => doc.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, 20);
+            .sort((a, b) => compareSearchResults(a, b, queryData));
+
+        const results = dedupeSearchResults(rankedResults, queryData);
 
         return { queryData, results };
-    }
-
-    function getAiRankedSearchResults(query, rewriteMeta = null, interpreterResult = null) {
-        const queryData = getAiSearchUnits(query, rewriteMeta, interpreterResult);
-        if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
-            return { queryData, results: [] };
-        }
-
-        const rankedResults = searchState.documents
-            .map(doc => ({ ...doc, score: scoreDocumentForAi(doc, queryData) }))
-            .filter(doc => doc.score > 0)
-            .sort((a, b) => b.score - a.score)
-            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
-
-        const results = isAiCapabilityGatedQuery(queryData)
-            ? [
-                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'primary'),
-                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'support'),
-                ...rankedResults.filter(result => classifyAiPrimarySuitability(result, queryData) === 'reject')
-            ].slice(0, AI_REPORT_RANKED_POOL_LIMIT)
-            : rankedResults;
-
-        return { queryData, results };
-    }
-
-    function safeGetAiRankedSearchResults(query, rewriteMeta = null, interpreterResult = null) {
-        try {
-            const payload = getAiRankedSearchResults(query, rewriteMeta, interpreterResult);
-            return {
-                ok: true,
-                queryData: payload.queryData,
-                results: payload.results,
-                error: null
-            };
-        } catch (error) {
-            console.error('AI local retrieval failed:', error);
-            return {
-                ok: false,
-                queryData: getAiSearchUnits(query, rewriteMeta, interpreterResult),
-                results: [],
-                error
-            };
-        }
-    }
-
-    function collapseAiDisplayResults(results = [], queryData = null) {
-        const collapsed = new Map();
-
-        results.forEach(result => {
-            const key = result.parentId || result.id;
-            const existing = collapsed.get(key);
-            if (!existing) {
-                collapsed.set(key, result);
-                return;
-            }
-
-            const existingRank = (existing.aiOnly ? 0 : 4) + (existing.fieldType === 'parent' ? 2 : 0);
-            const candidateRank = (result.aiOnly ? 0 : 4) + (result.fieldType === 'parent' ? 2 : 0);
-            if (candidateRank > existingRank || (candidateRank === existingRank && (result.score || 0) > (existing.score || 0))) {
-                collapsed.set(key, result);
-            }
-        });
-
-        return Array.from(collapsed.values())
-            .sort((a, b) => {
-                const suitabilityA = queryData ? classifyAiPrimarySuitability(a, queryData) : 'primary';
-                const suitabilityB = queryData ? classifyAiPrimarySuitability(b, queryData) : 'primary';
-                const order = { primary: 0, support: 1, reject: 2 };
-                if ((order[suitabilityA] ?? 9) !== (order[suitabilityB] ?? 9)) {
-                    return (order[suitabilityA] ?? 9) - (order[suitabilityB] ?? 9);
-                }
-                return (b.score || 0) - (a.score || 0);
-            })
-            .slice(0, 20);
-    }
-
-    function scoreAiSelectionCandidate(result, role, queryData = {}, intentProfile = null) {
-        const resolvedProfile = intentProfile || queryData.intentProfile || buildAiIntentProfile(queryData);
-        const focusTerms = uniqueItems([
-            ...(resolvedProfile.focusTerms || []),
-            ...(queryData.slotTerms || [])
-        ]);
-        let score = result.score || 0;
-        const bodyText = `${result.normalizedKeywords} ${result.normalizedText} ${result.normalizedStructuredText || ''}`;
-        const focusTitleMatches = countMatchedTerms(result.normalizedTitle, focusTerms);
-        const focusBodyMatches = countMatchedTerms(bodyText, focusTerms);
-        const fieldType = result.fieldType || 'parent';
-        const roleHints = result.evidenceRoleHints || [];
-        const sourceGroup = getAiSourceGroup(result.sourceType);
-
-        if (focusTitleMatches >= 1) {
-            score += 14;
-        } else if (focusBodyMatches >= 1) {
-            score += 8;
-        }
-
-        if (roleHints.includes(role)) {
-            score += 18;
-        }
-
-        if (role === 'primary-answer') {
-            if (!result.aiOnly) score += 14;
-            if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) score += 12;
-            if (sourceGroup === resolvedProfile.sourcePriority[0]) score += 14;
-        }
-
-        if (role === 'core-answer') {
-            if (!result.aiOnly) score += 18;
-            if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) score += 18;
-            if (sourceGroup === resolvedProfile.sourcePriority[0]) score += 16;
-            if (countMatchedTerms(result.normalizedCombined, queryData.hardAnchors || []) >= 1) {
-                score += 18;
-            }
-        }
-
-        if (role === 'sop-action') {
-            if (['action', 'desc', 'tripUse', 'tripLink'].includes(fieldType)) score += 24;
-            if (result.sourceType === 'playbook') score += 10;
-            if (resolvedProfile.type === 'sequence' && result.sourceType === 'schedule') score += 10;
-        }
-
-        if (role === 'same-subject-detail') {
-            if (['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(fieldType)) score += 18;
-            if (countMatchedTerms(result.normalizedCombined, queryData.subjectClusters || []) >= 1) {
-                score += 12;
-            }
-            if (focusBodyMatches >= 1) {
-                score += 8;
-            }
-        }
-
-        if (role === 'caution-exception') {
-            if (['caution', 'bestTime', 'timingTip'].includes(fieldType)) score += 24;
-            if (result.sourceDetailType === 'official') score += 12;
-            if ((queryData.slots?.risk || []).length && ['caution', 'bestTime', 'timingTip'].includes(fieldType)) {
-                score += 10;
-            }
-        }
-
-        if (role === 'rules-limits') {
-            if (['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(fieldType)) score += 24;
-            if (result.sourceDetailType === 'official') score += 14;
-            if (countMatchedTerms(result.normalizedCombined, queryData.softModifiers || []) >= 1) {
-                score += 4;
-            }
-        }
-
-        if (role === 'context-day') {
-            if (result.sourceType === 'schedule') score += 18;
-            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'parent'].includes(fieldType)) score += 12;
-            if (countMatchedTerms(bodyText, [...(queryData.slots?.day || []), ...(queryData.slots?.timeWindow || [])]) >= 1) {
-                score += 10;
-            }
-        }
-
-        if (role === 'timing-context') {
-            if (result.sourceType === 'schedule') score += 20;
-            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'desc', 'parent'].includes(fieldType)) score += 14;
-            if (countMatchedTerms(bodyText, [...(queryData.slots?.day || []), ...(queryData.slots?.timeWindow || [])]) >= 1) {
-                score += 12;
-            }
-        }
-
-        if (role === 'why-this-works') {
-            if (['tripFit', 'tripUse', 'tripLink'].includes(fieldType)) score += 20;
-        }
-
-        if (role === 'source-breakdown' && result.sourceType === 'playbook' && result.sourceDetailType !== 'general') {
-            score += 16;
-        }
-
-        if (role === 'source-compare') {
-            if (result.sourceDetailType !== 'general') score += 18;
-            if (result.sourceType === 'playbook') score += 10;
-            if (['action', 'caution', 'parent', 'desc'].includes(fieldType)) score += 8;
-        }
-
-        if (role === 'source-contrast') {
-            if (result.sourceDetailType !== 'general') score += 20;
-            if (result.sourceType === 'playbook') score += 12;
-            if (['action', 'caution', 'parent', 'desc', 'whenToUse'].includes(fieldType)) score += 10;
-        }
-
-        if (role === 'bridge-context') {
-            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'tripUse', 'tripFit', 'desc'].includes(fieldType)) {
-                score += 16;
-            }
-            if (focusBodyMatches >= 1) {
-                score += 8;
-            }
-        }
-
-        if (role === 'report-support') {
-            if (['action', 'caution', 'tripFit', 'tripUse', 'bestTime', 'timingTip', 'whenToUse', 'desc', 'summary', 'theme'].includes(fieldType)) {
-                score += 14;
-            }
-            if (focusBodyMatches >= 1) {
-                score += 8;
-            }
-        }
-
-        if (role === 'facet-goal') {
-            if (['action', 'tripUse', 'tripLink', 'tripFit', 'desc', 'parent'].includes(fieldType)) {
-                score += 22;
-            }
-            if (focusBodyMatches >= 1) {
-                score += 8;
-            }
-        }
-
-        if (role === 'facet-time') {
-            if (['time', 'whenToUse', 'bestTime', 'timingTip', 'desc', 'parent'].includes(fieldType)) {
-                score += 22;
-            }
-            if (result.sourceType === 'schedule') {
-                score += 12;
-            }
-        }
-
-        if (role === 'facet-entity-place') {
-            if (['parent', 'summary', 'theme', 'action', 'desc'].includes(fieldType)) {
-                score += 18;
-            }
-            if (focusTitleMatches >= 1) {
-                score += 10;
-            }
-        }
-
-        if (role === 'facet-audience') {
-            if (['tripFit', 'tripUse', 'action', 'summary', 'desc'].includes(fieldType)) {
-                score += 18;
-            }
-        }
-
-        if (role === 'facet-risk') {
-            if (['caution', 'bestTime', 'timingTip', 'action'].includes(fieldType)) {
-                score += 24;
-            }
-            if (result.sourceDetailType === 'official') {
-                score += 10;
-            }
-        }
-
-        if (role === 'facet-alternatives') {
-            if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) {
-                score += 18;
-            }
-            if (focusTitleMatches >= 1) {
-                score += 8;
-            }
-        }
-
-        return score;
-    }
-
-    function getAiSelectionConfig(responseMode, intentProfile) {
-        const isReport = responseMode === 'report';
-
-        return {
-            maxResults: isReport ? AI_REPORT_MAX_RESULTS : 8,
-            maxParents: isReport ? AI_REPORT_MAX_PARENTS : 4,
-            maxPerParent: isReport ? AI_REPORT_MAX_PER_PARENT : 2,
-            maxPerSourceGroup: isReport ? 14 : 3,
-            maxSchedule: isReport ? 10 : (intentProfile.type === 'sequence' ? 3 : 2),
-            maxStatic: isReport ? 2 : 1
-        };
-    }
-
-    function matchesAiEvidenceBundleCategory(result, category) {
-        const fieldType = result.fieldType || 'parent';
-        const role = result.evidenceRole || '';
-        const sourceDetailType = result.sourceDetailType || 'general';
-
-        if (category === 'core') {
-            return ['primary-answer', 'sop-action', 'core-answer'].includes(role)
-                || ['parent', 'action', 'desc'].includes(fieldType);
-        }
-
-        if (category === 'detail') {
-            return ['why-this-works', 'report-support', 'facet-goal', 'facet-entity-place', 'bridge-context', 'same-subject-detail'].includes(role)
-                || ['tripFit', 'tripUse', 'summary', 'theme', 'action', 'desc', 'parent'].includes(fieldType);
-        }
-
-        if (category === 'risk') {
-            return ['caution-exception', 'facet-risk', 'rules-limits'].includes(role)
-                || ['caution', 'bestTime', 'timingTip', 'whenToUse'].includes(fieldType);
-        }
-
-        if (category === 'context') {
-            return ['context-day', 'facet-time', 'timing-context'].includes(role)
-                || result.sourceType === 'schedule'
-                || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(fieldType);
-        }
-
-        if (category === 'compare') {
-            return ['source-compare', 'source-breakdown', 'facet-alternatives', 'source-contrast'].includes(role)
-                || sourceDetailType !== 'general';
-        }
-
-        return false;
-    }
-
-    function getAiEvidenceBundleFillConfig(reportPlan = {}) {
-        return [
-            {
-                category: 'core',
-                limit: 6,
-                role: 'core-answer',
-                filter: candidate => ['parent', 'action', 'desc'].includes(candidate.fieldType || 'parent')
-            },
-            {
-                category: 'detail',
-                limit: 8,
-                role: 'same-subject-detail',
-                filter: candidate => ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent')
-            },
-            {
-                category: 'risk',
-                limit: 4,
-                role: 'rules-limits',
-                filter: candidate => ['caution', 'bestTime', 'timingTip', 'action', 'whenToUse'].includes(candidate.fieldType || 'parent')
-            },
-            {
-                category: 'context',
-                limit: 3,
-                role: 'timing-context',
-                filter: candidate => candidate.sourceType === 'schedule'
-                    || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')
-            },
-            {
-                category: 'compare',
-                limit: 3,
-                role: 'source-contrast',
-                filter: candidate => (candidate.sourceDetailType || 'general') !== 'general'
-            }
-        ];
-    }
-
-    function getAiSiblingFieldPriority(sourceType) {
-        if (sourceType === 'playbook') {
-            return ['action', 'caution', 'tripFit', 'whenToUse', 'parent'];
-        }
-
-        if (sourceType === 'schedule') {
-            return ['desc', 'time', 'tag', 'parent'];
-        }
-
-        if (sourceType === 'deck') {
-            return ['summary', 'bestTime', 'tripUse', 'parent'];
-        }
-
-        if (sourceType === 'show') {
-            return ['theme', 'timingTip', 'tripLink', 'parent'];
-        }
-
-        return ['parent'];
-    }
-
-    function matchesAiFacetTerms(result, terms = []) {
-        return countMatchedTerms(result.normalizedCombined || '', terms) >= 1;
-    }
-
-    function selectAiEvidenceResults(results, queryData = {}, options = {}) {
-        const responseMode = options.responseMode === 'report' ? 'report' : 'compact';
-        const reportPlan = options.reportPlan || buildAiReportPlanner(queryData, results, [], options);
-        const selected = [];
-        const seenIds = new Set();
-        const parentCounts = new Map();
-        const sourceCounts = new Map();
-        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const selectionConfig = getAiSelectionConfig(responseMode, intentProfile);
-        const hardAnchors = uniqueItems(reportPlan.hardAnchors || queryData.hardAnchors || []);
-        const softModifiers = uniqueItems(reportPlan.softModifiers || queryData.softModifiers || []);
-        const subjectClusters = uniqueItems(reportPlan.subjectClusters || queryData.subjectClusters || hardAnchors);
-        const evidenceLayers = reportPlan.evidenceLayers || queryData.evidenceLayers || {};
-        const rolePlan = responseMode === 'report'
-            ? ['core-answer', 'core-answer', 'timing-context', 'rules-limits', 'same-subject-detail', 'source-contrast']
-            : (intentProfile.type === 'sequence'
-                ? ['primary-answer', 'sop-action', 'context-day', 'caution-exception']
-                : ['primary-answer', 'sop-action', 'caution-exception', 'context-day']);
-
-        const canAddResult = (result) => {
-            if (!result || seenIds.has(result.id)) return false;
-            if (selected.length >= selectionConfig.maxResults) return false;
-
-            const parentId = result.parentId || result.id;
-            const currentParentCount = parentCounts.get(parentId) || 0;
-            if (currentParentCount >= selectionConfig.maxPerParent) return false;
-            if (!parentCounts.has(parentId) && parentCounts.size >= selectionConfig.maxParents) return false;
-
-            const sourceGroup = getAiSourceGroup(result.sourceType);
-            const currentSourceCount = sourceCounts.get(sourceGroup) || 0;
-            if (sourceGroup === 'static' && currentSourceCount >= selectionConfig.maxStatic) return false;
-            if (sourceGroup === 'schedule' && currentSourceCount >= selectionConfig.maxSchedule) return false;
-            if (currentSourceCount >= selectionConfig.maxPerSourceGroup) return false;
-
-            return true;
-        };
-
-        const addResult = (result, role) => {
-            if (!canAddResult(result)) return false;
-
-            const parentId = result.parentId || result.id;
-            const sourceGroup = getAiSourceGroup(result.sourceType);
-            seenIds.add(result.id);
-            parentCounts.set(parentId, (parentCounts.get(parentId) || 0) + 1);
-            sourceCounts.set(sourceGroup, (sourceCounts.get(sourceGroup) || 0) + 1);
-            selected.push({
-                ...result,
-                evidenceRole: role
-            });
-            return true;
-        };
-
-        const pickBestForRole = (role, extraFilter = null) => {
-            const candidates = results.filter(result => canAddResult(result) && (!extraFilter || extraFilter(result)));
-            if (!candidates.length) return null;
-
-            return [...candidates]
-                .sort((a, b) => scoreAiSelectionCandidate(b, role, queryData, intentProfile) - scoreAiSelectionCandidate(a, role, queryData, intentProfile))[0];
-        };
-
-        const pickCandidatesForRole = (role, extraFilter = null, limit = 1) => {
-            if (limit <= 0) return [];
-            return results
-                .filter(result => canAddResult(result) && (!extraFilter || extraFilter(result)))
-                .sort((a, b) => scoreAiSelectionCandidate(b, role, queryData, intentProfile) - scoreAiSelectionCandidate(a, role, queryData, intentProfile))
-                .slice(0, limit);
-        };
-
-        const addCandidates = (role, extraFilter = null, limit = 1) => {
-            let added = 0;
-            pickCandidatesForRole(role, extraFilter, limit).forEach(candidate => {
-                if (addResult(candidate, role)) {
-                    added += 1;
-                }
-            });
-            return added;
-        };
-
-        const matchTerms = (candidate, terms = []) => {
-            if (!terms.length) return false;
-            return matchesAiFacetTerms(candidate, terms);
-        };
-
-        rolePlan.forEach(role => {
-            if (role === 'core-answer') {
-                addCandidates(role, candidate =>
-                    matchTerms(candidate, hardAnchors)
-                    && ['parent', 'action', 'desc', 'summary', 'theme'].includes(candidate.fieldType || 'parent'),
-                1);
-                return;
-            }
-
-            if (role === 'timing-context') {
-                addCandidates(role, candidate =>
-                    (intentProfile.prefersScheduleContext || matchTerms(candidate, evidenceLayers.timingContext || reportPlan.facets?.time || []))
-                    && (candidate.sourceType === 'schedule'
-                        || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')),
-                1);
-                return;
-            }
-
-            if (role === 'rules-limits') {
-                addCandidates(role, candidate =>
-                    (intentProfile.requiresCautionChunk || matchTerms(candidate, evidenceLayers.rulesLimits || softModifiers))
-                    && ['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(candidate.fieldType || 'parent'),
-                1);
-                return;
-            }
-
-            if (role === 'same-subject-detail') {
-                addCandidates(role, candidate =>
-                    matchTerms(candidate, subjectClusters)
-                    && ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent'),
-                1);
-                return;
-            }
-
-            if (role === 'source-contrast') {
-                addCandidates(role, candidate =>
-                    reportPlan.needsSourceComparison
-                    && (candidate.sourceDetailType || 'general') !== 'general',
-                1);
-                return;
-            }
-
-            let result = pickBestForRole(role);
-            if (!result && role === 'primary-answer') {
-                result = results[0] || null;
-            }
-
-            if (role === 'primary-answer' && intentProfile.type === 'sequence') {
-                result = pickBestForRole(role, candidate =>
-                    getAiSourceGroup(candidate.sourceType) === 'schedule' || candidate.fieldType === 'action'
-                ) || result;
-            }
-
-            if (role === 'sop-action' && intentProfile.requiresActionChunk) {
-                result = pickBestForRole(role, candidate =>
-                    ['action', 'desc', 'tripUse', 'tripLink'].includes(candidate.fieldType || 'parent')
-                ) || result;
-            }
-
-            if (role === 'caution-exception' && intentProfile.requiresCautionChunk) {
-                result = pickBestForRole(role, candidate =>
-                    ['caution', 'bestTime', 'timingTip'].includes(candidate.fieldType || 'parent')
-                ) || result;
-            }
-
-            if (role === 'context-day' && intentProfile.prefersScheduleContext) {
-                result = pickBestForRole(role, candidate =>
-                    candidate.sourceType === 'schedule'
-                    || ['time', 'whenToUse', 'bestTime', 'timingTip'].includes(candidate.fieldType || 'parent')
-                ) || result;
-            }
-
-            addResult(result, role);
-        });
-
-        if (!selected.length) {
-            addResult(results[0] || null, responseMode === 'report' ? 'core-answer' : 'primary-answer');
-        }
-
-        if (intentProfile.type === 'sequence' && !selected.some(result => result.sourceType === 'schedule')) {
-            addResult(pickBestForRole('timing-context', result => result.sourceType === 'schedule'), 'timing-context');
-        }
-
-        if (!selected.some(result => ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent'))) {
-            addResult(
-                pickBestForRole('core-answer', result =>
-                    ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent')
-                ),
-                responseMode === 'report' ? 'core-answer' : 'sop-action'
-            );
-        }
-
-        if (intentProfile.requiresCautionChunk && !selected.some(result => ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent'))) {
-            addResult(
-                pickBestForRole('rules-limits', result =>
-                    ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent')
-                ),
-                responseMode === 'report' ? 'rules-limits' : 'caution-exception'
-            );
-        }
-
-        if (responseMode === 'report') {
-            const facetConfigs = [
-                {
-                    role: 'core-answer',
-                    terms: evidenceLayers.core || hardAnchors,
-                    filter: candidate => ['parent', 'action', 'desc', 'summary', 'theme'].includes(candidate.fieldType || 'parent')
-                },
-                {
-                    role: 'same-subject-detail',
-                    terms: evidenceLayers.extension || subjectClusters,
-                    filter: candidate => ['action', 'tripFit', 'tripUse', 'summary', 'theme', 'desc', 'parent'].includes(candidate.fieldType || 'parent')
-                },
-                {
-                    role: 'rules-limits',
-                    terms: evidenceLayers.rulesLimits || softModifiers,
-                    filter: candidate => ['caution', 'bestTime', 'timingTip', 'whenToUse', 'action'].includes(candidate.fieldType || 'parent')
-                },
-                {
-                    role: 'timing-context',
-                    terms: evidenceLayers.timingContext || reportPlan.facets?.time || [],
-                    filter: candidate => candidate.sourceType === 'schedule'
-                        || ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(candidate.fieldType || 'parent')
-                },
-                {
-                    role: 'source-contrast',
-                    terms: evidenceLayers.sourceContrast || [],
-                    filter: candidate => (candidate.sourceDetailType || 'general') !== 'general'
-                }
-            ];
-
-            facetConfigs.forEach(facetConfig => {
-                if (selected.length >= selectionConfig.maxResults) return;
-                if (!facetConfig.terms?.length && facetConfig.role !== 'source-contrast') return;
-                addCandidates(facetConfig.role, candidate =>
-                    (!facetConfig.terms?.length || matchTerms(candidate, facetConfig.terms))
-                    && (!facetConfig.filter || facetConfig.filter(candidate)),
-                facetConfig.role === 'same-subject-detail' ? 3 : 2);
-            });
-
-            uniqueItems(selected.map(result => result.parentId || result.id)).forEach(parentId => {
-                const siblingPool = results.filter(result => (result.parentId || result.id) === parentId);
-                const parentSourceType = siblingPool[0]?.sourceType || 'static';
-
-                getAiSiblingFieldPriority(parentSourceType).forEach(fieldType => {
-                    addResult(
-                        pickBestForRole('same-subject-detail', candidate =>
-                            (candidate.parentId || candidate.id) === parentId
-                            && (candidate.fieldType || 'parent') === fieldType
-                        ),
-                        fieldType === 'action'
-                            ? 'core-answer'
-                            : fieldType === 'caution'
-                                ? 'rules-limits'
-                                : fieldType === 'time' || fieldType === 'whenToUse' || fieldType === 'bestTime' || fieldType === 'timingTip'
-                                    ? 'timing-context'
-                                    : 'same-subject-detail'
-                    );
-                });
-            });
-
-            const bridgeTerms = uniqueItems([
-                ...subjectClusters,
-                ...(reportPlan.facets?.time || []),
-                ...(reportPlan.facets?.audience || []),
-                ...hardAnchors.slice(0, 6)
-            ]).slice(0, 18);
-
-            results
-                .filter(result => canAddResult(result) && matchTerms(result, bridgeTerms))
-                .sort((a, b) => scoreAiSelectionCandidate(b, 'bridge-context', queryData, intentProfile) - scoreAiSelectionCandidate(a, 'bridge-context', queryData, intentProfile))
-                .slice(0, 8)
-                .forEach(result => {
-                    addResult(result, ['time', 'whenToUse', 'bestTime', 'timingTip', 'desc'].includes(result.fieldType || 'parent')
-                        ? 'timing-context'
-                        : 'same-subject-detail');
-                });
-
-            if (reportPlan.needsSourceComparison) {
-                uniqueItems([
-                    ...(reportPlan.sourceDetailTypes || []),
-                    ...results
-                        .map(result => result.sourceDetailType || 'general')
-                        .filter(type => type && type !== 'general')
-                ])
-                    .slice(0, 4)
-                    .forEach(sourceDetailType => {
-                        addResult(
-                            pickBestForRole('source-contrast', candidate =>
-                                (candidate.sourceDetailType || 'general') === sourceDetailType
-                                && getAiSourceGroup(candidate.sourceType) !== 'static'
-                            ),
-                            'source-contrast'
-                        );
-                    });
-            }
-
-            getAiEvidenceBundleFillConfig(reportPlan).forEach(bundleConfig => {
-                const bundleTerms = bundleConfig.category === 'core'
-                    ? (evidenceLayers.core || hardAnchors)
-                    : bundleConfig.category === 'detail'
-                        ? (evidenceLayers.extension || subjectClusters)
-                        : bundleConfig.category === 'risk'
-                            ? (evidenceLayers.rulesLimits || softModifiers)
-                            : bundleConfig.category === 'context'
-                                ? (evidenceLayers.timingContext || reportPlan.facets?.time || [])
-                                : (evidenceLayers.sourceContrast || []);
-                while (
-                    selected.filter(result => matchesAiEvidenceBundleCategory(result, bundleConfig.category)).length < bundleConfig.limit
-                    && selected.length < selectionConfig.maxResults
-                ) {
-                    const candidate = pickBestForRole(bundleConfig.role, result =>
-                        (!bundleTerms.length || matchTerms(result, bundleTerms) || bundleConfig.category === 'compare')
-                        && (!bundleConfig.filter || bundleConfig.filter(result))
-                    );
-                    if (!candidate) break;
-                    addResult(candidate, bundleConfig.role);
-                }
-            });
-        }
-
-        results.forEach(result => {
-            if (selected.length >= selectionConfig.maxResults) return;
-            const role = responseMode === 'report'
-                ? (matchTerms(result, subjectClusters) ? 'same-subject-detail' : ((result.evidenceRoleHints || [])[0] || 'supporting'))
-                : ((result.evidenceRoleHints || [])[0] || 'supporting');
-            addResult(result, role);
-        });
-
-        return selected.slice(0, selectionConfig.maxResults);
-    }
-
-    function resolveAiEvidencePlan(results, queryData, options = {}) {
-        const planningOptions = {
-            ...options,
-            defaultResponseMode: options.defaultResponseMode || AI_REPORT_DEFAULT_MODE
-        };
-        const initialPlan = buildAiReportPlanner(queryData, results, results.slice(0, 6), planningOptions);
-        let selectedResults = selectAiEvidenceResults(results, queryData, {
-            ...planningOptions,
-            responseMode: initialPlan.responseMode,
-            reportPlan: initialPlan
-        });
-        let reportPlan = buildAiReportPlanner(queryData, results, selectedResults, planningOptions);
-
-        if (reportPlan.responseMode === 'report' || reportPlan.responseMode !== initialPlan.responseMode) {
-            selectedResults = selectAiEvidenceResults(results, queryData, {
-                ...planningOptions,
-                responseMode: reportPlan.responseMode,
-                reportPlan
-            });
-            reportPlan = buildAiReportPlanner(queryData, results, selectedResults, planningOptions);
-        }
-
-        return {
-            selectedResults,
-            reportPlan
-        };
-    }
-
-    function getAiCoverageEntityType(result) {
-        if (!result) return 'mixed';
-        if (result.sourceType === 'deck') return 'facility';
-        if (result.sourceType === 'show') return 'show';
-        if (result.sourceType === 'schedule') return 'schedule';
-        if (result.sourceType === 'playbook') {
-            return (result.sourceDetailType || 'general') === 'general' ? 'playbook' : 'service';
-        }
-        return 'mixed';
-    }
-
-    function getAiCoverageParentPriority(result) {
-        if (!result) return 0;
-        if (result.sourceType === 'deck') return 5;
-        if (result.sourceType === 'playbook') return 4;
-        if (result.sourceType === 'show') return 3;
-        if (result.sourceType === 'schedule') return 2;
-        if (result.sourceType === 'static') return 1;
-        return 0;
-    }
-
-    function inferAiCoverageEvidenceRole(result, queryData = {}, reportPlan = {}) {
-        if (!result) return 'same-subject-detail';
-        const fieldType = result.fieldType || 'parent';
-        if (reportPlan.needsSourceComparison && (result.sourceDetailType || 'general') !== 'general' && ['parent', 'action', 'caution', 'desc', 'whenToUse'].includes(fieldType)) {
-            return 'source-contrast';
-        }
-        if (isAiCapabilityGatedQuery(queryData) && result.sourceType === 'schedule') {
-            return 'timing-context';
-        }
-        if (result.sourceType === 'schedule' || ['time', 'whenToUse', 'bestTime', 'timingTip'].includes(fieldType)) {
-            return 'timing-context';
-        }
-        if (['caution', 'bestTime', 'timingTip'].includes(fieldType)) {
-            return 'rules-limits';
-        }
-        if (['parent', 'action', 'summary', 'theme', 'desc'].includes(fieldType)) {
-            return 'core-answer';
-        }
-        if (countMatchedTerms(result.normalizedCombined || '', queryData.subjectClusters || []) >= 1) {
-            return 'same-subject-detail';
-        }
-        return 'same-subject-detail';
-    }
-
-    function scoreAiCoverageCandidate(result, queryData = {}, reportPlan = {}, displayParentIds = new Set()) {
-        if (!result) return 0;
-        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const role = inferAiCoverageEvidenceRole(result, queryData, reportPlan);
-        const fieldType = result.fieldType || 'parent';
-        const parentId = result.parentId || result.id;
-        const sourceGroup = getAiSourceGroup(result.sourceType);
-        const suitability = classifyAiPrimarySuitability(result, queryData);
-        const capabilityMatchCount = getAiCapabilityMatchCount(result, queryData);
-        let score = scoreAiSelectionCandidate(result, role, queryData, intentProfile);
-
-        if (displayParentIds.has(parentId)) score += 24;
-        if (fieldType === 'parent') score += 18;
-        if (['action', 'summary', 'theme', 'desc'].includes(fieldType)) score += 14;
-        if (['tripUse', 'tripFit', 'tripLink'].includes(fieldType)) score += 10;
-        if ((result.sourceDetailType || 'general') !== 'general') score += 10;
-        if (getAiCoverageParentPriority(result) >= 4) score += 12;
-        if (countMatchedTerms(result.normalizedTitle || '', queryData.hardAnchors || []) >= 1) score += 12;
-        if (countMatchedTerms(result.normalizedCombined || '', queryData.subjectClusters || []) >= 1) score += 8;
-        if ((reportPlan.mustCoverCategories || []).some(categoryLabel => resultMatchesCategory(result, categoryLabel))) {
-            score += 14;
-        }
-        if ((reportPlan.preferredClusters || []).some(clusterKey => [result.sourceClusterKey, result.venueKey, result.seriesKey, result.entityKey].includes(clusterKey))) {
-            score += 12;
-        }
-
-        if (isAiCapabilityGatedQuery(queryData)) {
-            if (capabilityMatchCount >= 1) {
-                score += 44 + (capabilityMatchCount * 10);
-            } else if (suitability === 'support') {
-                score -= 14;
-            } else {
-                score -= 96;
-            }
-        }
-
-        if (reportPlan.inventoryIntent) {
-            if (sourceGroup === 'schedule') {
-                if (['time', 'desc', 'whenToUse', 'parent'].includes(fieldType)) {
-                    score -= 4;
-                } else {
-                    score -= 12;
-                }
-            }
-            if (result.sourceType === 'static') {
-                score -= 20;
-            }
-        }
-
-        if (reportPlan.intentType !== 'sequence' && result.sourceType === 'schedule' && fieldType === 'parent') {
-            score -= 8;
-        }
-
-        return score;
-    }
-
-    function shouldAssimilateVisibleAiResult(result, reportPlan = {}, queryData = {}) {
-        if (!result) return false;
-        if (result.sourceType === 'static') return false;
-        if (isAiCapabilityGatedQuery(queryData) && classifyAiPrimarySuitability(result, queryData) === 'reject') {
-            return false;
-        }
-        if (result.sourceType === 'schedule') {
-            if (reportPlan.visibleInventoryMode || queryData.facilityBreadthMode) {
-                return false;
-            }
-            return reportPlan.intentType === 'sequence' || Boolean((reportPlan.facets?.time || []).length);
-        }
-        return ['playbook', 'deck', 'show'].includes(result.sourceType);
-    }
-
-    function isCoveragePrimaryParent(result, reportPlan = {}, queryData = {}) {
-        if (!result) return false;
-        if (!['playbook', 'deck', 'show'].includes(result.sourceType)) return false;
-        if (isAiCapabilityGatedQuery(queryData) && classifyAiPrimarySuitability(result, queryData) !== 'primary') {
-            return false;
-        }
-        if (result.sourceType === 'show') return true;
-        if (reportPlan.visibleInventoryMode && result.sourceType === 'deck') return true;
-        if (reportPlan.inventoryIntent) return true;
-        return getAiCoverageParentPriority(result) >= 4;
-    }
-
-    function collectAiCoverageAnchorValues(results = []) {
-        return uniqueItems((Array.isArray(results) ? results : []).flatMap(result => ([
-            result?.entityKey,
-            result?.venueKey,
-            result?.seriesKey,
-            result?.sourceClusterKey
-        ]).filter(Boolean)));
-    }
-
-    function collectAiCoverageParentIds(results = []) {
-        return uniqueItems((Array.isArray(results) ? results : [])
-            .map(result => result?.parentId || result?.id)
-            .filter(Boolean));
-    }
-
-    function matchesAiCoverageAnchorValues(result, anchorValues = []) {
-        if (!result || !Array.isArray(anchorValues) || !anchorValues.length) return false;
-        return [
-            result.entityKey,
-            result.venueKey,
-            result.seriesKey,
-            result.sourceClusterKey
-        ].some(anchor => anchor && anchorValues.includes(anchor));
-    }
-
-    function isAiRelevantScheduleSupportResult(result, queryData = {}, reportPlan = {}, anchorValues = []) {
-        if (!result || result.sourceType !== 'schedule') return false;
-
-        const fieldType = result.fieldType || 'parent';
-        const hardMatches = countMatchedTerms(
-            result.normalizedCombined || '',
-            reportPlan.hardAnchors || queryData.hardAnchors || []
-        );
-        const clusterMatches = countMatchedTerms(
-            result.normalizedCombined || '',
-            reportPlan.subjectClusters || queryData.subjectClusters || []
-        );
-        const categoryMatch = (reportPlan.mustCoverCategories || []).some(categoryLabel =>
-            resultMatchesCategory(result, categoryLabel)
-        );
-        const breadthMode = reportPlan.visibleInventoryMode || reportPlan.inventoryIntent || queryData.facilityBreadthMode;
-
-        if (matchesAiCoverageAnchorValues(result, anchorValues)) return true;
-        if (hardMatches >= 1 || clusterMatches >= 1) return true;
-        if (categoryMatch) return true;
-        if (!breadthMode) return false;
-
-        return ['parent', 'desc', 'time', 'tag'].includes(fieldType)
-            && Boolean(result.timeHint || result.bestTimeHint || result.locationLabel);
-    }
-
-    function getAiSupportCoveragePriority(result, queryData = {}, reportPlan = {}, anchorValues = []) {
-        if (!result) return 0;
-        const fieldType = result.fieldType || 'parent';
-        let score = scoreAiCoverageCandidate(result, queryData, reportPlan);
-
-        if (result.sourceType === 'schedule') {
-            score += 18;
-            if (matchesAiCoverageAnchorValues(result, anchorValues)) {
-                score += 24;
-            }
-            if (fieldType === 'parent') {
-                score += 14;
-            } else if (fieldType === 'desc') {
-                score += 12;
-            } else if (fieldType === 'time' || fieldType === 'tag') {
-                score += 8;
-            }
-            if (result.timeHint) {
-                score += 8;
-            }
-        } else if (result.sourceType === 'static') {
-            score -= 10;
-        }
-
-        return score;
-    }
-
-    function getAiVisibleCoveragePriority(result, queryData = {}, reportPlan = {}) {
-        if (!result) return 0;
-        let score = scoreAiCoverageCandidate(result, queryData, reportPlan);
-        const fieldType = result.fieldType || 'parent';
-
-        if (reportPlan.visibleInventoryMode || queryData.facilityBreadthMode) {
-            if (result.sourceType === 'deck') score += 42;
-            if (result.sourceType === 'show') score += 36;
-            if (result.sourceType === 'playbook') score += (result.sourceDetailType || 'general') !== 'general' ? 22 : 12;
-            if (result.sourceType === 'schedule') score -= 40;
-        }
-
-        if (fieldType === 'parent') score += 14;
-        if (['summary', 'theme', 'desc', 'action'].includes(fieldType)) score += 8;
-        return score;
-    }
-
-    function collectAiVisibleCoverageParentIds(displayResults = [], queryData = {}, reportPlan = {}) {
-        const visibleCandidates = (Array.isArray(displayResults) ? displayResults : [])
-            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
-            .sort((a, b) => getAiVisibleCoveragePriority(b, queryData, reportPlan) - getAiVisibleCoveragePriority(a, queryData, reportPlan));
-
-        return uniqueItems(visibleCandidates.map(result => result.parentId || result.id))
-            .slice(0, reportPlan.visibleInventoryMode ? 16 : AI_REPORT_MAX_PARENTS);
-    }
-
-    function collectAiDerivedCoverageParentIds(results = [], visibleParentIds = [], queryData = {}, reportPlan = {}, selectedResults = []) {
-        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
-        const visibleSet = new Set(visibleParentIds || []);
-        const visibleCandidates = pool.filter(result => visibleSet.has(result.parentId || result.id));
-        const seedResults = uniqueItems([
-            ...collectAiCoverageParentIds(selectedResults),
-            ...visibleParentIds
-        ]).map(parentId => pool.find(result => (result.parentId || result.id) === parentId))
-            .filter(Boolean);
-        const anchorValues = collectAiCoverageAnchorValues([...seedResults, ...selectedResults, ...visibleCandidates]);
-        const seen = new Set();
-        const parentIds = [];
-
-        const pushParent = (parentId) => {
-            if (!parentId || seen.has(parentId)) return;
-            seen.add(parentId);
-            parentIds.push(parentId);
-        };
-
-        collectAiCoverageParentIds(selectedResults).forEach(parentId => {
-            if (!visibleSet.has(parentId)) pushParent(parentId);
-        });
-
-        pool
-            .filter(result => {
-                if (!isCoveragePrimaryParent(result, reportPlan, queryData)) return false;
-                if (anchorValues.length && [
-                    result.entityKey,
-                    result.venueKey,
-                    result.seriesKey,
-                    result.sourceClusterKey
-                ].some(anchor => anchor && anchorValues.includes(anchor))) {
-                    return true;
-                }
-                if (!reportPlan.inventoryIntent) return false;
-                return countMatchedTerms(result.normalizedCombined || '', reportPlan.subjectClusters || queryData.subjectClusters || []) >= 1;
-            })
-            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
-            .forEach(result => {
-                const parentId = result.parentId || result.id;
-                if (visibleSet.has(parentId)) return;
-                pushParent(parentId);
-            });
-
-        return parentIds.slice(0, AI_REPORT_MAX_PARENTS);
-    }
-
-    function collectAiSupportCoverageParentIds(results = [], requiredParentIds = [], queryData = {}, reportPlan = {}, selectedResults = [], displayResults = []) {
-        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
-        const requiredSet = new Set(requiredParentIds || []);
-        const visibleCandidates = (Array.isArray(displayResults) ? displayResults : [])
-            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT);
-        const referenceResults = uniqueItems([
-            ...collectAiCoverageParentIds(selectedResults),
-            ...Array.from(requiredSet)
-        ])
-            .map(parentId => pool.find(result => (result.parentId || result.id) === parentId))
-            .filter(Boolean);
-        const anchorValues = collectAiCoverageAnchorValues([
-            ...referenceResults,
-            ...(Array.isArray(selectedResults) ? selectedResults : []),
-            ...visibleCandidates
-        ]);
-
-        const prioritizedScheduleParentIds = uniqueItems(
-            pool
-                .filter(result => {
-                    const parentId = result.parentId || result.id;
-                    if (!parentId || requiredSet.has(parentId)) return false;
-                    return isAiRelevantScheduleSupportResult(result, queryData, reportPlan, anchorValues);
-                })
-                .sort((a, b) =>
-                    getAiSupportCoveragePriority(b, queryData, reportPlan, anchorValues)
-                    - getAiSupportCoveragePriority(a, queryData, reportPlan, anchorValues)
-                )
-                .map(result => result.parentId || result.id)
-        ).slice(0, Math.min(12, AI_REPORT_MAX_PARENTS));
-
-        const staticSupportParentIds = uniqueItems(
-            pool
-                .filter(result => {
-                    const parentId = result.parentId || result.id;
-                    return result.sourceType === 'static' && parentId && !requiredSet.has(parentId);
-                })
-                .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
-                .map(result => result.parentId || result.id)
-        ).slice(0, 4);
-
-        return uniqueItems([
-            ...prioritizedScheduleParentIds,
-            ...staticSupportParentIds
-        ]).slice(0, AI_REPORT_MAX_PARENTS);
-    }
-
-    function buildAiCoverageContract(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
-        const visibleParentIds = collectAiVisibleCoverageParentIds(displayResults, queryData, reportPlan);
-        const mustRenderDerivedParentIds = collectAiDerivedCoverageParentIds(results, visibleParentIds, queryData, reportPlan, selectedResults);
-        const mustRenderParentIds = uniqueItems([
-            ...visibleParentIds,
-            ...mustRenderDerivedParentIds
-        ]).slice(0, AI_REPORT_MAX_PARENTS);
-        const preferredSupportParentIds = collectAiSupportCoverageParentIds(
-            results,
-            mustRenderParentIds,
-            queryData,
-            reportPlan,
-            selectedResults,
-            displayResults
-        );
-        const targetCoverageCount = mustRenderParentIds.length;
-        const minimumCoverageRatio = mustRenderParentIds.length === 0 ? 0 : 1;
-        const targetVisibleCoverageCount = visibleParentIds.length;
-        const minimumVisibleCoverageRatio = visibleParentIds.length === 0 ? 0 : 1;
-
-        return {
-            mode: reportPlan.visibleInventoryMode
-                ? 'visible-inventory'
-                : (reportPlan.inventoryIntent ? 'inventory' : 'standard'),
-            targetCoverageCount,
-            minimumCoverageRatio,
-            mustRenderParentIds,
-            preferredParentIds: preferredSupportParentIds,
-            visibleParentIds,
-            eligibleVisibleParentIds: visibleParentIds,
-            mustRenderVisibleParentIds: visibleParentIds,
-            mustRenderDerivedParentIds,
-            preferredSupportParentIds,
-            targetVisibleCoverageCount,
-            minimumVisibleCoverageRatio,
-            mustCoverCategories: Array.isArray(reportPlan.mustCoverCategories) ? reportPlan.mustCoverCategories.slice(0, 10) : [],
-            preferredClusters: Array.isArray(reportPlan.preferredClusters) ? reportPlan.preferredClusters.slice(0, 10) : [],
-            relevantSourceTypes: uniqueItems((Array.isArray(results) ? results : [])
-                .map(result => result.sourceType)
-                .filter(sourceType => ['show', 'playbook', 'deck', 'schedule'].includes(sourceType))),
-            coverageReason: reportPlan.visibleInventoryMode
-                ? '右側可見高價值卡會直接變成左側必須覆蓋的可見結果契約'
-                : reportPlan.inventoryIntent
-                    ? '完整盤點題會優先覆蓋右側可見結果與同主題 sibling cards'
-                    : '依主題契合度優先覆蓋高價值 parent cards'
-        };
-    }
-
-    function getAiCoverageTierForParent(parentId = '', coverageContract = null) {
-        if (!parentId) return 'support';
-        if (coverageContract?.mustRenderVisibleParentIds?.includes(parentId)) return 'visible';
-        if (coverageContract?.mustRenderDerivedParentIds?.includes(parentId)) return 'derived';
-        if (coverageContract?.preferredSupportParentIds?.includes(parentId)) return 'support';
-        return 'support';
-    }
-
-    function orderAiParentBriefsForCoverage(parentBriefs = [], coverageContract = null) {
-        const orderedParentIds = uniqueItems([
-            ...(coverageContract?.mustRenderVisibleParentIds || []),
-            ...(coverageContract?.mustRenderDerivedParentIds || []),
-            ...(coverageContract?.preferredSupportParentIds || [])
-        ]);
-        const orderMap = new Map(orderedParentIds.map((parentId, index) => [parentId, index]));
-        return [...(Array.isArray(parentBriefs) ? parentBriefs : [])].sort((a, b) => {
-            const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
-            const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
-            if (orderA !== orderB) return orderA - orderB;
-            return (b.renderPriority || 0) - (a.renderPriority || 0);
-        });
-    }
-
-    function buildAiAnswerCoveragePool(results = [], displayResults = [], queryData = {}, reportPlan = {}, selectedResults = []) {
-        const pool = Array.isArray(results) ? results.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
-        const maxResults = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_RESULTS : 8;
-        const maxParents = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_PARENTS : 4;
-        const maxPerParent = reportPlan.responseMode === 'report' ? AI_REPORT_MAX_PER_PARENT : 2;
-        const selected = [];
-        const seenIds = new Set();
-        const parentCounts = new Map();
-        const coverageContract = buildAiCoverageContract(pool, displayResults, queryData, reportPlan, selectedResults);
-        const mustRenderParentIds = coverageContract.mustRenderParentIds || [];
-        const visibleParents = new Set(displayResults
-            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
-            .map(result => result.parentId || result.id));
-
-        const sortedPool = [...pool].sort((a, b) =>
-            scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents)
-            - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents)
-        );
-
-        const canAdd = (result) => {
-            if (!result || seenIds.has(result.id)) return false;
-            if (selected.length >= maxResults) return false;
-            const parentId = result.parentId || result.id;
-            const currentParentCount = parentCounts.get(parentId) || 0;
-            if (currentParentCount >= maxPerParent) return false;
-            if (!parentCounts.has(parentId) && parentCounts.size >= maxParents) return false;
-            return true;
-        };
-
-        const addResult = (result, role = '') => {
-            if (!canAdd(result)) return false;
-            const parentId = result.parentId || result.id;
-            seenIds.add(result.id);
-            parentCounts.set(parentId, (parentCounts.get(parentId) || 0) + 1);
-            selected.push({
-                ...result,
-                evidenceRole: role || result.evidenceRole || inferAiCoverageEvidenceRole(result, queryData, reportPlan)
-            });
-            return true;
-        };
-
-        const addParentBundle = (parentId, preferredRole = '') => {
-            if (!parentId) return;
-            const siblings = sortedPool.filter(result => (result.parentId || result.id) === parentId);
-            if (!siblings.length) return;
-
-            const preferredParent = siblings.find(result => (result.fieldType || 'parent') === 'parent') || siblings[0];
-            addResult(preferredParent, preferredRole || inferAiCoverageEvidenceRole(preferredParent, queryData, reportPlan));
-
-            getAiSiblingFieldPriority(preferredParent.sourceType).forEach(fieldType => {
-                const sibling = siblings.find(result => (result.fieldType || 'parent') === fieldType);
-                if (!sibling) return;
-                addResult(sibling, inferAiCoverageEvidenceRole(sibling, queryData, reportPlan));
-            });
-        };
-
-        mustRenderParentIds.forEach(parentId => {
-            const role = visibleParents.has(parentId) ? 'same-subject-detail' : 'core-answer';
-            addParentBundle(parentId, role);
-        });
-
-        (coverageContract.preferredSupportParentIds || []).forEach(parentId => {
-            addParentBundle(parentId, 'timing-context');
-        });
-
-        uniqueItems(selectedResults.map(result => result.parentId || result.id)).forEach(parentId => {
-            addParentBundle(parentId, 'core-answer');
-        });
-
-        selectedResults
-            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents) - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents))
-            .forEach(result => {
-                addResult(result, result.evidenceRole || inferAiCoverageEvidenceRole(result, queryData, reportPlan));
-            });
-
-        displayResults
-            .slice(0, AI_REPORT_VISIBLE_ASSIMILATION_LIMIT)
-            .filter(result => shouldAssimilateVisibleAiResult(result, reportPlan, queryData))
-            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan, visibleParents) - scoreAiCoverageCandidate(a, queryData, reportPlan, visibleParents))
-            .forEach(result => {
-                addParentBundle(result.parentId || result.id, 'same-subject-detail');
-            });
-
-        uniqueItems([
-            ...(reportPlan.hardAnchors || []),
-            ...(reportPlan.subjectClusters || []),
-            ...((reportPlan.facets?.entityPlace || []).slice(0, 8))
-        ]).slice(0, 18).forEach(term => {
-            sortedPool
-                .filter(result =>
-                    canAdd(result)
-                    && countMatchedTerms(result.normalizedCombined || '', [term]) >= 1
-                    && getAiCoverageParentPriority(result) >= 3
-                )
-                .slice(0, 3)
-                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
-        });
-
-        (reportPlan.mustCoverCategories || []).forEach(categoryLabel => {
-            sortedPool
-                .filter(result => canAdd(result) && resultMatchesCategory(result, categoryLabel))
-                .slice(0, 4)
-                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
-        });
-
-        (reportPlan.preferredClusters || []).forEach(clusterKey => {
-            sortedPool
-                .filter(result => canAdd(result) && [result.sourceClusterKey, result.entityKey, result.venueKey, result.seriesKey].includes(clusterKey))
-                .slice(0, 3)
-                .forEach(result => addParentBundle(result.parentId || result.id, 'same-subject-detail'));
-        });
-
-        sortedPool.forEach(result => {
-            if (selected.length >= maxResults) return;
-            addResult(result, inferAiCoverageEvidenceRole(result, queryData, reportPlan));
-        });
-
-        return selected.slice(0, maxResults);
-    }
-
-    function buildAiParentBriefResults(answerCoverageResults = [], rankedResults = [], coverageContract = null, queryData = {}, reportPlan = {}) {
-        const merged = new Map((Array.isArray(answerCoverageResults) ? answerCoverageResults : []).map(result => [result.id, result]));
-        const requiredParentIds = uniqueItems([
-            ...(coverageContract?.mustRenderVisibleParentIds || []),
-            ...(coverageContract?.mustRenderDerivedParentIds || []),
-            ...(coverageContract?.preferredSupportParentIds || [])
-        ]);
-        const rankedPool = Array.isArray(rankedResults) ? rankedResults.slice(0, AI_REPORT_RANKED_POOL_LIMIT) : [];
-
-        requiredParentIds.forEach(parentId => {
-            rankedPool
-                .filter(result => (result.parentId || result.id) === parentId)
-                .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
-                .slice(0, AI_REPORT_MAX_PER_PARENT)
-                .forEach(result => {
-                    if (!merged.has(result.id)) {
-                        merged.set(result.id, result);
-                    }
-                });
-        });
-
-        return Array.from(merged.values())
-            .sort((a, b) => scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan))
-            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
-    }
-
-    function getAiParentBriefDetailLines(result, queryData = {}) {
-        if (!result) return [];
-        const lines = [];
-        if (result.timeHint) {
-            lines.push(`時段：${compactSearchText(result.timeHint)}`);
-        }
-        if (result.bestTimeHint) {
-            lines.push(`最佳時機：${compactSearchText(result.bestTimeHint)}`);
-        }
-
-        const highlightLines = buildSearchResultHighlights(result, queryData);
-        if (highlightLines.length) {
-            lines.push(...highlightLines);
-        } else {
-            lines.push(`${result.fieldLabel || getAiFieldLabel(result.fieldType || 'parent')}：${truncateSearchPreview(result.text || result.structuredText, 220)}`);
-        }
-
-        if (result.sourceType === 'schedule') {
-            if (result.locationLabel) {
-                lines.push(`相關位置：${compactSearchText(result.locationLabel)}`);
-            }
-            const scheduleSummary = truncateSearchPreview(result.structuredText || result.text, 220);
-            if (scheduleSummary) {
-                lines.push(`行程摘要：${scheduleSummary}`);
-            }
-        }
-
-        return uniqueItems(lines.filter(Boolean)).slice(0, (result.fieldType || 'parent') === 'parent' ? 4 : 3);
-    }
-
-    function buildAiParentBriefs(results = [], queryData = {}, reportPlan = {}, coverageContract = null) {
-        const grouped = new Map();
-        const orderedResults = [...results].sort((a, b) =>
-            scoreAiCoverageCandidate(b, queryData, reportPlan) - scoreAiCoverageCandidate(a, queryData, reportPlan)
-        );
-
-        orderedResults.forEach(result => {
-            const parentId = result.parentId || result.id;
-            const current = grouped.get(parentId);
-            const sourceDetailType = result.sourceDetailType || 'general';
-            const sourceLabels = uniqueItems([
-                getAiAnswerSourceLabel(result.sourceType),
-                getAiSourceDetailLabel(sourceDetailType)
-            ]);
-
-            if (!current) {
-                grouped.set(parentId, {
-                    parentId,
-                    title: result.title,
-                    cardType: getAiCoverageEntityType(result),
-                    groupLabel: result.groupLabel || getSourceLabel(result.sourceType),
-                    sourceType: result.sourceType,
-                    contentRole: result.contentRole || 'primary',
-                    canonicalEntityIds: Array.isArray(result.canonicalEntityIds) ? result.canonicalEntityIds.slice(0, 8) : [],
-                    entityKey: result.entityKey || '',
-                    venueKey: result.venueKey || '',
-                    seriesKey: result.seriesKey || '',
-                    sourceClusterKey: result.sourceClusterKey || '',
-                    capabilityTags: Array.isArray(result.capabilityTags) ? result.capabilityTags.slice(0, 6) : [],
-                    entityFamilies: Array.isArray(result.entityFamilies) ? result.entityFamilies.slice(0, 6) : [],
-                    supportOfParentIds: Array.isArray(result.supportOfParentIds) ? result.supportOfParentIds.slice(0, 8) : [],
-                    renderPriority: getAiCoverageParentPriority(result),
-                    coverageTier: getAiCoverageTierForParent(parentId, coverageContract),
-                    categoryFamilies: Array.isArray(result.categoryFamilies) ? result.categoryFamilies.slice(0, 6) : [],
-                    sourceLabels,
-                    detailBullets: [],
-                    citationIds: []
-                });
-            }
-
-            const target = grouped.get(parentId);
-            sourceLabels.forEach(label => {
-                if (target.sourceLabels.length < 4 && !target.sourceLabels.includes(label)) {
-                    target.sourceLabels.push(label);
-                }
-            });
-            (result.categoryFamilies || []).forEach(categoryLabel => {
-                if (!target.categoryFamilies.includes(categoryLabel) && target.categoryFamilies.length < 6) {
-                    target.categoryFamilies.push(categoryLabel);
-                }
-            });
-            (result.capabilityTags || []).forEach(capabilityId => {
-                if (!target.capabilityTags.includes(capabilityId) && target.capabilityTags.length < 6) {
-                    target.capabilityTags.push(capabilityId);
-                }
-            });
-            (result.entityFamilies || []).forEach(entityFamily => {
-                if (!target.entityFamilies.includes(entityFamily) && target.entityFamilies.length < 6) {
-                    target.entityFamilies.push(entityFamily);
-                }
-            });
-            (result.supportOfParentIds || []).forEach(relatedParentId => {
-                if (!target.supportOfParentIds.includes(relatedParentId) && target.supportOfParentIds.length < 8) {
-                    target.supportOfParentIds.push(relatedParentId);
-                }
-            });
-            (result.canonicalEntityIds || []).forEach(entityId => {
-                if (!target.canonicalEntityIds.includes(entityId) && target.canonicalEntityIds.length < 8) {
-                    target.canonicalEntityIds.push(entityId);
-                }
-            });
-            if (result.contentRole === 'support') {
-                target.contentRole = 'support';
-            }
-            getAiParentBriefDetailLines(result, queryData).forEach(line => {
-                if (target.detailBullets.length < 10 && !target.detailBullets.includes(line)) {
-                    target.detailBullets.push(line);
-                }
-            });
-            if (result.id && target.citationIds.length < AI_REPORT_MAX_RESULTS && !target.citationIds.includes(result.id)) {
-                target.citationIds.push(result.id);
-            }
-        });
-
-        const orderedParentIds = uniqueItems([
-            ...(coverageContract?.mustRenderVisibleParentIds || []),
-            ...(coverageContract?.mustRenderDerivedParentIds || []),
-            ...(coverageContract?.preferredSupportParentIds || [])
-        ]);
-        const orderMap = new Map(orderedParentIds.map((parentId, index) => [parentId, index]));
-
-        return Array.from(grouped.values())
-            .filter(item => item.title && item.detailBullets.length)
-            .sort((a, b) => {
-                const orderA = orderMap.has(a.parentId) ? orderMap.get(a.parentId) : Number.MAX_SAFE_INTEGER;
-                const orderB = orderMap.has(b.parentId) ? orderMap.get(b.parentId) : Number.MAX_SAFE_INTEGER;
-                if (orderA !== orderB) return orderA - orderB;
-                return (b.renderPriority || 0) - (a.renderPriority || 0);
-            })
-            .slice(0, AI_REPORT_MAX_PARENTS);
-    }
-
-    function buildAiCoverageStats(results = [], queryData = {}, reportPlan = {}, coverageContract = null) {
-        const sourceCounts = {};
-        results.forEach(result => {
-            const key = result.sourceDetailType || 'general';
-            sourceCounts[key] = (sourceCounts[key] || 0) + 1;
-        });
-
-        const selectedParentIds = uniqueItems(results.map(result => result.parentId || result.id));
-        const visibleParentIds = coverageContract?.mustRenderVisibleParentIds || [];
-        const visibleRenderedCount = selectedParentIds.filter(parentId => visibleParentIds.includes(parentId)).length;
-
-        return {
-            selectedParentCount: selectedParentIds.length,
-            selectedChunkCount: results.length,
-            targetParentCount: coverageContract?.targetCoverageCount || 0,
-            visibleTargetCount: visibleParentIds.length,
-            visibleRenderedCount,
-            visibleBackfilledCount: 0,
-            visibleCoverageRatio: visibleParentIds.length
-                ? Number((Math.min(1, visibleRenderedCount / visibleParentIds.length)).toFixed(2))
-                : 0,
-            sourceCounts,
-            primarySubject: (reportPlan.hardAnchors || [])[0]
-                || (reportPlan.subjectClusters || [])[0]
-                || (queryData.highlightTerms || [])[0]
-                || queryData.rawQuery
-                || ''
-        };
-    }
-
-    function buildAiEntityCoverageSets(parentBriefs = [], queryData = {}, coverageContract = null) {
-        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
-        const primary = [];
-        const support = [];
-        const primaryIds = new Set();
-        const visibleIds = new Set(coverageContract?.mustRenderVisibleParentIds || []);
-        const derivedIds = new Set(coverageContract?.mustRenderDerivedParentIds || []);
-        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
-
-        safeBriefs.forEach(item => {
-            const capabilityMatched = !isAiCapabilityGatedQuery(queryData)
-                || requiredCapabilities.every(capabilityId => briefMatchesCapability(item, capabilityId));
-            const isPrimaryCandidate = capabilityMatched
-                && item.contentRole !== 'support'
-                && item.sourceType !== 'schedule'
-                && item.sourceType !== 'static'
-                && (visibleIds.has(item.parentId)
-                    || derivedIds.has(item.parentId)
-                    || item.coverageTier !== 'support');
-
-            if (isPrimaryCandidate) {
-                primary.push(item);
-                primaryIds.add(item.parentId);
-            }
-        });
-
-        safeBriefs.forEach(item => {
-            if (primaryIds.has(item.parentId)) return;
-            if (item.sourceType === 'schedule' || item.sourceType === 'static' || item.coverageTier === 'support') {
-                support.push(item);
-                return;
-            }
-            if ((item.supportOfParentIds || []).some(parentId => primaryIds.has(parentId))) {
-                support.push(item);
-            }
-        });
-
-        return {
-            primaryEntityParents: primary.slice(0, AI_REPORT_MAX_PARENTS),
-            supportEntityParents: support.slice(0, AI_REPORT_MAX_PARENTS)
-        };
-    }
-
-    function getAiArticleSectionMeta(sectionKey = 'deckShow') {
-        const meta = {
-            schedule: {
-                sectionKey: 'schedule',
-                sectionTitle: '行程安排攻略'
-            },
-            deckShow: {
-                sectionKey: 'deckShow',
-                sectionTitle: '甲板設施與表演攻略'
-            },
-            playbook: {
-                sectionKey: 'playbook',
-                sectionTitle: '攻略心得與注意事項'
-            }
-        };
-        return meta[sectionKey] || meta.deckShow;
-    }
-
-    function getAiArticleSectionKey(item = {}) {
-        const sourceType = String(item.sourceType || '').toLowerCase();
-        const cardType = String(item.cardType || '').toLowerCase();
-        if (sourceType === 'schedule' || cardType === 'schedule') {
-            return 'schedule';
-        }
-        if (sourceType === 'playbook' || cardType === 'playbook') {
-            return 'playbook';
-        }
-        return 'deckShow';
-    }
-
-    function splitAiArticleDetailBuckets(detailBullets = []) {
-        const buckets = {
-            time: [],
-            location: [],
-            content: [],
-            insight: [],
-            caution: []
-        };
-        const timePattern = /^(時段|日期|時間|最佳時機|時段提示|開演前|集合時間|時機|day\s*\d+)/i;
-        const locationPattern = /^(地點|位置|相關位置|樓層|甲板|Deck|場館|區域|船頭|船尾)/i;
-        const cautionPattern = /^(注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒)/i;
-        const insightPattern = /^(心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順)/i;
-
-        (Array.isArray(detailBullets) ? detailBullets : []).forEach((detail) => {
-            const line = compactSearchText(detail || '');
-            if (!line) return;
-            const normalized = line.toLowerCase();
-            if (timePattern.test(line) || /(上午|下午|晚上|海上日|登船日|晚餐前|開演前|每次主秀|day\s*\d+)/i.test(line)) {
-                buckets.time.push(line);
-                return;
-            }
-            if (locationPattern.test(line) || /(deck\s*\d+|甲板|樓層|forward|aft|midship|劇院|酒廊|泳池|花園|餐廳)/i.test(normalized)) {
-                buckets.location.push(line);
-                return;
-            }
-            if (cautionPattern.test(line) || /(注意|提醒|限制|風險|避免|踩雷|壓縮|錯過|晚到|以當晚通知為主|仍以)/i.test(line)) {
-                buckets.caution.push(line);
-                return;
-            }
-            if (insightPattern.test(line) || /(心得|亮點|旅程連結|適合|值得|加值|最順|推薦|這趟)/i.test(line)) {
-                buckets.insight.push(line);
-                return;
-            }
-            buckets.content.push(line);
-        });
-
-        return buckets;
-    }
-
-    function joinAiArticleBucketLines(lines = [], maxItems = 2) {
-        const items = uniqueItems((Array.isArray(lines) ? lines : []).filter(Boolean)).slice(0, maxItems);
-        return items.join('； ');
-    }
-
-    function normalizeAiArticleFactText(value = '') {
-        return compactSearchText(value || '')
-            .replace(/^(時段|日期|時間|時間\s*\/\s*時段|最佳時機|時段提示|開演前|集合時間|時機|地點|位置|相關位置|樓層|甲板|場館|區域|船頭|船尾|心得|亮點|旅程連結|這趟用途|建議做法|建議|適合|值得|玩法|加值|最順|注意事項|提醒|限制|風險|備註|避免踩雷|注意|限制提醒|行程重點|活動標籤|目的|節奏判斷|點心補給|重點摘要|適用時機)\s*[：:]\s*/i, '')
-            .replace(/\s*[|｜]\s*/g, '，')
-            .replace(/\s*\/\s*/g, '／')
-            .replace(/[?？]{2,}/g, ' ')
-            .trim();
-    }
-
-    function isAiNarrativeNoise(text = '') {
-        const normalized = compactSearchText(text || '').trim();
-        if (!normalized) return true;
-        if (normalized.length <= 2) return true;
-        if (/^(day\s*\d+|deck\s*\d+)$/i.test(normalized)) return true;
-        if (/^(行程重點|活動標籤|時間|日期|地點|位置|樓層|甲板|注意事項|提醒|限制)$/i.test(normalized)) return true;
-        if ((normalized.match(/[、；]/g) || []).length >= 4 && /(deck\s*\d+|day\s*\d+|登船|海上|下船)/i.test(normalized)) return true;
-        return false;
-    }
-
-    function condenseAiNarrativeFact(text = '', maxClauses = 2) {
-        const normalized = normalizeAiArticleFactText(text);
-        if (!normalized) return '';
-        const clauses = normalized
-            .split(/[；。]/)
-            .map((item) => compactSearchText(item || '').trim())
-            .filter(Boolean);
-        if (!clauses.length) return '';
-        const limited = clauses.slice(0, maxClauses).join('，');
-        return compactSearchText(limited).trim();
-    }
-
-    function buildAiArticleParagraphsFromBuckets(buckets = {}, detailBullets = []) {
-        const toFacts = (items = [], maxItems = 3) => uniqueItems((Array.isArray(items) ? items : [])
-            .map(item => normalizeAiArticleFactText(item))
-            .filter(Boolean))
-            .slice(0, maxItems);
-
-        const fallbackFacts = toFacts(detailBullets, 4);
-        const contentFacts = toFacts((Array.isArray(buckets.content) && buckets.content.length) ? buckets.content : fallbackFacts, 3);
-        const locationFacts = toFacts(buckets.location, 2);
-        const timeFacts = toFacts(buckets.time, 2);
-        const insightFacts = toFacts(buckets.insight, 2);
-        const cautionFacts = toFacts(buckets.caution, 2);
-
-        const summarySentences = [];
-        if (contentFacts.length) {
-            summarySentences.push(contentFacts.join('； '));
-        }
-        if (locationFacts.length) {
-            summarySentences.push(`位置可先記 ${locationFacts.join('； ')}`);
-        }
-        if (timeFacts.length) {
-            summarySentences.push(`如果要抓時段，${timeFacts.join('； ')}`);
-        }
-
-        const supportSentences = [];
-        if (insightFacts.length) {
-            supportSentences.push(insightFacts.join('； '));
-        }
-        if (cautionFacts.length) {
-            supportSentences.push(`另外要留意 ${cautionFacts.join('； ')}`);
-        }
-
-        const summaryParagraph = compactSearchText(summarySentences.join('。 ').replace(/。+/g, '。')).trim();
-        const supportParagraph = compactSearchText(supportSentences.join('。 ').replace(/。+/g, '。')).trim();
-
-        return {
-            summaryParagraph,
-            supportParagraph
-        };
-    }
-
-    function buildAiArticleCardDossier(item = {}) {
-        const buckets = splitAiArticleDetailBuckets(item.detailBullets || []);
-        const paragraphs = buildAiArticleParagraphsFromBuckets(buckets, item.detailBullets || []);
-        return {
-            parentId: item.parentId,
-            title: item.title,
-            cardType: item.cardType || 'mixed',
-            sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels.slice(0, 5) : [],
-            detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets.slice(0, 10) : [],
-            summaryParagraph: paragraphs.summaryParagraph,
-            supportParagraph: paragraphs.supportParagraph,
-            citationIds: Array.isArray(item.citationIds) ? item.citationIds.slice(0, AI_REPORT_MAX_RESULTS) : [],
-            renderOrigin: 'backfill'
-        };
-    }
-
-    function buildAiArticleCardFromInventoryItem(item = {}) {
-        const dossier = buildAiArticleCardDossier({
-            parentId: item.parentId || item.id || item.title,
-            title: item.title,
-            cardType: item.cardType || item.sourceType || 'mixed',
-            sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels : [],
-            detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets : [],
-            citationIds: Array.isArray(item.citationIds) ? item.citationIds : []
-        });
-        const renderOrigin = typeof item.renderOrigin === 'string' && item.renderOrigin
-            ? item.renderOrigin
-            : (item.coverageTier === 'visible' ? 'visible-backfill' : item.coverageTier === 'derived' ? 'derived-backfill' : 'backfill');
-        return {
-            ...dossier,
-            renderOrigin
-        };
-    }
-
-    function buildAiSectionFactCollection(cards = []) {
-        const titles = [];
-        const timeFacts = [];
-        const locationFacts = [];
-        const contentFacts = [];
-        const insightFacts = [];
-        const cautionFacts = [];
-        const seenFacts = new Set();
-
-        const pushFact = (target, value) => {
-            const text = condenseAiNarrativeFact(value || '');
-            if (!text) return;
-            if (isAiNarrativeNoise(text)) return;
-            const key = text.toLowerCase();
-            if (!key || seenFacts.has(key)) return;
-            seenFacts.add(key);
-            target.push(text);
-        };
-
-        const pushBucketFacts = (bucket = {}, maxItems = 3) => {
-            uniqueItems((Array.isArray(bucket.time) ? bucket.time : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(timeFacts, item));
-            uniqueItems((Array.isArray(bucket.location) ? bucket.location : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(locationFacts, item));
-            uniqueItems((Array.isArray(bucket.content) ? bucket.content : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(contentFacts, item));
-            uniqueItems((Array.isArray(bucket.insight) ? bucket.insight : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(insightFacts, item));
-            uniqueItems((Array.isArray(bucket.caution) ? bucket.caution : []).map(normalizeAiArticleFactText).filter(Boolean)).slice(0, maxItems).forEach((item) => pushFact(cautionFacts, item));
-        };
-
-        (Array.isArray(cards) ? cards : []).forEach((rawCard) => {
-            const card = rawCard && typeof rawCard === 'object' ? rawCard : {};
-            const title = compactSearchText(card.title || '').trim();
-            if (title && !isAiNarrativeNoise(title) && !titles.includes(title)) {
-                titles.push(title);
-            }
-
-            const detailBullets = Array.isArray(card.detailBullets) ? card.detailBullets : [];
-            if (detailBullets.length) {
-                pushBucketFacts(splitAiArticleDetailBuckets(detailBullets));
-            }
-
-            const summaryParagraph = compactSearchText(card.summaryParagraph || '').trim();
-            if (summaryParagraph) {
-                pushFact(contentFacts, summaryParagraph);
-            }
-
-            const supportParagraph = compactSearchText(card.supportParagraph || '').trim();
-            if (supportParagraph) {
-                const supportBucket = splitAiArticleDetailBuckets([supportParagraph]);
-                if ((supportBucket.caution || []).length) {
-                    pushBucketFacts({ caution: supportBucket.caution }, 2);
-                } else if ((supportBucket.insight || []).length) {
-                    pushBucketFacts({ insight: supportBucket.insight }, 2);
-                } else {
-                    pushFact(insightFacts, supportParagraph);
-                }
-            }
-        });
-
-        return {
-            titles: titles.slice(0, 3),
-            timeFacts: timeFacts.slice(0, 3),
-            locationFacts: locationFacts.slice(0, 3),
-            contentFacts: contentFacts.slice(0, 4),
-            insightFacts: insightFacts.slice(0, 3),
-            cautionFacts: cautionFacts.slice(0, 3)
-        };
-    }
-
-    function joinAiNaturalList(items = []) {
-        const safeItems = uniqueItems((Array.isArray(items) ? items : []).map((item) => compactSearchText(item || '').trim()).filter(Boolean));
-        if (!safeItems.length) return '';
-        if (safeItems.length === 1) return safeItems[0];
-        if (safeItems.length === 2) return `${safeItems[0]}和${safeItems[1]}`;
-        if (safeItems.length > 3) return `${safeItems.slice(0, 2).join('、')}等重點`;
-        return `${safeItems.slice(0, -1).join('、')}，以及${safeItems[safeItems.length - 1]}`;
-    }
-
-    function composeAiGuideSectionParagraphs(sectionKey = 'deckShow', facts = {}) {
-        const titles = Array.isArray(facts.titles) ? facts.titles : [];
-        const timeFacts = Array.isArray(facts.timeFacts) ? facts.timeFacts : [];
-        const locationFacts = Array.isArray(facts.locationFacts) ? facts.locationFacts : [];
-        const contentFacts = Array.isArray(facts.contentFacts) ? facts.contentFacts : [];
-        const insightFacts = Array.isArray(facts.insightFacts) ? facts.insightFacts : [];
-        const cautionFacts = Array.isArray(facts.cautionFacts) ? facts.cautionFacts : [];
-
-        const paragraphs = [];
-        const titleLead = joinAiNaturalList(titles);
-        const takeFacts = (items, maxItems = 2) => uniqueItems((Array.isArray(items) ? items : [])
-            .map((item) => compactSearchText(item || '').trim())
-            .filter((item) => item && !isAiNarrativeNoise(item)))
-            .slice(0, maxItems);
-        const joinGuideFacts = (items, maxItems = 2) => {
-            const picked = takeFacts(items, maxItems);
-            if (!picked.length) return '';
-            if (picked.length === 1) return picked[0];
-            if (picked.length === 2) return `${picked[0]}，也可以順手處理 ${picked[1]}`;
-            return `${picked[0]}，再搭配 ${picked[1]}，最後留意 ${picked[2]}`;
-        };
-        const pushParagraph = (sentences = []) => {
-            const paragraph = compactSearchText((Array.isArray(sentences) ? sentences : [])
-                .map((item) => compactSearchText(item || '').trim())
-                .filter(Boolean)
-                .join(' '))
-                .trim();
-            if (paragraph) {
-                paragraphs.push(paragraph);
-            }
-        };
-
-        if (sectionKey === 'schedule') {
-            pushParagraph([
-                titleLead ? `如果你是為了把這題的節奏排順，先把 ${titleLead} 當成主要安排順序。` : '',
-                timeFacts.length ? `排程上最值得先抓的是 ${joinGuideFacts(timeFacts)}。` : '',
-                contentFacts.length ? `把 ${joinGuideFacts(contentFacts)} 串起來看，整體節奏會更清楚。` : ''
-            ]);
-
-            pushParagraph([
-                locationFacts.length ? `移動路線上可以先記 ${joinGuideFacts(locationFacts)}。` : '',
-                insightFacts.length ? `實際執行時，${joinGuideFacts(insightFacts)}。` : '',
-                cautionFacts.length ? `另外要避開的點是 ${joinGuideFacts(cautionFacts)}。` : ''
-            ]);
-        } else if (sectionKey === 'deckShow') {
-            pushParagraph([
-                titleLead ? `就設施與表演本體來看，先認識 ${titleLead} 這幾個重點最有幫助。` : '',
-                contentFacts.length ? `真正能用上的內容，重點是 ${joinGuideFacts(contentFacts, 3)}。` : '',
-                locationFacts.length ? `位置上主要會落在 ${joinGuideFacts(locationFacts)}。` : ''
-            ]);
-
-            pushParagraph([
-                timeFacts.length ? `如果要抓什麼時候去最順，可以先看 ${joinGuideFacts(timeFacts)}。` : '',
-                insightFacts.length ? `比較值得提前知道的是 ${joinGuideFacts(insightFacts)}。` : '',
-                cautionFacts.length ? `實際去用時要特別留意 ${joinGuideFacts(cautionFacts)}。` : ''
-            ]);
-        } else {
-            pushParagraph([
-                titleLead ? `如果把這題整理成一版真的好執行的攻略，先抓 ${titleLead} 這幾個重點就夠用了。` : '',
-                insightFacts.length ? `比較有幫助的做法是 ${joinGuideFacts(insightFacts, 3)}。` : '',
-                !insightFacts.length && contentFacts.length ? `可以先記 ${joinGuideFacts(contentFacts)}。` : ''
-            ]);
-
-            pushParagraph([
-                timeFacts.length ? `排進行程時，${joinGuideFacts(timeFacts)} 會比較順。` : '',
-                locationFacts.length ? `切換位置或動線時，也可以一起記 ${joinGuideFacts(locationFacts)}。` : '',
-                cautionFacts.length ? `最後最容易被忽略的是 ${joinGuideFacts(cautionFacts)}。` : ''
-            ]);
-        }
-
-        const cleanedParagraphs = uniqueItems(paragraphs.map((item) => compactSearchText(item || '').trim()).filter(Boolean));
-        const maxParagraphs = sectionKey === 'schedule' ? 2 : (sectionKey === 'deckShow' ? 2 : 3);
-        if (cleanedParagraphs.length <= maxParagraphs) {
-            return cleanedParagraphs;
-        }
-
-        const merged = cleanedParagraphs.slice(0, maxParagraphs - 1);
-        const trailing = compactSearchText(cleanedParagraphs.slice(maxParagraphs - 1).join(' ')).trim();
-        if (trailing) {
-            merged.push(trailing);
-        }
-        return uniqueItems(merged).slice(0, maxParagraphs);
-    }
-
-    function buildAiSectionNarrativeParagraphs(sectionKey = 'deckShow', cards = []) {
-        const sectionMeta = getAiArticleSectionMeta(sectionKey);
-        const facts = buildAiSectionFactCollection(cards);
-        const paragraphs = composeAiGuideSectionParagraphs(sectionKey, facts);
-        if (paragraphs.length) {
-            return paragraphs;
-        }
-
-        const fallbackSummary = compactSearchText(sectionMeta.sectionSummary || '').trim();
-        return fallbackSummary ? [fallbackSummary] : [];
-    }
-
-    function buildAiSectionNarrative(sectionKey = 'deckShow', cards = []) {
-        const meta = getAiArticleSectionMeta(sectionKey);
-        const safeCards = Array.isArray(cards) ? cards.filter(Boolean) : [];
-        const narrativeParagraphs = buildAiSectionNarrativeParagraphs(sectionKey, safeCards);
-        const citationIds = uniqueItems(safeCards.flatMap((card) => Array.isArray(card?.citationIds) ? card.citationIds : [])).slice(0, AI_REPORT_MAX_RESULTS);
-        const renderOrigin = safeCards.some((card) => String(card?.renderOrigin || '').endsWith('backfill'))
-            ? 'backfill'
-            : 'model';
-        if (!narrativeParagraphs.length) {
-            return null;
-        }
-
-        return {
-            sectionKey: meta.sectionKey,
-            sectionTitle: meta.sectionTitle,
-            sectionSummary: '',
-            narrativeParagraphs,
-            citationIds,
-            renderOrigin,
-            cards: safeCards
-        };
-    }
-
-    function buildAiLongformArticleFallbackFromReport(report = {}) {
-        const inventory = Array.isArray(report?.fullCardInventory) ? report.fullCardInventory : [];
-        if (!inventory.length) {
-            return null;
-        }
-
-        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
-        const sections = sectionOrder.map((sectionKey) => {
-            const cards = inventory
-                .filter((item) => getAiArticleSectionKey(item) === sectionKey)
-                .map((item) => buildAiArticleCardFromInventoryItem(item))
-                .filter((card) => card.parentId && card.title && (card.summaryParagraph || card.supportParagraph));
-
-            return buildAiSectionNarrative(sectionKey, cards);
-        }).filter(Boolean);
-
-        if (!sections.length) {
-            return null;
-        }
-
-        return {
-            headline: typeof report?.headline === 'string' ? report.headline : '',
-            introSummary: Array.isArray(report?.executiveSummary) && report.executiveSummary.length
-                ? report.executiveSummary.join(' ')
-                : '',
-            sections,
-            sourceComparison: Array.isArray(report?.sourceComparison) ? report.sourceComparison : [],
-            unansweredQuestions: Array.isArray(report?.unansweredQuestions) ? report.unansweredQuestions : []
-        };
-    }
-
-    function buildAiInventoryItemsFromParentBriefs(parentBriefs = []) {
-        return (Array.isArray(parentBriefs) ? parentBriefs : [])
-            .map((item) => ({
-                parentId: item.parentId,
-                title: item.title,
-                cardType: item.cardType || item.sourceType || 'mixed',
-                groupLabel: item.groupLabel || '',
-                sourceLabels: Array.isArray(item.sourceLabels) ? item.sourceLabels.slice(0, 4) : [],
-                categoryFamilies: Array.isArray(item.categoryFamilies) ? item.categoryFamilies.slice(0, 6) : [],
-                detailBullets: Array.isArray(item.detailBullets) ? item.detailBullets.slice(0, 10) : [],
-                citationIds: Array.isArray(item.citationIds) ? item.citationIds.slice(0, AI_REPORT_MAX_RESULTS) : [],
-                coverageTier: item.coverageTier || 'support',
-                renderOrigin: item.coverageTier === 'visible'
-                    ? 'visible-backfill'
-                    : item.coverageTier === 'derived'
-                        ? 'derived-backfill'
-                        : 'support-backfill'
-            }))
-            .filter((item) => item.parentId && item.title && item.detailBullets.length);
-    }
-
-    function buildAiInventoryItemsFromChunks(chunks = []) {
-        const seen = new Set();
-        return (Array.isArray(chunks) ? chunks : [])
-            .map((chunk) => {
-                const parentId = compactSearchText(chunk?.parentId || chunk?.id || '').trim();
-                const title = compactSearchText(chunk?.title || '').trim();
-                if (!parentId || !title || seen.has(parentId)) {
-                    return null;
-                }
-                seen.add(parentId);
-
-                const detailText = uniqueItems([
-                    compactSearchText(chunk?.structuredText || '').trim(),
-                    compactSearchText(chunk?.text || '').trim(),
-                    compactSearchText(chunk?.locationLabel || '').trim(),
-                    compactSearchText(chunk?.timeHint || '').trim(),
-                    compactSearchText(chunk?.bestTimeHint || '').trim()
-                ].filter(Boolean))
-                    .slice(0, 4)
-                    .map((item) => item.length > 240 ? `${item.slice(0, 237)}...` : item);
-
-                return {
-                    parentId,
-                    title,
-                    cardType: chunk?.cardType || chunk?.sourceType || 'mixed',
-                    groupLabel: '',
-                    sourceLabels: uniqueItems([
-                        getAiAnswerSourceLabel(chunk?.sourceType || 'static'),
-                        getAiSourceDetailLabel(chunk?.sourceDetailType || 'general')
-                    ].filter(Boolean)).slice(0, 4),
-                    categoryFamilies: Array.isArray(chunk?.categoryFamilies) ? chunk.categoryFamilies.slice(0, 6) : [],
-                    detailBullets: detailText,
-                    citationIds: chunk?.id ? [chunk.id] : [],
-                    coverageTier: 'support',
-                    renderOrigin: 'support-backfill'
-                };
-            })
-            .filter((item) => item && item.detailBullets.length);
-    }
-
-    function mergeAiInventoryItems(primaryItems = [], fallbackItems = []) {
-        const merged = [];
-        const seen = new Set();
-        [...(Array.isArray(primaryItems) ? primaryItems : []), ...(Array.isArray(fallbackItems) ? fallbackItems : [])].forEach((item) => {
-            if (!item?.parentId || seen.has(item.parentId)) return;
-            seen.add(item.parentId);
-            merged.push(item);
-        });
-        return merged;
-    }
-
-    function buildAiCoverageSummaryFallback(fullCardInventory = [], queryData = {}, coverageStats = {}, coverageContract = null) {
-        const items = Array.isArray(fullCardInventory) ? fullCardInventory : [];
-        const targetParentCount = Number(coverageStats?.targetParentCount || coverageContract?.targetCoverageCount || items.length || 0);
-        const visibleTargetCount = Number(coverageStats?.visibleTargetCount || coverageContract?.targetVisibleCoverageCount || (coverageContract?.mustRenderVisibleParentIds || []).length || 0);
-        const renderedParentCount = items.length;
-        const backfilledParentCount = items.filter((item) => String(item?.renderOrigin || '').endsWith('backfill')).length;
-        const visibleRenderedCount = items.filter((item) => item?.coverageTier === 'visible').length;
-        const visibleBackfilledCount = items.filter((item) => item?.coverageTier === 'visible' && String(item?.renderOrigin || '').endsWith('backfill')).length;
-        return {
-            selectedParentCount: Number(coverageStats?.selectedParentCount || items.length || 0),
-            targetParentCount,
-            renderedParentCount,
-            backfilledParentCount,
-            visibleTargetCount,
-            visibleRenderedCount,
-            visibleBackfilledCount,
-            visibleCoverageRatio: visibleTargetCount ? visibleRenderedCount / visibleTargetCount : 0,
-            coverageRatio: targetParentCount ? renderedParentCount / targetParentCount : 0,
-            primarySubject: compactSearchText(coverageStats?.primarySubject || (Array.isArray(queryData?.canonicalEntities) ? queryData.canonicalEntities.join(' / ') : '') || queryData?.normalizedQuery || ''),
-            sourceCounts: coverageStats?.sourceCounts && typeof coverageStats.sourceCounts === 'object'
-                ? coverageStats.sourceCounts
-                : {}
-        };
-    }
-
-    function buildAiClientEmergencyReport(payload = {}, options = {}) {
-        const fallbackInventory = mergeAiInventoryItems(
-            buildAiInventoryItemsFromParentBriefs(options.parentBriefs || []),
-            buildAiInventoryItemsFromChunks(options.chunks || [])
-        );
-        if (!fallbackInventory.length) {
-            return null;
-        }
-
-        const executiveSummary = uniqueItems([
-            compactSearchText(payload.answer || '').trim(),
-            ...((Array.isArray(payload.bullets) ? payload.bullets : [])
-                .map((item) => compactSearchText(item || '').trim())
-                .filter(Boolean))
-        ]).slice(0, 4);
-
-        const report = {
-            headline: compactSearchText(payload.answer || '我先用目前命中的站內卡片整理一版文章。').trim(),
-            executiveSummary,
-            fullCardInventory: fallbackInventory,
-            sourceComparison: Array.isArray(payload.report?.sourceComparison) ? payload.report.sourceComparison : [],
-            unansweredQuestions: payload.missingReason ? [payload.missingReason] : []
-        };
-        report.coverageSummary = buildAiCoverageSummaryFallback(
-            report.fullCardInventory,
-            options.queryData || {},
-            options.coverageStats || {},
-            options.coverageContract || null
-        );
-        report.longformArticle = buildAiLongformArticleFallbackFromReport(report);
-
-        return report.longformArticle ? report : null;
-    }
-
-    function materializeAiClientReportFallback(payload, options = {}) {
-        if (!payload || typeof payload !== 'object') {
-            return payload;
-        }
-
-        annotateAiWorkerVersionStatus(payload);
-
-        const parentBriefs = Array.isArray(options.parentBriefs) ? options.parentBriefs : [];
-        const shouldBeReport = options.responseMode === 'report' || payload.responseMode === 'report';
-        if (!shouldBeReport || !parentBriefs.length) {
-            if (!shouldBeReport) return payload;
-            const emergencyReport = buildAiClientEmergencyReport(payload, options);
-            if (emergencyReport) {
-                payload.report = emergencyReport;
-                payload.responseMode = 'report';
-            }
-            return payload;
-        }
-
-        const fallbackInventory = buildAiInventoryItemsFromParentBriefs(parentBriefs);
-        if (!fallbackInventory.length) {
-            return payload;
-        }
-
-        const report = payload.report && typeof payload.report === 'object'
-            ? { ...payload.report }
-            : {};
-
-        report.fullCardInventory = mergeAiInventoryItems(report.fullCardInventory, fallbackInventory);
-        if (!Array.isArray(report.executiveSummary) || !report.executiveSummary.length) {
-            report.executiveSummary = uniqueItems([
-                compactSearchText(payload.answer || ''),
-                ...((Array.isArray(payload.bullets) ? payload.bullets : []).map((item) => compactSearchText(item || '')))
-            ].filter(Boolean)).slice(0, 4);
-        }
-        if (!Array.isArray(report.unansweredQuestions) || !report.unansweredQuestions.length) {
-            report.unansweredQuestions = payload.missingReason ? [payload.missingReason] : [];
-        }
-        if (!report.coverageSummary || typeof report.coverageSummary !== 'object') {
-            report.coverageSummary = buildAiCoverageSummaryFallback(
-                report.fullCardInventory,
-                options.queryData || {},
-                options.coverageStats || {},
-                options.coverageContract || null
-            );
-        }
-
-        const resolvedLongform = resolveAiRenderableLongformArticle(report);
-        if (resolvedLongform) {
-            report.longformArticle = resolvedLongform;
-        }
-
-        payload.report = report;
-        payload.responseMode = 'report';
-        return payload;
-    }
-
-    function resolveAiRenderableLongformArticle(report = {}) {
-        const article = report?.longformArticle && typeof report.longformArticle === 'object'
-            ? report.longformArticle
-            : null;
-        const sections = Array.isArray(article?.sections)
-            ? article.sections
-                .map((section) => {
-                    const cards = Array.isArray(section?.cards) ? section.cards.filter(Boolean) : [];
-                    const narrativeParagraphs = uniqueItems((Array.isArray(section?.narrativeParagraphs) ? section.narrativeParagraphs : [])
-                        .map((item) => compactSearchText(item || '').trim())
-                        .filter(Boolean));
-                    const derivedNarratives = narrativeParagraphs.length
-                        ? narrativeParagraphs
-                        : buildAiSectionNarrativeParagraphs(section?.sectionKey || 'deckShow', cards);
-                    if (!derivedNarratives.length) {
-                        return null;
-                    }
-                    return {
-                        sectionKey: section?.sectionKey || 'deckShow',
-                        sectionTitle: compactSearchText(section?.sectionTitle || '').trim() || getAiArticleSectionMeta(section?.sectionKey || 'deckShow').sectionTitle,
-                        sectionSummary: compactSearchText(section?.sectionSummary || '').trim(),
-                        narrativeParagraphs: derivedNarratives,
-                        citationIds: uniqueItems([
-                            ...(Array.isArray(section?.citationIds) ? section.citationIds : []),
-                            ...cards.flatMap((card) => Array.isArray(card?.citationIds) ? card.citationIds : [])
-                        ]).slice(0, AI_REPORT_MAX_RESULTS),
-                        renderOrigin: typeof section?.renderOrigin === 'string' && section.renderOrigin
-                            ? section.renderOrigin
-                            : (cards.some((card) => String(card?.renderOrigin || '').endsWith('backfill')) ? 'backfill' : 'model'),
-                        cards
-                    };
-                })
-                .filter(Boolean)
-            : [];
-        if (article && sections.length) {
-            return {
-                ...article,
-                sections
-            };
-        }
-        return buildAiLongformArticleFallbackFromReport(report);
-    }
-
-    function buildAiLongformArticlePlan(parentBriefs = []) {
-        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
-        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
-        return {
-            articleMode: 'longform-by-section',
-            sections: sectionOrder.map((sectionKey) => {
-                const meta = getAiArticleSectionMeta(sectionKey);
-                const sectionCards = safeBriefs.filter((item) => getAiArticleSectionKey(item) === sectionKey);
-                return {
-                    sectionKey: meta.sectionKey,
-                    sectionTitle: meta.sectionTitle,
-                    parentIds: sectionCards.map((item) => item.parentId)
-                };
-            })
-        };
-    }
-
-    function buildAiSectionDossiers(parentBriefs = []) {
-        const sectionOrder = ['schedule', 'deckShow', 'playbook'];
-        const safeBriefs = Array.isArray(parentBriefs) ? parentBriefs : [];
-        return sectionOrder.map((sectionKey) => {
-            const meta = getAiArticleSectionMeta(sectionKey);
-            const cards = safeBriefs
-                .filter((item) => getAiArticleSectionKey(item) === sectionKey)
-                .map((item) => buildAiArticleCardDossier(item));
-            return {
-                sectionKey: meta.sectionKey,
-                sectionTitle: meta.sectionTitle,
-                cards
-            };
-        });
-    }
-
-    function buildAiSectionWritingRules() {
-        return {
-            mode: 'section-first-guide',
-            targetParagraphsPerSection: {
-                schedule: [1, 2],
-                deckShow: [2, 4],
-                playbook: [2, 4]
-            },
-            priorities: {
-                schedule: '只交代時段、順序與安排脈絡，不主導全文。',
-                deckShow: '優先整合設施、服務、表演、位置與內容細節。',
-                playbook: '整合做法、心得、限制、小技巧與注意事項。'
-            },
-            dedupeRule: '相同事實只保留在最合適區塊一次，支援卡只補差異。',
-            proseStyle: '寫成像旅伴直接整理給你的通順攻略文章，先消化資料再開口，不要照抄行程標籤、不要堆原始欄位詞、不要用分號把 facts 直接串起來，也不要把多張卡平行摘要後直接貼上。先整合，再敘述，讓人一眼看懂怎麼安排。'
-        };
-    }
-
-    function buildAiCapabilityCoveragePlan(parentBriefs = [], queryData = {}) {
-        const requiredCapabilities = Array.isArray(queryData.requiredCapabilities) ? queryData.requiredCapabilities : [];
-        const coverage = requiredCapabilities.map(capabilityId => {
-            const capability = getTaxonomyCapabilityEntry(capabilityId);
-            const matchedParents = (Array.isArray(parentBriefs) ? parentBriefs : [])
-                .filter(item => briefMatchesCapability(item, capabilityId))
-                .map(item => item.parentId);
-
-            return {
-                capabilityId,
-                label: capability?.label || capabilityId,
-                matchedParentIds: uniqueItems(matchedParents).slice(0, 10),
-                categoryFamilies: (capability?.categoryFamilies || []).slice(0, 6),
-                disallowedCategories: (capability?.disallowedCategories || []).slice(0, 6)
-            };
-        });
-
-        return {
-            requiredCapabilities,
-            disallowedCategories: Array.isArray(queryData.disallowedCategories) ? queryData.disallowedCategories.slice(0, 8) : [],
-            items: coverage
-        };
-    }
-
-    function getAiRetrievalStatus(queryData, results, selectedResults, reportPlan = null) {
-        if (!queryData.normalizedQuery || queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
-            return 'insufficient';
-        }
-
-        if (!results.length) {
-            return 'insufficient';
-        }
-
-        const intentProfile = queryData.intentProfile || buildAiIntentProfile(queryData);
-        const strongCount = selectedResults.filter(result => result.score >= 18).length;
-        const topScore = results[0]?.score || 0;
-        const primaryGroup = intentProfile.sourcePriority[0];
-        const hasPrimary = selectedResults.some(result => getAiSourceGroup(result.sourceType) === primaryGroup);
-        const hasActionChunk = selectedResults.some(result => ['action', 'desc', 'tripUse', 'tripLink'].includes(result.fieldType || 'parent'));
-        const hasCautionChunk = selectedResults.some(result => ['caution', 'bestTime', 'timingTip'].includes(result.fieldType || 'parent'));
-        const hasSupportingGuide = selectedResults.some(result =>
-            getAiSourceGroup(result.sourceType) !== primaryGroup && getAiSourceGroup(result.sourceType) !== 'static'
-        );
-        const hasWeakEvidence = results.length >= 2 || topScore >= 12;
-        const hasIntentSignal = Object.values(queryData.intents || {}).some(Boolean);
-
-        if (intentProfile.type === 'sequence') {
-            if (hasPrimary && hasSupportingGuide && hasActionChunk && (strongCount >= 1 || topScore >= 22)) {
-                return 'strong';
-            }
-        } else if (reportPlan?.responseMode === 'report' && hasPrimary && selectedResults.length >= 4 && strongCount >= AI_REPORT_STRONG_EVIDENCE_MIN) {
-            return 'strong';
-        } else if (hasPrimary && hasActionChunk && (!intentProfile.requiresCautionChunk || hasCautionChunk) && (strongCount >= 1 || topScore >= 24)) {
-            return 'strong';
-        }
-
-        if (selectedResults.length >= 2 || hasWeakEvidence || hasIntentSignal) {
-            return 'rewrite';
-        }
-
-        return 'insufficient';
-    }
-
-    function mergeAiRankedResults(primaryResults, secondaryResults) {
-        const merged = new Map();
-
-        [...primaryResults, ...secondaryResults].forEach(result => {
-            const existing = merged.get(result.id);
-            if (!existing || existing.score < result.score) {
-                merged.set(result.id, result);
-            }
-        });
-
-        return Array.from(merged.values())
-            .sort((a, b) => b.score - a.score)
-            .slice(0, AI_REPORT_RANKED_POOL_LIMIT);
-    }
-
-    function getAiReportSectionEntries(report = {}) {
-        return [
-            {
-                key: 'executiveSummary',
-                title: '先看結論',
-                type: 'summary',
-                items: Array.isArray(report.executiveSummary) ? report.executiveSummary : []
-            },
-            {
-                key: 'recommendedPlan',
-                title: '推薦做法',
-                type: 'list',
-                items: Array.isArray(report.recommendedPlan) ? report.recommendedPlan : []
-            },
-            {
-                key: 'fullCardInventory',
-                title: '完整卡片總表',
-                type: 'full-card-inventory',
-                items: Array.isArray(report.fullCardInventory) ? report.fullCardInventory : []
-            },
-            {
-                key: 'topicAppendix',
-                title: '深入附錄',
-                type: 'topic-appendix',
-                items: Array.isArray(report.topicAppendix) ? report.topicAppendix : []
-            },
-            {
-                key: 'detailBreakdown',
-                title: '細節拆解',
-                type: 'list',
-                items: Array.isArray(report.detailBreakdown) ? report.detailBreakdown : []
-            },
-            {
-                key: 'decisionAnalysis',
-                title: '為什麼這樣安排',
-                type: 'list',
-                items: Array.isArray(report.decisionAnalysis) ? report.decisionAnalysis : []
-            },
-            {
-                key: 'risksAndFallbacks',
-                title: '風險與備案',
-                type: 'list',
-                items: Array.isArray(report.risksAndFallbacks) ? report.risksAndFallbacks : []
-            },
-            {
-                key: 'topicGroups',
-                title: '主題清單',
-                type: 'topic-groups',
-                items: Array.isArray(report.topicGroups) ? report.topicGroups : []
-            },
-            {
-                key: 'cardHighlights',
-                title: '關鍵攻略卡',
-                type: 'card-highlights',
-                items: Array.isArray(report.cardHighlights) ? report.cardHighlights : []
-            },
-            {
-                key: 'sourceComparison',
-                title: '來源差異',
-                type: 'comparison',
-                items: Array.isArray(report.sourceComparison) ? report.sourceComparison : []
-            },
-            {
-                key: 'unansweredQuestions',
-                title: '還缺什麼',
-                type: 'list',
-                items: Array.isArray(report.unansweredQuestions) ? report.unansweredQuestions : []
-            }
-        ].filter(section => section.items.length);
-    }
-
-    function renderAiCoverageSummary(report = {}) {
-        const coverageSummary = report.coverageSummary && typeof report.coverageSummary === 'object'
-            ? report.coverageSummary
-            : null;
-        if (!coverageSummary) return '';
-
-        const selectedParentCount = Number(coverageSummary.selectedParentCount || 0);
-        const targetParentCount = Number(coverageSummary.targetParentCount || 0);
-        const renderedParentCount = Number(coverageSummary.renderedParentCount || 0);
-        const backfilledParentCount = Number(coverageSummary.backfilledParentCount || 0);
-        const visibleTargetCount = Number(coverageSummary.visibleTargetCount || 0);
-        const visibleRenderedCount = Number(coverageSummary.visibleRenderedCount || 0);
-        const visibleBackfilledCount = Number(coverageSummary.visibleBackfilledCount || 0);
-        const visibleCoverageRatio = Number(coverageSummary.visibleCoverageRatio || 0);
-        const coverageRatio = Number(coverageSummary.coverageRatio || 0);
-        const primarySubject = compactSearchText(coverageSummary.primarySubject || '');
-        const sourceCounts = coverageSummary.sourceCounts && typeof coverageSummary.sourceCounts === 'object'
-            ? Object.entries(coverageSummary.sourceCounts)
-                .filter(([, count]) => Number(count) > 0)
-                .slice(0, 6)
-            : [];
-
-        if (!selectedParentCount && !targetParentCount && !renderedParentCount && !primarySubject && !sourceCounts.length) {
-            return '';
-        }
-
-        return `
-            <div class="search-ai-coverage-banner">
-                <div class="search-ai-coverage-summary">
-                    <strong>${renderedParentCount || selectedParentCount || 0}</strong>
-                    <span>張卡片已整理進回答</span>
-                    ${(targetParentCount || selectedParentCount) ? `<span class="search-ai-coverage-divider">/</span><span>目標 ${targetParentCount || selectedParentCount} 張</span>` : ''}
-                    ${visibleTargetCount ? `<span class="search-ai-coverage-divider">/</span><span>可見卡 ${visibleRenderedCount}/${visibleTargetCount}</span>` : ''}
-                    ${visibleBackfilledCount ? `<span class="search-ai-coverage-divider">/</span><span>可見補齊 ${visibleBackfilledCount} 張</span>` : ''}
-                    ${backfilledParentCount ? `<span class="search-ai-coverage-divider">/</span><span>補齊 ${backfilledParentCount} 張</span>` : ''}
-                    ${visibleCoverageRatio ? `<span class="search-ai-coverage-divider">/</span><span>可見覆蓋 ${Math.round(visibleCoverageRatio * 100)}%</span>` : ''}
-                    ${coverageRatio ? `<span class="search-ai-coverage-divider">/</span><span>覆蓋率 ${Math.round(coverageRatio * 100)}%</span>` : ''}
-                    ${primarySubject ? `<span class="search-ai-coverage-divider">/</span><span>主題：${escapeHtml(primarySubject)}</span>` : ''}
-                </div>
-                ${sourceCounts.length ? `
-                    <div class="search-ai-coverage-chips">
-                        ${sourceCounts.map(([key, count]) => `
-                            <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(key || 'general'))} ${Number(count)}</span>
-                        `).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-    }
-
-    function getAiInventorySectionLabel(cardType = 'mixed') {
-        const mapping = {
-            show: '表演',
-            facility: '設施 / 場館',
-            playbook: '攻略 / SOP / 注意事項',
-            service: '攻略 / SOP / 注意事項',
-            schedule: '時間脈絡',
-            mixed: '綜合整理'
-        };
-        return mapping[cardType] || '綜合整理';
-    }
-
-    function getAiLongformArticleSectionEntries(article = {}) {
-        const sections = Array.isArray(article?.sections) ? article.sections : [];
-        const entries = sections
-            .filter(section => Array.isArray(section?.narrativeParagraphs) && section.narrativeParagraphs.length)
-            .map(section => ({
-                key: `article-${section.sectionKey}`,
-                title: section.sectionTitle || section.sectionKey
-            }));
-
-        if (Array.isArray(article?.sourceComparison) && article.sourceComparison.length) {
-            entries.push({
-                key: 'article-sourceComparison',
-                title: '來源差異'
-            });
-        }
-        if (Array.isArray(article?.unansweredQuestions) && article.unansweredQuestions.length) {
-            entries.push({
-                key: 'article-unansweredQuestions',
-                title: '還缺什麼'
-            });
-        }
-
-        return entries;
-    }
-
-    function renderAiLongformArticle(report = {}) {
-        const article = resolveAiRenderableLongformArticle(report);
-        const sections = Array.isArray(article?.sections)
-            ? article.sections.filter(section => Array.isArray(section?.narrativeParagraphs) && section.narrativeParagraphs.length)
-            : [];
-        if (!article || !sections.length) return '';
-
-        return `
-            <div class="search-ai-longform-article">
-                <div class="search-ai-longform-sections">
-                    ${sections.map(section => `
-                        <section class="search-ai-report-section search-ai-article-section" data-ai-report-section="article-${section.sectionKey}">
-                            <div class="search-ai-report-section-header">
-                                <h3 class="search-ai-section-title">${escapeHtml(section.sectionTitle || section.sectionKey)}</h3>
-                            </div>
-                            <div class="search-ai-article-section-body">
-                                ${(Array.isArray(section.narrativeParagraphs) ? section.narrativeParagraphs : []).map(paragraph => `
-                                    <p>${escapeHtml(paragraph)}</p>
-                                `).join('')}
-                            </div>
-                            ${Array.isArray(section.citationIds) && section.citationIds.length ? `
-                                <div class="search-ai-inline-citations">
-                                    ${section.citationIds.map(citationId => {
-                                        const citation = searchState.aiCitationsById.get(citationId);
-                                        return citation ? `
-                                            <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
-                                                <i class="fa-solid fa-link"></i>
-                                                <span>${escapeHtml(citation.title)}</span>
-                                            </button>
-                                        ` : '';
-                                    }).join('')}
-                                </div>
-                            ` : ''}
-                        </section>
-                    `).join('')}
-                    ${Array.isArray(article?.sourceComparison) && article.sourceComparison.length ? `
-                        <section class="search-ai-report-section" data-ai-report-section="article-sourceComparison">
-                            <div class="search-ai-report-section-header">
-                                <h3 class="search-ai-section-title">來源差異</h3>
-                            </div>
-                            <div class="search-ai-source-comparison">
-                                ${article.sourceComparison.map(item => `
-                                    <article class="search-ai-source-comparison-item">
-                                        <div class="search-ai-source-comparison-top">
-                                            <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
-                                            ${item?.stance ? `<span class="search-ai-source-comparison-stance">${escapeHtml(item.stance)}</span>` : ''}
-                                        </div>
-                                        <p>${escapeHtml(item?.summary || '')}</p>
-                                        ${item?.confidenceNote ? `<p class="search-ai-note">${escapeHtml(item.confidenceNote)}</p>` : ''}
-                                    </article>
-                                `).join('')}
-                            </div>
-                        </section>
-                    ` : ''}
-                    ${Array.isArray(article?.unansweredQuestions) && article.unansweredQuestions.length ? `
-                        <section class="search-ai-report-section" data-ai-report-section="article-unansweredQuestions">
-                            <div class="search-ai-report-section-header">
-                                <h3 class="search-ai-section-title">還缺什麼</h3>
-                            </div>
-                            <ul class="search-ai-report-list">
-                                ${article.unansweredQuestions.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                            </ul>
-                        </section>
-                    ` : ''}
-                </div>
-            </div>
-        `;
-    }
-
-    function renderAiReportOutline(sectionEntries = []) {
-        if (!sectionEntries.length) return '';
-
-        return `
-            <div class="search-ai-report-outline" role="navigation" aria-label="AI 報告段落">
-                ${sectionEntries.map(section => `
-                    <button type="button" class="search-ai-report-anchor" data-ai-report-anchor="${section.key}">
-                        ${escapeHtml(section.title)}
-                    </button>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    function renderAiReportSection(section, report = {}) {
-        const sectionCitationIds = report.sectionCitationIds && typeof report.sectionCitationIds === 'object'
-            ? report.sectionCitationIds
-            : {};
-        const citationCount = Array.isArray(sectionCitationIds[section.key]) ? sectionCitationIds[section.key].length : 0;
-
-        if (section.type === 'full-card-inventory') {
-            const groupedItems = section.items.reduce((groups, item) => {
-                const label = Array.isArray(item?.categoryFamilies) && item.categoryFamilies.length
-                    ? item.categoryFamilies[0]
-                    : getAiInventorySectionLabel(item?.cardType || 'mixed');
-                if (!groups.has(label)) groups.set(label, []);
-                groups.get(label).push(item);
-                return groups;
-            }, new Map());
-
-            return `
-                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                    <div class="search-ai-report-section-header">
-                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                    </div>
-                    <div class="search-ai-full-card-inventory">
-                        ${Array.from(groupedItems.entries()).map(([groupLabel, items]) => `
-                            <div class="search-ai-full-card-group">
-                                <div class="search-ai-report-section-header compact">
-                                    <h4 class="search-ai-section-title">${escapeHtml(groupLabel)}</h4>
-                                    <span class="search-ai-section-meta">${items.length} 張卡</span>
-                                </div>
-                                ${items.map(item => `
-                                    <article class="search-ai-card-highlight-item inventory">
-                                        <div class="search-ai-card-highlight-top">
-                                            <div>
-                                                <h4 class="search-ai-card-highlight-title">${escapeHtml(item?.title || '')}</h4>
-                                                ${item?.groupLabel ? `<p class="search-ai-card-highlight-why">${escapeHtml(item.groupLabel)}</p>` : ''}
-                                            </div>
-                                            <div class="search-ai-card-highlight-chips">
-                                                ${item?.cardType ? `<span class="search-ai-source-chip">${escapeHtml(getAiEntityTypeLabel(item.cardType) || item.cardType)}</span>` : ''}
-                                                ${item?.coverageTier === 'visible' ? `<span class="search-ai-source-chip">右欄可見卡</span>` : ''}
-                                                ${item?.coverageTier === 'derived' ? `<span class="search-ai-source-chip subtle">主題延伸卡</span>` : ''}
-                                                ${item?.coverageTier === 'support' ? `<span class="search-ai-source-chip subtle">支援脈絡卡</span>` : ''}
-                                                ${String(item?.renderOrigin || '').endsWith('backfill') ? `<span class="search-ai-source-chip">補齊卡片</span>` : ''}
-                                                ${Array.isArray(item?.categoryFamilies) ? item.categoryFamilies
-                                                    .filter(Boolean)
-                                                    .slice(0, 3)
-                                                    .map(label => `<span class="search-ai-source-chip subtle">${escapeHtml(label)}</span>`)
-                                                    .join('') : ''}
-                                                ${Array.isArray(item?.sourceLabels) ? item.sourceLabels
-                                                    .filter(Boolean)
-                                                    .slice(0, 4)
-                                                    .map(label => `<span class="search-ai-source-chip">${escapeHtml(label)}</span>`)
-                                                    .join('') : ''}
-                                            </div>
-                                        </div>
-                                        ${Array.isArray(item?.detailBullets) && item.detailBullets.length ? `
-                                            <ul class="search-ai-report-list dense">
-                                                ${item.detailBullets.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
-                                            </ul>
-                                        ` : ''}
-                                        ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
-                                            <div class="search-ai-inline-citations">
-                                                ${item.citationIds.map(citationId => {
-                                                    const citation = searchState.aiCitationsById.get(citationId);
-                                                    return citation ? `
-                                                        <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
-                                                            <i class="fa-solid fa-link"></i>
-                                                            <span>${escapeHtml(citation.title)}</span>
-                                                        </button>
-                                                    ` : '';
-                                                }).join('')}
-                                            </div>
-                                        ` : ''}
-                                    </article>
-                                `).join('')}
-                            </div>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        if (section.type === 'topic-appendix') {
-            return `
-                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                    <div class="search-ai-report-section-header">
-                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                    </div>
-                    <div class="search-ai-topic-groups">
-                        ${section.items.map(item => `
-                            <article class="search-ai-topic-group extension">
-                                <div class="search-ai-topic-group-top">
-                                    <div>
-                                        <h4 class="search-ai-topic-group-title">${escapeHtml(item?.groupTitle || '')}</h4>
-                                        ${item?.summary ? `<p class="search-ai-topic-group-summary">${escapeHtml(item.summary)}</p>` : ''}
-                                    </div>
-                                    <div class="search-ai-card-highlight-chips">
-                                        ${item?.categoryId ? `<span class="search-ai-source-chip subtle">${escapeHtml(item.categoryId)}</span>` : ''}
-                                        ${Array.isArray(item?.sourceMix) ? item.sourceMix
-                                            .map(source => getAiSourceDetailLabel(source || 'general'))
-                                            .filter(Boolean)
-                                            .map(sourceLabel => `<span class="search-ai-source-chip">${escapeHtml(sourceLabel)}</span>`)
-                                            .join('') : ''}
-                                    </div>
-                                </div>
-                                ${Array.isArray(item?.detailItems) && item.detailItems.length ? `
-                                    <ul class="search-ai-report-list dense">
-                                        ${item.detailItems.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
-                                    <div class="search-ai-inline-citations">
-                                        ${item.citationIds.map(citationId => {
-                                            const citation = searchState.aiCitationsById.get(citationId);
-                                            return citation ? `
-                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
-                                                    <i class="fa-solid fa-link"></i>
-                                                    <span>${escapeHtml(citation.title)}</span>
-                                                </button>
-                                            ` : '';
-                                        }).join('')}
-                                    </div>
-                                ` : ''}
-                            </article>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        if (section.type === 'card-highlights') {
-            return `
-                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                    <div class="search-ai-report-section-header">
-                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                    </div>
-                    <div class="search-ai-card-highlights">
-                        ${section.items.map(item => `
-                            <article class="search-ai-card-highlight-item">
-                                <div class="search-ai-card-highlight-top">
-                                    <h4 class="search-ai-card-highlight-title">${escapeHtml(item?.title || '')}</h4>
-                                    <div class="search-ai-card-highlight-chips">
-                                        <span class="search-ai-source-chip">${escapeHtml(getAiAnswerSourceLabel(item?.sourceType || 'static'))}</span>
-                                        <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
-                                    </div>
-                                </div>
-                                ${item?.whyRelevant ? `<p class="search-ai-card-highlight-why">${escapeHtml(item.whyRelevant)}</p>` : ''}
-                                ${Array.isArray(item?.detailBullets) && item.detailBullets.length ? `
-                                    <ul class="search-ai-report-list">
-                                        ${item.detailBullets.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
-                                    <div class="search-ai-inline-citations">
-                                        ${item.citationIds.map(citationId => {
-                                            const citation = searchState.aiCitationsById.get(citationId);
-                                            return citation ? `
-                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
-                                                    <i class="fa-solid fa-link"></i>
-                                                    <span>${escapeHtml(citation.title)}</span>
-                                                </button>
-                                            ` : '';
-                                        }).join('')}
-                                    </div>
-                                ` : ''}
-                            </article>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        if (section.type === 'topic-groups') {
-            return `
-                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                    <div class="search-ai-report-section-header">
-                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                    </div>
-                    <div class="search-ai-topic-groups">
-                        ${section.items.map(item => `
-                            <article class="search-ai-topic-group ${item?.groupKind === 'core' ? 'core' : 'extension'}">
-                                <div class="search-ai-topic-group-top">
-                                    <div>
-                                        <h4 class="search-ai-topic-group-title">${escapeHtml(item?.groupTitle || '')}</h4>
-                                        ${item?.summary ? `<p class="search-ai-topic-group-summary">${escapeHtml(item.summary)}</p>` : ''}
-                                    </div>
-                                    <div class="search-ai-card-highlight-chips">
-                                        <span class="search-ai-source-chip">${escapeHtml(item?.groupKind === 'core' ? '核心' : '延伸')}</span>
-                                        ${item?.entityType ? `<span class="search-ai-source-chip">${escapeHtml(getAiEntityTypeLabel(item.entityType))}</span>` : ''}
-                                        ${Array.isArray(item?.sourceMix) ? item.sourceMix
-                                            .map(source => getAiSourceDetailLabel(source || 'general'))
-                                            .filter(Boolean)
-                                            .map(sourceLabel => `<span class="search-ai-source-chip">${escapeHtml(sourceLabel)}</span>`)
-                                            .join('') : ''}
-                                    </div>
-                                </div>
-                                ${Array.isArray(item?.detailItems) && item.detailItems.length ? `
-                                    <ul class="search-ai-report-list">
-                                        ${item.detailItems.map(detail => `<li>${escapeHtml(detail)}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                                ${Array.isArray(item?.citationIds) && item.citationIds.length ? `
-                                    <div class="search-ai-inline-citations">
-                                        ${item.citationIds.map(citationId => {
-                                            const citation = searchState.aiCitationsById.get(citationId);
-                                            return citation ? `
-                                                <button type="button" class="search-ai-citation compact" data-ai-citation-id="${citation.id}">
-                                                    <i class="fa-solid fa-link"></i>
-                                                    <span>${escapeHtml(citation.title)}</span>
-                                                </button>
-                                            ` : '';
-                                        }).join('')}
-                                    </div>
-                                ` : ''}
-                            </article>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        if (section.type === 'comparison') {
-            return `
-                <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                    <div class="search-ai-report-section-header">
-                        <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                        ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                    </div>
-                    <div class="search-ai-source-comparison">
-                        ${section.items.map(item => `
-                            <article class="search-ai-source-comparison-item">
-                                <div class="search-ai-source-comparison-top">
-                                    <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.sourceDetailType || 'general'))}</span>
-                                    ${item?.stance ? `<span class="search-ai-source-comparison-stance">${escapeHtml(item.stance)}</span>` : ''}
-                                </div>
-                                <p>${escapeHtml(item?.summary || '')}</p>
-                                ${item?.confidenceNote ? `<p class="search-ai-note">${escapeHtml(item.confidenceNote)}</p>` : ''}
-                            </article>
-                        `).join('')}
-                    </div>
-                </section>
-            `;
-        }
-
-        const listClass = section.type === 'summary'
-            ? 'search-ai-report-summary'
-            : 'search-ai-report-list';
-
-        return `
-            <section class="search-ai-report-section" data-ai-report-section="${section.key}">
-                <div class="search-ai-report-section-header">
-                    <h3 class="search-ai-section-title">${escapeHtml(section.title)}</h3>
-                    ${citationCount ? `<span class="search-ai-section-meta">${citationCount} 則引用</span>` : ''}
-                </div>
-                <ul class="${listClass}">
-                    ${section.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                </ul>
-            </section>
-        `;
-    }
-
-    function updateSearchWorkspaceLayout() {
-        const panel = document.querySelector('#search-overlay .search-panel');
-        const panelBody = document.getElementById('search-panel-body');
-        const aiAnswer = document.getElementById('search-ai-answer');
-        const results = document.getElementById('search-results');
-        if (!panel || !panelBody || !aiAnswer || !results) return;
-
-        const workspaceActive = searchState.activeMode === 'ai' && !aiAnswer.hidden;
-        panel.classList.toggle('workspace-panel', searchState.activeMode === 'ai');
-        panelBody.classList.toggle('workspace-layout', workspaceActive);
-        aiAnswer.classList.toggle('workspace-pane', workspaceActive);
-        results.classList.toggle('workspace-pane', workspaceActive);
-    }
-
-    function renderAiAnswerState(state) {
-        const container = document.getElementById('search-ai-answer');
-        const panel = document.querySelector('#search-overlay .search-panel');
-        if (!container) return;
-
-        if (!state) {
-            container.hidden = true;
-            container.innerHTML = '';
-            searchState.aiCitationsById = new Map();
-            panel?.classList.remove('reading-mode');
-            updateSearchWorkspaceLayout();
-            return;
-        }
-
-        container.hidden = false;
-        updateSearchWorkspaceLayout();
-
-        if (state.type === 'loading') {
-            panel?.classList.remove('reading-mode');
-            container.innerHTML = `
-                <div class="search-ai-card loading">
-                    <div class="search-ai-header">
-                        <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> AI 解答整理中</span>
-                    </div>
-                    ${state.rewriteInfo?.hintTerms?.length ? `
-                        <div class="search-ai-rewrite-note">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>已依站內常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
-                        </div>
-                    ` : ''}
-                    <p class="search-ai-summary">${escapeHtml(state.message || '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。')}</p>
-                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
-                </div>
-            `;
-            updateSearchWorkspaceLayout();
-            return;
-        }
-
-        if (state.type === 'info') {
-            panel?.classList.remove('reading-mode');
-            container.innerHTML = `
-                <div class="search-ai-card info">
-                    <div class="search-ai-header">
-                        <span class="search-ai-badge"><i class="fa-solid fa-circle-info"></i> AI 解答提示</span>
-                    </div>
-                    <p class="search-ai-summary">${escapeHtml(state.message)}</p>
-                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
-                </div>
-            `;
-            updateSearchWorkspaceLayout();
-            return;
-        }
-
-        if (state.type === 'error') {
-            panel?.classList.remove('reading-mode');
-            container.innerHTML = `
-                <div class="search-ai-card error">
-                    <div class="search-ai-header">
-                        <span class="search-ai-badge"><i class="fa-solid fa-triangle-exclamation"></i> AI 解答暫時不可用</span>
-                    </div>
-                    <p class="search-ai-summary">${escapeHtml(state.message)}</p>
-                    ${state.note ? `<p class="search-ai-note">${escapeHtml(state.note)}</p>` : ''}
-                </div>
-            `;
-            updateSearchWorkspaceLayout();
-            return;
-        }
-
-        const citations = state.citations || [];
-        searchState.aiCitationsById = new Map(citations.map(citation => [citation.id, citation]));
-        const confidenceLabel = {
-            high: '高信心',
-            medium: '中等信心',
-            low: '低信心'
-        };
-        const confidence = confidenceLabel[state.confidence] ? state.confidence : '';
-        const sections = state.sections && typeof state.sections === 'object' ? state.sections : {};
-        const directAnswer = sections.directAnswer || state.answer;
-        const recommendedSteps = Array.isArray(sections.recommendedSteps) && sections.recommendedSteps.length
-            ? sections.recommendedSteps
-            : (state.bullets || []);
-        const whyThisWorks = Array.isArray(sections.whyThisWorks) ? sections.whyThisWorks : [];
-        const watchOuts = Array.isArray(sections.watchOuts) ? sections.watchOuts : [];
-        const sourceBreakdown = Array.isArray(state.sourceBreakdown) ? state.sourceBreakdown : [];
-        const report = state.report && typeof state.report === 'object' ? state.report : null;
-        const longformArticle = resolveAiRenderableLongformArticle(report);
-        const reportSections = report ? getAiReportSectionEntries(report) : [];
-        const articleSectionEntries = longformArticle ? getAiLongformArticleSectionEntries(longformArticle) : [];
-        const isLongformArticleMode = Boolean(longformArticle && articleSectionEntries.length);
-        const isReportMode = Boolean(report && (reportSections.length || isLongformArticleMode));
-        const sourceMixLabels = uniqueItems(sourceBreakdown
-            .map(item => getAiSourceDetailLabel(item?.type || item?.sourceDetailType || 'general'))
-            .filter(Boolean));
-        const interpretationTags = Array.isArray(state.interpretationTags) ? state.interpretationTags.filter(Boolean).slice(0, AI_INTERPRETATION_TAG_LIMIT) : [];
-        panel?.classList.toggle('reading-mode', isLongformArticleMode);
-
-        if (isLongformArticleMode) {
-            container.innerHTML = `
-                <div class="search-ai-card longform-mode">
-                    ${interpretationTags.length ? `
-                        <div class="search-ai-interpretation compact">
-                            <div class="search-ai-interpretation-tags">
-                                ${interpretationTags.map(tag => `<span class="search-ai-interpretation-chip">${escapeHtml(tag)}</span>`).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    ${state.workerVersionMismatch ? `
-                        <div class="search-ai-worker-warning compact">
-                            <div class="search-ai-worker-warning-title">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                                <span>AI 後端版本落後，已用前端文章模式補齊</span>
-                            </div>
-                            <p>${escapeHtml(state.workerVersionMessage || '')}</p>
-                        </div>
-                    ` : ''}
-                    ${renderAiLongformArticle({ ...report, longformArticle })}
-                </div>
-            `;
-            updateSearchWorkspaceLayout();
-            return;
-        }
-
-        container.innerHTML = `
-            <div class="search-ai-card">
-                <div class="search-ai-header">
-                    <span class="search-ai-badge"><i class="fa-solid fa-sparkles"></i> ${isReportMode ? 'AI 深層報告' : 'AI 解答'}</span>
-                    ${confidence ? `<span class="search-ai-confidence ${confidence}">${confidenceLabel[confidence]}</span>` : ''}
-                </div>
-                ${state.primarySourceType ? `
-                    <div class="search-ai-source-hint">
-                        <i class="fa-solid fa-layer-group"></i>
-                        <span>本次答案主要依據：${escapeHtml(getAiAnswerSourceLabel(state.primarySourceType))}</span>
-                    </div>
-                ` : ''}
-                ${sourceMixLabels.length ? `
-                    <div class="search-ai-source-mix">
-                        ${sourceMixLabels.map(label => `<span class="search-ai-source-chip">${escapeHtml(label)}</span>`).join('')}
-                    </div>
-                ` : ''}
-                ${interpretationTags.length ? `
-                    <div class="search-ai-interpretation">
-                        <span class="search-ai-interpretation-label">AI 理解為</span>
-                        <div class="search-ai-interpretation-tags">
-                            ${interpretationTags.map(tag => `<span class="search-ai-interpretation-chip">${escapeHtml(tag)}</span>`).join('')}
-                        </div>
-                    </div>
-                ` : ''}
-                ${state.workerVersionMismatch ? `
-                    <div class="search-ai-worker-warning">
-                        <div class="search-ai-worker-warning-title">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <span>AI 後端版本落後，已改用前端 fallback 補齊新版文章模式</span>
-                        </div>
-                        <p>${escapeHtml(state.workerVersionMessage || '')}</p>
-                    </div>
-                ` : ''}
-                ${state.rewriteInfo?.hintTerms?.length ? `
-                    <div class="search-ai-rewrite-note">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>已依站內資料常見詞再試一次：${escapeHtml(state.rewriteInfo.hintTerms.join('、'))}</span>
-                    </div>
-                ` : ''}
-                ${isReportMode && report?.headline && !isLongformArticleMode ? `<h3 class="search-ai-report-headline">${escapeHtml(report.headline)}</h3>` : ''}
-                <p class="search-ai-summary">${escapeHtml(directAnswer)}</p>
-                ${isReportMode ? renderAiCoverageSummary(report) : ''}
-                ${isReportMode ? renderAiReportOutline(isLongformArticleMode ? articleSectionEntries : reportSections) : ''}
-                ${isLongformArticleMode ? renderAiLongformArticle({ ...report, longformArticle }) : isReportMode ? `
-                    <div class="search-ai-report-sections">
-                        ${reportSections.map(section => renderAiReportSection(section, report)).join('')}
-                    </div>
-                ` : recommendedSteps.length || whyThisWorks.length || watchOuts.length ? `
-                    <div class="search-ai-sections">
-                        ${recommendedSteps.length ? `
-                            <section class="search-ai-section">
-                                <h3 class="search-ai-section-title">建議步驟</h3>
-                                <ul class="search-ai-bullets">
-                                    ${recommendedSteps.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                                </ul>
-                            </section>
-                        ` : ''}
-                        ${whyThisWorks.length ? `
-                            <section class="search-ai-section">
-                                <h3 class="search-ai-section-title">為什麼這樣排</h3>
-                                <ul class="search-ai-bullets">
-                                    ${whyThisWorks.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                                </ul>
-                            </section>
-                        ` : ''}
-                        ${watchOuts.length ? `
-                            <section class="search-ai-section">
-                                <h3 class="search-ai-section-title">注意事項</h3>
-                                <ul class="search-ai-bullets">
-                                    ${watchOuts.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                                </ul>
-                            </section>
-                        ` : ''}
-                    </div>
-                ` : ''}
-                ${sourceBreakdown.length && !isLongformArticleMode ? `
-                    <div class="search-ai-source-breakdown">
-                        ${sourceBreakdown.map(item => `
-                            <div class="search-ai-source-breakdown-item">
-                                <span class="search-ai-source-chip">${escapeHtml(getAiSourceDetailLabel(item?.type || item?.sourceDetailType || 'general'))}</span>
-                                <p>${escapeHtml(item?.summary || '')}</p>
-                            </div>
-                        `).join('')}
-                    </div>
-                ` : ''}
-                ${state.insufficientData ? `
-                    <p class="search-ai-note">目前命中的站內資料不足以給更完整的回答，建議換更具體的問法，或先看下方關鍵字結果。</p>
-                ` : isReportMode ? `
-                    <p class="search-ai-note">這份報告只根據目前站內命中的內容整理；跨卡片的統整結論會標示成綜合判斷，不會冒充成單一官方事實。</p>
-                ` : state.confidence === 'low' ? `
-                    <p class="search-ai-note">目前這段答案是根據少量站內片段整理，建議同時點開下方引用來源快速核對。</p>
-                ` : `
-                    <p class="search-ai-note">這段回答只根據目前站內命中的內容整理，沒有額外查外部資料。</p>
-                `}
-                ${state.followUpHint ? `<p class="search-ai-followup">${escapeHtml(state.followUpHint)}</p>` : ''}
-                ${state.missingReason ? `<p class="search-ai-note">${escapeHtml(state.missingReason)}</p>` : ''}
-                ${citations.length ? `
-                    <div class="search-ai-citations">
-                        ${citations.map(citation => `
-                            <button type="button" class="search-ai-citation" data-ai-citation-id="${citation.id}">
-                                <i class="fa-solid fa-link"></i>
-                                <span>${escapeHtml(citation.title)}</span>
-                            </button>
-                        `).join('')}
-                    </div>
-                ` : ''}
-            </div>
-        `;
-        updateSearchWorkspaceLayout();
-    }
-
-    function getAiCacheKey(query, chunks, options = {}) {
-        const analysisPlan = options.analysisPlan && typeof options.analysisPlan === 'object'
-            ? options.analysisPlan
-            : null;
-        const interpreterResult = options.interpreterResult && typeof options.interpreterResult === 'object'
-            ? options.interpreterResult
-            : null;
-        const parentBriefs = Array.isArray(options.parentBriefs) ? options.parentBriefs : [];
-        const coverageContract = options.coverageContract && typeof options.coverageContract === 'object'
-            ? options.coverageContract
-            : null;
-        const coverageStats = options.coverageStats && typeof options.coverageStats === 'object'
-            ? options.coverageStats
-            : null;
-        const analysisPlanSignature = analysisPlan
-            ? simpleHash(JSON.stringify({
-                responseMode: analysisPlan.responseMode,
-                intentType: analysisPlan.intentType,
-                inventoryIntent: analysisPlan.inventoryIntent,
-                coverageMode: analysisPlan.coverageMode,
-                activeFacetNames: analysisPlan.activeFacetNames || [],
-                triggerReasons: analysisPlan.triggerReasons || [],
-                evidenceBudget: analysisPlan.evidenceBudget,
-                maxParentCards: analysisPlan.maxParentCards,
-                evidenceSummary: analysisPlan.evidenceSummary || {},
-                facetSummary: analysisPlan.facetSummary || {}
-            }))
-            : 'compact';
-        const interpreterSignature = interpreterResult
-            ? simpleHash(JSON.stringify({
-                canonicalEntities: interpreterResult.canonicalEntities || [],
-                genericClasses: interpreterResult.genericClasses || [],
-                expandedCategories: interpreterResult.expandedCategories || [],
-                clusterExpansions: interpreterResult.clusterExpansions || [],
-                coverageHints: interpreterResult.coverageHints || [],
-                confidence: interpreterResult.confidence || 'low'
-            }))
-            : 'no-interpreter';
-        const parentBriefSignature = parentBriefs.length
-            ? simpleHash(JSON.stringify(parentBriefs.map(item => ({
-                parentId: item.parentId,
-                title: item.title,
-                cardType: item.cardType,
-                groupLabel: item.groupLabel,
-                sourceLabels: item.sourceLabels || [],
-                detailBullets: item.detailBullets || [],
-                citationIds: item.citationIds || []
-            }))))
-            : 'no-parent-briefs';
-        const coverageSignature = coverageStats
-            ? simpleHash(JSON.stringify(coverageStats))
-            : 'no-coverage';
-        const coverageContractSignature = coverageContract
-            ? simpleHash(JSON.stringify(coverageContract))
-            : 'no-contract';
-        const chunkSignature = chunks
-            .map(chunk => `${chunk.id}:${simpleHash([
-                chunk.parentId,
-                chunk.title,
-                chunk.locationLabel,
-                chunk.sourceType,
-                chunk.sourceDetailType,
-                chunk.fieldType,
-                chunk.evidenceRole,
-                chunk.entityKey,
-                chunk.venueKey,
-                chunk.seriesKey,
-                chunk.sourceClusterKey,
-                chunk.structuredText,
-                chunk.text
-            ].join('::'))}`)
-            .join('|');
-
-        return `cruise-ai-answer::${getAiContentVersion()}::${options.responseMode === 'report' ? 'report' : 'compact'}::${analysisPlanSignature}::${interpreterSignature}::${parentBriefSignature}::${coverageSignature}::${coverageContractSignature}::${normalizeSearchText(query)}::${chunkSignature}`;
-    }
-
-    function buildAnswerContext(results, queryData, options = {}) {
-        const responseMode = options.responseMode === 'report' ? 'report' : 'compact';
-        return results.map(result => {
-            const fieldType = result.fieldType || 'parent';
-            const preferredExcerptLength = responseMode === 'report'
-                ? (['action', 'caution', 'tripFit', 'summary', 'theme', 'desc', 'parent'].includes(fieldType) ? 1200 : 900)
-                : (['action', 'caution', 'tripFit', 'summary', 'theme'].includes(fieldType) ? 480 : 360);
-            const excerptSource = {
-                title: result.title,
-                text: result.structuredText || result.text
-            };
-
-            return {
-                id: result.id,
-                parentId: result.parentId || result.id,
-                title: result.title,
-                locationLabel: result.locationLabel,
-                sectionId: result.sectionId,
-                sourceType: result.sourceType,
-                sourceDetailType: result.sourceDetailType || 'general',
-                fieldType: result.fieldType || 'parent',
-                fieldLabel: result.fieldLabel || getAiFieldLabel(result.fieldType || 'parent'),
-                evidenceRole: result.evidenceRole || '',
-                timeHint: result.timeHint || '',
-                bestTimeHint: result.bestTimeHint || '',
-                navTarget: result.navTarget,
-                groupLabel: result.groupLabel || '',
-                entityKey: result.entityKey || '',
-                venueKey: result.venueKey || '',
-                seriesKey: result.seriesKey || '',
-                sourceClusterKey: result.sourceClusterKey || '',
-                structuredText: createPlainExcerpt(excerptSource, queryData, preferredExcerptLength),
-                text: createPlainExcerpt(result, queryData, Math.max(420, preferredExcerptLength - 180))
-            };
-        });
-    }
-
-    function getAiContentVersion() {
-        return `${SITE_SEARCH_SCHEMA_VERSION}-${searchState.documentVersion || 'base'}`;
-    }
-
-    function readAiCache(cacheKey) {
-        try {
-            const raw = sessionStorage.getItem(cacheKey);
-            if (!raw) return null;
-            const parsed = JSON.parse(raw);
-            if (!parsed?.savedAt || Date.now() - parsed.savedAt > AI_CACHE_TTL) {
-                sessionStorage.removeItem(cacheKey);
-                return null;
-            }
-            return parsed.payload || null;
-        } catch {
-            return null;
-        }
-    }
-
-    function writeAiCache(cacheKey, payload) {
-        try {
-            sessionStorage.setItem(cacheKey, JSON.stringify({
-                savedAt: Date.now(),
-                payload
-            }));
-        } catch {
-            // ignore cache errors
-        }
-    }
-
-    async function askAiAnswer(query, chunks, options = {}) {
-        const response = await fetch(getAiAnswerEndpoint(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query,
-                mode: 'grounded_qa_v1',
-                contentVersion: getAiContentVersion(),
-                responseMode: options.responseMode === 'report' ? 'report' : 'compact',
-                analysisPlan: options.analysisPlan || null,
-                inventoryIntent: Boolean(options.inventoryIntent),
-                coverageMode: options.coverageMode === 'exhaustive' ? 'exhaustive' : 'standard',
-                answerCoveragePool: options.answerCoveragePool || null,
-                visibleCoverageContract: options.visibleCoverageContract || null,
-                coverageContract: options.coverageContract || null,
-                mustRenderParents: options.mustRenderParents || null,
-                mustRenderVisibleParents: options.mustRenderVisibleParents || null,
-                mustRenderDerivedParents: options.mustRenderDerivedParents || null,
-                preferredRenderParents: options.preferredRenderParents || null,
-                preferredSupportParents: options.preferredSupportParents || null,
-                parentBriefs: options.parentBriefs || null,
-                parentDossiers: options.parentDossiers || options.parentBriefs || null,
-                primaryEntityParents: options.primaryEntityParents || null,
-                supportEntityParents: options.supportEntityParents || null,
-                articleMode: (options.articleMode === 'longform-by-block' || options.articleMode === 'longform-by-section') ? options.articleMode : 'standard',
-                articlePlan: options.articlePlan || null,
-                cardDossiersByBlock: options.cardDossiersByBlock || null,
-                capabilityCoveragePlan: options.capabilityCoveragePlan || null,
-                categoryCoveragePlan: options.categoryCoveragePlan || null,
-                categoryDossiers: options.categoryDossiers || null,
-                answerDepthMode: options.answerDepthMode === 'exhaustive' ? 'exhaustive' : 'broad',
-                coverageStats: options.coverageStats || null,
-                expectedWorkerSchemaVersion: EXPECTED_WORKER_SCHEMA_VERSION,
-                chunks
-            })
-        });
-
-        const payload = await response.json().catch(() => null);
-        if (!response.ok || !payload) {
-            throw new Error(payload?.error || 'AI 解答服務暫時無法使用。');
-        }
-
-        return annotateAiWorkerVersionStatus(payload);
-    }
-
-    async function askAiQueryInterpretation(query) {
-        const response = await fetch(getAiAnswerEndpoint(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query,
-                mode: 'query_interpretation_v3',
-                responseLocale: 'zh-Hant',
-                contentVersion: getAiContentVersion(),
-                taxonomy: getSerializableAiQueryTaxonomy()
-            })
-        });
-
-        const payload = await response.json().catch(() => null);
-        if (!response.ok || !payload) {
-            throw new Error(payload?.error || 'AI 問句解讀服務暫時無法使用。');
-        }
-
-        return sanitizeAiInterpreterResult(payload);
-    }
-
-    async function askAiRewrite(query, chunks) {
-        const response = await fetch(getAiAnswerEndpoint(), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                query,
-                mode: 'query_rewrite_v1',
-                contentVersion: getAiContentVersion(),
-                chunks
-            })
-        });
-
-        const payload = await response.json().catch(() => null);
-        if (!response.ok || !payload) {
-            throw new Error(payload?.error || 'AI 改寫服務暫時無法使用。');
-        }
-
-        return normalizeAiRewriteMeta(payload);
-    }
-
-    async function requestAiAnswer() {
-        const input = document.getElementById('search-input');
-        if (!input) return;
-        if (searchState.aiPending) return;
-
-        const rawQuery = input.value.trim();
-        let interpreterResult = null;
-        let rewriteMeta = null;
-        let rewriteAttempts = 0;
-
-        if (rawQuery && getSearchSignalLength(rawQuery) >= AI_SEARCH_MIN_LENGTH && navigator.onLine) {
-            try {
-                interpreterResult = await askAiQueryInterpretation(rawQuery);
-            } catch (error) {
-                console.warn('AI query interpretation fallback:', error);
-            }
-        }
-
-        let aiSearchPayload = safeGetAiRankedSearchResults(rawQuery, null, interpreterResult);
-
-        if (!aiSearchPayload.ok) {
-            renderAiAnswerState({
-                type: 'error',
-                message: 'AI 解答前置檢索發生錯誤，請重新整理後再試。',
-                note: aiSearchPayload.error?.message || '本地召回流程沒有完成，所以這次沒有送出 AI 解答。'
-            });
-            renderSearchResultsError('AI 模式的本地召回暫時失敗，重新整理頁面後再試一次。');
-            return;
-        }
-
-        let { queryData, results } = aiSearchPayload;
-        let { selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
-            defaultResponseMode: AI_REPORT_DEFAULT_MODE
-        });
-        let retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
-        let displayResults = collapseAiDisplayResults(results, queryData);
-
-        searchState.lastQuery = queryData.normalizedQuery;
-        searchState.lastQueryData = queryData;
-        searchState.lastResults = displayResults;
-        searchState.resultsById = new Map(displayResults.map(result => [result.id, result]));
-        renderSearchResults(displayResults, queryData);
-
-        if (!queryData.normalizedQuery) {
-            renderAiAnswerState({
-                type: 'info',
-                message: '先輸入一個自然語言問題，例如「第一天提早登船後最值得先做什麼？」'
-            });
-            return;
-        }
-
-        if (queryData.signalLength < AI_SEARCH_MIN_LENGTH) {
-            renderAiAnswerState({
-                type: 'info',
-                message: `AI 解答建議至少輸入 ${AI_SEARCH_MIN_LENGTH} 個字，問法越完整越容易整理出重點。`
-            });
-            return;
-        }
-
-        if (!navigator.onLine) {
-            renderAiAnswerState({
-                type: 'info',
-                message: '目前沒有網路連線，本地搜尋仍可用，但 AI 解答需要連線。',
-                note: '你可以先看下方關鍵字結果，恢復連線後再按一次 AI 解答。'
-            });
-            return;
-        }
-
-        if (retrievalStatus === 'rewrite' && rewriteAttempts < AI_REWRITE_MAX_ATTEMPTS) {
-            const rewriteSeedResults = selectedResults.length
-                ? selectedResults
-                : results.slice(0, AI_REWRITE_MAX_RESULTS);
-            const rewriteChunks = buildAnswerContext(rewriteSeedResults, queryData).slice(0, AI_REWRITE_MAX_RESULTS);
-
-            if (rewriteChunks.length) {
-                renderAiAnswerState({
-                    type: 'loading',
-                    message: '第一輪命中的線索還不夠集中，正在依站內常見詞換一種方式再找一次。',
-                    note: '這一步只會做一次受控改寫，不會無限重試。'
-                });
-
-                try {
-                    rewriteMeta = await askAiRewrite(rawQuery, rewriteChunks);
-                    rewriteAttempts += 1;
-
-                    const secondPass = safeGetAiRankedSearchResults(rawQuery, rewriteMeta, interpreterResult);
-                    if (!secondPass.ok) {
-                        throw secondPass.error || new Error('AI rewrite retrieval failed');
-                    }
-
-                    results = mergeAiRankedResults(results, secondPass.results);
-                    queryData = secondPass.queryData;
-                    ({ selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
-                        defaultResponseMode: AI_REPORT_DEFAULT_MODE,
-                        rewriteTriggered: true
-                    }));
-                    retrievalStatus = getAiRetrievalStatus(queryData, results, selectedResults, reportPlan);
-                    displayResults = collapseAiDisplayResults(results, queryData);
-
-                    searchState.lastQuery = queryData.normalizedQuery;
-                    searchState.lastQueryData = queryData;
-                    searchState.lastResults = displayResults;
-                    searchState.resultsById = new Map(displayResults.map(result => [result.id, result]));
-                    renderSearchResults(displayResults, queryData);
-                } catch (error) {
-                    rewriteMeta = null;
-                    renderAiAnswerState({
-                        type: 'info',
-                        message: 'AI 改寫這次沒有成功，但我仍保留第一輪命中的站內片段供你快速查看。',
-                        note: error.message || '你可以把問法再具體一點，或直接點下方搜尋結果。'
-                    });
-                }
-            }
-        }
-
-        if (retrievalStatus === 'insufficient' || selectedResults.length < 2) {
-            renderAiAnswerState({
-                type: 'info',
-                message: '目前站內資料還抓不到足夠證據來整理答案，先看下方搜尋結果或把問題問得更具體一點。',
-                note: rewriteMeta?.hintTerms?.length
-                    ? `這次已試過相近詞：${rewriteMeta.hintTerms.join('、')}，若還不夠，建議直接問設施、時段或步驟。`
-                    : '例如把「第一天先做什麼」改成「第一天提早登船後先去 Lounge 還是 Open House？」會更容易整理出答案。'
-            });
-            return;
-        }
-
-        const answerCoverageResults = reportPlan.responseMode === 'report'
-            ? buildAiAnswerCoveragePool(results, displayResults, queryData, reportPlan, selectedResults)
-            : selectedResults;
-        const coverageContract = buildAiCoverageContract(results, displayResults, queryData, reportPlan, selectedResults);
-        const parentBriefResults = buildAiParentBriefResults(answerCoverageResults, results, coverageContract, queryData, reportPlan);
-        const coverageStats = buildAiCoverageStats(parentBriefResults, queryData, reportPlan, coverageContract);
-        const parentBriefs = orderAiParentBriefsForCoverage(
-            buildAiParentBriefs(parentBriefResults, queryData, reportPlan, coverageContract),
-            coverageContract
-        );
-        const { primaryEntityParents, supportEntityParents } = buildAiEntityCoverageSets(parentBriefs, queryData, coverageContract);
-        const capabilityCoveragePlan = buildAiCapabilityCoveragePlan(parentBriefs, queryData);
-        const answerCoveragePool = parentBriefs.map(item => ({
-            parentId: item.parentId,
-            title: item.title,
-            cardType: item.cardType,
-            sourceType: item.sourceType || '',
-            groupLabel: item.groupLabel,
-            sourceLabels: item.sourceLabels,
-            citationIds: item.citationIds,
-            categoryFamilies: item.categoryFamilies || [],
-            entityKey: item.entityKey || '',
-            venueKey: item.venueKey || '',
-            seriesKey: item.seriesKey || '',
-            sourceClusterKey: item.sourceClusterKey || '',
-            capabilityTags: item.capabilityTags || [],
-            entityFamilies: item.entityFamilies || [],
-            supportOfParentIds: item.supportOfParentIds || [],
-            coverageTier: item.coverageTier || 'support',
-            renderPriority: item.renderPriority || 0
-        }));
-        const mustRenderVisibleParents = parentBriefs
-            .filter(item => coverageContract.mustRenderVisibleParentIds.includes(item.parentId))
-            .map(item => ({
-                parentId: item.parentId,
-                title: item.title,
-                cardType: item.cardType,
-                sourceType: item.sourceType || '',
-                groupLabel: item.groupLabel,
-                sourceLabels: item.sourceLabels,
-                categoryFamilies: item.categoryFamilies || [],
-                capabilityTags: item.capabilityTags || [],
-                entityFamilies: item.entityFamilies || [],
-                supportOfParentIds: item.supportOfParentIds || [],
-                detailBullets: item.detailBullets,
-                citationIds: item.citationIds,
-                venueKey: item.venueKey || '',
-                seriesKey: item.seriesKey || '',
-                sourceClusterKey: item.sourceClusterKey || '',
-                renderPriority: item.renderPriority || 0,
-                coverageTier: item.coverageTier || 'visible'
-            }));
-        const mustRenderDerivedParents = parentBriefs
-            .filter(item => coverageContract.mustRenderDerivedParentIds.includes(item.parentId))
-            .map(item => ({
-                parentId: item.parentId,
-                title: item.title,
-                cardType: item.cardType,
-                sourceType: item.sourceType || '',
-                groupLabel: item.groupLabel,
-                sourceLabels: item.sourceLabels,
-                categoryFamilies: item.categoryFamilies || [],
-                capabilityTags: item.capabilityTags || [],
-                entityFamilies: item.entityFamilies || [],
-                supportOfParentIds: item.supportOfParentIds || [],
-                detailBullets: item.detailBullets,
-                citationIds: item.citationIds,
-                venueKey: item.venueKey || '',
-                seriesKey: item.seriesKey || '',
-                sourceClusterKey: item.sourceClusterKey || '',
-                renderPriority: item.renderPriority || 0,
-                coverageTier: item.coverageTier || 'derived'
-            }));
-        const preferredSupportParents = parentBriefs
-            .filter(item => coverageContract.preferredSupportParentIds.includes(item.parentId))
-            .map(item => ({
-                parentId: item.parentId,
-                title: item.title,
-                cardType: item.cardType,
-                sourceType: item.sourceType || '',
-                groupLabel: item.groupLabel,
-                sourceLabels: item.sourceLabels,
-                categoryFamilies: item.categoryFamilies || [],
-                capabilityTags: item.capabilityTags || [],
-                entityFamilies: item.entityFamilies || [],
-                supportOfParentIds: item.supportOfParentIds || [],
-                detailBullets: item.detailBullets,
-                citationIds: item.citationIds,
-                venueKey: item.venueKey || '',
-                seriesKey: item.seriesKey || '',
-                sourceClusterKey: item.sourceClusterKey || '',
-                renderPriority: item.renderPriority || 0,
-                coverageTier: item.coverageTier || 'support'
-            }));
-        const categoryCoveragePlan = buildAiCategoryCoveragePlan(answerCoverageResults, queryData, reportPlan);
-        const analysisPlan = buildAiAnalysisPlanPayload({
-            ...reportPlan,
-            selectedChunkCount: answerCoverageResults.length,
-            parentCardCount: coverageStats.selectedParentCount,
-            sourceTypes: uniqueItems(answerCoverageResults.map(result => result.sourceType).filter(Boolean)),
-            sourceDetailTypes: uniqueItems(answerCoverageResults
-                .map(result => result.sourceDetailType || 'general')
-                .filter(type => type && type !== 'general')),
-            literalAnchors: queryData.literalAnchors || [],
-            canonicalEntities: queryData.canonicalEntities || [],
-            genericClasses: queryData.genericClasses || [],
-            requiredCapabilities: queryData.requiredCapabilities || [],
-            disallowedCategories: queryData.disallowedCategories || [],
-            answerIntent: queryData.answerIntent || 'answer',
-            expandedCategories: queryData.expandedCategories || [],
-            clusterExpansions: queryData.clusterExpansions || [],
-            coverageHints: queryData.coverageHints || [],
-            breadthSignals: queryData.breadthSignals || [],
-            facilityBreadthMode: Boolean(queryData.facilityBreadthMode),
-            breadthProfile: queryData.breadthProfile || 'guided-expansion',
-            expansionReasons: queryData.expansionReasons || [],
-            preferredClusters: reportPlan.preferredClusters || queryData.preferredClusters || [],
-            mustCoverCategories: reportPlan.mustCoverCategories || queryData.mustCoverCategories || [],
-            mustCoverCapabilities: queryData.mustCoverCapabilities || [],
-            categoryCoveragePlan
-        });
-        const interpretationTags = buildAiInterpretationTags(queryData, reportPlan);
-        const articlePlan = buildAiLongformArticlePlan(parentBriefs);
-        const sectionDossiers = buildAiSectionDossiers(parentBriefs);
-        const sectionWritingRules = buildAiSectionWritingRules();
-        const chunks = buildAnswerContext(answerCoverageResults, queryData, {
-            responseMode: reportPlan.responseMode,
-            reportPlan
-        });
-        const cacheKey = getAiCacheKey(rawQuery, chunks, {
-            responseMode: reportPlan.responseMode,
-            analysisPlan,
-            interpreterResult: queryData.interpreterResult,
-            parentBriefs,
-            coverageStats,
-            coverageContract
-        });
-        const cachedAnswer = readAiCache(cacheKey);
-        if (cachedAnswer) {
-            if (rewriteMeta && !cachedAnswer.rewriteInfo) {
-                cachedAnswer.rewriteInfo = rewriteMeta;
-            }
-            if (!cachedAnswer.interpretationTags?.length) {
-                cachedAnswer.interpretationTags = interpretationTags;
-            }
-            materializeAiClientReportFallback(cachedAnswer, {
-                responseMode: reportPlan.responseMode,
-                parentBriefs,
-                coverageStats,
-                coverageContract,
-                queryData
-            });
-            renderAiAnswerState(cachedAnswer);
-            return;
-        }
-
-        renderAiAnswerState({
-            type: 'loading',
-            message: reportPlan.responseMode === 'report'
-                ? '正在把多張卡片與不同來源的線索整理成一頁式深層報告，這一步只會讀你網站裡的資料。'
-                : '正在根據目前站內命中的內容整理答案，這一步只會讀你網站裡的資料。',
-            rewriteInfo: rewriteMeta
-        });
-        searchState.aiPending = true;
-
-        try {
-            const payload = await askAiAnswer(rawQuery, chunks, {
-                responseMode: reportPlan.responseMode,
-                analysisPlan,
-                inventoryIntent: reportPlan.inventoryIntent,
-                coverageMode: reportPlan.coverageMode,
-                answerCoveragePool,
-                visibleCoverageContract: {
-                    visibleParentIds: coverageContract.visibleParentIds || [],
-                    eligibleVisibleParentIds: coverageContract.eligibleVisibleParentIds || [],
-                    targetVisibleCoverageCount: coverageContract.targetVisibleCoverageCount || 0,
-                    minimumVisibleCoverageRatio: coverageContract.minimumVisibleCoverageRatio || 0,
-                    coverageReason: coverageContract.coverageReason || ''
-                },
-                coverageContract,
-                mustRenderParents: [...mustRenderVisibleParents, ...mustRenderDerivedParents],
-                mustRenderVisibleParents,
-                mustRenderDerivedParents,
-                preferredRenderParents: preferredSupportParents,
-                preferredSupportParents,
-                parentBriefs,
-                parentDossiers: parentBriefs,
-                primaryEntityParents,
-                supportEntityParents,
-                articleMode: 'longform-by-section',
-                articlePlan,
-                sectionDossiers,
-                sectionWritingRules,
-                cardDossiersByBlock: sectionDossiers,
-                capabilityCoveragePlan,
-                categoryCoveragePlan,
-                categoryDossiers: categoryCoveragePlan,
-                answerDepthMode: reportPlan.coverageMode === 'exhaustive' ? 'exhaustive' : 'broad',
-                coverageStats
-            });
-            if (!payload.primarySourceType) {
-                payload.primarySourceType = answerCoverageResults[0]?.sourceType || '';
-            }
-            if (rewriteMeta) {
-                payload.rewriteInfo = rewriteMeta;
-            }
-            payload.responseMode = reportPlan.responseMode;
-            payload.interpretationTags = interpretationTags;
-            materializeAiClientReportFallback(payload, {
-                responseMode: reportPlan.responseMode,
-                parentBriefs,
-                coverageStats,
-                coverageContract,
-                queryData
-            });
-            renderAiAnswerState(payload);
-            writeAiCache(cacheKey, payload);
-        } catch (error) {
-            const fallbackCitations = chunks.map((chunk) => ({
-                id: chunk.id,
-                title: chunk.title,
-                locationLabel: chunk.locationLabel || '',
-                navTarget: chunk.navTarget || ''
-            }));
-            const fallbackPayload = {
-                answer: `我先根據目前命中的站內卡片整理一版可讀文章：關於「${queryData.normalizedQuery || rawQuery}」，先把最相關的設施、時段與攻略串成同一篇攻略。`,
-                bullets: [],
-                citations: fallbackCitations,
-                confidence: 'low',
-                primarySourceType: answerCoverageResults[0]?.sourceType || '',
-                missingReason: '',
-                insufficientData: false,
-                sections: {
-                    directAnswer: `AI 生成暫時失敗，但我已改用目前命中的站內卡片直接補成文章版整理。`,
-                    recommendedSteps: [],
-                    whyThisWorks: [],
-                    watchOuts: []
-                },
-                sourceBreakdown: [],
-                followUpHint: '',
-                responseMode: reportPlan.responseMode,
-                interpretationTags,
-                workerFallbackReason: error.message || 'client-local-longform-fallback'
-            };
-            materializeAiClientReportFallback(fallbackPayload, {
-                responseMode: reportPlan.responseMode,
-                parentBriefs,
-                chunks,
-                coverageStats,
-                coverageContract,
-                queryData
-            });
-
-            if (reportPlan.responseMode === 'report' && fallbackPayload.report && resolveAiRenderableLongformArticle(fallbackPayload.report)) {
-                renderAiAnswerState(fallbackPayload);
-                return;
-            }
-
-            renderAiAnswerState({
-                type: 'error',
-                message: 'AI 解答目前沒有成功回應，但原本的關鍵字搜尋結果仍可用。',
-                note: error.message || '請稍後再試，或先確認 Worker 與 GEMINI_API_KEY 是否已部署。'
-            });
-        } finally {
-            searchState.aiPending = false;
-        }
-    }
-
-    function setSearchMode(mode) {
-        searchState.activeMode = mode;
-        searchState.pendingSubmit = false;
-        const modeButtons = document.querySelectorAll('.search-mode-btn');
-        const submitBtn = document.getElementById('search-ai-submit');
-        const input = document.getElementById('search-input');
-
-        modeButtons.forEach(button => {
-            const isActive = button.dataset.searchMode === mode;
-            button.classList.toggle('active', isActive);
-            button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-        });
-
-        if (submitBtn) {
-            submitBtn.hidden = mode !== 'ai';
-        }
-
-        if (input) {
-            input.placeholder = mode === 'ai'
-                ? '用自然語言提問，例如：第一天提早登船後最值得先做什麼？'
-                : '輸入關鍵字，例如：禮賓、Baymax、Room Service';
-        }
-
-        renderAiAnswerState(null);
-        renderSearchResults(searchState.lastResults, searchState.lastQueryData || searchState.lastQuery);
-        updateSearchWorkspaceLayout();
     }
 
     function renderSearchResults(results, queryContext) {
@@ -8417,10 +3562,8 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         if (!currentQuery) {
             container.innerHTML = `
                 <div class="search-empty-state">
-                    <p><strong>${searchState.activeMode === 'ai' ? '先用自然語言提問' : '開始搜尋郵輪重點'}</strong></p>
-                    <p>${searchState.activeMode === 'ai'
-                        ? '例如：第一天提早登船後最值得先做什麼？、禮賓怎麼提早進劇院？'
-                        : '可以試試看：禮賓、Baymax、Room Service、Deck 17、爆米花、SGAC。'}</p>
+                    <p><strong>開始搜尋郵輪重點</strong></p>
+                    <p>可以試試看：禮賓、Baymax、Room Service、Deck 17、爆米花、SGAC。</p>
                 </div>
             `;
             return;
@@ -8429,7 +3572,7 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         if (currentQuery.length < SEARCH_MIN_LENGTH) {
             container.innerHTML = `
                 <div class="search-empty-state">
-                    <p><strong>${searchState.activeMode === 'ai' ? '先讓本地搜尋抓到足夠線索' : '再多輸入一點點'}</strong></p>
+                    <p><strong>再多輸入一點點</strong></p>
                     <p>至少輸入 ${SEARCH_MIN_LENGTH} 個字元，搜尋結果會更準。</p>
                 </div>
             `;
@@ -8461,29 +3604,19 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
                 const cards = groupedResults.get(groupLabel)
                     .map(result => {
                         const metaChips = getSearchResultMetaChips(result);
-                        const resultHighlights = buildSearchResultHighlights(result, resolvedQueryData);
-                        const snippet = createExcerpt(result, resolvedQueryData);
+                        const summaryLine = buildSearchResultSummaryLine(result, resolvedQueryData);
+                        const metaLine = getSearchResultMetaLine(result);
 
                         return `
                             <button type="button" class="search-result-card" data-result-id="${result.id}">
-                                <div class="search-result-meta">
-                                    <span>${getSourceLabel(result.sourceType)}</span>
-                                    <span>•</span>
-                                    <span>${escapeHtml(result.locationLabel)}</span>
-                                </div>
+                                <div class="search-result-meta">${escapeHtml(metaLine)}</div>
                                 <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
-                                <div class="search-result-location">${escapeHtml(result.locationLabel)}</div>
                                 ${metaChips.length ? `
                                     <div class="search-result-chip-row">
                                         ${metaChips.map(chip => `<span class="search-result-chip">${escapeHtml(chip)}</span>`).join('')}
                                     </div>
                                 ` : ''}
-                                ${resultHighlights.length ? `
-                                    <ul class="search-result-highlights">
-                                        ${resultHighlights.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
-                                    </ul>
-                                ` : ''}
-                                ${snippet ? `<div class="search-result-snippet">${snippet}</div>` : ''}
+                                ${summaryLine ? `<div class="search-result-summary">${escapeHtml(summaryLine)}</div>` : ''}
                             </button>
                         `;
                     })
@@ -8570,7 +3703,6 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         searchState.pendingSubmit = false;
         overlay.hidden = false;
         document.body.classList.add('search-open');
-        setSearchMode('keyword');
         renderSearchResults([], '');
         if (panelBody) panelBody.scrollTop = 0;
         window.setTimeout(() => input.focus(), 40);
@@ -8589,12 +3721,9 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         searchState.isComposing = false;
         searchState.pendingSubmit = false;
         searchState.resultsById = new Map();
-        searchState.aiCitationsById = new Map();
         searchState.lastQuery = '';
         searchState.lastResults = [];
         searchState.lastQueryData = null;
-        setSearchMode('keyword');
-        renderAiAnswerState(null);
     }
 
     function initializeSearch() {
@@ -8604,48 +3733,18 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         const form = document.getElementById('search-form');
         const input = document.getElementById('search-input');
         const results = document.getElementById('search-results');
-        const modeButtons = document.querySelectorAll('.search-mode-btn');
-        const aiSubmit = document.getElementById('search-ai-submit');
-        const aiAnswer = document.getElementById('search-ai-answer');
         const backdrop = overlay?.querySelector('[data-search-close]');
 
-        if (!overlay || !trigger || !closeBtn || !form || !input || !results || !aiSubmit || !aiAnswer) return;
+        if (!overlay || !trigger || !closeBtn || !form || !input || !results) return;
 
         prepareSearchDocuments();
 
         function runSearchPreview(rawValue) {
-            if (searchState.activeMode === 'ai') {
-                const aiSearchPayload = safeGetAiRankedSearchResults(rawValue);
-                if (!aiSearchPayload.ok) {
-                    renderAiAnswerState({
-                        type: 'error',
-                        message: 'AI 模式的前置搜尋暫時發生錯誤，請重新整理後再試。',
-                        note: aiSearchPayload.error?.message || '本地召回沒有完成，因此這次先不送出 AI 解答。'
-                    });
-                    renderSearchResultsError('AI 模式的本地召回暫時失敗。');
-                    return;
-                }
-                const { queryData, results } = aiSearchPayload;
-                const displayResults = collapseAiDisplayResults(results, queryData);
-                searchState.lastQuery = queryData.normalizedQuery;
-                searchState.lastQueryData = queryData;
-                searchState.lastResults = displayResults;
-                searchState.resultsById = new Map(displayResults.map(result => [result.id, result]));
-                renderSearchResults(displayResults, queryData);
-                return;
-            }
-
             performSearch(rawValue);
         }
 
         function submitCurrentSearch() {
             searchState.pendingSubmit = false;
-
-            if (searchState.activeMode === 'ai') {
-                requestAiAnswer();
-                return;
-            }
-
             performSearch(input.value);
         }
 
@@ -8653,19 +3752,8 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
         closeBtn.addEventListener('click', closeSearchOverlay);
         backdrop?.addEventListener('click', closeSearchOverlay);
 
-        modeButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                setSearchMode(button.dataset.searchMode);
-                runSearchPreview(input.value);
-            });
-        });
-
         input.addEventListener('input', () => {
             window.clearTimeout(searchState.debounceTimer);
-            if (searchState.activeMode === 'ai') {
-                renderAiAnswerState(null);
-            }
-
             if (searchState.isComposing) {
                 return;
             }
@@ -8709,27 +3797,6 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             navigateToSearchResult(result);
         });
 
-        aiAnswer.addEventListener('click', event => {
-            const button = event.target.closest('.search-ai-citation');
-            if (button) {
-                const citation = searchState.aiCitationsById.get(button.dataset.aiCitationId);
-                navigateToSearchResult(citation);
-                return;
-            }
-
-            const anchor = event.target.closest('.search-ai-report-anchor');
-            if (!anchor) return;
-
-            const sectionKey = anchor.dataset.aiReportAnchor;
-            const target = aiAnswer.querySelector(`[data-ai-report-section="${sectionKey}"]`);
-            if (!target) return;
-
-            target.scrollIntoView({
-                behavior: prefersReducedMotion.matches ? 'auto' : 'smooth',
-                block: 'start'
-            });
-        });
-
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape' && !overlay.hidden) {
                 closeSearchOverlay();
@@ -8740,79 +3807,25 @@ const EXPECTED_WORKER_SCHEMA_VERSION = 'ai-answer-worker-v9';
             }
         });
 
-        setSearchMode('keyword');
         renderSearchResults([], '');
     }
 
-    function runAiCoverageSimulation(rawQuery, options = {}) {
-        if (!searchState.documents.length) {
-            prepareSearchDocuments();
-        }
-
-        const rewriteMeta = options.rewriteMeta || null;
-        const interpreterResult = options.interpreterResult || null;
-        const { queryData, results } = getAiRankedSearchResults(rawQuery, rewriteMeta, interpreterResult);
-        const displayResults = collapseAiDisplayResults(results, queryData);
-        const { selectedResults, reportPlan } = resolveAiEvidencePlan(results, queryData, {
-            defaultResponseMode: options.defaultResponseMode || 'report',
-            rewriteTriggered: Boolean(options.rewriteTriggered)
-        });
-        const answerCoverageResults = reportPlan.responseMode === 'report'
-            ? buildAiAnswerCoveragePool(results, displayResults, queryData, reportPlan, selectedResults)
-            : selectedResults;
-        const coverageContract = buildAiCoverageContract(results, displayResults, queryData, reportPlan, selectedResults);
-        const parentBriefResults = buildAiParentBriefResults(answerCoverageResults, results, coverageContract, queryData, reportPlan);
-        const parentBriefs = orderAiParentBriefsForCoverage(
-            buildAiParentBriefs(parentBriefResults, queryData, reportPlan, coverageContract),
-            coverageContract
-        );
-        const entityCoverage = buildAiEntityCoverageSets(parentBriefs, queryData, coverageContract);
-        const capabilityCoveragePlan = buildAiCapabilityCoveragePlan(parentBriefs, queryData);
-        const chunks = buildAnswerContext(answerCoverageResults, queryData, {
-            responseMode: reportPlan.responseMode,
-            reportPlan
-        });
-
-        return {
-            queryData,
-            results,
-            displayResults,
-            selectedResults,
-            reportPlan,
-            answerCoverageResults,
-            coverageContract,
-            parentBriefResults,
-            parentBriefs,
-            primaryEntityParents: entityCoverage.primaryEntityParents,
-            supportEntityParents: entityCoverage.supportEntityParents,
-            capabilityCoveragePlan,
-            chunks
-        };
-    }
-
-    if (window.__AI_SEARCH_TEST_HOOKS__ && typeof window.__AI_SEARCH_TEST_HOOKS__ === 'object') {
-        Object.assign(window.__AI_SEARCH_TEST_HOOKS__, {
+    if (window.__SEARCH_TEST_HOOKS__ && typeof window.__SEARCH_TEST_HOOKS__ === 'object') {
+        Object.assign(window.__SEARCH_TEST_HOOKS__, {
             prepareSearchDocuments,
-            getAiRankedSearchResults,
-            collapseAiDisplayResults,
-            resolveAiEvidencePlan,
-            buildAiAnswerCoveragePool,
-            buildAiCoverageContract,
-            buildAiParentBriefResults,
-            buildAiParentBriefs,
-            buildAnswerContext,
-            buildAiLongformArticleFallbackFromReport,
-            resolveAiRenderableLongformArticle,
-            renderAiLongformArticle,
-            materializeAiClientReportFallback,
-            annotateAiWorkerVersionStatus,
-            runAiCoverageSimulation,
+            getRankedSearchResults,
+            getSearchUnits,
+            buildSearchResultHighlights,
+            createExcerpt,
+            buildSearchResultSummaryLine,
+            getSearchResultMetaLine,
             getSearchDocuments: () => searchState.documents.slice()
         });
     }
 
-    if (!window.__AI_SEARCH_SKIP_BOOTSTRAP__) {
+    if (!window.__SEARCH_SKIP_BOOTSTRAP__) {
         initializeSearch();
     }
 
 });
+
