@@ -159,6 +159,19 @@ assert(hasAnyTitle(baymaxTitles, [/Baymax Cinemas/i]), 'Baymax Cinemas query sho
 const theatreTitles = titlesFor(hooks, 'Walt Disney Theatre');
 assert(hasAnyTitle(theatreTitles, [/Walt Disney Theatre/i, /Disney Seas the Adventure/i, /Remember/i]), 'Walt Disney Theatre query should surface theatre-related results');
 
+const photoTitles = titlesFor(hooks, '\u62cd\u7167');
+assert(photoTitles.length > 0, 'photo query should return keyword search results');
+assert(hasAnyTitle(photoTitles, [/Pics Photo Shop/i, /Disney Cruise Line Photos/i, /Photo: Unlimited Package/i, /\u62cd\u7167\u5957\u88dd/i]), 'photo query should surface ship photo entities or guide cards');
+
+const shuttersTitles = titlesFor(hooks, 'Shutters');
+assert(hasAnyTitle(shuttersTitles, [/Pics Photo Shop/i, /Disney Cruise Line Photos/i, /Photo: Unlimited Package/i]), 'Shutters alias should resolve to Adventure photo entities');
+
+const photoPackageTitles = titlesFor(hooks, 'photo package');
+assert(hasAnyTitle(photoPackageTitles, [/Photo: Unlimited Package/i, /\u62cd\u7167\u5957\u88dd/i, /Pics Photo Shop/i]), 'photo package query should surface package-related results');
+
+const photosSystemTitles = titlesFor(hooks, 'Disney Cruise Line Photos');
+assert(hasAnyTitle(photosSystemTitles, [/Disney Cruise Line Photos/i, /Pics Photo Shop/i]), 'Disney Cruise Line Photos query should surface the onboard photo system');
+
 const swimPayload = hooks.getRankedSearchResults('\u6709\u54ea\u4e9b\u8a2d\u65bd\u53ef\u4ee5\u6e38\u6cf3');
 const swimTitles = swimPayload.results.map((item) => String(item.title || ''));
 assert(swimTitles.length > 0, 'swim/facility query should still return results');

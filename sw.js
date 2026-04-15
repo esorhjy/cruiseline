@@ -1,4 +1,4 @@
-const APP_BUILD_ID = '2026-04-15-keyword-search-v3';
+const APP_BUILD_ID = '2026-04-15-keyword-search-v4';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [

@@ -25,7 +25,10 @@ const requiredEntities = [
   'baymax-cinemas',
   'concierge-lounge',
   'concierge-sundeck-pool',
-  'walt-disney-theatre'
+  'walt-disney-theatre',
+  'pics-photo-shop',
+  'disney-cruise-line-photos',
+  'photo-unlimited-package'
 ];
 
 requiredEntities.forEach((entityId) => {

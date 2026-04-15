@@ -60,14 +60,15 @@
     }));
 
     window.SEARCH_KEYWORD_TAXONOMY = {
-        version: '2026-04-15-keyword-search-v1',
+        version: '2026-04-15-keyword-search-v2',
         aliases: buildRegistryAliases(),
         genericClasses: [
             { canonical: '設施', terms: ['設施', '地方', '項目', '體驗'], expandsTo: ['場館', '服務', '表演'] },
             { canonical: '服務', terms: ['服務', '幫忙', '協助'], expandsTo: ['服務', '酒廊'] },
             { canonical: '表演', terms: ['表演', '主秀', '節目', 'show', 'shows'], expandsTo: ['表演', '場館'] },
             { canonical: '餐飲', terms: ['餐飲', '餐廳', '吃', '用餐', 'food'], expandsTo: ['餐廳', '快餐', '酒廊'] },
-            { canonical: '購物', terms: ['購物', '商店', 'shop', 'shopping'], expandsTo: ['商店'] }
+            { canonical: '購物', terms: ['購物', '商店', 'shop', 'shopping'], expandsTo: ['商店'] },
+            { canonical: '拍照', terms: ['拍照', '攝影', '照片', '合照', 'photo', 'photos', 'photography', 'shutters', 'pics', 'magic shots', 'photo package'], expandsTo: ['攝影', '服務', '商店'] }
         ],
         categoryFamilies,
         clusterRelations: [],
