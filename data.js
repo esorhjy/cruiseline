@@ -19,7 +19,8 @@
                         desc: [
                             "<strong>目的：</strong>若住 DCL 合作飯店，可先聯繫安排接駁，通常會比一般自到客更早進入登船節奏。",
                             "<strong>提醒：</strong>QR code 先截圖或列印最穩；接駁車行李通常另有處理，不用停在自助 drop-off。",
-                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。"
+                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。",
+                            "<strong>拍照註記：</strong>登船入口與完成報到前後通常就是第一組正式合照時機，若重視開場照，這段先把全家狀態整理好最省力。"
                         ]
                     },
                     {
@@ -70,7 +71,8 @@
                         tagClass: "tag-explore",
                         desc: [
                             "<strong>Deck 7：</strong>帶小寶看 Edge 隱藏入口、了解 大英雄天團電玩樂場",
-                            "<strong>Deck 10/11：</strong>確認 Imagination Garden 位置，到花園舞台看表演"
+                            "<strong>Deck 10/11：</strong>確認 Imagination Garden 位置，到花園舞台看表演",
+                            "<strong>拍照註記：</strong>Atrium 與主背景布景點也值得一起認位置，之後若要補正式照或 Magic Shots，才不會每次都臨時找點。"
                         ]
                     },
                     {
@@ -119,6 +121,7 @@
                             "經典「黑白變彩色」動畫互動用餐體驗",
                             "若輪到 Animator's Palate：準備互動驚喜（手繪草圖變動畫）",
                             "<strong>提醒：</strong>專屬服務員開始跟隨你們",
+                            "<strong>拍照註記：</strong>晚餐前後通常是最穩的正式全家照窗口，若重視餐廳合照，記得替這段多留 5–10 分鐘。",
                             "<strong>建議：</strong>這晚拍全家正式照片",
                             "<strong>First Seating 提醒：</strong>若晚餐互動或餐廳秀拉長，別吃到最後一刻，否則還是會壓縮後面劇院排隊時間。"
                         ]
@@ -274,6 +277,7 @@
                         tagClass: "tag-dining",
                         desc: [
                             "有米奇米妮的船長晚餐。",
+                            "<strong>拍照註記：</strong>若這晚想補正式餐廳照，最好在進場或甜點前留一個短空檔，不要把拍照擠到衝秀的最後幾分鐘。",
                             "<strong>First Seating 提醒：</strong>若晚餐互動或餐廳秀拉長，別吃到最後一刻，否則還是會壓縮後面劇院排隊時間。"
                         ]
                     },
@@ -372,7 +376,8 @@
                         tagClass: "tag-highlight",
                         desc: [
                             "<strong>澤澤、彤妹：</strong>完整參與活動",
-                            "<strong>大人帶小寶：</strong>Royal Meet & Greet（免費皇家見面會）"
+                            "<strong>大人帶小寶：</strong>Royal Meet & Greet（免費皇家見面會）",
+                            "<strong>拍照註記：</strong>角色見面會本來就是高價值官方攝影時段，若有買方案，這段最不值得臨時錯過。"
                         ]
                     },
                     {
@@ -416,7 +421,8 @@
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "最後一晚的輪替餐廳美食"
+                            "最後一晚的輪替餐廳美食",
+                            "<strong>拍照註記：</strong>最後一晚若還想補正式全家照，這是最穩的收尾窗口，晚餐前先拍會比散場後更從容。"
                         ]
                     },
                     {
@@ -501,7 +507,7 @@ const checklistData = [
         items: [
             { id: "royal-meet-130d", text: "130 天前禮賓預約：皇家公主見面會" },
             { id: "dinner-table", text: "聯絡管家確認用餐需求 (如併桌安排)" },
-            { id: "photo-package", text: "確認拍照套裝是否要先買；一房通常只需一人買，可於付完全額後在 My Plan > Onboard Fun 查看，若買無限拍從第一天起算最划算" },
+            { id: "photo-package", text: "付完全額後，先決定要不要預購拍照套裝；若要買，記得在出發前 3 天前完成調整" },
             { id: "wifi-buy", text: "確認是否需要額外 Wi-Fi；禮賓房每位房客含 24 小時連續網路，不必太早啟用" },
             { id: "kids-club-booking", text: "預定 Oceaneer Club 兒童俱樂部時段" }
         ]
@@ -638,10 +644,18 @@ const deckGuideData = [
             },
             {
                 icon: "fa-solid fa-mug-hot",
-                name: "Alley Cat Café / Pics Photo Shop / 商店街",
-                summary: "咖啡、照片取件與周邊都集中在同一帶，很適合邊走邊補貨，也方便把當天拍的照片快速檢查一輪。",
+                name: "Alley Cat Café / 商店街",
+                summary: "咖啡、輕補給與商店街都集中在這一帶，很適合邊走邊補貨，也方便當作 Deck 7 的中繼站。",
                 bestTime: "下午或白天比演後散場友善。",
-                tripUse: "大人等孩子跑活動時，可以順手到 Pics 或感應機台看大圖、確認照片有沒有入帳；若買了拍照套裝，也最好在航行中把想留的照片檢查與下載完成，看完機台記得登出。Deck 7 也是 roaming character 偶爾會經過的流動走廊，剛好路過時值得抬頭多看一眼。",
+                tripUse: "大人等孩子跑活動時，可以順手買杯咖啡、逛商店街，或把這裡當成 Deck 7 的短休補給點。Deck 7 也是 roaming character 偶爾會經過的流動走廊，剛好路過時值得抬頭多看一眼。",
+                highlight: false
+            },
+            {
+                icon: "fa-solid fa-camera-retro",
+                name: "Pics Photo Shop / Disney Cruise Line Photos",
+                summary: "這裡是船上檢查、挑選、購買與下載照片的主站；Adventure 實體店名叫 Pics，但官方 FAQ 仍常用 Shutters Photography Shop 指整套照片系統與 kiosks。",
+                bestTime: "下午或晚餐、角色合照後回來看一輪最實用；不要拖到最後一晚才第一次確認照片有沒有入帳。",
+                tripUse: "若有買拍照套裝，建議航程中至少回來看幾次 kiosks，確認角色見面、晚餐、背景布景點與 Magic Shots 的照片都有被抓到。船上也可用 Disney Cruise Line Photos 頁面先下載單張；若想拍正式人像，這裡也可留意 Signature Private Portrait Session 的安排。",
                 highlight: false
             }
         ]
@@ -1139,7 +1153,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-camera-retro",
                 sourceType: "community",
                 whenToUse: "海上日早上與一般 meet-and-greet 前。",
-                action: "角色合照通常提早 10–15 分鐘排最省時間；若想拍空景，D2、D3 的 07:30–08:30 是最容易拍到乾淨甲板的時段。",
+                action: "角色合照通常提早 10–15 分鐘排最省時間；若想拍空景，D2、D3 的 07:30–08:30 是最容易拍到乾淨甲板的時段。這張卡只處理『什麼時候去拍比較省力』，不把套裝購買、下載與帳號規則混在一起。",
                 tripFit: "這種『早點去就省很多力』的節奏，比臨時在人潮中硬排更適合多孩家庭。",
                 caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯；若是有人數控管的角色場次，登船後與隔日下午多刷幾次 App 看是否釋出通常比死守單一時段更有效。Deck 7 也常是 roaming character 會經過的走廊，但移動中的公主不一定都會停下互動。",
                 relatedSectionId: "timeline"
@@ -1157,11 +1171,11 @@ const playbookGuideData = [
             {
                 title: "拍照套裝怎麼買才不浪費，下載時機更重要",
                 icon: "fa-solid fa-camera",
-                sourceType: "community",
-                whenToUse: "付完全額船費後到航行中的最後兩天，都還能評估要不要買。",
-                action: "拍照方案可先在 App 的 My Plan > Onboard Fun 查看；一房通常只需一人買，若確定要買無限拍，從第一天起算通常最划算。實際使用時，看到攝影師就拍，通常提早 5–10 分鐘去排最省時；App 也可直接搜尋 photo 找拍照點，攝影師常會在一個點駐 1–2 小時。拍照時務必刷到房卡或至少報到正確房號，照片通常 1–2 小時後就會出現在 App 裡。",
-                tripFit: "若你們很重視全家合照，關鍵不是只決定買不買，而是把拍照節奏固定下來：以有買方案的人為中心拍大合照、角色場次可帶簽名本與筆、每天晚上順手把照片下載下來最穩。",
-                caution: "是否值得仍看拍照習慣，但如果要買，必須在航行中完成購買與下載；離船後 App 轉成歷史訂單，就可能看不到照片。船內免費網路通常已足夠看與下載照片，感應機台用完也記得登出。",
+                sourceType: "official",
+                whenToUse: "付完全額船費後，到航程最後一天前都值得再確認一次。",
+                action: "拍照套裝可在 My Cruise Plans / Onboard Fun 內查看，一房通常只需一人購買。若想保留最大彈性，重點不是一開始就急著下載，而是先確認照片都有順利進到帳號；官方 FAQ 也建議航程中至少去 Pics 或 kiosks 看幾次，確保角色見面、晚餐與背景點的照片都有被抓到。",
+                tripFit: "這張卡最適合拿來當『購買與下載規則表』：付完全額後才看得到預購，出發前 3 天前都還能調整；若在船上購買後尚未下載任何數位照片，航程結束前仍可取消。船上只能單張下載，下船後登入 Disney Cruise Line Photos 才能用 Download All 一次抓回，且每張照片自拍攝日起 45 天內可下載。",
+                caution: "可能價格與早鳥折扣會依航次、方案與購買時間浮動，是否有 85 折、15 張或 10 張套裝，都以當次 My Cruise Plans 顯示為準。若已決定購買，最好在船上就完成購買與至少一次下載；額外照片購買通常必須在下船前完成。",
                 relatedSectionId: "entertainment"
             },
             {
@@ -1173,6 +1187,16 @@ const playbookGuideData = [
                 tripFit: "你們是多人同行，一個小 bug 就可能拖慢整串節奏，所以最重要的是知道『不要只卡在 App 裡』。",
                 caution: "這屬常見實測補救，不代表系統一定會出錯；但一旦遇到，第一時間直接找現場工作人員通常最省力。",
                 relatedSectionId: ""
+            },
+            {
+                title: "把官方拍照點刻意排進每天動線，才拍得到夠多",
+                icon: "fa-solid fa-camera",
+                sourceType: "community",
+                whenToUse: "每天早上第一次看 Navigator App、準備排今天主線時。",
+                action: "官方拍照不是邊走邊自然就會累積，真正有感的做法是每天先看今天有哪些 photo opportunities，再把其中 1–2 個順路塞進行程。最值得主動繞過去的通常是登船入口、每晚晚餐、角色見面會、Atrium / 主背景布景點，以及某些 Magic Shots 或道具拍照點；先決定今天要拍哪幾組，路過時才不會一直覺得等等再說、最後一張都沒拍到。",
+                tripFit: "首批 4 晚乘客心得裡講得很直接：重點不是有沒有買套裝，而是有沒有刻意把拍照點排進每天動線。若你們很在意全家合照，這個小習慣往往比臨時衝點位更能穩定累積照片。",
+                caution: "這不代表每個點都要拍，而是要挑真正符合你們主線的點。角色場、晚餐與背景布景點通常最穩；若看到攝影師會提供神燈、天燈之類的小道具，也值得順手多拍一組。手機版下載畫質通常會比電腦版小，若重視原始畫質，離船前後可再用電腦把檔案重抓一次。",
+                relatedSectionId: "timeline"
             }
         ]
     },

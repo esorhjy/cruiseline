@@ -1,5 +1,5 @@
 (function () {
-    const VERIFIED_DATE = '2026-04-13';
+    const VERIFIED_DATE = '2026-04-15';
     const SOURCES = {
         shipOverview: 'https://disneycruise.disney.go.com/en-sg/ships/adventure/',
         themedAreas: 'https://disneycruise.disney.go.com/en-sg/ships/adventure/themed-areas/',
@@ -8,7 +8,10 @@
         concierge: 'https://disneycruise.disney.go.com/ships/adventure/concierge/',
         adultsExclusive: 'https://disneycruise.disney.go.com/en-sg/onboard-activities/adults-exclusive/',
         youthClubs: 'https://disneycruise.disney.go.com/en-sg/onboard-activities/youth-clubs/',
-        shopping: 'https://disneycruise.disney.go.com/en-sg/onboard-activities/shopping/'
+        shopping: 'https://disneycruise.disney.go.com/en-sg/onboard-activities/shopping/',
+        photosFaq: 'https://disneycruise.disney.go.com/en/faq/photos/when-will-i-receive-my-photos/',
+        photosDeadline: 'https://disneycruise.disney.go.com/en-sg/faq/photos/deadline-for-booking-photo-packages-pre-cruise/',
+        photosDownloadAll: 'https://disneycruise.disney.go.com/faq/photos/download-all-photos/'
     };
 
     const entity = (data) => ({
@@ -40,7 +43,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-04-13-v1',
+        version: '2026-04-15-v2',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -273,12 +276,35 @@
                 officialNameEn: 'Pics',
                 displayNameZh: 'Pics 照片商店',
                 entityType: 'shop',
-                categoryFamilies: ['商店'],
-                capabilityTags: ['shop'],
-                aliases: ['Pics Photo Shop', '照片取件'],
+                categoryFamilies: ['商店', '攝影', '服務'],
+                capabilityTags: ['shop', 'photo'],
+                aliases: ['Pics Photo Shop', '照片取件', 'Shutters', 'Shutters Photography Shop', '照片商店', '拍照櫃檯'],
                 deckHints: ['Deck 7'],
                 area: 'San Fransokyo Street',
-                sourceUrls: [SOURCES.shopping]
+                relatedEntityIds: ['disney-cruise-line-photos', 'photo-unlimited-package'],
+                sourceUrls: [SOURCES.shopping, SOURCES.photosFaq]
+            }),
+            entity({
+                entityId: 'disney-cruise-line-photos',
+                officialNameEn: 'Disney Cruise Line Photos',
+                displayNameZh: 'Disney Cruise Line Photos 照片系統',
+                entityType: 'service',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['My Cruise Photos', 'onboard download', '照片下載', '船上照片', '照片系統'],
+                relatedEntityIds: ['pics-photo-shop', 'photo-unlimited-package'],
+                sourceUrls: [SOURCES.photosFaq, SOURCES.photosDownloadAll]
+            }),
+            entity({
+                entityId: 'photo-unlimited-package',
+                officialNameEn: 'Photo: Unlimited Package',
+                displayNameZh: '拍照套裝 Photo: Unlimited Package',
+                entityType: 'service',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Photo Package', 'Unlimited Digital Package', '拍照套裝', '無限拍', '數位套裝'],
+                relatedEntityIds: ['pics-photo-shop', 'disney-cruise-line-photos'],
+                sourceUrls: [SOURCES.photosDeadline, SOURCES.photosFaq, SOURCES.photosDownloadAll]
             }),
             entity({
                 entityId: 'disney-oceaneer-club',
@@ -833,7 +859,10 @@
                 'deck7:0': primary(['edge', 'vibe']),
                 'deck7:1': primary(['big-hero-arcade']),
                 'deck7:2': primary(['baymax-cinemas']),
-                'deck7:3': primary(['alley-cat-cafe', 'pics-photo-shop']),
+                'deck7:3': primary(['alley-cat-cafe']),
+                'deck7:4': primary(['pics-photo-shop', 'disney-cruise-line-photos'], {
+                    keywordHints: ['拍照', '攝影', 'photos', 'shutters', 'photo kiosk']
+                }),
                 'deck8:0': primary(['disney-oceaneer-club']),
                 'deck8:1': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環', '取孩', 'kids club'] }),
                 'deck8:2': primary(['royal-society-for-friendship-and-tea', 'disney-oceaneer-club']),
@@ -907,7 +936,17 @@
                 'embark-sprint:2': primary(['concierge-lounge']),
                 'daily-ops:1': primary(['walt-disney-theatre', 'baymax-cinemas'], { keywordHints: ['爆米花', '看秀', '觀影'] }),
                 'daily-ops:3': primary(['room-service']),
+                'daily-ops:4': support(['royal-meet-and-greet', 'pics-photo-shop', 'disney-cruise-line-photos'], {
+                    keywordHints: ['角色拍照', '空景', '拍照早檔', 'photo opportunities']
+                }),
                 'daily-ops:5': primary(['walt-disney-theatre', 'royal-meet-and-greet']),
+                'daily-ops:6': primary(['photo-unlimited-package', 'disney-cruise-line-photos', 'pics-photo-shop'], {
+                    keywordHints: ['photo package', '拍照套裝', '照片下載', 'download all', 'shutters']
+                }),
+                'daily-ops:7': support(['guest-services'], { keywordHints: ['app error', '預約補位'] }),
+                'daily-ops:8': support(['pics-photo-shop', 'disney-cruise-line-photos', 'royal-meet-and-greet', 'disney-imagination-garden'], {
+                    keywordHints: ['每日拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照']
+                }),
                 'concierge-plus:0': support(['concierge-lounge'], { keywordHints: ['welcome lunch', 'welcome amenity'] }),
                 'concierge-plus:1': support(['concierge-lounge'], { keywordHints: ['minibar', 'soft drinks', 'bottled water'] }),
                 'concierge-plus:2': support(['concierge-lounge'], { keywordHints: ['concierge support', 'butler help'] }),
