@@ -1,11 +1,11 @@
-const APP_BUILD_ID = '2026-04-15-ai-search-section-guide-v11';
+const APP_BUILD_ID = '2026-04-15-keyword-search-v3';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [
   'style.css',
   'script.js',
-  'ai-entity-registry.js',
-  'ai-query-taxonomy.js',
+  'search-entity-registry.js',
+  'search-keyword-taxonomy.js',
   'data.js',
   'manifest.json',
   'icons/icon-192.png',
@@ -19,7 +19,7 @@ const CORE_ASSETS_TO_CACHE = [
   'icons/icon-512.png'
 ];
 
-const EXCLUDED_PATHS = new Set(['/api/ai-answer']);
+const EXCLUDED_PATHS = new Set([]);
 const EXCLUDED_HOSTS = new Set(['api.open-meteo.com']);
 const RUNTIME_CACHEABLE_DESTINATIONS = new Set(['document', 'style', 'script', 'image', 'font']);
 const CORE_ASSET_PATHS = new Set(

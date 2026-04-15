@@ -39,7 +39,7 @@
         ...extra
     });
 
-    window.AI_ENTITY_REGISTRY = {
+    window.SEARCH_ENTITY_REGISTRY = {
         version: '2026-04-13-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [

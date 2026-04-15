@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-04-15-ai-search-section-guide-v9">
+    <meta name="app-build" content="2026-04-15-keyword-search-v3">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-04-15-ai-search-section-guide-v11';
+window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v3';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,11 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-ai-search-section-guide-v11';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-04-15-ai-search-section-guide-v9">
-    <link rel="manifest" href="manifest.json?v=2026-04-15-ai-search-section-guide-v9">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-04-15-ai-search-section-guide-v9">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-04-15-ai-search-section-guide-v9">
-    <meta name="ai-answer-endpoint" content="https://disney-adventure-ai-answer.esorhjy.workers.dev/api/ai-answer">
+    <link rel="stylesheet" href="style.css?v=2026-04-15-keyword-search-v3">
+    <link rel="manifest" href="manifest.json?v=2026-04-15-keyword-search-v3">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-04-15-keyword-search-v3">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-04-15-keyword-search-v3">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -66,33 +65,18 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-ai-search-section-guide-v11';
                 <div class="search-panel-copy">
                     <span class="search-kicker">Quick Find</span>
                     <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
-                    <p>可直接搜尋關鍵字，或切到 AI 解答模式，用自然語言問站內資料。</p>
+                    <p>直接輸入關鍵字，快速找到行程、甲板、表演與攻略重點。</p>
                 </div>
                 <button type="button" class="search-close-btn" id="search-close-btn" aria-label="關閉搜尋">
                     <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="search-mode-switch" id="search-mode-switch" role="tablist" aria-label="搜尋模式">
-                <button type="button" class="search-mode-btn active" data-search-mode="keyword" aria-pressed="true">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>關鍵字搜尋</span>
-                </button>
-                <button type="button" class="search-mode-btn" data-search-mode="ai" aria-pressed="false">
-                    <i class="fa-solid fa-sparkles"></i>
-                    <span>AI 解答</span>
                 </button>
             </div>
             <form class="search-input-shell" id="search-form">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
                     autocomplete="off">
-                <button type="submit" class="search-submit-btn" id="search-ai-submit" hidden>
-                    <i class="fa-solid fa-sparkles"></i>
-                    <span>AI 解答</span>
-                </button>
             </form>
             <div class="search-panel-body" id="search-panel-body">
-                <div class="search-ai-answer" id="search-ai-answer" hidden></div>
                 <div class="search-results" id="search-results"></div>
             </div>
         </div>
@@ -581,12 +565,12 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-ai-search-section-guide-v11';
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-<script src="data.js?v=2026-04-15-ai-search-section-guide-v8"></script>
-<script src="ai-entity-registry.js?v=2026-04-15-ai-search-section-guide-v8"></script>
-<script src="ai-query-taxonomy.js?v=2026-04-15-ai-search-section-guide-v8"></script>
-<script src="script.js?v=2026-04-15-ai-search-section-guide-v8"></script>
+<script src="data.js?v=2026-04-15-keyword-search-v3"></script>
+<script src="search-entity-registry.js?v=2026-04-15-keyword-search-v3"></script>
+<script src="search-keyword-taxonomy.js?v=2026-04-15-keyword-search-v3"></script>
+<script src="script.js?v=2026-04-15-keyword-search-v3"></script>
     <script>
-        if ('serviceWorker' in navigator) {
+        if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
                 const hadController = Boolean(navigator.serviceWorker.controller);
                 let hasReloadedForUpdate = false;
