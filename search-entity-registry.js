@@ -43,7 +43,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-04-15-v2',
+        version: '2026-04-24-v3',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -351,7 +351,7 @@
                 entityType: 'venue',
                 categoryFamilies: ['場館', '表演'],
                 capabilityTags: ['watch-show', 'rest'],
-                aliases: ['Imagination Garden', '幻想花園'],
+                aliases: ['Imagination Garden', '幻想花園', '花園舞台', 'Garden Stage'],
                 deckHints: ['Deck 10', 'Deck 11'],
                 area: 'Disney Imagination Garden',
                 relatedEntityIds: ['avengers-assemble-show', 'duffy-and-the-friend-ship-show', 'lets-set-sail-show', 'baymax-super-exercise-expo', 'lion-king-celebration-in-the-sky'],
@@ -550,7 +550,7 @@
                 entityType: 'service',
                 categoryFamilies: ['服務', '酒廊', '場館'],
                 capabilityTags: ['rest', 'drink'],
-                aliases: ['禮賓酒廊', 'Concierge'],
+                aliases: ['禮賓', '禮賓酒廊', 'Concierge'],
                 deckHints: ['Deck 17'],
                 area: 'Concierge',
                 relatedEntityIds: ['concierge-sundeck-pool', 'walt-disney-theatre', 'royal-meet-and-greet'],
@@ -733,7 +733,7 @@
                 entityType: 'pool',
                 categoryFamilies: ['泳池', '場館', '服務'],
                 capabilityTags: ['swim', 'rest', 'drink'],
-                aliases: ['Concierge Sundeck', '禮賓陽光甲板', 'Sundeck Pool'],
+                aliases: ['Concierge Sundeck', '禮賓', '禮賓陽光甲板', 'Sundeck Pool'],
                 deckHints: ['Deck 19'],
                 area: 'Concierge',
                 relatedEntityIds: ['concierge-lounge', 'fitness-center'],
@@ -771,7 +771,7 @@
                 entityType: 'service',
                 categoryFamilies: ['服務', '餐廳'],
                 capabilityTags: ['eat'],
-                aliases: ['客房服務', '房務'],
+                aliases: ['客房服務', '房務', '客房餐點', '房務餐點', 'Room Service menu'],
                 sourceAuthority: 'trusted-secondary',
                 sourceUrls: [SOURCES.shipOverview]
             }),
@@ -924,14 +924,17 @@
                 'day3:3:2': support(['concierge-sundeck-pool']),
                 'day3:4:0': support(['hollywood-spotlight-club']),
                 'day3:4:1': support(['disney-imagination-garden']),
-                'day3:4:2': support(['lion-king-celebration-in-the-sky', 'disney-imagination-garden'])
+                'day3:4:2': support(['lion-king-celebration-in-the-sky', 'disney-imagination-garden']),
+                'day4:0:0': support(['animators-palate'], {
+                    keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'self assist', 'express walk off']
+                })
             },
             playbookItems: {
                 'embark-sprint:0': support(['concierge-lounge', 'toy-story-place', 'flying-saucer-splash-zone'], {
-                    keywordHints: ['day one prep', 'water gear', 'pool clothes']
+                    keywordHints: ['day one prep', 'water gear', 'pool clothes', '上船先做什麼', '登船日先做什麼']
                 }),
-                'embark-sprint:1': support(['concierge-lounge', 'disney-oceaneer-club', 'toy-story-place', 'flying-saucer-splash-zone'], {
-                    keywordHints: ['open house', 'kids club', 'pool loop', 'water play']
+                'embark-sprint:1': primary(['concierge-lounge', 'disney-oceaneer-club', 'toy-story-place', 'flying-saucer-splash-zone'], {
+                    keywordHints: ['open house', 'kids club', 'pool loop', 'water play', '上船先做什麼', '登船日先做什麼']
                 }),
                 'embark-sprint:2': primary(['concierge-lounge']),
                 'daily-ops:1': primary(['walt-disney-theatre', 'baymax-cinemas'], { keywordHints: ['爆米花', '看秀', '觀影'] }),
@@ -954,7 +957,10 @@
                 'concierge-plus:4': primary(['concierge-lounge']),
                 'concierge-plus:5': support(['concierge-lounge'], { keywordHints: ['wifi', 'internet', '24 hours'] }),
                 'concierge-plus:6': primary(['walt-disney-theatre', 'concierge-lounge']),
-                'stateroom-family:0': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環'] })
+                'stateroom-family:0': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環'] }),
+                'last-night:1': primary(['animators-palate'], {
+                    keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'Self-Assist', 'SGAC']
+                })
             }
         }
     };

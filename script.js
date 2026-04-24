@@ -13,13 +13,18 @@
     };
     const SEARCH_SYNONYM_GROUPS = [
         ['禮賓', 'concierge', 'lounge', '酒廊', '管家'],
-        ['房務', 'room service', '客房服務'],
+        ['房務', 'room service', '客房服務', '客房餐點', '房務餐點'],
         ['海洋俱樂部', 'oceaneer', 'kids club', '兒童俱樂部'],
         ['杯麵', 'baymax'],
         ['爆米花', 'popcorn'],
-        ['登船', 'check in', 'check-in', 'qr', 'sgac'],
+        ['登船', '上船', '登船日', '第一天', 'day 1', 'check in', 'check-in', 'qr', 'sgac'],
+        ['下船', '撤船', '離船', '最後一天', 'self assist', 'express walk off'],
         ['煙火', 'lion king', '獅子王'],
         ['披薩', 'pizza', 'pizza planet'],
+        ['拍照', '照片', 'photo', 'photos', 'shutters', 'photo package', '無限拍', '照片下載'],
+        ['花園舞台', 'imagination garden', 'disney imagination garden', '幻想花園'],
+        ['手環', 'rfid', '取孩密語', '兒童手環'],
+        ['avengers', 'avengers assemble', '復仇者'],
         ['劇院', 'theatre', 'theater', 'remember'],
         ['行前清單', 'checklist', '清單'],
         ['房卡', 'key to the world'],
@@ -139,7 +144,13 @@
         '早／中午',
         '中午',
         '登船',
+        '上船',
+        '登船日',
+        '第一天',
         '下船',
+        '撤船',
+        '離船',
+        '最後一天',
         'schedule',
         'itinerary',
         'when'
@@ -1168,7 +1179,7 @@
         }
 
         if (normalized.includes('room service') || normalized.includes('客房服務') || normalized.includes('房務')) {
-            keywords.push('room service', '客房服務', '房務');
+            keywords.push('room service', '客房服務', '房務', '客房餐點', '菜單');
         }
 
         if (normalized.includes('open house') || normalized.includes('oceaneer') || normalized.includes('kids club')) {
@@ -1177,6 +1188,26 @@
 
         if (normalized.includes('披薩') || normalized.includes('pizza') || normalized.includes('補給') || normalized.includes('點心') || normalized.includes('快餐')) {
             keywords.push('披薩', 'pizza', '補給', '點心', '快餐');
+        }
+
+        if (normalized.includes('上船') || normalized.includes('登船')) {
+            keywords.push('登船日', '第一天', 'Day 1', 'Open House', 'Oceaneer', '手環', '玩水', 'Toy Story Pool', 'Concierge Lounge');
+        }
+
+        if (normalized.includes('照片') || normalized.includes('拍照') || normalized.includes('photo')) {
+            keywords.push('拍照套裝', 'Photo Package', '照片下載', 'Pics Photo Shop', 'Disney Cruise Line Photos', 'Shutters');
+        }
+
+        if (normalized.includes('最後一天') || normalized.includes('下船') || normalized.includes('撤船') || normalized.includes('離船')) {
+            keywords.push('最後一天', '下船', '撤船日', '早餐', 'Self-Assist', 'Express Walk-off', 'SGAC');
+        }
+
+        if (normalized.includes('花園舞台') || normalized.includes('imagination garden') || normalized.includes('幻想花園')) {
+            keywords.push('花園舞台', 'Disney Imagination Garden', 'Deck 10', 'Deck 11', '動線');
+        }
+
+        if (normalized.includes('手環') || normalized.includes('rfid') || normalized.includes('取孩')) {
+            keywords.push('RFID', '手環', 'Oceaneer Club', 'Kids Club', '取孩密語');
         }
 
         return uniqueItems(keywords);
@@ -2195,8 +2226,8 @@
         const registryProperNounTokens = collectEntityRegistryProperNounTokens(entityRefs);
         const registryAliasTokens = collectEntityRegistryAliasTokens(entityRefs);
         const keywords = uniqueItems([
-            ...seedKeywords,
             ...(Array.isArray(config.keywordHints) ? config.keywordHints : []),
+            ...seedKeywords,
             ...registryProperNounTokens,
             ...registryAliasTokens
         ]).slice(0, 24);
@@ -2960,6 +2991,8 @@
         const literalProperHit = hasAnyNormalizedTerm(doc.normalizedProperNouns, literalAnchors);
         const literalAliasHit = hasAnyNormalizedTerm(doc.normalizedAliases, literalAnchors);
         const literalKeywordHit = hasAnyNormalizedTerm(doc.normalizedKeywords, literalAnchors);
+        const exactKeywordPhraseHit = getSearchSignalLength(queryData.normalizedQuery) >= 4
+            && hasAnyNormalizedTerm(doc.normalizedKeywords, [queryData.normalizedQuery]);
         const strongLiteralAnchorHit = literalTitleHit || literalProperHit || literalAliasHit;
         const directAnchorHit = literalTitleHit || literalProperHit || literalAliasHit || literalKeywordHit;
         const canonicalEntityMatchCount = countCanonicalEntityMatches(doc, canonicalEntities);
@@ -2967,11 +3000,13 @@
         const capabilityHitCount = requiredCapabilities.filter(capabilityId => resultMatchesCapability(doc, capabilityId)).length;
         const sourceBucket = getSearchResultSourceBucket(doc);
         const weakKeywordOnlyHit = literalKeywordHit
+            && !exactKeywordPhraseHit
             && !literalTitleHit
             && !literalProperHit
             && !literalAliasHit
             && !canonicalEntityMatchCount
             && !supportEntityMatchCount;
+        let categoryHitCount = 0;
 
         let score = 0;
 
@@ -3007,6 +3042,7 @@
         if (literalProperHit) score += 72;
         if (literalAliasHit) score += 56;
         if (literalKeywordHit) score += 28;
+        if (exactKeywordPhraseHit) score += 96;
 
         if (canonicalEntityMatchCount) {
             const entityMatchWeight = Math.max(20, 76 - Math.max(0, entityBreadth - 1) * 16);
@@ -3020,6 +3056,7 @@
 
         categoryHints.forEach(categoryLabel => {
             if (resultMatchesCategory(doc, categoryLabel)) {
+                categoryHitCount += 1;
                 score += 28;
             }
         });
@@ -3109,6 +3146,19 @@
             && entityBreadth >= 4
             && !strongLiteralAnchorHit) {
             score -= 220;
+        }
+
+        const hasSearchEvidence = directAnchorHit
+            || canonicalEntityMatchCount
+            || supportEntityMatchCount
+            || capabilityHitCount
+            || categoryHitCount
+            || hasAnyNormalizedTerm(doc.normalizedCombined, [queryData.normalizedQuery])
+            || hasAnyNormalizedTerm(doc.normalizedCombined, units)
+            || hasAnyNormalizedTerm(doc.normalizedCombined, contextualKeywords);
+
+        if (!hasSearchEvidence) {
+            return 0;
         }
 
         return Math.max(0, Math.round(score));
@@ -3368,20 +3418,28 @@
         const sourceBucket = getSearchResultSourceBucket(result);
         const literalAnchors = Array.isArray(queryData.literalAnchors) ? queryData.literalAnchors : [];
         const literalTitleHit = hasAnyNormalizedTerm(result?.normalizedTitle, literalAnchors);
+        const fullPhraseAnchorHit = getSearchSignalLength(queryData.normalizedQuery) >= 4 && (hasAnyNormalizedTerm(result?.normalizedTitle, [queryData.normalizedQuery])
+            || hasAnyNormalizedTerm(result?.normalizedProperNouns, [queryData.normalizedQuery])
+            || hasAnyNormalizedTerm(result?.normalizedAliases, [queryData.normalizedQuery]));
+        const fullKeywordPhraseHit = getSearchSignalLength(queryData.normalizedQuery) >= 4
+            && hasAnyNormalizedTerm(result?.normalizedKeywords, [queryData.normalizedQuery]);
         const strongLiteralAnchorHit = documentHasStrongLiteralAnchorHit(result, literalAnchors);
         const entityMatchCount = countCanonicalEntityMatches(result, queryData.canonicalEntities || []);
         const entityMatchRatio = entityMatchCount / Math.max(1, Number(result.entityBreadth) || 1);
         const strongEntityHit = entityMatchCount > 0 && ((Number(result.entityBreadth) || 1) <= 2 || entityMatchRatio >= 0.45);
         const capabilityHit = (queryData.requiredCapabilities || []).some(capabilityId => resultMatchesCapability(result, capabilityId));
+        const hasCanonicalFocus = (queryData.canonicalEntities || []).length > 0;
         const effectiveStrongLiteralHit = result?.sourceType === 'playbook' && (Number(result.entityBreadth) || 1) >= 4
             ? literalTitleHit
             : strongLiteralAnchorHit;
         const strongHit = effectiveStrongLiteralHit || strongEntityHit || capabilityHit;
 
-        if (sourceBucket === 'primary' && strongHit) return 0;
+        if (sourceBucket === 'playbook' && (fullPhraseAnchorHit || fullKeywordPhraseHit)) return 0;
+        if (sourceBucket === 'primary' && (fullPhraseAnchorHit || strongEntityHit || capabilityHit)) return 0;
         if (sourceBucket === 'playbook' && strongHit) return 1;
         if (queryData.scheduleIntent && result.sourceType === 'schedule' && strongHit) return 2;
         if (sourceBucket === 'primary' && documentHasLiteralAnchorHit(result, literalAnchors)) return 2;
+        if (queryData.scheduleIntent && !hasCanonicalFocus && sourceBucket === 'primary') return 6;
         if (sourceBucket === 'primary') return 3;
         if (sourceBucket === 'playbook' && (effectiveStrongLiteralHit || documentHasLiteralAnchorHit(result, literalAnchors))) return 4;
         if (sourceBucket === 'playbook') return 5;
@@ -3751,6 +3809,16 @@
         trigger.addEventListener('click', openSearchOverlay);
         closeBtn.addEventListener('click', closeSearchOverlay);
         backdrop?.addEventListener('click', closeSearchOverlay);
+
+        overlay.addEventListener('click', event => {
+            const chip = event.target.closest('[data-search-query]');
+            if (!chip) return;
+
+            const query = chip.dataset.searchQuery || chip.textContent || '';
+            input.value = query.trim();
+            performSearch(input.value);
+            input.focus();
+        });
 
         input.addEventListener('input', () => {
             window.clearTimeout(searchState.debounceTimer);

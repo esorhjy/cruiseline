@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-04-15-keyword-search-v4">
+    <meta name="app-build" content="2026-04-24-keyword-search-v5">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v4';
+window.__DCL_GUIDE_BUILD__ = '2026-04-24-keyword-search-v5';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,10 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v4';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-04-15-keyword-search-v4">
-    <link rel="manifest" href="manifest.json?v=2026-04-15-keyword-search-v4">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-04-15-keyword-search-v4">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-04-15-keyword-search-v4">
+    <link rel="stylesheet" href="style.css?v=2026-04-24-keyword-search-v5">
+    <link rel="manifest" href="manifest.json?v=2026-04-24-keyword-search-v5">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-04-24-keyword-search-v5">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-04-24-keyword-search-v5">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -76,7 +76,29 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v4';
                 <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
                     autocomplete="off">
             </form>
+            <div class="search-quick-chips" aria-label="常用搜尋">
+                <button type="button" data-search-query="上船先做什麼">上船先做什麼</button>
+                <button type="button" data-search-query="禮賓">禮賓</button>
+                <button type="button" data-search-query="Room Service">Room Service</button>
+                <button type="button" data-search-query="Avengers Assemble">Avengers</button>
+                <button type="button" data-search-query="拍照套裝">拍照套裝</button>
+                <button type="button" data-search-query="最後一天早餐">下船早餐</button>
+            </div>
             <div class="search-panel-body" id="search-panel-body">
+                <div class="search-embark-panel" aria-label="登船日快查">
+                    <div class="search-embark-copy">
+                        <span class="search-embark-kicker">Day 1 Quick Deck</span>
+                        <strong>登船日快查</strong>
+                        <p>上船現場最常用的幾件事，直接點一下就能搜尋到對應卡片。</p>
+                    </div>
+                    <div class="search-embark-actions">
+                        <button type="button" data-search-query="RFID 手環怎麼領"><i class="fa-solid fa-child-reaching"></i> 手環</button>
+                        <button type="button" data-search-query="登船日 玩水 換裝"><i class="fa-solid fa-water-ladder"></i> 換裝玩水</button>
+                        <button type="button" data-search-query="登船日 午餐 快餐"><i class="fa-solid fa-burger"></i> 午餐補給</button>
+                        <button type="button" data-search-query="Live Shows My Plan"><i class="fa-solid fa-heart"></i> My Plan</button>
+                        <button type="button" data-search-query="晚餐 看秀"><i class="fa-solid fa-masks-theater"></i> 晚餐看秀</button>
+                    </div>
+                </div>
                 <div class="search-results" id="search-results"></div>
             </div>
         </div>
@@ -110,7 +132,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v4';
                 <span class="hero-sparkle hero-sparkle-c"><i class="fa-solid fa-star"></i></span>
                 <div class="hero-story-card">
                     <div class="hero-story-arch">
-                        <img src="1772539078755.png" alt="兔兔站在 Disney Adventure 船首迎接啟航" loading="eager">
+                        <img src="1772539078755-hero.jpg" alt="兔兔站在 Disney Adventure 船首迎接啟航" loading="eager">
                     </div>
                     <div class="hero-story-plaque">
                         <span class="hero-story-title">Disney Adventure</span>
@@ -565,10 +587,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-04-15-keyword-search-v4';
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-<script src="data.js?v=2026-04-15-keyword-search-v4"></script>
-<script src="search-entity-registry.js?v=2026-04-15-keyword-search-v4"></script>
-<script src="search-keyword-taxonomy.js?v=2026-04-15-keyword-search-v4"></script>
-<script src="script.js?v=2026-04-15-keyword-search-v4"></script>
+<script src="data.js?v=2026-04-24-keyword-search-v5"></script>
+<script src="search-entity-registry.js?v=2026-04-24-keyword-search-v5"></script>
+<script src="search-keyword-taxonomy.js?v=2026-04-24-keyword-search-v5"></script>
+<script src="script.js?v=2026-04-24-keyword-search-v5"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
