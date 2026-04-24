@@ -75,6 +75,7 @@
 2. 再補 alias、`entityRefs`、`supportForEntityRefs`
 3. 再補 `categoryFamilies`、`capabilityTags`、`entityFamilies`
 4. 最後才微調內文語氣或卡片呈現方式
+5. 若新增的是高頻現場問題，補一條搜尋 smoke case，避免之後排序回歸
 
 ## 不再維護的內容形態
 - 不再為 AI 搜尋額外準備 prompt、section dossier、coverage contract 或 AI answer 專屬欄位。

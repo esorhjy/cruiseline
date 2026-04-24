@@ -60,7 +60,7 @@
     }));
 
     window.SEARCH_KEYWORD_TAXONOMY = {
-        version: '2026-04-15-keyword-search-v2',
+        version: '2026-04-24-keyword-search-v3',
         aliases: buildRegistryAliases(),
         genericClasses: [
             { canonical: '設施', terms: ['設施', '地方', '項目', '體驗'], expandsTo: ['場館', '服務', '表演'] },
@@ -68,7 +68,9 @@
             { canonical: '表演', terms: ['表演', '主秀', '節目', 'show', 'shows'], expandsTo: ['表演', '場館'] },
             { canonical: '餐飲', terms: ['餐飲', '餐廳', '吃', '用餐', 'food'], expandsTo: ['餐廳', '快餐', '酒廊'] },
             { canonical: '購物', terms: ['購物', '商店', 'shop', 'shopping'], expandsTo: ['商店'] },
-            { canonical: '拍照', terms: ['拍照', '攝影', '照片', '合照', 'photo', 'photos', 'photography', 'shutters', 'pics', 'magic shots', 'photo package'], expandsTo: ['攝影', '服務', '商店'] }
+            { canonical: '拍照', terms: ['拍照', '攝影', '照片', '合照', 'photo', 'photos', 'photography', 'shutters', 'pics', 'magic shots', 'photo package', '照片下載'], expandsTo: ['攝影', '服務', '商店'] },
+            { canonical: '登船日', terms: ['登船日', '上船', '第一天', 'day 1', 'embarkation'], expandsTo: ['服務', '兒童俱樂部', '泳池'] },
+            { canonical: '下船日', terms: ['下船', '離船', '撤船', '最後一天', 'self assist', 'express walk off'], expandsTo: ['服務', '餐廳'] }
         ],
         categoryFamilies,
         clusterRelations: [],

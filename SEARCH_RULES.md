@@ -10,6 +10,8 @@
 - 不存在模式切換，也不存在 AI submit 分支。
 - 搜尋最短長度為 `2` 個字元。
 - `file://` 直接開啟 `index.html` 時也必須可正常搜尋，不依賴後端。
+- 搜尋面板可提供 quick chips，但它們只是預填關鍵字並走同一條搜尋流程。
+- 若沒有足夠搜尋證據，不應用基礎分數硬湊結果；未知 query 應顯示無結果狀態。
 
 ## 搜尋資料來源
 - 行程：`cruiseSchedule`
@@ -46,6 +48,8 @@
   2. alias 是否完整
   3. `categoryFamilies`、`capabilityTags`、`entityRefs` 是否齊全
   4. 最後才調整排序公式
+- 若某張卡需要服務自然語句查詢，例如 `上船先做什麼` 或 `最後一天早餐`，優先在 registry binding 補 `keywordHints`。
+- `keywordHints` 屬高價值查詢錨點，排序上可高於泛用欄位文字，但不可拿來堆疊無關詞。
 
 ## 排序策略
 
@@ -157,3 +161,10 @@
 - 泛用攻略卡不可因綁很多 entity 就壓過核心主卡。
 - 每張結果卡只保留一段主摘要，不再同時出現 highlights 與 snippet。
 - 本機直接開 `index.html` 時，不應對任何 AI endpoint 發出請求。
+- 重要高頻查詢需納入 smoke test：
+  - `Room Service`
+  - `photo package`
+  - `花園舞台怎麼走`
+  - `最後一天早餐`
+  - `上船先做什麼`
+- `index.html` 與 `sw.js` 的 build id 必須一致，離線核心資產需包含 `data.js`、registry、taxonomy 與首頁 hero 圖。

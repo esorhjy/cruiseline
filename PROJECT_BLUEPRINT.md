@@ -23,6 +23,7 @@
 - 無 AI 模式
 - 無遠端 Worker
 - 無 AI 回答面板
+- 搜尋面板提供常用 quick chips 與 `登船日快查` 小面板，協助現場快速查到高頻問題。
 - 搜尋排序採 `exact-anchor first`：
   1. `literal anchors`
   2. `canonical entity / alias`
@@ -80,14 +81,18 @@
 - 搜尋若不理想，先修 registry 與內容 metadata，再考慮調整排序、去重或 UI。
 - 任何搜尋優化都應優先讓結果更精準、更易讀，而不是更寬。
 - 保持本機直接開 `index.html` 就能正常使用，不依賴隱性後端。
+- 每次調整內容、搜尋資料或核心資產時，需同步檢查 `index.html` 與 `sw.js` 的 build id。
+- 新增高價值攻略卡時，應同步考慮 registry binding 與搜尋 smoke case，而不是只改 `data.js`。
 
 ## 測試基線
 - `tests/search-entity-registry.eval.mjs`
 - `tests/search-keyword.smoke.mjs`
 - `tests/search-shell.eval.mjs`
+- `tests/content-data-integrity.eval.mjs`
 
 ## 近期優化方向
-- 純搜尋結果卡的排序微調
+- 純搜尋結果卡的排序微調與弱命中去噪
 - 專有名詞、alias、capability 持續補強
 - 搜尋 overlay header 與結果列表的可用性優化
 - schedule 與支援型攻略卡的進一步去噪
+- Hero 圖與動態效果持續維持手機友善，不犧牲離線核心功能

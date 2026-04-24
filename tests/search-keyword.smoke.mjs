@@ -172,6 +172,25 @@ assert(hasAnyTitle(photoPackageTitles, [/Photo: Unlimited Package/i, /\u62cd\u71
 const photosSystemTitles = titlesFor(hooks, 'Disney Cruise Line Photos');
 assert(hasAnyTitle(photosSystemTitles, [/Disney Cruise Line Photos/i, /Pics Photo Shop/i]), 'Disney Cruise Line Photos query should surface the onboard photo system');
 
+const roomServiceTitles = titlesFor(hooks, 'Room Service');
+assert.equal(roomServiceTitles[0], 'Room Service 很適合儀式感，但一定要提早下單', 'Room Service should prioritize the exact playbook guide over generic Guest Services');
+
+const onboardFirstTitles = titlesFor(hooks, '\u4e0a\u8239\u5148\u505a\u4ec0\u9ebc');
+assert.equal(onboardFirstTitles[0], '登船 3 小時 SOP：只跑第一圈，不要一開始就滿船亂衝', 'natural-language embarkation query should surface the Day 1 SOP card first');
+assert(hasAnyTitle(onboardFirstTitles.slice(0, 5), [/Oceaneer Club/i, /RFID \u624b\u74b0/, /Toy Story Pool/i]), 'embarkation query should still surface kids/water first-day context');
+
+const photoDownloadTitles = titlesFor(hooks, '\u7167\u7247\u8981\u4ec0\u9ebc\u6642\u5019\u4e0b\u8f09');
+assert.equal(photoDownloadTitles[0], '拍照套裝怎麼買才不浪費，下載時機更重要', 'photo download query should prioritize the photo package guide');
+
+const gardenRouteTitles = titlesFor(hooks, '\u82b1\u5712\u821e\u53f0\u600e\u9ebc\u8d70');
+assert.equal(gardenRouteTitles[0], 'Disney Imagination Garden', 'garden stage route query should prioritize the Imagination Garden deck card');
+
+const lastBreakfastTitles = titlesFor(hooks, '\u6700\u5f8c\u4e00\u5929\u65e9\u9910');
+assert.equal(lastBreakfastTitles[0], '撤船日早餐與房務供應，要先分清楚', 'last-day breakfast query should prioritize the disembarkation breakfast guide');
+assert(hasAnyTitle(lastBreakfastTitles, [/\u65e9\u9910\uff0b\u6700\u5f8c\u78ba\u8a8d/]), 'last-day breakfast query should retain the Day 4 schedule event as support');
+
+assert.equal(titlesFor(hooks, 'zzzznotfound').length, 0, 'unknown queries should not fall back to unrelated generic cards');
+
 const swimPayload = hooks.getRankedSearchResults('\u6709\u54ea\u4e9b\u8a2d\u65bd\u53ef\u4ee5\u6e38\u6cf3');
 const swimTitles = swimPayload.results.map((item) => String(item.title || ''));
 assert(swimTitles.length > 0, 'swim/facility query should still return results');
