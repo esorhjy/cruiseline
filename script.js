@@ -21,7 +21,7 @@
         ['下船', '撤船', '離船', '最後一天', 'self assist', 'express walk off'],
         ['煙火', 'lion king', '獅子王'],
         ['披薩', 'pizza', 'pizza planet'],
-        ['拍照', '照片', 'photo', 'photos', 'shutters', 'photo package', '無限拍', '照片下載'],
+        ['拍照', '照片', 'photo', 'photos', 'shutters', 'photo package', '無限拍', '照片下載', 'photo spot', 'magic shots', 'pics photo observatory', 'deck 9 photos', '光劍', '天燈', '冰雪奇緣拍照', 'mjolnir'],
         ['花園舞台', 'imagination garden', 'disney imagination garden', '幻想花園'],
         ['手環', 'rfid', '取孩密語', '兒童手環'],
         ['avengers', 'avengers assemble', '復仇者'],
