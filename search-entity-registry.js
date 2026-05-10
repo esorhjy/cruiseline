@@ -11,7 +11,8 @@
         shopping: 'https://disneycruise.disney.go.com/en-sg/onboard-activities/shopping/',
         photosFaq: 'https://disneycruise.disney.go.com/en/faq/photos/when-will-i-receive-my-photos/',
         photosDeadline: 'https://disneycruise.disney.go.com/en-sg/faq/photos/deadline-for-booking-photo-packages-pre-cruise/',
-        photosDownloadAll: 'https://disneycruise.disney.go.com/faq/photos/download-all-photos/'
+        photosDownloadAll: 'https://disneycruise.disney.go.com/faq/photos/download-all-photos/',
+        communityPhotoMap: 'https://disney.tiiny.site/'
     };
 
     const entity = (data) => ({
@@ -43,7 +44,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-04-24-v3',
+        version: '2026-05-10-photo-deck9-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -281,7 +282,7 @@
                 aliases: ['Pics Photo Shop', '照片取件', 'Shutters', 'Shutters Photography Shop', '照片商店', '拍照櫃檯'],
                 deckHints: ['Deck 7'],
                 area: 'San Fransokyo Street',
-                relatedEntityIds: ['disney-cruise-line-photos', 'photo-unlimited-package'],
+                relatedEntityIds: ['disney-cruise-line-photos', 'photo-unlimited-package', 'deck7-magic-shot-portraits', 'pics-photo-observatory'],
                 sourceUrls: [SOURCES.shopping, SOURCES.photosFaq]
             }),
             entity({
@@ -302,9 +303,159 @@
                 entityType: 'service',
                 categoryFamilies: ['攝影', '服務'],
                 capabilityTags: ['photo'],
-                aliases: ['Photo Package', 'Unlimited Digital Package', '拍照套裝', '無限拍', '數位套裝'],
-                relatedEntityIds: ['pics-photo-shop', 'disney-cruise-line-photos'],
+                aliases: ['Photo Package', 'Unlimited Digital Package', '拍照套裝', '無限拍', '數位套裝', 'unlimited photo package'],
+                relatedEntityIds: ['pics-photo-shop', 'disney-cruise-line-photos', 'pics-photo-observatory'],
                 sourceUrls: [SOURCES.photosDeadline, SOURCES.photosFaq, SOURCES.photosDownloadAll]
+            }),
+            entity({
+                entityId: 'deck7-magic-shot-portraits',
+                officialNameEn: 'Deck 7 Magic Shots and Portraits',
+                displayNameZh: 'Deck 7 主題拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Duffy photo', 'Duffy & Friends photo', 'Pixar Pals photo', 'Spider-Man Magic Shots', 'Aladdin Magic Shots', 'Lion King photo', 'Princess Portraits', 'Marvel Portraits', 'Duffy 拍照', '皮克斯拍照', '蜘蛛人特效', '阿拉丁特效', '獅子王拍照', '公主拍照', '漫威拍照', 'Magic Shots'],
+                deckHints: ['Deck 7'],
+                area: 'Pics Photo Shop / Disney Studio / Royal Studio',
+                relatedEntityIds: ['pics-photo-shop', 'disney-cruise-line-photos', 'photo-unlimited-package'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'pics-photo-observatory',
+                officialNameEn: 'Pics Photo Observatory',
+                displayNameZh: 'Pics Photo Observatory 拍照觀景點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務', '場館'],
+                capabilityTags: ['photo'],
+                aliases: ['Photo Observatory', 'Deck 9 photos', 'Deck 9 photo spots', 'Deck 9 拍照點', 'Deck 9 照片', '9樓拍照點', '拍照觀景點'],
+                deckHints: ['Deck 9'],
+                area: 'Disney Discovery Reef',
+                relatedEntityIds: ['photo-unlimited-package', 'disney-cruise-line-photos', 'frozen-photo-spot', 'star-wars-lightsaber-photo', 'rapunzel-lantern-photo', 'lifestyle-portraits'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'frozen-photo-spot',
+                officialNameEn: 'Frozen Photo Spot',
+                displayNameZh: 'Frozen 冰雪奇緣拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Frozen photo', 'Frozen backdrop', '冰雪奇緣拍照', '冰雪奇緣背景'],
+                deckHints: ['Deck 9'],
+                area: 'Pics Photo Observatory',
+                relatedEntityIds: ['pics-photo-observatory'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'star-wars-lightsaber-photo',
+                officialNameEn: 'Star Wars Lightsaber Photo Spot',
+                displayNameZh: 'Star Wars Lightsaber 光劍拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Star Wars Lightsaber', 'Lightsaber photo', 'lightsaber', '光劍', '星際大戰光劍', '光劍拍照'],
+                deckHints: ['Deck 9'],
+                area: 'Pics Photo Observatory',
+                relatedEntityIds: ['pics-photo-observatory'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'rapunzel-lantern-photo',
+                officialNameEn: 'Rapunzel’s Lantern Photo Spot',
+                displayNameZh: 'Rapunzel’s Lantern 長髮公主天燈拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Rapunzel Lantern', 'Rapunzel’s Lantern', 'Lantern photo', '長髮公主天燈', '天燈', '天燈拍照'],
+                deckHints: ['Deck 9'],
+                area: 'Pics Photo Observatory',
+                relatedEntityIds: ['pics-photo-observatory'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'lifestyle-portraits',
+                officialNameEn: 'Lifestyle Portraits',
+                displayNameZh: 'Lifestyle Portraits 生活風格人像',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Lifestyle photo', 'Lifestyle Portrait', '生活風格拍照', '正式人像'],
+                deckHints: ['Deck 9'],
+                area: 'Pics Photo Observatory',
+                relatedEntityIds: ['pics-photo-observatory'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'stitch-magic-shots',
+                officialNameEn: 'Stitch Magic Shots',
+                displayNameZh: 'Stitch Magic Shots 史迪奇特效拍照',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Stitch photo', 'Stitch Magic Shot', '史迪奇特效', '史迪奇拍照'],
+                deckHints: ['Deck 6'],
+                area: 'Premier Sips & Snacks',
+                relatedEntityIds: ['premier-sips-snacks', 'disney-cruise-line-photos'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'thor-mjolnir-photo-spot',
+                officialNameEn: 'Thor’s Hammer Mjolnir Photo Spot',
+                displayNameZh: 'Thor’s Hammer Mjolnir 索爾錘子拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Thor Hammer', 'Thor’s Hammer', 'Mjolnir', '索爾錘子', '雷神之鎚', '雷神之錘', '索爾拍照'],
+                deckHints: ['Deck 8'],
+                area: 'Escalator Landing',
+                relatedEntityIds: ['hollywood-spotlight-club', 'disney-cruise-line-photos'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'dory-nemo-statue-photo-spot',
+                officialNameEn: 'Dory & Nemo Statue Photo Spot',
+                displayNameZh: 'Dory & Nemo Statue 海底總動員拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Dory Nemo', 'Dory & Nemo', 'Nemo statue', 'Dory statue', '海底總動員拍照', '多莉尼莫'],
+                deckHints: ['Deck 10'],
+                area: 'Discovery Reef',
+                relatedEntityIds: ['discovery-reef', 'disney-cruise-line-photos'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
+                entityId: 'sorcerer-mickey-topiary-photo-spot',
+                officialNameEn: 'Sorcerer Mickey Topiary Photo Spot',
+                displayNameZh: 'Sorcerer Mickey Topiary 魔法師米奇植栽拍照點',
+                entityType: 'photo-spot',
+                categoryFamilies: ['攝影', '服務'],
+                capabilityTags: ['photo'],
+                aliases: ['Sorcerer Mickey', 'Sorcerer Mickey Topiary', 'Magic Mickey Topiary', '魔法師米奇', '米奇植栽'],
+                deckHints: ['Deck 11'],
+                area: 'Imagination Garden',
+                relatedEntityIds: ['disney-imagination-garden', 'disney-cruise-line-photos'],
+                sourceAuthority: 'trusted-secondary',
+                lastVerifiedDate: '2026-05-10',
+                sourceUrls: [SOURCES.communityPhotoMap]
             }),
             entity({
                 entityId: 'disney-oceaneer-club',
@@ -430,7 +581,7 @@
                 categoryFamilies: ['場館', '餐廳', '商店'],
                 capabilityTags: ['eat', 'shop', 'rest'],
                 aliases: ['Discovery Reef', '探索礁灣'],
-                deckHints: ['Deck 9', 'Deck 10'],
+                deckHints: ['Deck 10'],
                 area: 'Disney Discovery Reef',
                 relatedEntityIds: ['gramma-talas-kitchen', 'mowglis-eatery', 'duffy-and-friends-shop', 'national-geographic-store'],
                 sourceUrls: [SOURCES.themedAreas, SOURCES.dining, SOURCES.shopping]
@@ -788,6 +939,18 @@
                 sourceUrls: [SOURCES.concierge]
             }),
             entity({
+                entityId: 'navigator-onboard-fun',
+                officialNameEn: 'Navigator App Onboard Fun',
+                displayNameZh: 'Navigator App Onboard Fun 預約入口',
+                entityType: 'service',
+                categoryFamilies: ['服務', '活動'],
+                capabilityTags: ['watch-show', 'kids-play'],
+                aliases: ['Onboard Fun', 'App +', 'App plus', 'Navigator Onboard Fun', 'My Plan', '預約入口', '活動預約'],
+                relatedEntityIds: ['royal-meet-and-greet', 'disney-imagination-garden'],
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.communityPhotoMap]
+            }),
+            entity({
                 entityId: 'lion-king-celebration-in-the-sky',
                 officialNameEn: 'The Lion King: Celebration in the Sky',
                 displayNameZh: '《The Lion King: Celebration in the Sky》',
@@ -854,26 +1017,29 @@
                 'deck5:3': primary(['world-of-disney', 'world-of-disney-too']),
                 'deck6:0': primary(['enchanted-summer-restaurant']),
                 'deck6:1': primary(['guest-services']),
-                'deck6:2': primary(['premier-sips-snacks']),
+                'deck6:2': primary(['premier-sips-snacks', 'stitch-magic-shots']),
                 'deck6:3': primary(['spellbound', 'royal-court-lounge', 'buccaneer-bar']),
                 'deck7:0': primary(['edge', 'vibe']),
                 'deck7:1': primary(['big-hero-arcade']),
                 'deck7:2': primary(['baymax-cinemas']),
                 'deck7:3': primary(['alley-cat-cafe']),
-                'deck7:4': primary(['pics-photo-shop', 'disney-cruise-line-photos'], {
-                    keywordHints: ['拍照', '攝影', 'photos', 'shutters', 'photo kiosk']
+                'deck7:4': primary(['pics-photo-shop', 'disney-cruise-line-photos', 'deck7-magic-shot-portraits'], {
+                    keywordHints: ['拍照', '攝影', 'photos', 'shutters', 'photo kiosk', 'magic shots', 'Duffy', 'Pixar', 'Spider-Man', 'Aladdin', 'Lion King', 'Princess Portraits', 'Marvel Portraits']
                 }),
                 'deck8:0': primary(['disney-oceaneer-club']),
                 'deck8:1': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環', '取孩', 'kids club'] }),
                 'deck8:2': primary(['royal-society-for-friendship-and-tea', 'disney-oceaneer-club']),
-                'deck8:3': primary(['hollywood-spotlight-club']),
+                'deck8:3': primary(['hollywood-spotlight-club', 'thor-mjolnir-photo-spot']),
+                'deck9:0': primary(['pics-photo-observatory', 'frozen-photo-spot', 'star-wars-lightsaber-photo', 'rapunzel-lantern-photo', 'lifestyle-portraits'], {
+                    keywordHints: ['Deck 9', 'Pics Photo Observatory', 'Frozen photo', 'Star Wars Lightsaber', 'Rapunzel Lantern', 'Lifestyle Portraits', '光劍', '天燈', '冰雪奇緣拍照']
+                }),
                 'deck10:0': primary(['disney-imagination-garden']),
-                'deck10:1': primary(['wayfinder-bay', 'discovery-reef']),
+                'deck10:1': primary(['wayfinder-bay', 'discovery-reef', 'dory-nemo-statue-photo-spot']),
                 'deck10:2': primary(['gramma-talas-kitchen']),
                 'deck10:3': primary(['mowglis-eatery']),
                 'deck10:4': primary(['stitchs-ohana-grill']),
                 'deck10:5': primary(['wayfinder-bar', 'fitness-center', 'opulence-spa']),
-                'deck11:0': primary(['disney-imagination-garden']),
+                'deck11:0': primary(['disney-imagination-garden', 'sorcerer-mickey-topiary-photo-spot']),
                 'deck11:1': primary(['garden-bar', 'taverna-portorosso']),
                 'deck11:2': primary(['palo-trattoria']),
                 'deck11:3': primary(['castle-collection']),
@@ -942,13 +1108,15 @@
                 'daily-ops:4': support(['royal-meet-and-greet', 'pics-photo-shop', 'disney-cruise-line-photos'], {
                     keywordHints: ['角色拍照', '空景', '拍照早檔', 'photo opportunities']
                 }),
-                'daily-ops:5': primary(['walt-disney-theatre', 'royal-meet-and-greet']),
+                'daily-ops:5': primary(['walt-disney-theatre', 'royal-meet-and-greet', 'navigator-onboard-fun'], {
+                    keywordHints: ['Onboard Fun', 'App +', 'My Plan', 'Live Shows', '活動預約']
+                }),
                 'daily-ops:6': primary(['photo-unlimited-package', 'disney-cruise-line-photos', 'pics-photo-shop'], {
                     keywordHints: ['photo package', '拍照套裝', '照片下載', 'download all', 'shutters']
                 }),
                 'daily-ops:7': support(['guest-services'], { keywordHints: ['app error', '預約補位'] }),
-                'daily-ops:8': support(['pics-photo-shop', 'disney-cruise-line-photos', 'royal-meet-and-greet', 'disney-imagination-garden'], {
-                    keywordHints: ['每日拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照']
+                'daily-ops:8': support(['pics-photo-shop', 'disney-cruise-line-photos', 'royal-meet-and-greet', 'disney-imagination-garden', 'pics-photo-observatory', 'stitch-magic-shots', 'thor-mjolnir-photo-spot', 'dory-nemo-statue-photo-spot', 'sorcerer-mickey-topiary-photo-spot'], {
+                    keywordHints: ['每日拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照', 'Deck 9', 'Pics Photo Observatory', '光劍', '天燈', '冰雪奇緣']
                 }),
                 'concierge-plus:0': support(['concierge-lounge'], { keywordHints: ['welcome lunch', 'welcome amenity'] }),
                 'concierge-plus:1': support(['concierge-lounge'], { keywordHints: ['minibar', 'soft drinks', 'bottled water'] }),

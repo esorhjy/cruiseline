@@ -172,6 +172,42 @@ assert(hasAnyTitle(photoPackageTitles, [/Photo: Unlimited Package/i, /\u62cd\u71
 const photosSystemTitles = titlesFor(hooks, 'Disney Cruise Line Photos');
 assert(hasAnyTitle(photosSystemTitles, [/Disney Cruise Line Photos/i, /Pics Photo Shop/i]), 'Disney Cruise Line Photos query should surface the onboard photo system');
 
+const deck9Titles = titlesFor(hooks, 'Deck 9');
+assert.equal(deck9Titles[0], 'Pics Photo Observatory', 'Deck 9 query should prioritize the dedicated photo observatory card');
+
+const photoObservatoryTitles = titlesFor(hooks, 'Pics Photo Observatory');
+assert.equal(photoObservatoryTitles[0], 'Pics Photo Observatory', 'Pics Photo Observatory query should prioritize the Deck 9 photo card');
+
+const lightsaberTitles = titlesFor(hooks, 'Star Wars Lightsaber');
+assert.equal(lightsaberTitles[0], 'Pics Photo Observatory', 'lightsaber query should find the Deck 9 photo observatory card');
+
+const zhLightsaberTitles = titlesFor(hooks, '\u5149\u528d');
+assert.equal(zhLightsaberTitles[0], 'Pics Photo Observatory', 'Chinese lightsaber query should find the Deck 9 photo observatory card');
+
+const lanternTitles = titlesFor(hooks, 'Rapunzel Lantern');
+assert.equal(lanternTitles[0], 'Pics Photo Observatory', 'Rapunzel lantern query should find the Deck 9 photo observatory card');
+
+const zhLanternTitles = titlesFor(hooks, '\u5929\u71c8');
+assert.equal(zhLanternTitles[0], 'Pics Photo Observatory', 'Chinese lantern query should find the Deck 9 photo observatory card');
+
+const frozenPhotoTitles = titlesFor(hooks, '\u51b0\u96ea\u5947\u7de3\u62cd\u7167');
+assert.equal(frozenPhotoTitles[0], 'Pics Photo Observatory', 'Frozen photo query should find the Deck 9 photo observatory card');
+
+const thorTitles = titlesFor(hooks, 'Thor hammer');
+assert.equal(thorTitles[0], 'Hollywood Spotlight Club', 'Thor hammer query should find the Deck 8 photo spot support card');
+
+const mjolnirTitles = titlesFor(hooks, 'Mjolnir');
+assert.equal(mjolnirTitles[0], 'Hollywood Spotlight Club', 'Mjolnir query should find the Deck 8 photo spot support card');
+
+const doryNemoTitles = titlesFor(hooks, 'Dory Nemo');
+assert.equal(doryNemoTitles[0], 'Wayfinder Bay + Discovery Reef', 'Dory Nemo query should find the Deck 10 Discovery Reef card');
+
+const sorcererMickeyTitles = titlesFor(hooks, 'Sorcerer Mickey');
+assert.equal(sorcererMickeyTitles[0], 'Imagination Garden 上層環繞區', 'Sorcerer Mickey query should find the Deck 11 photo-support card');
+
+const onboardFunTitles = titlesFor(hooks, 'Onboard Fun');
+assert.equal(onboardFunTitles[0], '想看的秀先在 Live Shows 點愛心，再排角色見面會', 'Onboard Fun query should find the My Plan booking strategy card');
+
 const roomServiceTitles = titlesFor(hooks, 'Room Service');
 assert.equal(roomServiceTitles[0], 'Room Service 很適合儀式感，但一定要提早下單', 'Room Service should prioritize the exact playbook guide over generic Guest Services');
 

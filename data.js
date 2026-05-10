@@ -595,9 +595,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-candy-cane",
                 name: "Premier Sips & Snacks",
-                summary: "劇院入口旁的付費小食站，爆米花與紀念杯很容易讓孩子分心。",
+                summary: "劇院入口旁的付費小食站，爆米花與紀念杯很容易讓孩子分心；船頭一帶也可留意 Stitch Magic Shots 這類短拍照點。",
                 bestTime: "劇院進場前先買，不要壓最後一刻排隊。",
-                tripUse: "看秀前想補個飲料或爆米花時很方便。",
+                tripUse: "看秀前想補個飲料或爆米花時很方便；若當天 App 或現場攝影師有史迪奇特效拍照點，這層可順手排進拍照路線。",
                 highlight: false
             },
             {
@@ -653,9 +653,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-camera-retro",
                 name: "Pics Photo Shop / Disney Cruise Line Photos",
-                summary: "這裡是船上檢查、挑選、購買與下載照片的主站；Adventure 實體店名叫 Pics，但官方 FAQ 仍常用 Shutters Photography Shop 指整套照片系統與 kiosks。",
+                summary: "這裡是船上檢查、挑選、購買與下載照片的主站；Adventure 實體店名叫 Pics，也常聚集 Duffy、Pixar、Spider-Man、Aladdin、Lion King、Princess、Marvel portraits / Magic Shots 等主題拍照點。",
                 bestTime: "下午或晚餐、角色合照後回來看一輪最實用；不要拖到最後一晚才第一次確認照片有沒有入帳。",
-                tripUse: "若有買拍照套裝，建議航程中至少回來看幾次 kiosks，確認角色見面、晚餐、背景布景點與 Magic Shots 的照片都有被抓到。船上也可用 Disney Cruise Line Photos 頁面先下載單張；若想拍正式人像，這裡也可留意 Signature Private Portrait Session 的安排。",
+                tripUse: "若有買拍照套裝，建議航程中至少回來看幾次 kiosks，確認角色見面、晚餐、背景布景點與 Magic Shots 的照片都有被抓到。Deck 7 船前與中段是照片系統的核心入口，船側戶外甲板也可留意 Mickey、Donald、Chip & Dale 類特效照。",
                 highlight: false
             }
         ]
@@ -695,10 +695,28 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-camera-retro",
                 name: "Hollywood Spotlight Club",
-                summary: "家庭舞會、合照與親子活動常在這裡出現，節奏比俱樂部更開放。",
+                summary: "家庭舞會、合照與親子活動常在這裡出現，節奏比俱樂部更開放；Deck 8 船尾電扶梯附近也可留意 Thor’s Hammer / Mjolnir 這類漫威拍照點。",
                 bestTime: "留意晚間 Navigator App 活動表。",
-                tripUse: "若全家想找一起參與的晚間活動，這層很值得看表補位。",
+                tripUse: "若全家想找一起參與的晚間活動，這層很值得看表補位；孩子若迷漫威，路過船尾時也可以順手確認索爾錘子拍照點是否開放。",
                 highlight: false
+            }
+        ]
+    },
+    {
+        id: "deck9",
+        label: "Deck 9",
+        title: "Deck 9｜Pics Photo Observatory 拍照背景集中層",
+        theme: "Frozen、Star Wars Lightsaber、Rapunzel Lantern、Lifestyle Portraits",
+        tripFocus: "這層不是主行程核心，但若有買拍照套裝，Deck 9 船尾很適合列入每日照片檢查路線。",
+        badges: ["拍照點快查", "Pics Photo Observatory", "航行中檢查"],
+        facilities: [
+            {
+                icon: "fa-solid fa-camera-retro",
+                name: "Pics Photo Observatory",
+                summary: "Deck 9 船尾可作為背景拍照集中點來看，常見整理包含 Frozen、Star Wars Lightsaber、Rapunzel’s Lantern 與 Lifestyle Portraits 等主題。",
+                bestTime: "每天看 Navigator App 或現場照片機台時順手確認；不要等最後一晚才第一次補拍。",
+                tripUse: "若你們已買或正在考慮拍照套裝，這層適合當作『今天要不要補一組正式背景照』的檢查點；實際背景與攝影師時段仍以當天 App 與現場公告為準。",
+                highlight: true
             }
         ]
     },
@@ -721,9 +739,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-water-ladder",
                 name: "Wayfinder Bay + Discovery Reef",
-                summary: "莫阿娜主題泳池與海景最舒服，旁邊還能順手買到烏蘇拉主題飲品。",
+                summary: "莫阿娜主題泳池與海景最舒服，旁邊還能順手買到烏蘇拉主題飲品；Discovery Reef 船尾也可留意 Dory & Nemo Statue 這類合照點。",
                 bestTime: "上午或秀前空檔比較舒服，避開正午最熱。",
-                tripUse: "Day 2 上午很適合玩水、拍照、買一杯珍奶當小獎勵。",
+                tripUse: "Day 2 上午很適合玩水、拍照、買一杯珍奶當小獎勵；如果當天想補海底總動員主題照片，這一帶可順手檢查。",
                 highlight: true
             },
             {
@@ -771,9 +789,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-eye",
                 name: "Imagination Garden 上層環繞區",
-                summary: "想看整個花園舞台的動態，站在上層環繞區比平面更容易掌握全場。",
+                summary: "想看整個花園舞台的動態，站在上層環繞區比平面更容易掌握全場；Deck 11 中段也可留意 Sorcerer Mickey Topiary 這類不太打斷行程的拍照點。",
                 bestTime: "表演前 15 分鐘先來找邊側或欄杆位。",
-                tripUse: "如果不想在人群最前排硬擠，這層是看秀很聰明的角度；某些花園秀開演前約 15 分鐘，後方電梯一帶也可能看到角色或英雄進場準備，其中一台有時還會顯示 PRIORITY SERVICE。",
+                tripUse: "如果不想在人群最前排硬擠，這層是看秀很聰明的角度；某些花園秀開演前約 15 分鐘，後方電梯一帶也可能看到角色或英雄進場準備，其中一台有時還會顯示 PRIORITY SERVICE。若路過魔法師米奇植栽，可順手補一張全家照。",
                 highlight: true
             },
             {
@@ -1076,9 +1094,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-suitcase-rolling",
                 sourceType: "community",
                 whenToUse: "1/25 登船前一晚收手提行李時。",
-                action: "把泳衣、防曬、防滑拖鞋、孩子換洗衣物、行動電源和必要文件放在同一包，別讓玩水裝備跟托運行李分開。",
+                action: "把泳衣、防曬、防滑拖鞋、孩子換洗衣物、行動電源、必要文件、房門磁鐵／裝飾與登船後立刻會用的小物放在同一包，別讓玩水裝備或第一輪要用的物品跟托運行李分開。",
                 tripFit: "你們的 Day 1 不是只有報到，而是要接 Open House 與玩水暖身，少一樣都會拖慢全家節奏。",
-                caution: "這張卡不取代證件檢查，它只是提醒真正影響心情的通常是『下午要用的東西有沒有跟著上船』。",
+                caution: "這張卡不取代證件檢查，它只是提醒真正影響心情的通常是『下午要用的東西有沒有跟著上船』。若有攜帶官方允許的飲品或酒類，請依 DCL 最新規則放手提行李，不要寫死舊航次條文。",
                 relatedSectionId: "checklist"
             },
             {
@@ -1163,7 +1181,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-heart-circle-check",
                 sourceType: "community",
                 whenToUse: "登船後第一次開始整理活動、想避免花園秀與晚餐打架時。",
-                action: "先進 App 的 Explore -> Live Shows，把 Garden Stage 和 Wayfinder Bay 想看的秀都點愛心，My Plan 會更容易幫你把演出節奏排出來。真正要先確定的通常是 Avengers Assemble! 的場次，再去排角色見面會，會比反過來更不容易和晚餐、主秀或其他甲板活動撞期。",
+                action: "先進 App 的 Explore -> Live Shows，把 Garden Stage 和 Wayfinder Bay 想看的秀都點愛心，My Plan 會更容易幫你把演出節奏排出來；若要約隔天活動，再從 App 的「＋」或 Onboard Fun 檢查可預約項目。真正要先確定的通常是 Avengers Assemble! 的場次，再去排角色見面會，會比反過來更不容易和晚餐、主秀或其他甲板活動撞期。",
                 tripFit: "你們這趟花園舞台和戶外秀很多，先把秀程定下來，再往外排角色與其他活動，整體衝突會少很多。",
                 caution: "這不是保證一定自動排得完美，而是先把高優先秀固定下來的實戰技巧；角色場次與開放時間仍以當天 App 顯示為準。",
                 relatedSectionId: "entertainment"
@@ -1193,9 +1211,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-camera",
                 sourceType: "community",
                 whenToUse: "每天早上第一次看 Navigator App、準備排今天主線時。",
-                action: "官方拍照不是邊走邊自然就會累積，真正有感的做法是每天先看今天有哪些 photo opportunities，再把其中 1–2 個順路塞進行程。最值得主動繞過去的通常是登船入口、每晚晚餐、角色見面會、Atrium / 主背景布景點，以及某些 Magic Shots 或道具拍照點；先決定今天要拍哪幾組，路過時才不會一直覺得等等再說、最後一張都沒拍到。",
-                tripFit: "首批 4 晚乘客心得裡講得很直接：重點不是有沒有買套裝，而是有沒有刻意把拍照點排進每天動線。若你們很在意全家合照，這個小習慣往往比臨時衝點位更能穩定累積照片。",
-                caution: "這不代表每個點都要拍，而是要挑真正符合你們主線的點。角色場、晚餐與背景布景點通常最穩；若看到攝影師會提供神燈、天燈之類的小道具，也值得順手多拍一組。手機版下載畫質通常會比電腦版小，若重視原始畫質，離船前後可再用電腦把檔案重抓一次。",
+                action: "官方拍照不是邊走邊自然就會累積，真正有感的做法是每天先看今天有哪些 photo opportunities，再把其中 1–2 個順路塞進行程。除登船入口、每晚晚餐、角色見面會與主背景布景點外，也可按 Deck 掃一輪：Deck 6 Stitch、Deck 7 Pics / Magic Shots、Deck 8 Thor’s Hammer、Deck 9 Pics Photo Observatory、Deck 10 Dory & Nemo、Deck 11 Sorcerer Mickey。",
+                tripFit: "首批 4 晚乘客心得裡講得很直接：重點不是有沒有買套裝，而是有沒有刻意把拍照點排進每天動線。若你們很在意全家合照，Deck 9 這種集中背景層就很適合拿來補正式照片。",
+                caution: "這不代表每個點都要拍，而是要挑真正符合你們主線的點。實際背景、攝影師與 Magic Shots 仍以當天 App 和現場公告為準；手機版下載畫質通常會比電腦版小，若重視原始畫質，離船前後可再用電腦把檔案重抓一次。",
                 relatedSectionId: "timeline"
             }
         ]
