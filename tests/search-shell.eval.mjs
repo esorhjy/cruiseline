@@ -14,8 +14,9 @@ assert(!indexHtml.includes('search-ai-answer'), 'index.html should not render an
 assert(!indexHtml.includes('search-mode-switch'), 'index.html should not include search mode toggles');
 assert(!indexHtml.includes('/api/ai-answer'), 'index.html should not point to an AI endpoint');
 assert(indexHtml.includes('id="search-results"'), 'index.html should keep the keyword search results container');
-assert(indexHtml.includes('search-quick-chips'), 'index.html should expose quick search chips');
-assert(indexHtml.includes('search-embark-panel'), 'index.html should expose the Day 1 quick panel');
+assert(indexHtml.includes('id="quick-start"'), 'index.html should expose a lightweight quick-start guide');
+assert(indexHtml.includes('search-chip-groups'), 'index.html should expose grouped quick search chips');
+assert(indexHtml.includes('search-chip-group'), 'index.html should keep quick chips collapsible by task');
 assert(indexHtml.includes('1772539078755-hero.jpg'), 'index.html should use the optimized hero image');
 
 const indexBuildMatch = indexHtml.match(/window\.__DCL_GUIDE_BUILD__ = '([^']+)'/);

@@ -979,6 +979,15 @@
             'last-night': 'fa-solid fa-anchor'
         };
 
+        const missionPriorityIndexes = {
+            pretrip: [0, 2, 3],
+            'embark-sprint': [1, 0, 2],
+            'daily-ops': [3, 5, 6],
+            'concierge-plus': [4, 6, 5],
+            'stateroom-family': [0, 3, 2],
+            'last-night': [1, 0, 2]
+        };
+
         let activeMission = playbookGuideData[0]?.id;
 
         missionsContainer.innerHTML = playbookGuideData.map(mission => `
@@ -1051,6 +1060,33 @@
             `;
         }
 
+        function buildPriorityMarkup(mission) {
+            const priorityIndexes = missionPriorityIndexes[mission.id] || [];
+            const links = priorityIndexes
+                .map(itemIndex => {
+                    const item = mission.items[itemIndex];
+                    if (!item) return '';
+                    const itemId = getPlaybookItemId(mission.id, itemIndex);
+                    return `
+                        <a class="playbook-priority-link" href="#${itemId}" data-playbook-priority="${itemId}">
+                            <i class="fa-solid fa-bookmark"></i>
+                            ${item.title}
+                        </a>
+                    `;
+                })
+                .filter(Boolean)
+                .join('');
+
+            if (!links) return '';
+
+            return `
+                <div class="playbook-priority-row" aria-label="${mission.label} 先看這幾張">
+                    <span class="playbook-priority-label">先看這幾張</span>
+                    ${links}
+                </div>
+            `;
+        }
+
         function updatePlaybook(targetId, options = {}) {
             activeMission = targetId;
             missionButtons.forEach(button => {
@@ -1068,6 +1104,7 @@
                         <p>${mission.intro}</p>
                     </div>
                 </div>
+                ${buildPriorityMarkup(mission)}
                 <div class="playbook-grid">
                     ${mission.items.map((item, itemIndex) => buildItemMarkup(item, mission.id, itemIndex)).join('')}
                 </div>
@@ -1083,6 +1120,19 @@
             button.addEventListener('click', () => {
                 updatePlaybook(button.dataset.playbookMission);
             });
+        });
+
+        contentContainer.addEventListener('click', event => {
+            const link = event.target.closest('[data-playbook-priority]');
+            if (!link) return;
+
+            event.preventDefault();
+            const itemId = link.dataset.playbookPriority;
+            const detail = document.getElementById(itemId);
+            if (!detail) return;
+
+            detail.open = true;
+            waitForTargetAndScroll(itemId);
         });
 
         setPlaybookMission = updatePlaybook;
@@ -1136,6 +1186,7 @@
 
     function getSectionLabel(sectionId) {
         const labels = {
+            'quick-start': '攻略速讀入口',
             overview: '團隊核心資訊',
             timeline: '禮賓預約黃金時間軸',
             checkin: '零失誤通關與登船實戰',
@@ -2629,6 +2680,7 @@
 
     function buildStaticSearchDocuments() {
         const sectionConfigs = [
+            { sectionId: 'quick-start', selector: '.quick-start-card' },
             { sectionId: 'overview', selector: '.card' },
             { sectionId: 'timeline', selector: '.timeline-content' },
             { sectionId: 'checkin', selector: '.card' },
@@ -2801,14 +2853,18 @@
 
         const splitUnits = normalizedQuery.split(' ').filter(Boolean);
         const matchingTerms = collectMatchingTerms(normalizedQuery, searchDisplayMap);
+        const focusedMatchingTerms = matchingTerms.filter(term =>
+            !(normalizedQuery !== term && normalizedQuery.length > term.length && normalizedQuery.includes(term))
+            && !matchingTerms.some(other => other !== term && other.length > term.length && other.includes(term))
+        );
         const literalAnchors = uniqueItems([
             ...(normalizedQuery.includes(' ') ? [normalizedQuery] : []),
-            ...matchingTerms,
+            ...focusedMatchingTerms,
             ...splitUnits.filter(unit => unit.length >= 2)
         ]).slice(0, 12);
         const canonicalEntities = inferEntityRefsFromText([rawQuery], 6);
         const requiredCapabilities = detectAiRequiredCapabilities(normalizedQuery, {
-            literalAnchors: matchingTerms,
+            literalAnchors: focusedMatchingTerms,
             canonicalEntities
         });
         const scheduleIntent = detectSearchScheduleIntent(normalizedQuery);
@@ -2835,7 +2891,7 @@
             ...literalAnchors
                 .map(term => resolveTaxonomyCategoryLabel(term))
                 .filter(Boolean),
-            ...matchingTerms
+            ...focusedMatchingTerms
                 .map(term => resolveTaxonomyCategoryLabel(term))
                 .filter(Boolean),
             ...((!canonicalEntities.length || requiredCapabilities.length || broadIntent)
@@ -2851,7 +2907,7 @@
         const units = uniqueItems([
             ...(normalizedQuery.includes(' ') ? [normalizedQuery] : []),
             ...splitUnits,
-            ...matchingTerms,
+            ...focusedMatchingTerms,
             ...entityContextualKeywords,
             ...((!canonicalEntities.length || requiredCapabilities.length || scheduleIntent || broadIntent)
                 ? contextualKeywords
@@ -3806,18 +3862,33 @@
             performSearch(input.value);
         }
 
+        function applySearchQuery(query) {
+            const nextQuery = String(query || '').trim();
+            if (!nextQuery) return;
+
+            if (overlay.hidden) {
+                openSearchOverlay();
+            }
+
+            input.value = nextQuery;
+            performSearch(input.value);
+            input.focus();
+
+            const panelBody = document.getElementById('search-panel-body');
+            if (panelBody) panelBody.scrollTop = 0;
+        }
+
         trigger.addEventListener('click', openSearchOverlay);
         closeBtn.addEventListener('click', closeSearchOverlay);
         backdrop?.addEventListener('click', closeSearchOverlay);
 
-        overlay.addEventListener('click', event => {
+        document.addEventListener('click', event => {
             const chip = event.target.closest('[data-search-query]');
             if (!chip) return;
 
+            event.preventDefault();
             const query = chip.dataset.searchQuery || chip.textContent || '';
-            input.value = query.trim();
-            performSearch(input.value);
-            input.focus();
+            applySearchQuery(query);
         });
 
         input.addEventListener('input', () => {

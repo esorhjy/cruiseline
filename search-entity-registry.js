@@ -44,7 +44,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-05-10-photo-deck9-v1',
+        version: '2026-05-11-quick-start-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -329,7 +329,7 @@
                 entityType: 'photo-spot',
                 categoryFamilies: ['攝影', '服務', '場館'],
                 capabilityTags: ['photo'],
-                aliases: ['Photo Observatory', 'Deck 9 photos', 'Deck 9 photo spots', 'Deck 9 拍照點', 'Deck 9 照片', '9樓拍照點', '拍照觀景點'],
+                aliases: ['Photo Observatory', 'Deck 9 photos', 'Deck 9 photo spots', '拍照點', 'Deck 9 拍照點', 'Deck 9 照片', '9樓拍照點', '拍照觀景點'],
                 deckHints: ['Deck 9'],
                 area: 'Disney Discovery Reef',
                 relatedEntityIds: ['photo-unlimited-package', 'disney-cruise-line-photos', 'frozen-photo-spot', 'star-wars-lightsaber-photo', 'rapunzel-lantern-photo', 'lifestyle-portraits'],
@@ -734,6 +734,19 @@
                 sourceUrls: [SOURCES.themedAreas]
             }),
             entity({
+                entityId: 'sun-protection-deck-tip',
+                officialNameEn: 'Sun Protection Deck Tip',
+                displayNameZh: '甲板防曬與曬後舒緩提醒',
+                entityType: 'tip',
+                categoryFamilies: ['泳池', '服務'],
+                capabilityTags: ['swim', 'kids-play'],
+                aliases: ['防曬', '曬傷', '曬後', '曬後舒緩', '甲板曝曬', '太陽很曬', 'sun protection'],
+                deckHints: ['Deck 17', 'Deck 18', 'Deck 19'],
+                area: 'Outdoor decks',
+                relatedEntityIds: ['toy-story-place', 'flying-saucer-splash-zone', 'woodys-wide-slide'],
+                sourceAuthority: 'trusted-secondary'
+            }),
+            entity({
                 entityId: 'pixar-market-restaurant',
                 officialNameEn: 'Pixar Market Restaurant',
                 displayNameZh: 'Pixar Market Restaurant',
@@ -1044,7 +1057,9 @@
                 'deck11:2': primary(['palo-trattoria']),
                 'deck11:3': primary(['castle-collection']),
                 'deck17:0': primary(['concierge-lounge']),
-                'deck17:1': primary(['toy-story-place', 'flying-saucer-splash-zone']),
+                'deck17:1': primary(['toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
+                    keywordHints: ['玩水', '泳池', '防曬', '曬傷', '甲板曝曬', '登船日換裝']
+                }),
                 'deck17:2': primary(['pixar-market-restaurant', 'pizza-planet', 'wheezys-freezies']),
                 'deck17:3': primary(['market-bar', 'three-wishes', 'palace-treasures']),
                 'deck18:0': primary(['marvel-landing']),
@@ -1058,7 +1073,9 @@
             shows: {
                 'stage-musicals:0': primary(['remember-show', 'walt-disney-theatre']),
                 'stage-musicals:1': primary(['disney-seas-the-adventure-show', 'walt-disney-theatre']),
-                'garden-shows:0': primary(['avengers-assemble-show', 'disney-imagination-garden']),
+                'garden-shows:0': primary(['avengers-assemble-show', 'disney-imagination-garden'], {
+                    keywordHints: ['Avengers Assemble', '45分鐘', 'Deck 10 MID', '花園舞台卡位', '復仇者']
+                }),
                 'garden-shows:1': primary(['duffy-and-the-friend-ship-show', 'disney-imagination-garden']),
                 'garden-shows:2': primary(['lets-set-sail-show', 'baymax-super-exercise-expo', 'disney-imagination-garden']),
                 'open-air-night:0': primary(['moana-call-of-the-sea', 'wayfinder-bay']),
@@ -1068,7 +1085,9 @@
                 'day1:0:1': support(['concierge-lounge'], { keywordHints: ['補給', 'lounge'] }),
                 'day1:0:2': support(['concierge-lounge']),
                 'day1:1:0': support(['disney-oceaneer-club']),
-                'day1:1:2': support(['toy-story-place', 'flying-saucer-splash-zone']),
+                'day1:1:2': support(['toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
+                    keywordHints: ['登船日 玩水 換裝', '防曬', '曬傷', '泳池人潮']
+                }),
                 'day1:2:0': support(['animators-palate']),
                 'day1:2:1': support(['walt-disney-theatre', 'remember-show']),
                 'day1:2:2': support(['concierge-lounge']),
@@ -1096,8 +1115,8 @@
                 })
             },
             playbookItems: {
-                'embark-sprint:0': support(['concierge-lounge', 'toy-story-place', 'flying-saucer-splash-zone'], {
-                    keywordHints: ['day one prep', 'water gear', 'pool clothes', '上船先做什麼', '登船日先做什麼']
+                'embark-sprint:0': support(['concierge-lounge', 'toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
+                    keywordHints: ['day one prep', 'water gear', 'pool clothes', '上船先做什麼', '登船日先做什麼', '防曬', '曬傷', '甲板曝曬']
                 }),
                 'embark-sprint:1': primary(['concierge-lounge', 'disney-oceaneer-club', 'toy-story-place', 'flying-saucer-splash-zone'], {
                     keywordHints: ['open house', 'kids club', 'pool loop', 'water play', '上船先做什麼', '登船日先做什麼']
@@ -1116,7 +1135,7 @@
                 }),
                 'daily-ops:7': support(['guest-services'], { keywordHints: ['app error', '預約補位'] }),
                 'daily-ops:8': support(['pics-photo-shop', 'disney-cruise-line-photos', 'royal-meet-and-greet', 'disney-imagination-garden', 'pics-photo-observatory', 'stitch-magic-shots', 'thor-mjolnir-photo-spot', 'dory-nemo-statue-photo-spot', 'sorcerer-mickey-topiary-photo-spot'], {
-                    keywordHints: ['每日拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照', 'Deck 9', 'Pics Photo Observatory', '光劍', '天燈', '冰雪奇緣']
+                    keywordHints: ['每日拍照點', '拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照', 'Deck 9', 'Pics Photo Observatory', '光劍', '天燈', '冰雪奇緣']
                 }),
                 'concierge-plus:0': support(['concierge-lounge'], { keywordHints: ['welcome lunch', 'welcome amenity'] }),
                 'concierge-plus:1': support(['concierge-lounge'], { keywordHints: ['minibar', 'soft drinks', 'bottled water'] }),

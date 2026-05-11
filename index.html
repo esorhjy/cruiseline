@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-05-10-photo-deck9-v1">
+    <meta name="app-build" content="2026-05-11-quick-start-v1">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-05-10-photo-deck9-v1';
+window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,10 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-10-photo-deck9-v1';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-05-10-photo-deck9-v1">
-    <link rel="manifest" href="manifest.json?v=2026-05-10-photo-deck9-v1">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-10-photo-deck9-v1">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-10-photo-deck9-v1">
+    <link rel="stylesheet" href="style.css?v=2026-05-11-quick-start-v1">
+    <link rel="manifest" href="manifest.json?v=2026-05-11-quick-start-v1">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-11-quick-start-v1">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-11-quick-start-v1">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -76,33 +76,48 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-10-photo-deck9-v1';
                 <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
                     autocomplete="off">
             </form>
-            <div class="search-quick-chips" aria-label="常用搜尋">
-                <button type="button" data-search-query="上船先做什麼">上船先做什麼</button>
-                <button type="button" data-search-query="禮賓">禮賓</button>
-                <button type="button" data-search-query="Room Service">Room Service</button>
-                <button type="button" data-search-query="Avengers Assemble">Avengers</button>
-                <button type="button" data-search-query="拍照套裝">拍照套裝</button>
-                <button type="button" data-search-query="拍照點">拍照點</button>
-                <button type="button" data-search-query="Deck 9 Pics Photo Observatory">Deck 9</button>
-                <button type="button" data-search-query="Star Wars Lightsaber 光劍">光劍</button>
-                <button type="button" data-search-query="Rapunzel Lantern 天燈">天燈</button>
-                <button type="button" data-search-query="最後一天早餐">下船早餐</button>
+            <div class="search-chip-groups" aria-label="常用搜尋">
+                <details class="search-chip-group" open>
+                    <summary>
+                        <span>現場快查</span>
+                        <small>登船與下船最常用</small>
+                    </summary>
+                    <div class="search-chip-row">
+                        <button type="button" data-search-query="上船先做什麼">上船先做什麼</button>
+                        <button type="button" data-search-query="RFID 手環怎麼領">手環</button>
+                        <button type="button" data-search-query="登船日 玩水 換裝 防曬">換裝玩水</button>
+                        <button type="button" data-search-query="晚餐 看秀">晚餐看秀</button>
+                        <button type="button" data-search-query="最後一天早餐">下船早餐</button>
+                    </div>
+                </details>
+                <details class="search-chip-group">
+                    <summary>
+                        <span>主題攻略</span>
+                        <small>禮賓、房務、看秀</small>
+                    </summary>
+                    <div class="search-chip-row">
+                        <button type="button" data-search-query="禮賓">禮賓</button>
+                        <button type="button" data-search-query="Room Service">Room Service</button>
+                        <button type="button" data-search-query="Avengers Assemble">Avengers</button>
+                        <button type="button" data-search-query="Live Shows My Plan">My Plan</button>
+                        <button type="button" data-search-query="防曬 曬傷 甲板曝曬">防曬</button>
+                    </div>
+                </details>
+                <details class="search-chip-group">
+                    <summary>
+                        <span>拍照設施</span>
+                        <small>照片套裝與拍照點</small>
+                    </summary>
+                    <div class="search-chip-row">
+                        <button type="button" data-search-query="拍照點 Deck 9 Pics Photo Observatory">拍照點</button>
+                        <button type="button" data-search-query="拍照套裝">拍照套裝</button>
+                        <button type="button" data-search-query="Deck 9 Pics Photo Observatory">Deck 9</button>
+                        <button type="button" data-search-query="Star Wars Lightsaber 光劍">光劍</button>
+                        <button type="button" data-search-query="Rapunzel Lantern 天燈">天燈</button>
+                    </div>
+                </details>
             </div>
             <div class="search-panel-body" id="search-panel-body">
-                <div class="search-embark-panel" aria-label="登船日快查">
-                    <div class="search-embark-copy">
-                        <span class="search-embark-kicker">Day 1 Quick Deck</span>
-                        <strong>登船日快查</strong>
-                        <p>上船現場最常用的幾件事，直接點一下就能搜尋到對應卡片。</p>
-                    </div>
-                    <div class="search-embark-actions">
-                        <button type="button" data-search-query="RFID 手環怎麼領"><i class="fa-solid fa-child-reaching"></i> 手環</button>
-                        <button type="button" data-search-query="登船日 玩水 換裝"><i class="fa-solid fa-water-ladder"></i> 換裝玩水</button>
-                        <button type="button" data-search-query="登船日 午餐 快餐"><i class="fa-solid fa-burger"></i> 午餐補給</button>
-                        <button type="button" data-search-query="Live Shows My Plan"><i class="fa-solid fa-heart"></i> My Plan</button>
-                        <button type="button" data-search-query="晚餐 看秀"><i class="fa-solid fa-masks-theater"></i> 晚餐看秀</button>
-                    </div>
-                </div>
                 <div class="search-results" id="search-results"></div>
             </div>
         </div>
@@ -161,6 +176,61 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-10-photo-deck9-v1';
             </svg>
         </div>
     </header>
+
+    <section id="quick-start" class="quick-start-section reveal" aria-labelledby="quick-start-title">
+        <div class="quick-start-heading">
+            <span class="quick-start-kicker"><i class="fa-solid fa-ticket-simple"></i> Boarding Pass Guide</span>
+            <h2 id="quick-start-title" class="section-title">第一次打開，先選你的任務</h2>
+            <p>不用從頭讀完整份攻略。先用這 5 張航海任務卡，直接跳到最適合現在情境的行程、甲板或攻略本。</p>
+        </div>
+        <div class="quick-start-track" aria-label="攻略速讀入口">
+            <article class="quick-start-card card">
+                <div class="quick-start-icon"><i class="fa-solid fa-compass"></i></div>
+                <h3>第一次看</h3>
+                <p>先抓住行程、甲板、攻略本各自解決什麼問題。</p>
+                <div class="quick-start-actions">
+                    <a href="#schedule">看行程</a>
+                    <button type="button" data-search-query="第一次看 攻略速讀">直接搜尋</button>
+                </div>
+            </article>
+            <article class="quick-start-card card">
+                <div class="quick-start-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3>登船日現場</h3>
+                <p>手環、換裝玩水、午餐補給和晚餐看秀先排順。</p>
+                <div class="quick-start-actions">
+                    <a href="#schedule">看 Day 1</a>
+                    <button type="button" data-search-query="上船先做什麼">直接搜尋</button>
+                </div>
+            </article>
+            <article class="quick-start-card card">
+                <div class="quick-start-icon"><i class="fa-solid fa-child-reaching"></i></div>
+                <h3>帶小孩</h3>
+                <p>先看 Oceaneer 手環、玩水、防曬和休息點。</p>
+                <div class="quick-start-actions">
+                    <a href="#facilities">看親子區</a>
+                    <button type="button" data-search-query="小孩 RFID 手環 玩水 防曬">直接搜尋</button>
+                </div>
+            </article>
+            <article class="quick-start-card card">
+                <div class="quick-start-icon"><i class="fa-solid fa-crown"></i></div>
+                <h3>禮賓房</h3>
+                <p>快速確認 Lounge、Sundeck、劇院入場與網路權益。</p>
+                <div class="quick-start-actions">
+                    <a href="#deck-guide">看甲板</a>
+                    <button type="button" data-search-query="禮賓 Lounge 劇院 網路">直接搜尋</button>
+                </div>
+            </article>
+            <article class="quick-start-card card">
+                <div class="quick-start-icon"><i class="fa-solid fa-camera-retro"></i></div>
+                <h3>看秀與拍照</h3>
+                <p>先排 Avengers、劇院卡位、Photo Package 與 Deck 9 拍照點。</p>
+                <div class="quick-start-actions">
+                    <a href="#deck-guide">看導覽</a>
+                    <button type="button" data-search-query="Avengers Assemble 拍照點">直接搜尋</button>
+                </div>
+            </article>
+        </div>
+    </section>
 
     <!-- 3. 每日推薦行程 (Mock Schedule) -->
     <section id="schedule" class="reveal">

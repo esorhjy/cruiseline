@@ -215,6 +215,13 @@ const onboardFirstTitles = titlesFor(hooks, '\u4e0a\u8239\u5148\u505a\u4ec0\u9eb
 assert.equal(onboardFirstTitles[0], '登船 3 小時 SOP：只跑第一圈，不要一開始就滿船亂衝', 'natural-language embarkation query should surface the Day 1 SOP card first');
 assert(hasAnyTitle(onboardFirstTitles.slice(0, 5), [/Oceaneer Club/i, /RFID \u624b\u74b0/, /Toy Story Pool/i]), 'embarkation query should still surface kids/water first-day context');
 
+const sunscreenTitles = titlesFor(hooks, '\u9632\u66ec');
+assert.equal(sunscreenTitles[0], 'Toy Story Pool / Splash Pad / Flying Saucer Splash Zone', 'sun-protection query should prioritize the outdoor water deck card');
+assert(hasAnyTitle(sunscreenTitles.slice(0, 4), [/\u96a8\u8eab\u5305/, /Toy Story Pool/]), 'sun-protection query should keep packing or water-play support nearby');
+
+const photoSpotTitles = titlesFor(hooks, '\u62cd\u7167\u9ede');
+assert.equal(photoSpotTitles[0], 'Pics Photo Observatory', 'photo spot query should prioritize the Deck 9 photo spot card over the photo package guide');
+
 const photoDownloadTitles = titlesFor(hooks, '\u7167\u7247\u8981\u4ec0\u9ebc\u6642\u5019\u4e0b\u8f09');
 assert.equal(photoDownloadTitles[0], '拍照套裝怎麼買才不浪費，下載時機更重要', 'photo download query should prioritize the photo package guide');
 
