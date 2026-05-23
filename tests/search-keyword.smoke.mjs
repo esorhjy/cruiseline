@@ -114,6 +114,9 @@ function loadSearchHooks() {
   const taxonomySource = fs.readFileSync(path.resolve('search-keyword-taxonomy.js'), 'utf8');
   vm.runInNewContext(taxonomySource, sandbox, { filename: 'search-keyword-taxonomy.js' });
 
+  const onboardLookupSource = fs.readFileSync(path.resolve('onboard-lookup-data.js'), 'utf8');
+  vm.runInNewContext(onboardLookupSource, sandbox, { filename: 'onboard-lookup-data.js' });
+
   const scriptSource = fs.readFileSync(path.resolve('script.js'), 'utf8');
   vm.runInNewContext(scriptSource, sandbox, { filename: 'script.js' });
 
@@ -135,6 +138,41 @@ function uniqueParentCount(results) {
 
 const hooks = loadSearchHooks();
 hooks.prepareSearchDocuments();
+
+function lookupResultsFor(query, category = 'all') {
+  return hooks.getBilingualLookupResults(query, { category }).results;
+}
+
+function hasLookupMatch(results, patterns) {
+  return results.some((item) => patterns.some((pattern) =>
+    pattern.test(String(item.englishName || '')) || pattern.test(String(item.zhLabel || ''))
+  ));
+}
+
+assert(hooks.getLookupRecords().length >= 580, 'bilingual lookup should include registry entities and onboard activity records');
+
+const guestServiceLookup = lookupResultsFor('\u5ba2\u52d9\u4e2d\u5fc3');
+assert.equal(guestServiceLookup[0]?.englishName, 'Guest Services', 'Chinese Guest Services lookup should surface the official English name');
+
+const diningLookup = lookupResultsFor('\u9910\u5ef3', 'dining');
+assert(hasLookupMatch(diningLookup.slice(0, 8), [/Animator/i, /Enchanted Summer/i, /Pixar Market/i]), 'dining lookup should surface major restaurants or quick-service venues');
+
+const avengersLookup = lookupResultsFor('Avengers', 'show');
+assert(hasLookupMatch(avengersLookup.slice(0, 6), [/Avengers Assemble/i]), 'Avengers lookup should surface the activity/show English name');
+
+const oceaneerLookup = lookupResultsFor('Oceaneer', 'kids');
+assert(hasLookupMatch(oceaneerLookup.slice(0, 8), [/Disney Oceaneer Club/i, /Oceaneer/i]), 'Oceaneer lookup should surface kids-club names and activity wording');
+
+const magicShotLookup = lookupResultsFor('Magic Shot', 'photo');
+assert(hasLookupMatch(magicShotLookup.slice(0, 8), [/Magic Shot/i, /Pics/i, /Photo/i]), 'Magic Shot lookup should surface photo activity wording and Pics-related locations');
+
+const crewMarkup = hooks.buildCrewDisplayCard(guestServiceLookup[0]);
+assert(crewMarkup.includes('Guest Services'), 'crew display card should include the English name');
+assert(crewMarkup.includes('\u5ba2\u52d9\u4e2d\u5fc3'), 'crew display card should include the Chinese label');
+assert(crewMarkup.includes('Could you help us find this?'), 'crew display card should include the default crew phrase');
+assert(crewMarkup.includes('data-lookup-crew-close'), 'crew display card should include a close control for the preview pane or bottom sheet');
+assert(crewMarkup.includes('\u7d66\u8239\u54e1\u770b'), 'crew display card should include Chinese helper text for the small Crew heading');
+assert(crewMarkup.includes('Question / \u554f\u53e5'), 'crew display card should label the English helper phrase with Chinese context');
 
 const conciergePayload = hooks.getRankedSearchResults('concierge');
 const conciergeTitles = conciergePayload.results.map((item) => String(item.title || ''));

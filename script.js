@@ -9,8 +9,35 @@
         '行程': 'fa-solid fa-calendar-days',
         '甲板與表演': 'fa-solid fa-compass',
         '攻略本': 'fa-solid fa-book-open-reader',
+        '中英對照': 'fa-solid fa-language',
         '其他資訊': 'fa-solid fa-folder-open'
     };
+    const LOOKUP_CATEGORY_LABELS = {
+        all: '全部',
+        facility: '設施',
+        activity: '活動',
+        dining: '餐點/餐廳',
+        photo: '拍照',
+        kids: '兒童/青少年',
+        show: '表演',
+        service: '服務',
+        shop: '購物',
+        wellness: 'Spa / 健身'
+    };
+    const LOOKUP_CATEGORY_EN_LABELS = {
+        all: 'All',
+        facility: 'Facilities',
+        activity: 'Activities',
+        dining: 'Dining',
+        photo: 'Photos',
+        kids: 'Kids / Teens',
+        show: 'Shows',
+        service: 'Services',
+        shop: 'Shopping',
+        wellness: 'Spa / Fitness'
+    };
+    const LOOKUP_MODE_PLACEHOLDER = '輸入中文或英文，例如：客務中心、餐廳、Magic Shot、Oceaneer';
+    const GUIDE_MODE_PLACEHOLDER = '輸入關鍵字，例如：禮賓、Baymax、Room Service';
     const SEARCH_SYNONYM_GROUPS = [
         ['禮賓', 'concierge', 'lounge', '酒廊', '管家'],
         ['房務', 'room service', '客房服務', '客房餐點', '房務餐點'],
@@ -186,8 +213,14 @@
     const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
         documents: [],
+        lookupRecords: [],
         resultsById: new Map(),
+        lookupResultsById: new Map(),
         debounceTimer: null,
+        mode: 'guide',
+        lookupCategory: 'all',
+        shortcutOpen: false,
+        activeCrewRecordId: '',
         isComposing: false,
         pendingSubmit: false,
         lastQuery: '',
@@ -873,6 +906,7 @@
                 <div class="facility-grid">
                     ${deck.facilities.map((facility, facilityIndex) => {
                         const facilityId = getDeckFacilityId(deck.id, facilityIndex);
+                        const bilingualEntity = getPrimaryEntityForBinding('deckFacilities', `${deck.id}:${facilityIndex}`);
                         return `
                         <article class="facility-card ${facility.highlight ? 'highlight' : ''}" id="${facilityId}" data-search-id="${facilityId}">
                             <div class="facility-icon">
@@ -880,6 +914,7 @@
                             </div>
                             <div class="facility-content">
                                 <span class="facility-name">${facility.name}</span>
+                                ${getBilingualStripMarkup(bilingualEntity)}
                                 <p class="facility-desc">${facility.summary}</p>
                                 <div class="facility-meta">
                                     <span><i class="fa-regular fa-clock"></i> 最佳時機：${facility.bestTime}</span>
@@ -902,9 +937,11 @@
                             <p class="performance-intro">${category.intro}</p>
                             ${category.shows.map((show, showIndex) => {
                                 const showId = getShowItemId(category.id, showIndex);
+                                const bilingualEntity = getPrimaryEntityForBinding('shows', `${category.id}:${showIndex}`);
                                 return `
                                 <article class="show-item" id="${showId}" data-search-id="${showId}">
                                     <span class="show-title">${show.name}</span>
+                                    ${getBilingualStripMarkup(bilingualEntity)}
                                     <p class="show-desc">${show.theme}</p>
                                     <div class="show-meta">
                                         <span><i class="fa-solid fa-location-dot"></i> ${show.location}</span>
@@ -1399,6 +1436,93 @@
         const group = aiEntityRegistry.bindings?.[bindingGroup];
         if (!(group instanceof Map)) return null;
         return group.get(compactSearchText(bindingKey)) || null;
+    }
+
+    function getPrimaryEntityForBinding(bindingGroup, bindingKey) {
+        const binding = getAiEntityBinding(bindingGroup, bindingKey);
+        const entityId = binding?.entityRefs?.[0];
+        return entityId ? getAiEntityRegistryEntry(entityId) : null;
+    }
+
+    function getBilingualStripMarkup(entity) {
+        if (!entity?.officialNameEn || !entity?.displayNameZh) return '';
+        return `
+            <div class="bilingual-strip">
+                <span class="bilingual-strip-label">English</span>
+                <span class="bilingual-strip-en">${escapeHtml(entity.officialNameEn)}</span>
+                <span class="bilingual-strip-zh">${escapeHtml(entity.displayNameZh)}</span>
+            </div>
+        `;
+    }
+
+    function getLookupCategoryLabel(category) {
+        return LOOKUP_CATEGORY_LABELS[category] || LOOKUP_CATEGORY_LABELS.activity;
+    }
+
+    function getLookupCategoryDisplayLabel(category) {
+        const zhLabel = getLookupCategoryLabel(category);
+        const enLabel = LOOKUP_CATEGORY_EN_LABELS[category] || LOOKUP_CATEGORY_EN_LABELS.activity;
+        return `${enLabel} / ${zhLabel}`;
+    }
+
+    function getLookupSourceDisplayLabel(sourceType) {
+        return sourceType === 'entity'
+            ? 'Official name / 正式名稱'
+            : 'Activity index / 活動索引';
+    }
+
+    function getEntityLookupCategory(entry = {}) {
+        const families = new Set((entry.categoryFamilies || []).map(item => compactSearchText(item)));
+        const capabilities = new Set((entry.capabilityTags || []).map(item => compactSearchText(item).toLowerCase()));
+        const entityType = compactSearchText(entry.entityType).toLowerCase();
+
+        if (families.has('攝影') || capabilities.has('photo') || entityType.includes('photo')) return 'photo';
+        if (families.has('兒童俱樂部') || capabilities.has('kids-play') || entityType.includes('kids')) return 'kids';
+        if (families.has('餐廳') || families.has('快餐') || families.has('酒廊') || capabilities.has('eat') || capabilities.has('drink')) return 'dining';
+        if (families.has('表演') || entityType === 'show') return 'show';
+        if (families.has('服務') || entityType === 'service') return 'service';
+        if (families.has('商店') || entityType === 'shop') return 'shop';
+        if (families.has('Spa / 健身') || capabilities.has('spa')) return 'wellness';
+        if (families.has('活動') || entityType === 'activity') return 'activity';
+        return 'facility';
+    }
+
+    function getOnboardLookupCategory(rawCategory = '') {
+        const category = compactSearchText(rawCategory).toLowerCase();
+        const categoryMap = {
+            youth: 'kids',
+            photo: 'photo',
+            show: 'show',
+            movie: 'show',
+            music: 'activity',
+            adult: 'activity',
+            other: 'activity',
+            game: 'activity',
+            shop: 'shop',
+            trivia: 'activity',
+            wellness: 'wellness',
+            craft: 'activity'
+        };
+        return categoryMap[category] || 'activity';
+    }
+
+    function getCategorySearchHints(category) {
+        const hints = {
+            dining: ['餐廳', '餐點', '吃', 'food', 'restaurant', 'dining', 'bar', 'lounge'],
+            activity: ['活動', '節目', 'activity', 'activities', 'game', 'party'],
+            facility: ['設施', '地方', '地點', 'facility', 'venue', 'deck'],
+            photo: ['拍照', '照片', 'photo', 'photos', 'magic shot', 'magic shots'],
+            kids: ['兒童', '青少年', '小孩', 'kids', 'youth', 'oceaneer', 'edge', 'vibe'],
+            show: ['表演', '電影', '看秀', 'show', 'movie', 'theatre', 'cinema'],
+            service: ['服務', '協助', 'service', 'help'],
+            shop: ['商店', '購物', 'shop', 'shopping'],
+            wellness: ['spa', 'fitness', '健身', '運動']
+        };
+        return hints[category] || [];
+    }
+
+    function buildLookupSearchText(parts = []) {
+        return normalizeSearchText(uniqueItems(parts.map(compactSearchText).filter(Boolean)).join(' '));
     }
 
     function inferEntityRefsFromText(textParts = [], limit = 8) {
@@ -2830,7 +2954,207 @@
             };
         });
 
-        
+        prepareLookupRecords();
+    }
+
+    function createLookupRecord(config = {}) {
+        const englishName = compactSearchText(config.englishName);
+        const zhLabel = compactSearchText(config.zhLabel);
+        if (!englishName || !zhLabel) return null;
+
+        const category = compactSearchText(config.category) || 'activity';
+        const aliases = sanitizeSearchTextArray(config.aliases, 18, 140);
+        const deckHint = compactSearchText(config.deckHint);
+        const venueEnglish = compactSearchText(config.venueEnglish);
+        const crewPhrase = compactSearchText(config.crewPhrase) || 'Could you help us find this?';
+        const categoryHints = getCategorySearchHints(category);
+        const searchText = buildLookupSearchText([
+            englishName,
+            zhLabel,
+            venueEnglish,
+            deckHint,
+            crewPhrase,
+            getLookupCategoryLabel(category),
+            ...(config.categoryAliases || []),
+            ...categoryHints,
+            ...aliases
+        ]);
+
+        return {
+            id: compactSearchText(config.id) || `lookup-${simpleHash(`${englishName}-${zhLabel}`)}`,
+            sourceType: config.sourceType === 'entity' ? 'entity' : 'onboard-activity',
+            category,
+            zhLabel,
+            englishName,
+            venueEnglish,
+            deckHint,
+            aliases,
+            crewPhrase,
+            sourceDayLabel: compactSearchText(config.sourceDayLabel),
+            sourceTimeHint: compactSearchText(config.sourceTimeHint),
+            searchText,
+            normalizedEnglishName: normalizeSearchText(englishName),
+            normalizedZhLabel: normalizeSearchText(zhLabel),
+            normalizedVenueEnglish: normalizeSearchText(venueEnglish),
+            normalizedDeckHint: normalizeSearchText(deckHint)
+        };
+    }
+
+    function buildEntityLookupRecords() {
+        return (aiEntityRegistry.entities || [])
+            .map(entry => createLookupRecord({
+                id: `entity-${entry.entityId}`,
+                sourceType: 'entity',
+                category: getEntityLookupCategory(entry),
+                zhLabel: entry.displayNameZh,
+                englishName: entry.officialNameEn,
+                venueEnglish: entry.area,
+                deckHint: (entry.deckHints || []).join(' / '),
+                aliases: [
+                    entry.officialNameZh,
+                    ...(entry.aliases || []),
+                    ...(entry.categoryFamilies || []),
+                    ...(entry.capabilityTags || [])
+                ],
+                categoryAliases: [entry.entityType],
+                crewPhrase: 'Could you help us find this?'
+            }))
+            .filter(Boolean);
+    }
+
+    function buildOnboardActivityLookupRecords() {
+        const rawRecords = Array.isArray(window.ONBOARD_LOOKUP_DATA?.records)
+            ? window.ONBOARD_LOOKUP_DATA.records
+            : [];
+
+        return rawRecords
+            .map(record => {
+                const category = getOnboardLookupCategory(record.category);
+                return createLookupRecord({
+                    id: record.id ? `activity-${record.id}` : '',
+                    sourceType: 'onboard-activity',
+                    category,
+                    zhLabel: record.zhLabel,
+                    englishName: record.englishName,
+                    venueEnglish: record.venueEnglish,
+                    deckHint: record.deckHint,
+                    aliases: [
+                        ...(Array.isArray(record.aliases) ? record.aliases : []),
+                        record.sourceDayLabel,
+                        record.sourceTimeHint
+                    ],
+                    categoryAliases: [record.category],
+                    crewPhrase: record.crewPhrase || 'Where is this activity?',
+                    sourceDayLabel: record.sourceDayLabel,
+                    sourceTimeHint: record.sourceTimeHint
+                });
+            })
+            .filter(Boolean);
+    }
+
+    function prepareLookupRecords() {
+        searchState.lookupRecords = [
+            ...buildEntityLookupRecords(),
+            ...buildOnboardActivityLookupRecords()
+        ];
+    }
+
+    function lookupCategoryMatches(record, category) {
+        if (!category || category === 'all') return true;
+        if (record.category === category) return true;
+        if (category === 'facility') return ['facility', 'service', 'shop', 'wellness'].includes(record.category);
+        if (category === 'activity') return ['activity', 'show', 'kids', 'photo'].includes(record.category) && record.sourceType === 'onboard-activity';
+        if (category === 'dining') return record.category === 'dining';
+        return false;
+    }
+
+    function scoreLookupRecord(record, normalizedQuery, selectedCategory) {
+        const categoryMatch = lookupCategoryMatches(record, selectedCategory);
+        if (!categoryMatch) return 0;
+
+        if (!normalizedQuery) {
+            return selectedCategory && selectedCategory !== 'all' ? (record.sourceType === 'entity' ? 30 : 18) : 0;
+        }
+
+        const queryUnits = normalizedQuery.split(' ').filter(Boolean);
+        let score = 0;
+        if (record.normalizedEnglishName === normalizedQuery || record.normalizedZhLabel === normalizedQuery) score += 160;
+        if (record.normalizedEnglishName.includes(normalizedQuery)) score += 110;
+        if (record.normalizedZhLabel.includes(normalizedQuery)) score += 105;
+        if (record.normalizedVenueEnglish.includes(normalizedQuery) || record.normalizedDeckHint.includes(normalizedQuery)) score += 76;
+        if (record.searchText.includes(normalizedQuery)) score += 68;
+
+        queryUnits.forEach(unit => {
+            if (unit.length < 2) return;
+            if (record.normalizedEnglishName.includes(unit)) score += 22;
+            if (record.normalizedZhLabel.includes(unit)) score += 20;
+            if (record.searchText.includes(unit)) score += 12;
+        });
+
+        if (record.sourceType === 'entity') score += 12;
+        if (selectedCategory && selectedCategory !== 'all') score += 10;
+        return score;
+    }
+
+    function mergeLookupResults(scoredResults = []) {
+        const merged = new Map();
+        scoredResults.forEach(result => {
+            const key = normalizeSearchText(result.englishName) || result.id;
+            const existing = merged.get(key);
+            if (!existing) {
+                merged.set(key, {
+                    ...result,
+                    occurrenceCount: 1,
+                    sampleVenues: uniqueItems([result.venueEnglish, result.deckHint].filter(Boolean)),
+                    sourceHints: uniqueItems([result.sourceDayLabel, result.sourceTimeHint].filter(Boolean))
+                });
+                return;
+            }
+
+            existing.score = Math.max(existing.score, result.score);
+            existing.occurrenceCount += 1;
+            existing.sampleVenues = uniqueItems([
+                ...(existing.sampleVenues || []),
+                result.venueEnglish,
+                result.deckHint
+            ].filter(Boolean)).slice(0, 4);
+            existing.sourceHints = uniqueItems([
+                ...(existing.sourceHints || []),
+                result.sourceDayLabel,
+                result.sourceTimeHint
+            ].filter(Boolean)).slice(0, 4);
+            if (existing.sourceType !== 'entity' && result.sourceType === 'entity') {
+                Object.assign(existing, {
+                    sourceType: result.sourceType,
+                    category: result.category,
+                    zhLabel: result.zhLabel,
+                    venueEnglish: result.venueEnglish || existing.venueEnglish,
+                    deckHint: result.deckHint || existing.deckHint,
+                    crewPhrase: result.crewPhrase || existing.crewPhrase,
+                    aliases: uniqueItems([...(existing.aliases || []), ...(result.aliases || [])]).slice(0, 18)
+                });
+            }
+        });
+
+        return Array.from(merged.values())
+            .sort((a, b) => b.score - a.score || (a.sourceType === 'entity' ? -1 : 1) || a.englishName.localeCompare(b.englishName))
+            .slice(0, 24);
+    }
+
+    function getBilingualLookupResults(query = '', options = {}) {
+        const normalizedQuery = normalizeSearchText(query);
+        const selectedCategory = compactSearchText(options.category || searchState.lookupCategory || 'all');
+        const scoredResults = (searchState.lookupRecords || [])
+            .map(record => ({ ...record, score: scoreLookupRecord(record, normalizedQuery, selectedCategory) }))
+            .filter(record => record.score > 0);
+
+        return {
+            queryData: {
+                normalizedQuery,
+                selectedCategory
+            },
+            results: mergeLookupResults(scoredResults)
+        };
     }
 
     function getSearchUnits(rawQuery) {
@@ -3665,6 +3989,115 @@
         return { queryData, results };
     }
 
+    function getLookupResultMetaLine(result) {
+        const parts = [
+            getLookupSourceDisplayLabel(result.sourceType),
+            getLookupCategoryDisplayLabel(result.category)
+        ];
+        return parts.join(' • ');
+    }
+
+    function buildCrewDisplayCard(record) {
+        if (!record) return '';
+        const location = uniqueItems([record.deckHint, record.venueEnglish].filter(Boolean)).join(' • ');
+        const sourceNote = record.sourceType === 'onboard-activity' && (record.sourceDayLabel || record.sourceTimeHint)
+            ? `<p class="lookup-crew-source"><span class="lookup-inline-label">Source note / 來源索引</span>${escapeHtml(uniqueItems([record.sourceDayLabel, record.sourceTimeHint].filter(Boolean)).join(' · '))}，不作為本航程正式時刻。</p>`
+            : '';
+        return `
+            <section class="lookup-crew-card" aria-live="polite">
+                <button type="button" class="lookup-crew-close" data-lookup-crew-close aria-label="關閉 Crew 顯示卡">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="lookup-crew-kicker">Show this to Crew <span>給船員看</span></div>
+                <h3>${escapeHtml(record.englishName)}</h3>
+                <p class="lookup-crew-zh"><span class="lookup-inline-label">Chinese check / 中文確認</span>${escapeHtml(record.zhLabel)}</p>
+                ${location ? `<p class="lookup-crew-location"><i class="fa-solid fa-location-dot"></i><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
+                <p class="lookup-crew-phrase"><span class="lookup-inline-label">Question / 問句</span>${escapeHtml(record.crewPhrase)}</p>
+                ${sourceNote}
+                <div class="lookup-crew-actions">
+                    <button type="button" data-copy-text="${escapeHtml(record.englishName)}">
+                        <i class="fa-regular fa-copy"></i> 複製英文名稱
+                    </button>
+                    <button type="button" data-copy-text="${escapeHtml(record.crewPhrase)}">
+                        <i class="fa-regular fa-message"></i> 複製短句
+                    </button>
+                </div>
+            </section>
+        `;
+    }
+
+    function renderLookupResults(results, queryContext = {}) {
+        const container = document.getElementById('search-results');
+        if (!container) return;
+        const normalizedQuery = queryContext.normalizedQuery || '';
+        const selectedCategory = queryContext.selectedCategory || searchState.lookupCategory || 'all';
+        const activeRecord = searchState.lookupResultsById.get(searchState.activeCrewRecordId) || null;
+
+        if (!normalizedQuery && selectedCategory === 'all') {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>切到中英對照了</strong></p>
+                    <p>輸入中文或英文，或點上方分類，快速找出可以拿給 Crew 看的正式英文名稱。</p>
+                </div>
+            `;
+            return;
+        }
+
+        if (!results.length) {
+            container.innerHTML = `
+                <div class="search-empty-state">
+                    <p><strong>目前沒有找到中英對照</strong></p>
+                    <p>可以換成較短的詞，例如：餐廳、Oceaneer、Magic Shot、Guest Services。</p>
+                </div>
+            `;
+            return;
+        }
+
+        const cards = results.map(result => {
+            const location = uniqueItems([result.deckHint, result.venueEnglish].filter(Boolean)).join(' • ');
+            const countLabel = result.occurrenceCount > 1 ? `<span class="lookup-count">合併 ${result.occurrenceCount} 筆</span>` : '';
+            return `
+                <article class="lookup-result-card">
+                    <div class="lookup-result-main">
+                        <div class="lookup-result-meta">${escapeHtml(getLookupResultMetaLine(result))}</div>
+                        <h3>${escapeHtml(result.zhLabel)}</h3>
+                        <p class="lookup-result-en">${escapeHtml(result.englishName)}</p>
+                        ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
+                        <div class="lookup-result-chips">
+                            <span>${escapeHtml(getLookupCategoryLabel(result.category))}</span>
+                            ${countLabel}
+                        </div>
+                    </div>
+                    <button type="button" class="lookup-crew-trigger" data-lookup-id="${escapeHtml(result.id)}">
+                        <i class="fa-solid fa-language"></i>
+                        給 Crew 看
+                    </button>
+                </article>
+            `;
+        }).join('');
+
+        container.innerHTML = `
+            <section class="search-group lookup-group">
+                <div class="search-group-title">
+                    <i class="fa-solid fa-language"></i>
+                    <span>中英對照</span>
+                </div>
+                <div class="lookup-workspace ${activeRecord ? 'has-crew-preview' : ''}">
+                    <div class="lookup-result-column">
+                        <div class="lookup-result-list">
+                            ${cards}
+                        </div>
+                    </div>
+                    ${activeRecord ? `
+                        <aside class="lookup-crew-pane">
+                            ${buildCrewDisplayCard(activeRecord)}
+                        </aside>
+                    ` : ''}
+                </div>
+            </section>
+        `;
+    }
+
     function renderSearchResults(results, queryContext) {
         const container = document.getElementById('search-results');
         if (!container) return;
@@ -3771,6 +4204,114 @@
         renderSearchResults(results, queryData);
     }
 
+    function performLookupSearch(query) {
+        const { queryData, results } = getBilingualLookupResults(query, { category: searchState.lookupCategory });
+        searchState.lastQuery = queryData.normalizedQuery;
+        searchState.lastQueryData = queryData;
+        searchState.lastResults = results;
+        searchState.lookupResultsById = new Map(results.map(result => [result.id, result]));
+        if (searchState.activeCrewRecordId && !searchState.lookupResultsById.has(searchState.activeCrewRecordId)) {
+            searchState.activeCrewRecordId = '';
+        }
+        renderLookupResults(results, queryData);
+    }
+
+    function performActiveSearch(query) {
+        if (searchState.mode === 'lookup') {
+            performLookupSearch(query);
+            return;
+        }
+        performSearch(query);
+    }
+
+    function setSearchToolMode(mode, options = {}) {
+        searchState.mode = mode === 'lookup' ? 'lookup' : 'guide';
+        if (options.lookupCategory) {
+            searchState.lookupCategory = compactSearchText(options.lookupCategory) || 'all';
+        }
+        if (searchState.mode === 'lookup') {
+            searchState.shortcutOpen = false;
+        }
+        searchState.activeCrewRecordId = '';
+        syncSearchModeUi();
+    }
+
+    function setLookupCategory(category) {
+        searchState.lookupCategory = compactSearchText(category) || 'all';
+        searchState.activeCrewRecordId = '';
+        syncSearchModeUi();
+    }
+
+    function setShortcutDrawerOpen(isOpen) {
+        searchState.shortcutOpen = Boolean(isOpen) && searchState.mode !== 'lookup';
+        syncSearchModeUi();
+    }
+
+    function syncSearchModeUi() {
+        const overlay = document.getElementById('search-overlay');
+        const input = document.getElementById('search-input');
+        const modeButtons = document.querySelectorAll('[data-search-tool-mode]');
+        const lookupCategoryRow = document.getElementById('lookup-category-row');
+        const categoryButtons = lookupCategoryRow?.querySelectorAll('[data-lookup-category]') || [];
+        const shortcutToggle = document.getElementById('search-shortcut-toggle');
+        const shortcutDrawer = document.getElementById('search-shortcut-drawer');
+
+        if (overlay) {
+            overlay.dataset.searchMode = searchState.mode;
+        }
+
+        modeButtons.forEach(button => {
+            const isActive = button.dataset.searchToolMode === searchState.mode;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        if (input) {
+            input.placeholder = searchState.mode === 'lookup' ? LOOKUP_MODE_PLACEHOLDER : GUIDE_MODE_PLACEHOLDER;
+        }
+
+        if (lookupCategoryRow) {
+            lookupCategoryRow.hidden = searchState.mode !== 'lookup';
+        }
+
+        categoryButtons.forEach(button => {
+            button.classList.toggle('active', button.dataset.lookupCategory === searchState.lookupCategory);
+        });
+
+        if (shortcutToggle) {
+            const canShowShortcuts = searchState.mode !== 'lookup';
+            shortcutToggle.hidden = !canShowShortcuts;
+            shortcutToggle.classList.toggle('active', searchState.shortcutOpen && canShowShortcuts);
+            shortcutToggle.setAttribute('aria-expanded', searchState.shortcutOpen && canShowShortcuts ? 'true' : 'false');
+        }
+
+        if (shortcutDrawer) {
+            shortcutDrawer.hidden = !(searchState.shortcutOpen && searchState.mode !== 'lookup');
+        }
+    }
+
+    function copyTextToClipboard(text) {
+        const value = String(text || '').trim();
+        if (!value) return;
+        if (navigator.clipboard?.writeText) {
+            navigator.clipboard.writeText(value).catch(() => null);
+            return;
+        }
+        const textarea = document.createElement('textarea');
+        textarea.value = value;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+        } catch (error) {
+            // Older browsers may reject copy; the visible text remains available.
+        }
+        textarea.remove();
+    }
+
     function navigateToSearchResult(result) {
         if (!result?.navTarget) return;
 
@@ -3817,7 +4358,8 @@
         searchState.pendingSubmit = false;
         overlay.hidden = false;
         document.body.classList.add('search-open');
-        renderSearchResults([], '');
+        syncSearchModeUi();
+        performActiveSearch(input.value);
         if (panelBody) panelBody.scrollTop = 0;
         window.setTimeout(() => input.focus(), 40);
     }
@@ -3835,6 +4377,9 @@
         searchState.isComposing = false;
         searchState.pendingSubmit = false;
         searchState.resultsById = new Map();
+        searchState.lookupResultsById = new Map();
+        searchState.activeCrewRecordId = '';
+        searchState.shortcutOpen = false;
         searchState.lastQuery = '';
         searchState.lastResults = [];
         searchState.lastQueryData = null;
@@ -3847,31 +4392,40 @@
         const form = document.getElementById('search-form');
         const input = document.getElementById('search-input');
         const results = document.getElementById('search-results');
+        const modeButtons = document.querySelectorAll('[data-search-tool-mode]');
+        const lookupCategoryRow = document.getElementById('lookup-category-row');
+        const shortcutToggle = document.getElementById('search-shortcut-toggle');
         const backdrop = overlay?.querySelector('[data-search-close]');
 
         if (!overlay || !trigger || !closeBtn || !form || !input || !results) return;
 
         prepareSearchDocuments();
+        syncSearchModeUi();
 
         function runSearchPreview(rawValue) {
-            performSearch(rawValue);
+            performActiveSearch(rawValue);
         }
 
         function submitCurrentSearch() {
             searchState.pendingSubmit = false;
-            performSearch(input.value);
+            performActiveSearch(input.value);
         }
 
-        function applySearchQuery(query) {
+        function applySearchQuery(query, options = {}) {
             const nextQuery = String(query || '').trim();
-            if (!nextQuery) return;
+            if (options.mode || options.lookupCategory) {
+                setSearchToolMode(options.mode || searchState.mode, {
+                    lookupCategory: options.lookupCategory || searchState.lookupCategory
+                });
+            }
+            if (!nextQuery && searchState.lookupCategory === 'all') return;
 
             if (overlay.hidden) {
                 openSearchOverlay();
             }
 
             input.value = nextQuery;
-            performSearch(input.value);
+            performActiveSearch(input.value);
             input.focus();
 
             const panelBody = document.getElementById('search-panel-body');
@@ -3888,7 +4442,29 @@
 
             event.preventDefault();
             const query = chip.dataset.searchQuery || chip.textContent || '';
-            applySearchQuery(query);
+            applySearchQuery(query, {
+                mode: chip.dataset.searchModeTarget,
+                lookupCategory: chip.dataset.lookupCategory
+            });
+            setShortcutDrawerOpen(false);
+        });
+
+        shortcutToggle?.addEventListener('click', () => {
+            setShortcutDrawerOpen(!searchState.shortcutOpen);
+        });
+
+        modeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                setSearchToolMode(button.dataset.searchToolMode);
+                performActiveSearch(input.value);
+            });
+        });
+
+        lookupCategoryRow?.addEventListener('click', event => {
+            const button = event.target.closest('[data-lookup-category]');
+            if (!button) return;
+            setSearchToolMode('lookup', { lookupCategory: button.dataset.lookupCategory });
+            performLookupSearch(input.value);
         });
 
         input.addEventListener('input', () => {
@@ -3929,6 +4505,33 @@
         });
 
         results.addEventListener('click', event => {
+            const copyButton = event.target.closest('[data-copy-text]');
+            if (copyButton) {
+                event.preventDefault();
+                event.stopPropagation();
+                copyTextToClipboard(copyButton.dataset.copyText || '');
+                return;
+            }
+
+            const lookupButton = event.target.closest('.lookup-crew-trigger');
+            if (lookupButton) {
+                event.preventDefault();
+                searchState.activeCrewRecordId = lookupButton.dataset.lookupId || '';
+                renderLookupResults(searchState.lastResults, searchState.lastQueryData || {});
+                const crewPane = document.querySelector('.lookup-crew-pane');
+                crewPane?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+                return;
+            }
+
+            const crewCloseButton = event.target.closest('[data-lookup-crew-close]');
+            if (crewCloseButton) {
+                event.preventDefault();
+                event.stopPropagation();
+                searchState.activeCrewRecordId = '';
+                renderLookupResults(searchState.lastResults, searchState.lastQueryData || {});
+                return;
+            }
+
             const button = event.target.closest('.search-result-card');
             if (!button) return;
 
@@ -3958,6 +4561,9 @@
             createExcerpt,
             buildSearchResultSummaryLine,
             getSearchResultMetaLine,
+            getBilingualLookupResults,
+            buildCrewDisplayCard,
+            getLookupRecords: () => searchState.lookupRecords.slice(),
             getSearchDocuments: () => searchState.documents.slice()
         });
     }

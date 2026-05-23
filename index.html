@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-05-11-quick-start-v1">
+    <meta name="app-build" content="2026-05-22-lookup-labels-v3">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
+window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,10 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-05-11-quick-start-v1">
-    <link rel="manifest" href="manifest.json?v=2026-05-11-quick-start-v1">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-11-quick-start-v1">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-11-quick-start-v1">
+    <link rel="stylesheet" href="style.css?v=2026-05-22-lookup-labels-v3">
+    <link rel="manifest" href="manifest.json?v=2026-05-22-lookup-labels-v3">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-22-lookup-labels-v3">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-22-lookup-labels-v3">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -61,22 +61,50 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
     <div class="search-overlay" id="search-overlay" hidden>
         <div class="search-backdrop" data-search-close></div>
         <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-panel-title">
-            <div class="search-panel-header">
-                <div class="search-panel-copy">
-                    <span class="search-kicker">Quick Find</span>
-                    <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
-                    <p>直接輸入關鍵字，快速找到行程、甲板、表演與攻略重點。</p>
+            <div class="search-command-bar">
+                <div class="search-command-top">
+                    <div class="search-panel-copy">
+                        <span class="search-kicker">Quick Find</span>
+                        <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
+                    </div>
+                    <div class="search-tool-mode" role="tablist" aria-label="搜尋模式">
+                        <button type="button" class="active" data-search-tool-mode="guide" role="tab"
+                            aria-selected="true">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                            攻略搜尋
+                        </button>
+                        <button type="button" data-search-tool-mode="lookup" role="tab" aria-selected="false">
+                            <i class="fa-solid fa-language"></i>
+                            中英對照
+                        </button>
+                    </div>
+                    <button type="button" class="search-shortcut-toggle" id="search-shortcut-toggle"
+                        aria-controls="search-shortcut-drawer" aria-expanded="false">
+                        <i class="fa-solid fa-bolt"></i>
+                        快捷
+                    </button>
+                    <button type="button" class="search-close-btn" id="search-close-btn" aria-label="關閉搜尋">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
-                <button type="button" class="search-close-btn" id="search-close-btn" aria-label="關閉搜尋">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <form class="search-input-shell" id="search-form">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
+                        autocomplete="off">
+                </form>
+                <div class="lookup-filter-strip" id="lookup-category-row" aria-label="中英對照分類" hidden>
+                    <button type="button" class="active" data-lookup-category="all">全部</button>
+                    <button type="button" data-lookup-category="facility">設施</button>
+                    <button type="button" data-lookup-category="activity">活動</button>
+                    <button type="button" data-lookup-category="dining">餐點/餐廳</button>
+                    <button type="button" data-lookup-category="photo">拍照</button>
+                    <button type="button" data-lookup-category="kids">兒童/青少年</button>
+                    <button type="button" data-lookup-category="show">表演</button>
+                    <button type="button" data-lookup-category="service">服務</button>
+                </div>
             </div>
-            <form class="search-input-shell" id="search-form">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
-                    autocomplete="off">
-            </form>
-            <div class="search-chip-groups" aria-label="常用搜尋">
+            <div class="search-shortcut-drawer" id="search-shortcut-drawer" hidden>
+                <div class="search-chip-groups" aria-label="常用搜尋">
                 <details class="search-chip-group" open>
                     <summary>
                         <span>現場快查</span>
@@ -116,6 +144,25 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
                         <button type="button" data-search-query="Rapunzel Lantern 天燈">天燈</button>
                     </div>
                 </details>
+                <details class="search-chip-group">
+                    <summary>
+                        <span>中英對照</span>
+                        <small>給 Crew 看英文名稱</small>
+                    </summary>
+                    <div class="search-chip-row">
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-search-query="餐廳">餐廳怎麼說</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="activity"
+                            data-search-query="活動">活動英文</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="photo"
+                            data-search-query="拍照">拍照英文</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="kids"
+                            data-search-query="Oceaneer kids">兒童活動</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="facility"
+                            data-search-query="找地點">找地點</button>
+                    </div>
+                </details>
+                </div>
             </div>
             <div class="search-panel-body" id="search-panel-body">
                 <div class="search-results" id="search-results"></div>
@@ -661,10 +708,11 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-<script src="data.js?v=2026-05-10-photo-deck9-v1"></script>
-<script src="search-entity-registry.js?v=2026-05-10-photo-deck9-v1"></script>
-<script src="search-keyword-taxonomy.js?v=2026-05-10-photo-deck9-v1"></script>
-<script src="script.js?v=2026-05-10-photo-deck9-v1"></script>
+<script src="data.js?v=2026-05-22-lookup-labels-v3"></script>
+<script src="search-entity-registry.js?v=2026-05-22-lookup-labels-v3"></script>
+<script src="search-keyword-taxonomy.js?v=2026-05-22-lookup-labels-v3"></script>
+<script src="onboard-lookup-data.js?v=2026-05-22-lookup-labels-v3"></script>
+<script src="script.js?v=2026-05-22-lookup-labels-v3"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
@@ -693,3 +741,4 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-11-quick-start-v1';
 </body>
 
 </html>
+
