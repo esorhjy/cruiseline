@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
     const VERIFIED_DATE = '2026-04-15';
     const SOURCES = {
         shipOverview: 'https://disneycruise.disney.go.com/en-sg/ships/adventure/',
@@ -44,7 +44,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-05-11-quick-start-v1',
+        version: '2026-05-22-lookup-labels-v3',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -1152,3 +1152,4 @@
         }
     };
 })();
+
