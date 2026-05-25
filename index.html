@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-05-25-menu-restaurant-v2">
+    <meta name="app-build" content="2026-05-25-menu-search-v3">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
+window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-search-v3';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,10 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-05-25-menu-restaurant-v2">
-    <link rel="manifest" href="manifest.json?v=2026-05-25-menu-restaurant-v2">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-25-menu-restaurant-v2">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-25-menu-restaurant-v2">
+    <link rel="stylesheet" href="style.css?v=2026-05-25-menu-search-v3">
+    <link rel="manifest" href="manifest.json?v=2026-05-25-menu-search-v3">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-25-menu-search-v3">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-25-menu-search-v3">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,7 +41,8 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
                 <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 概覽</a></li>
                 <li><a href="#timeline"><i class="fa-solid fa-clock-rotate-left"></i> 時間軸</a></li>
                 <li><a href="#playbook"><i class="fa-solid fa-book-open-reader"></i> 攻略</a></li>
-                <li><a href="#menu-lookup"><i class="fa-solid fa-utensils"></i> 菜單</a></li>
+                <li><a href="#menu-search" data-search-mode-target="lookup" data-lookup-category="dining"
+                        data-search-query=""><i class="fa-solid fa-utensils"></i> 菜單</a></li>
                 <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 工具</a></li>
             </ul>
             <div class="nav-utilities">
@@ -605,37 +606,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
         </div>
     </section>
 
-    <!-- 8. 菜單中英快查 -->
-    <section id="menu-lookup" class="menu-lookup-section reveal">
-        <div class="menu-lookup-heading">
-            <span class="menu-lookup-kicker"><i class="fa-solid fa-utensils"></i> Dining Lookup</span>
-            <h2 class="section-title">菜單中英快查</h2>
-            <p>把船上菜名、餐廳、分類與價格整理成可離線查詢的中英對照。想點餐時，直接打中文或英文，點「給 Crew 看」就能秀出大字英文菜名。</p>
-        </div>
-        <div class="menu-lookup-tool">
-            <div class="menu-lookup-controls">
-                <label class="menu-lookup-search" for="menu-lookup-input">
-                    <span>餐點搜尋</span>
-                    <input type="search" id="menu-lookup-input" placeholder="搜尋：海南雞飯、黑胡椒菲力、Palo、Bacha、兒童餐" autocomplete="off">
-                </label>
-                <div class="menu-lookup-filters menu-course-filters" id="menu-category-filters" aria-label="點餐段落"></div>
-            </div>
-            <div class="menu-lookup-summary" id="menu-lookup-summary"></div>
-            <div class="menu-lookup-workspace" id="menu-lookup-workspace">
-                <aside class="menu-restaurant-panel" aria-label="餐廳列表">
-                    <div class="menu-restaurant-panel-title">
-                        <i class="fa-solid fa-utensils"></i>
-                        <span>餐廳</span>
-                    </div>
-                    <div class="menu-lookup-filters menu-restaurant-filters" id="menu-group-filters" aria-label="餐廳列表"></div>
-                </aside>
-                <div class="menu-lookup-results" id="menu-lookup-results"></div>
-                <aside class="menu-crew-pane" id="menu-crew-pane" hidden></aside>
-            </div>
-        </div>
-    </section>
-
-    <!-- 9. 隱藏攻略、購物與離船 -->
+    <!-- 8. 隱藏攻略、購物與離船 -->
     <section id="tips" class="reveal">
         <h2 class="section-title">購物、隱藏預算與離船</h2>
         <div class="grid-container">
@@ -678,7 +649,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
         </div>
     </section>
 
-    <!-- 10. 在地資訊與小工具 -->
+    <!-- 9. 在地資訊與小工具 -->
     <section id="local-info" class="reveal">
         <h2 class="section-title">在地資訊與小工具</h2>
         <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
@@ -761,11 +732,11 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-<script src="data.js?v=2026-05-25-menu-restaurant-v2"></script>
-<script src="search-entity-registry.js?v=2026-05-25-menu-restaurant-v2"></script>
-<script src="search-keyword-taxonomy.js?v=2026-05-25-menu-restaurant-v2"></script>
-<script src="onboard-lookup-data.js?v=2026-05-25-menu-restaurant-v2"></script>
-<script src="script.js?v=2026-05-25-menu-restaurant-v2"></script>
+<script src="data.js?v=2026-05-25-menu-search-v3"></script>
+<script src="search-entity-registry.js?v=2026-05-25-menu-search-v3"></script>
+<script src="search-keyword-taxonomy.js?v=2026-05-25-menu-search-v3"></script>
+<script src="onboard-lookup-data.js?v=2026-05-25-menu-search-v3"></script>
+<script src="script.js?v=2026-05-25-menu-search-v3"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {

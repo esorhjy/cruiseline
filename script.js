@@ -5586,7 +5586,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!chip) return;
 
             event.preventDefault();
-            const query = chip.dataset.searchQuery || chip.textContent || '';
+            const query = chip.hasAttribute('data-search-query')
+                ? chip.dataset.searchQuery
+                : (chip.textContent || '');
             applySearchQuery(query, {
                 mode: chip.dataset.searchModeTarget,
                 lookupCategory: chip.dataset.lookupCategory,
@@ -5751,7 +5753,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!window.__SEARCH_SKIP_BOOTSTRAP__) {
         initializeSearch();
-        initializeMenuQuickLookup();
     }
 
 });

@@ -29,10 +29,8 @@ assert(indexHtml.includes('id="lookup-menu-restaurant-select"'), 'lookup overlay
 assert(indexHtml.includes('id="lookup-menu-course-row"'), 'lookup overlay should expose compact course filters for dining mode');
 assert(indexHtml.includes('onboard-lookup-data.js'), 'index.html should load onboard lookup data');
 assert(!indexHtml.includes('<script src="menu-lookup-data.js'), 'index.html should lazy-load menu lookup data instead of blocking the homepage');
-assert(indexHtml.includes('id="menu-lookup"'), 'index.html should expose the main menu quick lookup section');
-assert(indexHtml.includes('id="menu-group-filters"'), 'menu lookup should expose restaurant group filters');
-assert(indexHtml.includes('id="menu-category-filters"'), 'menu lookup should expose category filters');
-assert(indexHtml.includes('menu-restaurant-panel'), 'menu lookup should render restaurant-first navigation');
+assert(!indexHtml.includes('id="menu-lookup"'), 'index.html should not render a homepage menu lookup section');
+assert(indexHtml.includes('href="#menu-search"') && indexHtml.includes('data-lookup-category="dining"'), 'top menu nav should open lookup dining mode directly');
 assert(indexHtml.includes('1772539078755-hero.jpg'), 'index.html should use the optimized hero image');
 
 const indexBuildMatch = indexHtml.match(/window\.__DCL_GUIDE_BUILD__ = '([^']+)'/);
@@ -55,7 +53,7 @@ assert(scriptJs.includes('getBilingualLookupResults('), 'script.js should expose
 assert(scriptJs.includes('buildMenuItemLookupRecords('), 'script.js should build menu lookup records');
 assert(scriptJs.includes('loadMenuLookupData('), 'script.js should lazy-load the menu lookup data');
 assert(scriptJs.includes('data-menu-load-action'), 'script.js should render retry/load controls for menu data');
-assert(scriptJs.includes('initializeMenuQuickLookup('), 'script.js should initialize the main menu quick lookup section');
+assert(!scriptJs.includes('initializeMenuQuickLookup();'), 'script.js should not initialize a homepage menu lookup section');
 assert(scriptJs.includes('getMenuRestaurantOptions('), 'script.js should expose restaurant-first menu helpers');
 assert(scriptJs.includes('data-menu-course-filter'), 'script.js should render course filters for menu browsing');
 assert(scriptJs.includes('data-menu-description-id'), 'script.js should let menu cards expand source descriptions');
