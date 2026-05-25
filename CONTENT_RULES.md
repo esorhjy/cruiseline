@@ -10,6 +10,7 @@
 - 標題可以友善，但不能失去專有名詞辨識度。
 - 同一名稱若有中英文常用說法，應補 alias，不要在不同卡片裡各寫各的。
 - 若站內有本地化中文名稱，仍需能回推英文 canonical entity。
+- 設施、表演、餐廳與服務卡若已有中文說法，應補正式英文對照或 bilingual strip，方便搜尋與船上溝通。
 
 ## 建議 metadata
 - 主體卡建議補齊：
@@ -57,6 +58,14 @@
 - 若一張卡明顯服務某個設施或表演，請用 `entityRefs` 或 `supportForEntityRefs` 關聯，不要只靠字面出現。
 - 若內容能清楚對應 `categoryFamilies` 或 `capabilityTags`，請優先在資料層表達，不要把搜尋語意塞進自由文字。
 
+## 菜單與中英對照內容
+- 菜單內容的正式來源是 `menu-lookup-data.js`，由 `tools/generate-menu-lookup-data.mjs` 從外部菜單資料產生 snapshot。
+- 菜單 snapshot 應完整保留來源菜名、英文名、餐廳、分類、價格、標籤、描述與來源 index；目前驗收基準是 `550` 筆。
+- 菜單內容不放首頁大型 section；首頁若需要入口，只能使用導覽列或 quick chip 打開搜尋 overlay 的 `餐點/餐廳` 分類。
+- 餐點內容呈現以船上點餐為目標：中文確認、英文菜名、餐廳、點餐段落、價格/標籤與 Crew 點餐句。
+- 餐點段落歸類應維持穩定：`全部 / 前菜 / 主餐 / 飲料 / 甜點 / 兒童/配菜`。若來源 category 更新，先更新產生器 mapping，再重產 snapshot。
+- `preview.html` 或外部活動表只可作為資料來源或參考，不應直接變成首頁大型表格。
+
 ## 去噪與去重友善原則
 - 不要用大量欄位標籤式文字堆疊內容，例如：
   - `日期：`
@@ -76,6 +85,7 @@
 3. 再補 `categoryFamilies`、`capabilityTags`、`entityFamilies`
 4. 最後才微調內文語氣或卡片呈現方式
 5. 若新增的是高頻現場問題，補一條搜尋 smoke case，避免之後排序回歸
+6. 若更新菜單資料，重跑產生器並確認 snapshot 筆數、lazy-load 行為與餐點 smoke cases
 
 ## 不再維護的內容形態
 - 不再為 AI 搜尋額外準備 prompt、section dossier、coverage contract 或 AI answer 專屬欄位。
