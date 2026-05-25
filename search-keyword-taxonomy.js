@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     const registry = Array.isArray(window.SEARCH_ENTITY_REGISTRY?.entities)
         ? window.SEARCH_ENTITY_REGISTRY.entities
         : [];
@@ -60,7 +60,7 @@
     }));
 
     window.SEARCH_KEYWORD_TAXONOMY = {
-        version: '2026-05-22-lookup-labels-v3',
+        version: '2026-05-25-menu-restaurant-v2',
         aliases: buildRegistryAliases(),
         genericClasses: [
             { canonical: '設施', terms: ['設施', '地方', '項目', '體驗'], expandsTo: ['場館', '服務', '表演'] },

@@ -1,13 +1,13 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-05-22-lookup-labels-v3">
+    <meta name="app-build" content="2026-05-25-menu-restaurant-v2">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
+window.__DCL_GUIDE_BUILD__ = '2026-05-25-menu-restaurant-v2';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
@@ -17,10 +17,10 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-05-22-lookup-labels-v3">
-    <link rel="manifest" href="manifest.json?v=2026-05-22-lookup-labels-v3">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-22-lookup-labels-v3">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-22-lookup-labels-v3">
+    <link rel="stylesheet" href="style.css?v=2026-05-25-menu-restaurant-v2">
+    <link rel="manifest" href="manifest.json?v=2026-05-25-menu-restaurant-v2">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-05-25-menu-restaurant-v2">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-05-25-menu-restaurant-v2">
     <meta name="theme-color" content="#0A3A70">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,6 +41,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
                 <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 概覽</a></li>
                 <li><a href="#timeline"><i class="fa-solid fa-clock-rotate-left"></i> 時間軸</a></li>
                 <li><a href="#playbook"><i class="fa-solid fa-book-open-reader"></i> 攻略</a></li>
+                <li><a href="#menu-lookup"><i class="fa-solid fa-utensils"></i> 菜單</a></li>
                 <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 工具</a></li>
             </ul>
             <div class="nav-utilities">
@@ -102,6 +103,13 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
                     <button type="button" data-lookup-category="show">表演</button>
                     <button type="button" data-lookup-category="service">服務</button>
                 </div>
+                <div class="lookup-filter-strip lookup-dining-filter-strip" id="lookup-dining-filter-row" aria-label="餐點篩選" hidden>
+                    <label class="lookup-menu-select" for="lookup-menu-restaurant-select">
+                        <span>餐廳</span>
+                        <select id="lookup-menu-restaurant-select" aria-label="選擇餐廳"></select>
+                    </label>
+                    <div class="lookup-menu-course-row" id="lookup-menu-course-row" aria-label="點餐段落"></div>
+                </div>
             </div>
             <div class="search-shortcut-drawer" id="search-shortcut-drawer" hidden>
                 <div class="search-chip-groups" aria-label="常用搜尋">
@@ -160,6 +168,16 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
                             data-search-query="Oceaneer kids">兒童活動</button>
                         <button type="button" data-search-mode-target="lookup" data-lookup-category="facility"
                             data-search-query="找地點">找地點</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-search-query="海南雞飯">海南雞飯</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-lookup-dining-filter="kids-side" data-search-query="兒童餐">兒童餐英文</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-lookup-dining-filter="entree" data-search-query="素食">素食餐點</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-lookup-restaurant-filter="palo-dinner" data-search-query="Palo">Palo 菜單</button>
+                        <button type="button" data-search-mode-target="lookup" data-lookup-category="dining"
+                            data-lookup-dining-filter="drinks" data-search-query="飲料">飲料怎麼說</button>
                     </div>
                 </details>
                 </div>
@@ -563,6 +581,11 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
                 </div>
                 <div class="card-content">
                     <h3>極致快餐地圖</h3>
+                    <div class="bilingual-strip">
+                        <span class="bilingual-strip-label">English</span>
+                        <span class="bilingual-strip-en">Mowgli’s Eatery / Cosmic Kebabs / Bewitching Boba / Mickey Ice Cream Bar</span>
+                        <span class="bilingual-strip-zh">快餐、珍奶與隱藏甜點英文對照</span>
+                    </div>
                     <p>白天遊玩別錯過甲板快餐：印度料理 <strong>Mowgli's Eatery</strong>、中東烤肉口袋餅 <strong>Cosmic
                             Kebabs</strong>，以及打卡聖地：<strong>烏蘇拉主題珍奶</strong>。若去 Pixar Market，也可留意特殊造型杯；主餐廳若想來個隱藏甜點，也可直接口頭點 <strong>Mickey Ice Cream Bar</strong>；若有訂 Mike &amp; Sulley，記得看衣著規範。</p>
                 </div>
@@ -582,7 +605,37 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
         </div>
     </section>
 
-    <!-- 8. 隱藏攻略、購物與離船 -->
+    <!-- 8. 菜單中英快查 -->
+    <section id="menu-lookup" class="menu-lookup-section reveal">
+        <div class="menu-lookup-heading">
+            <span class="menu-lookup-kicker"><i class="fa-solid fa-utensils"></i> Dining Lookup</span>
+            <h2 class="section-title">菜單中英快查</h2>
+            <p>把船上菜名、餐廳、分類與價格整理成可離線查詢的中英對照。想點餐時，直接打中文或英文，點「給 Crew 看」就能秀出大字英文菜名。</p>
+        </div>
+        <div class="menu-lookup-tool">
+            <div class="menu-lookup-controls">
+                <label class="menu-lookup-search" for="menu-lookup-input">
+                    <span>餐點搜尋</span>
+                    <input type="search" id="menu-lookup-input" placeholder="搜尋：海南雞飯、黑胡椒菲力、Palo、Bacha、兒童餐" autocomplete="off">
+                </label>
+                <div class="menu-lookup-filters menu-course-filters" id="menu-category-filters" aria-label="點餐段落"></div>
+            </div>
+            <div class="menu-lookup-summary" id="menu-lookup-summary"></div>
+            <div class="menu-lookup-workspace" id="menu-lookup-workspace">
+                <aside class="menu-restaurant-panel" aria-label="餐廳列表">
+                    <div class="menu-restaurant-panel-title">
+                        <i class="fa-solid fa-utensils"></i>
+                        <span>餐廳</span>
+                    </div>
+                    <div class="menu-lookup-filters menu-restaurant-filters" id="menu-group-filters" aria-label="餐廳列表"></div>
+                </aside>
+                <div class="menu-lookup-results" id="menu-lookup-results"></div>
+                <aside class="menu-crew-pane" id="menu-crew-pane" hidden></aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. 隱藏攻略、購物與離船 -->
     <section id="tips" class="reveal">
         <h2 class="section-title">購物、隱藏預算與離船</h2>
         <div class="grid-container">
@@ -625,7 +678,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
         </div>
     </section>
 
-    <!-- 9. 在地資訊與小工具 -->
+    <!-- 10. 在地資訊與小工具 -->
     <section id="local-info" class="reveal">
         <h2 class="section-title">在地資訊與小工具</h2>
         <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
@@ -708,11 +761,11 @@ window.__DCL_GUIDE_BUILD__ = '2026-05-22-lookup-labels-v3';
             Adventure Cruise Guide © 2027</p>
     </footer>
 
-<script src="data.js?v=2026-05-22-lookup-labels-v3"></script>
-<script src="search-entity-registry.js?v=2026-05-22-lookup-labels-v3"></script>
-<script src="search-keyword-taxonomy.js?v=2026-05-22-lookup-labels-v3"></script>
-<script src="onboard-lookup-data.js?v=2026-05-22-lookup-labels-v3"></script>
-<script src="script.js?v=2026-05-22-lookup-labels-v3"></script>
+<script src="data.js?v=2026-05-25-menu-restaurant-v2"></script>
+<script src="search-entity-registry.js?v=2026-05-25-menu-restaurant-v2"></script>
+<script src="search-keyword-taxonomy.js?v=2026-05-25-menu-restaurant-v2"></script>
+<script src="onboard-lookup-data.js?v=2026-05-25-menu-restaurant-v2"></script>
+<script src="script.js?v=2026-05-25-menu-restaurant-v2"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {

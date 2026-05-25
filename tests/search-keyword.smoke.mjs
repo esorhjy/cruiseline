@@ -117,10 +117,20 @@ function loadSearchHooks() {
   const onboardLookupSource = fs.readFileSync(path.resolve('onboard-lookup-data.js'), 'utf8');
   vm.runInNewContext(onboardLookupSource, sandbox, { filename: 'onboard-lookup-data.js' });
 
+  const menuLookupSource = fs.readFileSync(path.resolve('menu-lookup-data.js'), 'utf8');
+  vm.runInNewContext(menuLookupSource, sandbox, { filename: 'menu-lookup-data.js' });
+
   const scriptSource = fs.readFileSync(path.resolve('script.js'), 'utf8');
   vm.runInNewContext(scriptSource, sandbox, { filename: 'script.js' });
 
   return hooks;
+}
+
+function loadMenuLookupData() {
+  const sandbox = { window: {} };
+  const menuLookupSource = fs.readFileSync(path.resolve('menu-lookup-data.js'), 'utf8');
+  vm.runInNewContext(menuLookupSource, sandbox, { filename: 'menu-lookup-data.js' });
+  return sandbox.window.MENU_LOOKUP_DATA;
 }
 
 function titlesFor(hooks, query) {
@@ -138,9 +148,10 @@ function uniqueParentCount(results) {
 
 const hooks = loadSearchHooks();
 hooks.prepareSearchDocuments();
+const menuData = loadMenuLookupData();
 
-function lookupResultsFor(query, category = 'all') {
-  return hooks.getBilingualLookupResults(query, { category }).results;
+function lookupResultsFor(query, category = 'all', diningFilter = 'all', restaurantFilter = 'all') {
+  return hooks.getBilingualLookupResults(query, { category, diningFilter, restaurantFilter }).results;
 }
 
 function hasLookupMatch(results, patterns) {
@@ -149,13 +160,48 @@ function hasLookupMatch(results, patterns) {
   ));
 }
 
-assert(hooks.getLookupRecords().length >= 580, 'bilingual lookup should include registry entities and onboard activity records');
+assert(hooks.getLookupRecords().length >= 1100, 'bilingual lookup should include registry entities, onboard activity records, and menu item records');
+assert.equal(menuData.sourceCount, 550, 'menu lookup snapshot should record the current source count');
+assert.equal(menuData.records.length, menuData.sourceCount, 'menu lookup snapshot should include every source menu record');
+assert.equal(hooks.getMenuLookupRecords().length, menuData.sourceCount, 'menu lookup records should match the local snapshot source count');
+assert(menuData.restaurants.length >= 20, 'menu lookup snapshot should include restaurant metadata');
+assert(menuData.courseGroups.some((group) => group.id === 'appetizer'), 'menu lookup snapshot should expose course groups');
+assert(menuData.records.some((item) => item.descriptionZh && item.descriptionZh.includes('\u9bae\u83c7')), 'menu lookup snapshot should preserve source descriptions');
+hooks.getMenuLookupRecords().forEach((item) => {
+  assert(item.id, 'each menu item should have an id');
+  assert(item.zhLabel, 'each menu item should have a Chinese label');
+  assert(item.englishName, 'each menu item should have an English name');
+  assert(item.restaurantId, 'each menu item should keep its restaurant id');
+  assert(item.restaurantLabel, 'each menu item should keep its restaurant label');
+  assert(item.menuCategory, 'each menu item should keep its menu category');
+  assert(item.courseGroup, 'each menu item should keep its ordering course group');
+  assert(Number.isFinite(item.sourceRecordIndex), 'each menu item should keep its source record index');
+  assert(item.searchText, 'each menu item should keep generated search text');
+});
 
 const guestServiceLookup = lookupResultsFor('\u5ba2\u52d9\u4e2d\u5fc3');
 assert.equal(guestServiceLookup[0]?.englishName, 'Guest Services', 'Chinese Guest Services lookup should surface the official English name');
 
 const diningLookup = lookupResultsFor('\u9910\u5ef3', 'dining');
 assert(hasLookupMatch(diningLookup.slice(0, 8), [/Animator/i, /Enchanted Summer/i, /Pixar Market/i]), 'dining lookup should surface major restaurants or quick-service venues');
+
+const hainanLookup = lookupResultsFor('\u6d77\u5357\u96de\u98ef', 'dining');
+assert(hasLookupMatch(hainanLookup.slice(0, 6), [/Hainanese Chicken,\s*Rice/i]), 'Hainanese chicken rice should resolve to the English menu name');
+
+const filetLookup = lookupResultsFor('\u9ed1\u80e1\u6912\u83f2\u529b', 'dining');
+assert(hasLookupMatch(filetLookup.slice(0, 6), [/Peppered Filet Mignon/i]), 'black-pepper filet should resolve to Peppered Filet Mignon');
+
+const kidsMealLookup = lookupResultsFor('\u5152\u7ae5\u9910', 'dining', 'kids-side');
+assert(kidsMealLookup.some((item) => item.sourceType === 'menu-item' && (item.tags || []).includes('kids')), 'kids dining filter should return kids menu items');
+
+const paloLookup = lookupResultsFor('Palo', 'dining', 'all', 'palo-dinner');
+assert(paloLookup.some((item) => item.sourceType === 'menu-item' && item.restaurantGroup === 'palo'), 'Palo dining filter should return Palo menu items');
+
+const bachaLookup = lookupResultsFor('Bacha', 'dining', 'drinks', 'bev-bacha');
+assert(bachaLookup.some((item) => item.sourceType === 'menu-item' && item.restaurantId === 'bev-bacha'), 'Bacha should return beverage or coffee menu items from Bacha Coffee');
+
+const bubbleTeaLookup = lookupResultsFor('\u73cd\u5976', 'dining', 'drinks');
+assert(bubbleTeaLookup.some((item) => /Boba|Tea|Milk/i.test(String(item.englishName || ''))), 'Chinese bubble-tea query should return boba or tea items');
 
 const avengersLookup = lookupResultsFor('Avengers', 'show');
 assert(hasLookupMatch(avengersLookup.slice(0, 6), [/Avengers Assemble/i]), 'Avengers lookup should surface the activity/show English name');
@@ -173,6 +219,38 @@ assert(crewMarkup.includes('Could you help us find this?'), 'crew display card s
 assert(crewMarkup.includes('data-lookup-crew-close'), 'crew display card should include a close control for the preview pane or bottom sheet');
 assert(crewMarkup.includes('\u7d66\u8239\u54e1\u770b'), 'crew display card should include Chinese helper text for the small Crew heading');
 assert(crewMarkup.includes('Question / \u554f\u53e5'), 'crew display card should label the English helper phrase with Chinese context');
+
+const menuCrewMarkup = hooks.buildCrewDisplayCard(hainanLookup.find((item) => /Hainanese/i.test(String(item.englishName || ''))));
+assert(menuCrewMarkup.includes('Hainanese Chicken'), 'menu crew card should include the English menu name');
+assert(menuCrewMarkup.includes('\u6d77\u5357'), 'menu crew card should include the Chinese menu label');
+assert(menuCrewMarkup.includes('Could I order this, please?'), 'menu crew card should use an ordering phrase for menu items');
+assert(menuCrewMarkup.includes('Ordering phrase / \u9ede\u9910\u53e5'), 'menu crew card should label the ordering phrase bilingually');
+
+const mainMenuHainan = hooks.getMenuQuickResults('\u6d77\u5357\u96de\u98ef');
+assert(hasLookupMatch(mainMenuHainan.slice(0, 4), [/Hainanese Chicken,\s*Rice/i]), 'main menu quick lookup should search menu items by Chinese dish name');
+
+const mainMenuFilet = hooks.getMenuQuickResults('\u9ed1\u80e1\u6912\u83f2\u529b');
+assert(hasLookupMatch(mainMenuFilet.slice(0, 4), [/Peppered Filet Mignon/i]), 'main menu quick lookup should search menu items by Chinese translated dish name');
+
+const navAppetizers = hooks.getMenuQuickResults('', 'nav', 'appetizer');
+assert(navAppetizers.length > 0, 'Navigator/Hollywood appetizers should produce results');
+assert(navAppetizers.every((item) => item.restaurantId === 'nav' && item.courseGroup === 'appetizer'), 'Navigator/Hollywood appetizer filter should only include that restaurant and course');
+
+const navEntrees = hooks.getMenuQuickResults('', 'nav', 'entree');
+assert(hasLookupMatch(navEntrees, [/Hainanese Chicken,\s*Rice/i]), 'Navigator/Hollywood entree filter should include Hainanese Chicken, Rice');
+
+const paloDrinks = hooks.getMenuQuickResults('', 'palo-brunch', 'drinks');
+assert(hasLookupMatch(paloDrinks, [/Palo Spritz/i, /Bellini/i]), 'Palo Brunch drinks filter should include Palo Spritz or Bellini');
+
+const bachaDrinks = hooks.getMenuQuickResults('', 'bev-bacha', 'drinks');
+assert(bachaDrinks.length > 0 && bachaDrinks.every((item) => item.restaurantId === 'bev-bacha' && item.courseGroup === 'drinks'), 'Bacha Coffee drinks filter should only include Bacha drinks');
+
+const allDesserts = hooks.getMenuQuickResults('', 'all', 'dessert');
+assert(allDesserts.length > 20, 'all restaurants dessert filter should include cross-restaurant desserts');
+assert(new Set(allDesserts.map((item) => item.restaurantId)).size > 2, 'all restaurants dessert filter should span multiple restaurants');
+
+const fullMenuBrowse = hooks.getMenuQuickResults('', 'all', 'all');
+assert.equal(fullMenuBrowse.length, menuData.sourceCount, 'main menu browse should not cap all restaurants at 48 records');
 
 const conciergePayload = hooks.getRankedSearchResults('concierge');
 const conciergeTitles = conciergePayload.results.map((item) => String(item.title || ''));

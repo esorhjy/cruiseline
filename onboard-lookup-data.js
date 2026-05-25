@@ -1,6 +1,6 @@
-﻿(function () {
+(function () {
   window.ONBOARD_LOOKUP_DATA = {
-    version: '2026-05-22-lookup-labels-v3',
+    version: '2026-05-25-menu-restaurant-v2',
     sourceNote: 'Derived from preview.html as onboard activity wording references; source dates are not treated as the 2027 sailing schedule.',
     records: [
     {

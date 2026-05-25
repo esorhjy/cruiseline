@@ -1,4 +1,4 @@
-﻿const APP_BUILD_ID = '2026-05-22-lookup-labels-v3';
+const APP_BUILD_ID = '2026-05-25-menu-restaurant-v2';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [
