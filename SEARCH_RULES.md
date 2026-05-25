@@ -6,11 +6,12 @@
 - 搜尋結果採 `強力合併 + 精準優先`，先保住專有名詞與主體卡，再少量補充支援內容。
 
 ## 搜尋輸入
-- 使用者輸入關鍵字後，直接走單一路徑的站內搜尋。
-- 不存在模式切換，也不存在 AI submit 分支。
+- 使用者輸入關鍵字後，依目前本地工具模式執行搜尋。
+- 不存在 AI 模式、AI submit 分支或遠端回答流程。
+- 搜尋 overlay 可保留兩個本地工具模式：`攻略搜尋` 與 `中英對照`；這不是 AI mode。
 - 搜尋最短長度為 `2` 個字元。
 - `file://` 直接開啟 `index.html` 時也必須可正常搜尋，不依賴後端。
-- 搜尋面板可提供 quick chips，但它們只是預填關鍵字並走同一條搜尋流程。
+- 搜尋面板可提供 quick chips；它們可預填關鍵字，也可切到 `中英對照` 的指定分類或篩選。
 - 若沒有足夠搜尋證據，不應用基礎分數硬湊結果；未知 query 應顯示無結果狀態。
 
 ## 搜尋資料來源
@@ -20,6 +21,8 @@
 - 攻略：`playbookGuideData`
 - 專有名詞與 alias registry：`search-entity-registry.js`
 - 搜尋 taxonomy：`search-keyword-taxonomy.js`
+- 船上設施/活動中英對照：`onboard-lookup-data.js`
+- 完整菜單中英對照 snapshot：`menu-lookup-data.js`
 
 ## 搜尋資料層
 - 每張搜尋文件應盡量能推得出或提供：
@@ -50,6 +53,19 @@
   4. 最後才調整排序公式
 - 若某張卡需要服務自然語句查詢，例如 `上船先做什麼` 或 `最後一天早餐`，優先在 registry binding 補 `keywordHints`。
 - `keywordHints` 屬高價值查詢錨點，排序上可高於泛用欄位文字，但不可拿來堆疊無關詞。
+
+## 中英對照與菜單查詢
+- `中英對照` 模式服務船上溝通場景，結果卡需快速顯示中文確認、正式英文名稱、地點/Deck/餐廳與 Crew 用短句。
+- `中英對照` 可有分類列；`餐點/餐廳` 類別需顯示餐廳 selector 與點餐段落 chips。
+- 餐點資料不可在首頁同步載入；只有進入 `餐點/餐廳` 查詢時，才 lazy load `menu-lookup-data.js`。
+- 上方導覽列的 `菜單` 必須直接開啟搜尋 overlay，切到 `中英對照 > 餐點/餐廳`，並維持空白 query 的餐點瀏覽狀態。
+- 首頁不可再新增 `#menu-lookup`、大型菜單表或餐點瀏覽器 section。
+- 餐點瀏覽與篩選邏輯固定為「先餐廳、再點餐段落」：
+  - 餐廳來自 `menu-lookup-data.js` 的 restaurant metadata。
+  - 點餐段落固定為 `全部 / 前菜 / 主餐 / 飲料 / 甜點 / 兒童/配菜`。
+  - 空白 query 在餐點分類下可顯示餐廳/餐點結果；這是中英對照模式的例外，不適用一般攻略搜尋的空白狀態。
+- `menu-lookup-data.js` 應由 `tools/generate-menu-lookup-data.mjs` 產生並保留完整來源 snapshot，目前 smoke test 基準為 `550` 筆。
+- 同一英文菜名重複出現時，結果可合併顯示常見餐廳或分類，避免洗版。
 
 ## 排序策略
 
@@ -133,12 +149,16 @@
   - AI 版本提示
 - Header 保持精簡，第一屏盡量直接看到結果卡。
 - `行程 / 甲板與表演 / 攻略本` 分組可保留，但只顯示經過去重後的高品質結果；若某組沒有高品質命中，可不顯示該組。
+- `中英對照` 模式下，結果區仍需優先；分類、餐廳 selector、點餐段落 chips 必須保持 compact。
+- Crew 大字卡不可預設插在結果列表頂部；桌機用右側 preview pane，手機用 bottom sheet / overlay。
 
 ## 明確不保留的能力
 - 不可讓前端依賴 `/api/ai-answer` 或任何遠端 AI endpoint。
 - 不可保留 AI mode、AI answer state、AI session cache、Worker schema version 檢查。
 - 不可再引入 Cloudflare Worker、Wrangler 或 AI 回答部署鏈路。
 - 不可把搜尋結果退回成寬鬆探索式清單；本專案的搜尋預設是精準優先，不是廣撒網。
+- 不可把菜單資料改回首頁同步載入，或把 `menu-lookup-data.js` 放回首頁底部 script。
+- 不可把 `menu-lookup-data.js` 放進 Service Worker core precache；大型菜單資料只能 lazy load 後走 runtime cache。
 
 ## 維護順序
 1. 先修 canonical entity 與命名
@@ -167,4 +187,10 @@
   - `花園舞台怎麼走`
   - `最後一天早餐`
   - `上船先做什麼`
-- `index.html` 與 `sw.js` 的 build id 必須一致，離線核心資產需包含 `data.js`、registry、taxonomy 與首頁 hero 圖。
+  - `海南雞飯`
+  - `Palo`
+  - `Bacha`
+  - `珍奶`
+- `index.html` 與 `sw.js` 的 build id 必須一致，離線核心資產需包含 `data.js`、registry、taxonomy、`onboard-lookup-data.js` 與首頁 hero 圖。
+- `menu-lookup-data.js` 必須線上 200 且含完整 `550` 筆，但不可在首頁初始 resource list 出現。
+- 導覽列 `菜單` 驗收：點擊後搜尋 overlay 開啟、模式為 `lookup`、分類為 `dining`、餐點資料才開始載入。
