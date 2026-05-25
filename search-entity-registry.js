@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     const VERIFIED_DATE = '2026-04-15';
     const SOURCES = {
         shipOverview: 'https://disneycruise.disney.go.com/en-sg/ships/adventure/',
@@ -12,7 +12,8 @@
         photosFaq: 'https://disneycruise.disney.go.com/en/faq/photos/when-will-i-receive-my-photos/',
         photosDeadline: 'https://disneycruise.disney.go.com/en-sg/faq/photos/deadline-for-booking-photo-packages-pre-cruise/',
         photosDownloadAll: 'https://disneycruise.disney.go.com/faq/photos/download-all-photos/',
-        communityPhotoMap: 'https://disney.tiiny.site/'
+        communityPhotoMap: 'https://disney.tiiny.site/',
+        menuReference: 'https://sachiko620702.github.io/disney/?rooms=12259#menu'
     };
 
     const entity = (data) => ({
@@ -44,7 +45,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-05-22-lookup-labels-v3',
+        version: '2026-05-25-menu-restaurant-v2',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -626,6 +627,20 @@
                 sourceUrls: [SOURCES.dining]
             }),
             entity({
+                entityId: 'cosmic-kebabs',
+                officialNameEn: 'Cosmic Kebabs',
+                displayNameZh: 'Cosmic Kebabs 中東烤肉口袋餅',
+                entityType: 'quick-service',
+                categoryFamilies: ['快餐', '餐廳'],
+                capabilityTags: ['eat'],
+                aliases: ['Kebabs', '烤肉口袋餅', '中東烤肉'],
+                deckHints: ['Deck 10'],
+                area: 'Disney Discovery Reef',
+                relatedEntityIds: ['discovery-reef'],
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.menuReference]
+            }),
+            entity({
                 entityId: 'stitchs-ohana-grill',
                 officialNameEn: 'Stitch’s Ohana Grill',
                 displayNameZh: 'Stitch’s Ohana Grill',
@@ -682,6 +697,54 @@
                 deckHints: ['Deck 11'],
                 area: 'Disney Imagination Garden',
                 sourceUrls: [SOURCES.dining]
+            }),
+            entity({
+                entityId: 'mike-sulleys-flavors-of-asia',
+                officialNameEn: 'Mike & Sulley’s Flavors of Asia',
+                displayNameZh: 'Mike & Sulley’s Flavors of Asia 怪獸電力公司亞洲風味餐廳',
+                entityType: 'restaurant',
+                categoryFamilies: ['餐廳'],
+                capabilityTags: ['eat', 'drink'],
+                aliases: ['Mike and Sulley', 'Mike & Sulley', '怪獸餐廳', 'Sulley Steakhouse', 'Sulley Omakase', 'Sulley Teppanyaki', 'Sulley Sushi'],
+                area: 'Dining venue',
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.menuReference]
+            }),
+            entity({
+                entityId: 'bacha-coffee',
+                officialNameEn: 'Bacha Coffee',
+                displayNameZh: 'Bacha Coffee 咖啡',
+                entityType: 'quick-service',
+                categoryFamilies: ['餐廳', '酒廊'],
+                capabilityTags: ['drink', 'eat'],
+                aliases: ['Bacha', '咖啡', '迪士尼聯名咖啡'],
+                area: 'Dining venue',
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.menuReference]
+            }),
+            entity({
+                entityId: 'bewitching-boba',
+                officialNameEn: 'Bewitching Boba',
+                displayNameZh: 'Bewitching Boba 珍奶',
+                entityType: 'quick-service',
+                categoryFamilies: ['餐廳', '酒廊'],
+                capabilityTags: ['drink'],
+                aliases: ['Boba', 'bubble tea', '珍奶', '烏蘇拉主題珍奶', '飲料'],
+                area: 'Dining venue',
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.menuReference]
+            }),
+            entity({
+                entityId: 'mickey-ice-cream-bar',
+                officialNameEn: 'Mickey Ice Cream Bar',
+                displayNameZh: 'Mickey Ice Cream Bar 米奇冰淇淋棒',
+                entityType: 'menu-item',
+                categoryFamilies: ['餐廳', '甜點'],
+                capabilityTags: ['eat'],
+                aliases: ['米奇冰棒', '米奇冰淇淋', 'ice cream bar', 'hidden dessert'],
+                area: 'Dining rooms',
+                sourceAuthority: 'trusted-secondary',
+                sourceUrls: [SOURCES.menuReference]
             }),
             entity({
                 entityId: 'castle-collection',

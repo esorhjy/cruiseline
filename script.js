@@ -1,4 +1,4 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
 
     let setScheduleTab = () => {};
     let setDeckGuideTab = () => {};
@@ -36,7 +36,48 @@
         shop: 'Shopping',
         wellness: 'Spa / Fitness'
     };
-    const LOOKUP_MODE_PLACEHOLDER = '輸入中文或英文，例如：客務中心、餐廳、Magic Shot、Oceaneer';
+    const MENU_DINING_FILTERS = [
+        { id: 'all', label: '全部', match: () => true },
+        { id: 'rotational', label: '主餐廳', match: record => record.restaurantGroup === 'rotational' },
+        { id: 'palo', label: 'Palo', match: record => record.restaurantGroup === 'palo' },
+        { id: 'sulley', label: '怪獸餐廳', match: record => record.restaurantGroup === 'sulley' },
+        { id: 'beverage', label: '酒吧飲品', match: record => record.restaurantGroup === 'beverage' },
+        { id: 'kids', label: '兒童餐', match: record => record.menuCategory === 'kids' || (record.tags || []).includes('kids') || (record.tags || []).includes('kids-disney') },
+        { id: 'vegetarian', label: '素食', match: record => (record.tags || []).some(tag => ['vegetarian', 'vegan'].includes(tag)) },
+        { id: 'paid', label: '付費', match: record => Boolean(record.price) },
+        { id: 'alcoholic', label: '酒精', match: record => (record.tags || []).includes('alcoholic') || ['cocktails', 'beer', 'wine', 'rum', 'whiskey', 'sake'].includes(record.menuCategory) }
+    ];
+    const MENU_QUICK_GROUPS = [
+        { id: 'all', label: '全部' },
+        { id: 'rotational', label: '主餐廳' },
+        { id: 'palo', label: 'Palo' },
+        { id: 'sulley', label: '怪獸餐廳' },
+        { id: 'beverage', label: '酒吧飲品' }
+    ];
+    const MENU_QUICK_CATEGORIES = [
+        { id: 'all', label: '全部' },
+        { id: 'kids', label: '兒童餐' },
+        { id: 'vegetarian', label: '素食' },
+        { id: 'paid', label: '付費' },
+        { id: 'alcoholic', label: '酒精' },
+        { id: 'dessert', label: '甜點' },
+        { id: 'drinks', label: '飲品' }
+    ];
+    const MENU_RESTAURANT_GROUP_LABELS = {
+        rotational: '主餐廳',
+        sulley: '怪獸餐廳',
+        palo: 'Palo',
+        beverage: '酒吧飲品'
+    };
+    const MENU_COURSE_FILTERS = [
+        { id: 'all', label: '全部', match: () => true },
+        { id: 'appetizer', label: '前菜', match: record => record.courseGroup === 'appetizer' },
+        { id: 'entree', label: '主餐', match: record => record.courseGroup === 'entree' },
+        { id: 'drinks', label: '飲料', match: record => record.courseGroup === 'drinks' },
+        { id: 'dessert', label: '甜點', match: record => record.courseGroup === 'dessert' },
+        { id: 'kids-side', label: '兒童/配菜', match: record => record.courseGroup === 'kids-side' }
+    ];
+    const LOOKUP_MODE_PLACEHOLDER = '輸入中文或英文，例如：客務中心、海南雞飯、Magic Shot、Oceaneer';
     const GUIDE_MODE_PLACEHOLDER = '輸入關鍵字，例如：禮賓、Baymax、Room Service';
     const SEARCH_SYNONYM_GROUPS = [
         ['禮賓', 'concierge', 'lounge', '酒廊', '管家'],
@@ -219,6 +260,8 @@
         debounceTimer: null,
         mode: 'guide',
         lookupCategory: 'all',
+        lookupDiningFilter: 'all',
+        lookupRestaurantFilter: 'all',
         shortcutOpen: false,
         activeCrewRecordId: '',
         isComposing: false,
@@ -227,6 +270,20 @@
         lastResults: [],
         lastQueryData: null
     };
+    const menuLookupState = {
+        query: '',
+        restaurant: 'all',
+        course: 'all',
+        activeCrewRecordId: '',
+        lastResults: [],
+        expandedRecordIds: new Set()
+    };
+    const menuDataLoadState = {
+        status: Array.isArray(window.MENU_LOOKUP_DATA?.records) ? 'ready' : 'idle',
+        promise: null,
+        error: null
+    };
+    const MENU_LOOKUP_DATA_SCRIPT_PATH = 'menu-lookup-data.js';
     const runtimeState = {
         bubbleTimer: null,
         countdownTimer: null,
@@ -255,6 +312,92 @@
             });
         });
         return map;
+    }
+
+    function isMenuLookupDataReady() {
+        return Array.isArray(window.MENU_LOOKUP_DATA?.records) && window.MENU_LOOKUP_DATA.records.length > 0;
+    }
+
+    function syncMenuDataLoadStateFromWindow() {
+        if (isMenuLookupDataReady()) {
+            menuDataLoadState.status = 'ready';
+            menuDataLoadState.error = null;
+        }
+        return menuDataLoadState.status;
+    }
+
+    function getMenuLookupDataScriptSrc() {
+        const buildId = window.__DCL_GUIDE_BUILD__ || document.documentElement?.dataset?.appBuild || 'local-dev';
+        return `${MENU_LOOKUP_DATA_SCRIPT_PATH}?v=${encodeURIComponent(buildId)}`;
+    }
+
+    function loadMenuLookupData(options = {}) {
+        const retry = Boolean(options.retry);
+        syncMenuDataLoadStateFromWindow();
+        if (menuDataLoadState.status === 'ready') {
+            return Promise.resolve(window.MENU_LOOKUP_DATA);
+        }
+        if (menuDataLoadState.status === 'loading' && menuDataLoadState.promise) {
+            return menuDataLoadState.promise;
+        }
+        if (menuDataLoadState.status === 'error' && !retry) {
+            return Promise.reject(menuDataLoadState.error || new Error('Menu lookup data failed to load.'));
+        }
+        if (!document.createElement || !document.head?.appendChild) {
+            const error = new Error('This browser cannot load the menu data script dynamically.');
+            menuDataLoadState.status = 'error';
+            menuDataLoadState.error = error;
+            return Promise.reject(error);
+        }
+
+        const previousScript = document.querySelector?.('[data-menu-lookup-data-script]');
+        if (previousScript && retry) {
+            previousScript.remove();
+        }
+
+        menuDataLoadState.status = 'loading';
+        menuDataLoadState.error = null;
+        menuDataLoadState.promise = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = getMenuLookupDataScriptSrc();
+            script.async = true;
+            script.dataset.menuLookupDataScript = 'true';
+            script.onload = () => {
+                if (!isMenuLookupDataReady()) {
+                    const error = new Error('Menu lookup data loaded, but no records were found.');
+                    menuDataLoadState.status = 'error';
+                    menuDataLoadState.error = error;
+                    menuDataLoadState.promise = null;
+                    reject(error);
+                    return;
+                }
+                menuDataLoadState.status = 'ready';
+                menuDataLoadState.error = null;
+                menuDataLoadState.promise = null;
+                prepareLookupRecords();
+                syncSearchModeUi();
+                resolve(window.MENU_LOOKUP_DATA);
+            };
+            script.onerror = () => {
+                const error = new Error(`Could not load ${MENU_LOOKUP_DATA_SCRIPT_PATH}.`);
+                menuDataLoadState.status = 'error';
+                menuDataLoadState.error = error;
+                menuDataLoadState.promise = null;
+                script.remove();
+                reject(error);
+            };
+            document.head.appendChild(script);
+        });
+
+        return menuDataLoadState.promise;
+    }
+
+    function ensureMenuLookupDataLoaded(options = {}) {
+        return loadMenuLookupData(options).then(data => {
+            prepareLookupRecords();
+            syncSearchModeUi();
+            return data;
+        });
     }
 
     function normalizeSearchText(text) {
@@ -1466,9 +1609,135 @@
     }
 
     function getLookupSourceDisplayLabel(sourceType) {
-        return sourceType === 'entity'
-            ? 'Official name / 正式名稱'
-            : 'Activity index / 活動索引';
+        if (sourceType === 'entity') return 'Official name / 正式名稱';
+        if (sourceType === 'menu-item') return 'Menu item / 餐點菜名';
+        return 'Activity index / 活動索引';
+    }
+
+    function getMenuDiningFilterEntry(filterId) {
+        return getMenuCourseEntry(filterId);
+    }
+
+    function getMenuQuickCategoryEntry(categoryId) {
+        return getMenuCourseEntry(categoryId);
+    }
+
+    function getMenuCourseEntry(courseId) {
+        const normalized = compactSearchText(courseId || 'all');
+        return MENU_COURSE_FILTERS.find(course => course.id === normalized) || MENU_COURSE_FILTERS[0];
+    }
+
+    function getMenuRestaurantOptions() {
+        const configured = Array.isArray(window.MENU_LOOKUP_DATA?.restaurants)
+            ? window.MENU_LOOKUP_DATA.restaurants
+            : [];
+        if (configured.length) {
+            return configured
+                .map(restaurant => ({
+                    id: compactSearchText(restaurant.id),
+                    label: compactSearchText(restaurant.label),
+                    englishName: compactSearchText(restaurant.englishName),
+                    group: compactSearchText(restaurant.group),
+                    groupLabel: compactSearchText(restaurant.groupLabel) || MENU_RESTAURANT_GROUP_LABELS[restaurant.group] || compactSearchText(restaurant.group),
+                    order: Number.isFinite(restaurant.order) ? restaurant.order : 999,
+                    count: Number.isFinite(restaurant.count) ? restaurant.count : 0
+                }))
+                .filter(restaurant => restaurant.id && restaurant.label)
+                .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
+        }
+        if (!isMenuLookupDataReady()) {
+            return [];
+        }
+
+        const restaurantMap = new Map();
+        getMenuLookupRecords().forEach(record => {
+            if (!record.restaurantId || restaurantMap.has(record.restaurantId)) return;
+            restaurantMap.set(record.restaurantId, {
+                id: record.restaurantId,
+                label: record.restaurantLabel,
+                englishName: record.restaurantEnglish,
+                group: record.restaurantGroup,
+                groupLabel: record.restaurantGroupLabel,
+                order: record.restaurantOrder || 999,
+                count: 0
+            });
+        });
+        getMenuLookupRecords().forEach(record => {
+            const entry = restaurantMap.get(record.restaurantId);
+            if (entry) entry.count += 1;
+        });
+        return Array.from(restaurantMap.values())
+            .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
+    }
+
+    function getMenuRestaurantEntry(restaurantId) {
+        const normalized = compactSearchText(restaurantId || 'all');
+        if (normalized === 'all') {
+            const sourceCount = Number(window.MENU_LOOKUP_DATA?.recordsCount || window.MENU_LOOKUP_DATA?.sourceCount || 0);
+            return { id: 'all', label: '全部餐廳', englishName: 'All restaurants', group: 'all', groupLabel: '全部', order: 0, count: sourceCount };
+        }
+        return getMenuRestaurantOptions().find(restaurant => restaurant.id === normalized) || {
+            id: normalized,
+            label: normalized,
+            englishName: '',
+            group: 'unknown',
+            groupLabel: '',
+            order: 999,
+            count: 0
+        };
+    }
+
+    function lookupRecordMatchesRestaurantFilter(record, restaurantId) {
+        const normalized = compactSearchText(restaurantId || 'all');
+        if (normalized === 'all') return true;
+        return record.sourceType === 'menu-item' && record.restaurantId === normalized;
+    }
+
+    function isMenuDrinkRecord(record = {}) {
+        return record.courseGroup === 'drinks'
+            || record.restaurantGroup === 'beverage'
+            || (record.tags || []).some(tag => ['coffee', 'non-alcoholic', 'alcoholic'].includes(tag))
+            || ['drinks', 'non-alcoholic', 'cocktails', 'coffee', 'beer', 'wine', 'rum', 'whiskey', 'sake'].includes(record.menuCategory);
+    }
+
+    function getMenuItemCrewPhrase(record = {}) {
+        if (isMenuDrinkRecord(record)) return 'Could I order this drink, please?';
+        return compactSearchText(record.crewPhrase) || 'Could I order this, please?';
+    }
+
+    function lookupRecordMatchesDiningFilter(record, filterId) {
+        const normalized = compactSearchText(filterId || 'all');
+        if (normalized === 'all') return true;
+        if (record.sourceType !== 'menu-item') return false;
+        return Boolean(getMenuCourseEntry(normalized).match(record));
+    }
+
+    function getLookupRecordLocation(record = {}) {
+        if (record.sourceType === 'menu-item') {
+            return uniqueItems([
+                record.restaurantLabel,
+                record.courseGroupLabel || record.menuCategoryLabel,
+                record.price
+            ].filter(Boolean)).join(' • ');
+        }
+        return uniqueItems([record.deckHint, record.venueEnglish].filter(Boolean)).join(' • ');
+    }
+
+    function getLookupResultChipLabels(result = {}) {
+        if (result.sourceType === 'menu-item') {
+            return uniqueItems([
+                result.restaurantGroupLabel,
+                result.courseGroupLabel,
+                result.menuCategoryLabel,
+                result.price,
+                ...(Array.isArray(result.tagLabels) ? result.tagLabels.slice(0, 2) : []),
+                result.occurrenceCount > 1 ? `合併 ${result.occurrenceCount} 筆` : ''
+            ].filter(Boolean)).slice(0, 5);
+        }
+        return uniqueItems([
+            getLookupCategoryLabel(result.category),
+            result.occurrenceCount > 1 ? `合併 ${result.occurrenceCount} 筆` : ''
+        ].filter(Boolean));
     }
 
     function getEntityLookupCategory(entry = {}) {
@@ -2967,27 +3236,74 @@
         const deckHint = compactSearchText(config.deckHint);
         const venueEnglish = compactSearchText(config.venueEnglish);
         const crewPhrase = compactSearchText(config.crewPhrase) || 'Could you help us find this?';
+        const sourceType = ['entity', 'onboard-activity', 'menu-item'].includes(config.sourceType)
+            ? config.sourceType
+            : 'onboard-activity';
+        const restaurantId = compactSearchText(config.restaurantId);
+        const restaurantLabel = compactSearchText(config.restaurantLabel);
+        const restaurantEnglish = compactSearchText(config.restaurantEnglish);
+        const restaurantGroup = compactSearchText(config.restaurantGroup);
+        const restaurantGroupLabel = compactSearchText(config.restaurantGroupLabel);
+        const menuCategory = compactSearchText(config.menuCategory);
+        const menuCategoryLabel = compactSearchText(config.menuCategoryLabel);
+        const courseGroup = compactSearchText(config.courseGroup);
+        const courseGroupLabel = compactSearchText(config.courseGroupLabel);
+        const descriptionZh = compactSearchText(config.descriptionZh);
+        const restaurantOrder = Number.isFinite(config.restaurantOrder) ? config.restaurantOrder : 999;
+        const sourceRecordIndex = Number.isFinite(config.sourceRecordIndex) ? config.sourceRecordIndex : 0;
+        const price = compactSearchText(config.price);
+        const tags = sanitizeSearchTextArray(config.tags, 12, 80).map(tag => tag.toLowerCase());
+        const tagLabels = sanitizeSearchTextArray(config.tagLabels, 12, 80);
         const categoryHints = getCategorySearchHints(category);
         const searchText = buildLookupSearchText([
             englishName,
             zhLabel,
             venueEnglish,
             deckHint,
+            restaurantId,
+            restaurantLabel,
+            restaurantEnglish,
+            restaurantGroup,
+            restaurantGroupLabel,
+            menuCategory,
+            menuCategoryLabel,
+            courseGroup,
+            courseGroupLabel,
+            descriptionZh,
+            price,
             crewPhrase,
+            config.searchText,
             getLookupCategoryLabel(category),
             ...(config.categoryAliases || []),
             ...categoryHints,
+            ...tags,
+            ...tagLabels,
             ...aliases
         ]);
 
         return {
             id: compactSearchText(config.id) || `lookup-${simpleHash(`${englishName}-${zhLabel}`)}`,
-            sourceType: config.sourceType === 'entity' ? 'entity' : 'onboard-activity',
+            sourceType,
             category,
             zhLabel,
             englishName,
             venueEnglish,
             deckHint,
+            restaurantId,
+            restaurantLabel,
+            restaurantEnglish,
+            restaurantGroup,
+            restaurantGroupLabel,
+            menuCategory,
+            menuCategoryLabel,
+            courseGroup,
+            courseGroupLabel,
+            descriptionZh,
+            restaurantOrder,
+            sourceRecordIndex,
+            price,
+            tags,
+            tagLabels,
             aliases,
             crewPhrase,
             sourceDayLabel: compactSearchText(config.sourceDayLabel),
@@ -2996,7 +3312,10 @@
             normalizedEnglishName: normalizeSearchText(englishName),
             normalizedZhLabel: normalizeSearchText(zhLabel),
             normalizedVenueEnglish: normalizeSearchText(venueEnglish),
-            normalizedDeckHint: normalizeSearchText(deckHint)
+            normalizedDeckHint: normalizeSearchText(deckHint),
+            normalizedRestaurant: normalizeSearchText([restaurantId, restaurantLabel, restaurantEnglish, restaurantGroupLabel].join(' ')),
+            normalizedMenuCategory: normalizeSearchText([menuCategory, menuCategoryLabel, courseGroup, courseGroupLabel, ...tags, ...tagLabels].join(' ')),
+            normalizedDescriptionZh: normalizeSearchText(descriptionZh)
         };
     }
 
@@ -3052,10 +3371,61 @@
             .filter(Boolean);
     }
 
+    function buildMenuItemLookupRecords() {
+        const rawRecords = Array.isArray(window.MENU_LOOKUP_DATA?.records)
+            ? window.MENU_LOOKUP_DATA.records
+            : [];
+
+        return rawRecords
+            .map(record => createLookupRecord({
+                id: record.id ? `menu-${record.id}` : '',
+                sourceType: 'menu-item',
+                category: 'dining',
+                zhLabel: record.zhLabel,
+                englishName: record.englishName,
+                venueEnglish: record.restaurantEnglish,
+                deckHint: record.restaurantLabel,
+                restaurantId: record.restaurantId,
+                restaurantLabel: record.restaurantLabel,
+                restaurantEnglish: record.restaurantEnglish,
+                restaurantGroup: record.restaurantGroup,
+                restaurantGroupLabel: record.restaurantGroupLabel,
+                menuCategory: record.menuCategory,
+                menuCategoryLabel: record.menuCategoryLabel,
+                courseGroup: record.courseGroup,
+                courseGroupLabel: record.courseGroupLabel,
+                descriptionZh: record.descriptionZh,
+                restaurantOrder: record.restaurantOrder,
+                sourceRecordIndex: record.sourceRecordIndex,
+                price: record.price,
+                tags: record.tags,
+                tagLabels: record.tagLabels,
+                searchText: record.searchText,
+                aliases: [
+                    ...(Array.isArray(record.aliases) ? record.aliases : []),
+                    record.restaurantId,
+                    record.restaurantLabel,
+                    record.restaurantEnglish,
+                    record.restaurantGroup,
+                    record.restaurantGroupLabel,
+                    record.menuCategory,
+                    record.menuCategoryLabel,
+                    record.courseGroup,
+                    record.courseGroupLabel,
+                    record.descriptionZh,
+                    record.price
+                ],
+                categoryAliases: ['menu', '菜單', '餐點', '點餐'],
+                crewPhrase: getMenuItemCrewPhrase(record)
+            }))
+            .filter(Boolean);
+    }
+
     function prepareLookupRecords() {
         searchState.lookupRecords = [
             ...buildEntityLookupRecords(),
-            ...buildOnboardActivityLookupRecords()
+            ...buildOnboardActivityLookupRecords(),
+            ...buildMenuItemLookupRecords()
         ];
     }
 
@@ -3068,12 +3438,17 @@
         return false;
     }
 
-    function scoreLookupRecord(record, normalizedQuery, selectedCategory) {
+    function scoreLookupRecord(record, normalizedQuery, selectedCategory, selectedDiningFilter = 'all', selectedRestaurantFilter = 'all') {
         const categoryMatch = lookupCategoryMatches(record, selectedCategory);
         if (!categoryMatch) return 0;
+        if (selectedCategory === 'dining' && !lookupRecordMatchesDiningFilter(record, selectedDiningFilter)) return 0;
+        if (selectedCategory === 'dining' && !lookupRecordMatchesRestaurantFilter(record, selectedRestaurantFilter)) return 0;
 
         if (!normalizedQuery) {
-            return selectedCategory && selectedCategory !== 'all' ? (record.sourceType === 'entity' ? 30 : 18) : 0;
+            if (!selectedCategory || selectedCategory === 'all') return 0;
+            if (record.sourceType === 'entity') return 30;
+            if (record.sourceType === 'menu-item') return (selectedDiningFilter && selectedDiningFilter !== 'all') || (selectedRestaurantFilter && selectedRestaurantFilter !== 'all') ? 26 : 20;
+            return 18;
         }
 
         const queryUnits = normalizedQuery.split(' ').filter(Boolean);
@@ -3082,17 +3457,23 @@
         if (record.normalizedEnglishName.includes(normalizedQuery)) score += 110;
         if (record.normalizedZhLabel.includes(normalizedQuery)) score += 105;
         if (record.normalizedVenueEnglish.includes(normalizedQuery) || record.normalizedDeckHint.includes(normalizedQuery)) score += 76;
+        if (record.normalizedRestaurant.includes(normalizedQuery) || record.normalizedMenuCategory.includes(normalizedQuery)) score += 72;
+        if (record.normalizedDescriptionZh.includes(normalizedQuery)) score += 46;
         if (record.searchText.includes(normalizedQuery)) score += 68;
 
         queryUnits.forEach(unit => {
             if (unit.length < 2) return;
             if (record.normalizedEnglishName.includes(unit)) score += 22;
             if (record.normalizedZhLabel.includes(unit)) score += 20;
+            if (record.normalizedDescriptionZh.includes(unit)) score += 8;
             if (record.searchText.includes(unit)) score += 12;
         });
 
         if (record.sourceType === 'entity') score += 12;
+        if (record.sourceType === 'menu-item') score += 10;
         if (selectedCategory && selectedCategory !== 'all') score += 10;
+        if (selectedDiningFilter && selectedDiningFilter !== 'all') score += 8;
+        if (selectedRestaurantFilter && selectedRestaurantFilter !== 'all') score += 8;
         return score;
     }
 
@@ -3105,7 +3486,7 @@
                 merged.set(key, {
                     ...result,
                     occurrenceCount: 1,
-                    sampleVenues: uniqueItems([result.venueEnglish, result.deckHint].filter(Boolean)),
+                    sampleVenues: uniqueItems([getLookupRecordLocation(result), result.venueEnglish, result.deckHint].filter(Boolean)),
                     sourceHints: uniqueItems([result.sourceDayLabel, result.sourceTimeHint].filter(Boolean))
                 });
                 return;
@@ -3115,6 +3496,7 @@
             existing.occurrenceCount += 1;
             existing.sampleVenues = uniqueItems([
                 ...(existing.sampleVenues || []),
+                getLookupRecordLocation(result),
                 result.venueEnglish,
                 result.deckHint
             ].filter(Boolean)).slice(0, 4);
@@ -3137,21 +3519,25 @@
         });
 
         return Array.from(merged.values())
-            .sort((a, b) => b.score - a.score || (a.sourceType === 'entity' ? -1 : 1) || a.englishName.localeCompare(b.englishName))
+            .sort((a, b) => b.score - a.score || (a.sourceType === 'entity' ? -1 : 1) || (a.sourceType === 'menu-item' ? -1 : 1) || a.englishName.localeCompare(b.englishName))
             .slice(0, 24);
     }
 
     function getBilingualLookupResults(query = '', options = {}) {
         const normalizedQuery = normalizeSearchText(query);
         const selectedCategory = compactSearchText(options.category || searchState.lookupCategory || 'all');
+        const selectedDiningFilter = compactSearchText(options.diningFilter || searchState.lookupDiningFilter || 'all');
+        const selectedRestaurantFilter = compactSearchText(options.restaurantFilter || searchState.lookupRestaurantFilter || 'all');
         const scoredResults = (searchState.lookupRecords || [])
-            .map(record => ({ ...record, score: scoreLookupRecord(record, normalizedQuery, selectedCategory) }))
+            .map(record => ({ ...record, score: scoreLookupRecord(record, normalizedQuery, selectedCategory, selectedDiningFilter, selectedRestaurantFilter) }))
             .filter(record => record.score > 0);
 
         return {
             queryData: {
                 normalizedQuery,
-                selectedCategory
+                selectedCategory,
+                selectedDiningFilter,
+                selectedRestaurantFilter
             },
             results: mergeLookupResults(scoredResults)
         };
@@ -3999,7 +4385,10 @@
 
     function buildCrewDisplayCard(record) {
         if (!record) return '';
-        const location = uniqueItems([record.deckHint, record.venueEnglish].filter(Boolean)).join(' • ');
+        const location = getLookupRecordLocation(record);
+        const phraseLabel = record.sourceType === 'menu-item'
+            ? 'Ordering phrase / 點餐句'
+            : 'Question / 問句';
         const sourceNote = record.sourceType === 'onboard-activity' && (record.sourceDayLabel || record.sourceTimeHint)
             ? `<p class="lookup-crew-source"><span class="lookup-inline-label">Source note / 來源索引</span>${escapeHtml(uniqueItems([record.sourceDayLabel, record.sourceTimeHint].filter(Boolean)).join(' · '))}，不作為本航程正式時刻。</p>`
             : '';
@@ -4012,7 +4401,7 @@
                 <h3>${escapeHtml(record.englishName)}</h3>
                 <p class="lookup-crew-zh"><span class="lookup-inline-label">Chinese check / 中文確認</span>${escapeHtml(record.zhLabel)}</p>
                 ${location ? `<p class="lookup-crew-location"><i class="fa-solid fa-location-dot"></i><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
-                <p class="lookup-crew-phrase"><span class="lookup-inline-label">Question / 問句</span>${escapeHtml(record.crewPhrase)}</p>
+                <p class="lookup-crew-phrase"><span class="lookup-inline-label">${escapeHtml(phraseLabel)}</span>${escapeHtml(record.crewPhrase)}</p>
                 ${sourceNote}
                 <div class="lookup-crew-actions">
                     <button type="button" data-copy-text="${escapeHtml(record.englishName)}">
@@ -4023,6 +4412,23 @@
                     </button>
                 </div>
             </section>
+        `;
+    }
+
+    function renderLookupMenuLoadState(status = menuDataLoadState.status, error = menuDataLoadState.error) {
+        const container = document.getElementById('search-results');
+        if (!container) return;
+        const isLoading = status === 'loading';
+        const isError = status === 'error';
+        container.innerHTML = `
+            <div class="search-empty-state search-menu-load-state">
+                <p><strong>${isError ? '菜單資料無法載入' : '正在準備餐點中英對照'}</strong></p>
+                <p>${isError ? escapeHtml(error?.message || '請確認 menu-lookup-data.js 已部署，或稍後再試。') : '完整 550 筆菜單資料會在餐點查詢時才下載，避免拖慢首頁。'}</p>
+                <button type="button" class="menu-load-button" data-menu-load-action="${isError ? 'retry-search' : 'load-search'}">
+                    <i class="fa-solid fa-utensils"></i>
+                    ${isLoading ? '載入中...' : (isError ? '重新載入菜單' : '載入菜單資料')}
+                </button>
+            </div>
         `;
     }
 
@@ -4054,8 +4460,8 @@
         }
 
         const cards = results.map(result => {
-            const location = uniqueItems([result.deckHint, result.venueEnglish].filter(Boolean)).join(' • ');
-            const countLabel = result.occurrenceCount > 1 ? `<span class="lookup-count">合併 ${result.occurrenceCount} 筆</span>` : '';
+            const location = getLookupRecordLocation(result);
+            const chipLabels = getLookupResultChipLabels(result);
             return `
                 <article class="lookup-result-card">
                     <div class="lookup-result-main">
@@ -4064,8 +4470,7 @@
                         <p class="lookup-result-en">${escapeHtml(result.englishName)}</p>
                         ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
                         <div class="lookup-result-chips">
-                            <span>${escapeHtml(getLookupCategoryLabel(result.category))}</span>
-                            ${countLabel}
+                            ${chipLabels.map(label => `<span class="${label.startsWith('合併') ? 'lookup-count' : ''}">${escapeHtml(label)}</span>`).join('')}
                         </div>
                     </div>
                     <button type="button" class="lookup-crew-trigger" data-lookup-id="${escapeHtml(result.id)}">
@@ -4096,6 +4501,644 @@
                 </div>
             </section>
         `;
+    }
+
+    function getMenuLookupRecords() {
+        if (!isMenuLookupDataReady()) {
+            return [];
+        }
+        if (!searchState.lookupRecords.length) {
+            prepareSearchDocuments();
+        }
+        let records = (searchState.lookupRecords || []).filter(record => record.sourceType === 'menu-item');
+        if (!records.length) {
+            prepareLookupRecords();
+            records = (searchState.lookupRecords || []).filter(record => record.sourceType === 'menu-item');
+        }
+        return records;
+    }
+
+    function menuRecordMatchesQuickCategory(record, categoryId) {
+        const normalized = getMenuQuickCategoryEntry(categoryId).id;
+        if (normalized === 'all') return true;
+        if (normalized === 'kids') {
+            return record.menuCategory === 'kids'
+                || (record.tags || []).includes('kids')
+                || (record.tags || []).includes('kids-disney');
+        }
+        if (normalized === 'vegetarian') {
+            return (record.tags || []).some(tag => ['vegetarian', 'vegan'].includes(tag));
+        }
+        if (normalized === 'paid') return Boolean(record.price);
+        if (normalized === 'alcoholic') {
+            return (record.tags || []).includes('alcoholic')
+                || ['cocktails', 'beer', 'wine', 'rum', 'whiskey', 'sake'].includes(record.menuCategory);
+        }
+        if (normalized === 'dessert') {
+            return record.menuCategory === 'desserts'
+                || (record.tags || []).some(tag => ['dessert', 'dessert-vegan'].includes(tag));
+        }
+        if (normalized === 'drinks') {
+            return isMenuDrinkRecord(record);
+        }
+        return true;
+    }
+
+    function scoreMenuQuickRecord(record, normalizedQuery, index) {
+        if (!normalizedQuery) return Math.max(8, 64 - Math.floor(index / 3));
+        const units = normalizedQuery.split(' ').filter(Boolean);
+        let score = 0;
+        if (record.normalizedEnglishName === normalizedQuery || record.normalizedZhLabel === normalizedQuery) score += 180;
+        if (record.normalizedEnglishName.includes(normalizedQuery)) score += 125;
+        if (record.normalizedZhLabel.includes(normalizedQuery)) score += 120;
+        if (record.normalizedRestaurant.includes(normalizedQuery)) score += 82;
+        if (record.normalizedMenuCategory.includes(normalizedQuery)) score += 76;
+        if (record.searchText.includes(normalizedQuery)) score += 70;
+        units.forEach(unit => {
+            if (unit.length < 2) return;
+            if (record.normalizedEnglishName.includes(unit)) score += 24;
+            if (record.normalizedZhLabel.includes(unit)) score += 22;
+            if (record.normalizedRestaurant.includes(unit)) score += 16;
+            if (record.normalizedMenuCategory.includes(unit)) score += 14;
+            if (record.searchText.includes(unit)) score += 10;
+        });
+        return score;
+    }
+
+    function getMenuQuickResults(query = '', group = 'all', category = 'all', limit = 48) {
+        const normalizedQuery = normalizeSearchText(query);
+        const selectedGroup = compactSearchText(group || 'all');
+        const selectedCategory = getMenuQuickCategoryEntry(category).id;
+
+        return getMenuLookupRecords()
+            .map((record, index) => ({
+                ...record,
+                menuQuickIndex: index,
+                menuQuickScore: scoreMenuQuickRecord(record, normalizedQuery, index)
+            }))
+            .filter(record => selectedGroup === 'all' || record.restaurantGroup === selectedGroup)
+            .filter(record => menuRecordMatchesQuickCategory(record, selectedCategory))
+            .filter(record => !normalizedQuery || record.menuQuickScore > 0)
+            .sort((a, b) => b.menuQuickScore - a.menuQuickScore || a.menuQuickIndex - b.menuQuickIndex)
+            .slice(0, limit);
+    }
+
+    function renderMenuQuickFilters() {
+        const groupContainer = document.getElementById('menu-group-filters');
+        const categoryContainer = document.getElementById('menu-category-filters');
+        if (groupContainer) {
+            groupContainer.innerHTML = MENU_QUICK_GROUPS.map(group => `
+                <button type="button" class="${group.id === menuLookupState.group ? 'active' : ''}" data-menu-group-filter="${escapeHtml(group.id)}">
+                    ${escapeHtml(group.label)}
+                </button>
+            `).join('');
+        }
+        if (categoryContainer) {
+            categoryContainer.innerHTML = MENU_QUICK_CATEGORIES.map(category => `
+                <button type="button" class="${category.id === menuLookupState.category ? 'active' : ''}" data-menu-category-filter="${escapeHtml(category.id)}">
+                    ${escapeHtml(category.label)}
+                </button>
+            `).join('');
+        }
+    }
+
+    function renderMenuQuickLookup() {
+        const input = document.getElementById('menu-lookup-input');
+        const summary = document.getElementById('menu-lookup-summary');
+        const resultsContainer = document.getElementById('menu-lookup-results');
+        const workspace = document.getElementById('menu-lookup-workspace');
+        const crewPane = document.getElementById('menu-crew-pane');
+        if (!resultsContainer) return;
+
+        const results = getMenuQuickResults(menuLookupState.query, menuLookupState.group, menuLookupState.category);
+        menuLookupState.lastResults = results;
+        const activeRecord = results.find(record => record.id === menuLookupState.activeCrewRecordId)
+            || getMenuLookupRecords().find(record => record.id === menuLookupState.activeCrewRecordId)
+            || null;
+        if (menuLookupState.activeCrewRecordId && !activeRecord) {
+            menuLookupState.activeCrewRecordId = '';
+        }
+
+        if (input && input.value !== menuLookupState.query) {
+            input.value = menuLookupState.query;
+        }
+        if (input) {
+            input.disabled = false;
+        }
+        if (summary) {
+            const groupLabel = MENU_QUICK_GROUPS.find(group => group.id === menuLookupState.group)?.label || '全部';
+            const categoryLabel = getMenuQuickCategoryEntry(menuLookupState.category).label;
+            summary.textContent = `${groupLabel} · ${categoryLabel} · 顯示 ${results.length} 筆`;
+        }
+        if (workspace) {
+            workspace.classList.toggle('has-crew-preview', Boolean(activeRecord));
+        }
+        if (crewPane) {
+            crewPane.hidden = !activeRecord;
+            crewPane.innerHTML = activeRecord ? buildCrewDisplayCard(activeRecord) : '';
+        }
+
+        if (!results.length) {
+            resultsContainer.innerHTML = `
+                <div class="menu-lookup-empty">
+                    <strong>目前沒有符合的菜名</strong>
+                    <span>可以換短一點的關鍵字，例如：雞飯、Palo、Bacha、兒童餐。</span>
+                </div>
+            `;
+            renderMenuQuickFilters();
+            return;
+        }
+
+        resultsContainer.innerHTML = results.map(record => {
+            const location = getLookupRecordLocation(record);
+            const chipLabels = getLookupResultChipLabels(record);
+            return `
+                <article class="menu-lookup-card">
+                    <div class="menu-lookup-card-main">
+                        <div class="lookup-result-meta">${escapeHtml(getLookupSourceDisplayLabel(record.sourceType))}</div>
+                        <h3>${escapeHtml(record.zhLabel)}</h3>
+                        <p class="lookup-result-en">${escapeHtml(record.englishName)}</p>
+                        ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Restaurant / 餐廳</span>${escapeHtml(location)}</p>` : ''}
+                        <div class="lookup-result-chips">
+                            ${chipLabels.map(label => `<span>${escapeHtml(label)}</span>`).join('')}
+                        </div>
+                    </div>
+                    <button type="button" class="menu-crew-trigger lookup-crew-trigger" data-menu-lookup-id="${escapeHtml(record.id)}">
+                        <i class="fa-solid fa-language"></i>
+                        給 Crew 看
+                    </button>
+                </article>
+            `;
+        }).join('');
+        renderMenuQuickFilters();
+    }
+
+    function initializeMenuQuickLookup() {
+        const root = document.getElementById('menu-lookup');
+        const input = document.getElementById('menu-lookup-input');
+        const groupContainer = document.getElementById('menu-group-filters');
+        const categoryContainer = document.getElementById('menu-category-filters');
+        const workspace = document.getElementById('menu-lookup-workspace');
+        if (!root || !input || !workspace) return;
+
+        if (!searchState.lookupRecords.length) {
+            prepareSearchDocuments();
+        }
+
+        let menuDebounceTimer = null;
+        input.addEventListener('input', () => {
+            window.clearTimeout(menuDebounceTimer);
+            menuDebounceTimer = window.setTimeout(() => {
+                menuLookupState.query = input.value.trim();
+                menuLookupState.activeCrewRecordId = '';
+                renderMenuQuickLookup();
+            }, 90);
+        });
+
+        groupContainer?.addEventListener('click', event => {
+            const button = event.target.closest('[data-menu-group-filter]');
+            if (!button) return;
+            menuLookupState.group = compactSearchText(button.dataset.menuGroupFilter || 'all') || 'all';
+            menuLookupState.activeCrewRecordId = '';
+            renderMenuQuickLookup();
+        });
+
+        categoryContainer?.addEventListener('click', event => {
+            const button = event.target.closest('[data-menu-category-filter]');
+            if (!button) return;
+            menuLookupState.category = getMenuQuickCategoryEntry(button.dataset.menuCategoryFilter).id;
+            menuLookupState.activeCrewRecordId = '';
+            renderMenuQuickLookup();
+        });
+
+        workspace.addEventListener('click', event => {
+            const copyButton = event.target.closest('[data-copy-text]');
+            if (copyButton) {
+                event.preventDefault();
+                copyTextToClipboard(copyButton.dataset.copyText || '');
+                return;
+            }
+
+            const crewButton = event.target.closest('[data-menu-lookup-id]');
+            if (crewButton) {
+                event.preventDefault();
+                menuLookupState.activeCrewRecordId = crewButton.dataset.menuLookupId || '';
+                renderMenuQuickLookup();
+                return;
+            }
+
+            const closeButton = event.target.closest('[data-lookup-crew-close]');
+            if (closeButton) {
+                event.preventDefault();
+                menuLookupState.activeCrewRecordId = '';
+                renderMenuQuickLookup();
+            }
+        });
+
+        renderMenuQuickLookup();
+    }
+
+    function menuRecordMatchesQuickCategory(record, categoryId) {
+        const normalized = getMenuCourseEntry(categoryId).id;
+        if (normalized === 'all') return true;
+        return record.courseGroup === normalized;
+    }
+
+    function scoreMenuQuickRecord(record, normalizedQuery, index) {
+        if (!normalizedQuery) return Math.max(8, 1200 - (record.restaurantOrder || 999) * 30 - (record.sourceRecordIndex || index));
+        const units = normalizedQuery.split(' ').filter(Boolean);
+        let score = 0;
+        if (record.normalizedEnglishName === normalizedQuery || record.normalizedZhLabel === normalizedQuery) score += 180;
+        if (record.normalizedEnglishName.includes(normalizedQuery)) score += 125;
+        if (record.normalizedZhLabel.includes(normalizedQuery)) score += 120;
+        if (record.normalizedRestaurant.includes(normalizedQuery)) score += 82;
+        if (record.normalizedMenuCategory.includes(normalizedQuery)) score += 76;
+        if (record.normalizedDescriptionZh.includes(normalizedQuery)) score += 42;
+        if (record.searchText.includes(normalizedQuery)) score += 70;
+        units.forEach(unit => {
+            if (unit.length < 2) return;
+            if (record.normalizedEnglishName.includes(unit)) score += 24;
+            if (record.normalizedZhLabel.includes(unit)) score += 22;
+            if (record.normalizedRestaurant.includes(unit)) score += 16;
+            if (record.normalizedMenuCategory.includes(unit)) score += 14;
+            if (record.normalizedDescriptionZh.includes(unit)) score += 8;
+            if (record.searchText.includes(unit)) score += 10;
+        });
+        return score;
+    }
+
+    function getMenuQuickResults(query = '', restaurantId = 'all', courseId = 'all', limit = Infinity) {
+        const normalizedQuery = normalizeSearchText(query);
+        const selectedRestaurant = getMenuRestaurantEntry(restaurantId).id;
+        const selectedCourse = getMenuCourseEntry(courseId).id;
+        const records = getMenuLookupRecords()
+            .map((record, index) => ({
+                ...record,
+                menuQuickIndex: index,
+                menuQuickScore: scoreMenuQuickRecord(record, normalizedQuery, index)
+            }))
+            .filter(record => selectedRestaurant === 'all' || record.restaurantId === selectedRestaurant)
+            .filter(record => selectedCourse === 'all' || record.courseGroup === selectedCourse)
+            .filter(record => !normalizedQuery || record.menuQuickScore > 0)
+            .sort((a, b) => {
+                if (normalizedQuery && b.menuQuickScore !== a.menuQuickScore) {
+                    return b.menuQuickScore - a.menuQuickScore;
+                }
+                return (a.restaurantOrder || 999) - (b.restaurantOrder || 999)
+                    || (a.sourceRecordIndex || a.menuQuickIndex) - (b.sourceRecordIndex || b.menuQuickIndex)
+                    || a.englishName.localeCompare(b.englishName);
+            });
+
+        return Number.isFinite(limit) ? records.slice(0, limit) : records;
+    }
+
+    function getMenuQuickSections(results = [], selectedRestaurant = 'all') {
+        const sectionMap = new Map();
+        const restaurantMode = compactSearchText(selectedRestaurant || 'all') === 'all';
+        results.forEach(record => {
+            const key = restaurantMode ? record.restaurantId : record.courseGroup;
+            if (!sectionMap.has(key)) {
+                sectionMap.set(key, {
+                    id: key,
+                    title: restaurantMode ? record.restaurantLabel : (record.courseGroupLabel || record.menuCategoryLabel),
+                    subtitle: restaurantMode ? record.restaurantGroupLabel : getMenuRestaurantEntry(record.restaurantId).label,
+                    order: restaurantMode ? (record.restaurantOrder || 999) : MENU_COURSE_FILTERS.findIndex(course => course.id === record.courseGroup),
+                    records: []
+                });
+            }
+            sectionMap.get(key).records.push(record);
+        });
+        return Array.from(sectionMap.values())
+            .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
+    }
+
+    function renderMenuLookupLoadState(status = menuDataLoadState.status, error = menuDataLoadState.error) {
+        const input = document.getElementById('menu-lookup-input');
+        const summary = document.getElementById('menu-lookup-summary');
+        const restaurantContainer = document.getElementById('menu-group-filters');
+        const courseContainer = document.getElementById('menu-category-filters');
+        const resultsContainer = document.getElementById('menu-lookup-results');
+        const workspace = document.getElementById('menu-lookup-workspace');
+        const crewPane = document.getElementById('menu-crew-pane');
+        if (!resultsContainer) return;
+
+        const isLoading = status === 'loading';
+        const isError = status === 'error';
+        if (input) input.disabled = isLoading;
+        if (summary) {
+            summary.textContent = isError
+                ? '菜單資料載入失敗，請重新載入。'
+                : (isLoading ? '菜單資料載入中...' : '打開菜單時才載入完整餐點資料。');
+        }
+        if (workspace) {
+            workspace.classList.remove('has-crew-preview', 'restaurant-selected');
+        }
+        if (crewPane) {
+            crewPane.hidden = true;
+            crewPane.innerHTML = '';
+        }
+        if (restaurantContainer) {
+            restaurantContainer.innerHTML = `
+                <button type="button" class="menu-restaurant-filter active" data-menu-load-action="${isError ? 'retry-menu' : 'load-menu'}">
+                    <span>${isError ? '重新載入菜單' : '載入菜單'}</span><small>550</small>
+                </button>
+            `;
+        }
+        if (courseContainer) {
+            courseContainer.innerHTML = MENU_COURSE_FILTERS.map(course => `
+                <button type="button" ${course.id === 'all' ? 'class="active"' : ''} disabled>${escapeHtml(course.label)}</button>
+            `).join('');
+        }
+
+        resultsContainer.innerHTML = `
+            <div class="menu-lookup-empty menu-lookup-load-state">
+                <strong>${isError ? '菜單資料無法載入' : (isLoading ? '正在載入完整菜單' : '菜單資料尚未載入')}</strong>
+                <span>${isError ? escapeHtml(error?.message || '請確認 menu-lookup-data.js 已部署，或稍後再試。') : '為了讓首頁更快，完整 550 筆餐點資料會在需要查菜單時才下載。'}</span>
+                <button type="button" class="menu-load-button" data-menu-load-action="${isError ? 'retry-menu' : 'load-menu'}">
+                    <i class="fa-solid fa-utensils"></i>
+                    ${isLoading ? '載入中...' : (isError ? '重新載入菜單' : '載入完整菜單')}
+                </button>
+            </div>
+        `;
+    }
+
+    function activateMenuLookup(options = {}) {
+        syncMenuDataLoadStateFromWindow();
+        if (menuDataLoadState.status === 'ready') {
+            renderMenuQuickLookup();
+            return Promise.resolve(window.MENU_LOOKUP_DATA);
+        }
+        renderMenuLookupLoadState('loading');
+        return ensureMenuLookupDataLoaded({ retry: Boolean(options.retry) })
+            .then(data => {
+                renderMenuQuickLookup();
+                return data;
+            })
+            .catch(error => {
+                renderMenuLookupLoadState('error', error);
+                return null;
+            });
+    }
+
+    function renderMenuQuickFilters() {
+        const restaurantContainer = document.getElementById('menu-group-filters');
+        const courseContainer = document.getElementById('menu-category-filters');
+        const restaurants = getMenuRestaurantOptions();
+        const sourceCount = Number(window.MENU_LOOKUP_DATA?.recordsCount || window.MENU_LOOKUP_DATA?.sourceCount || getMenuLookupRecords().length);
+        if (restaurantContainer) {
+            const groupedRestaurants = restaurants.reduce((groups, restaurant) => {
+                const groupLabel = restaurant.groupLabel || MENU_RESTAURANT_GROUP_LABELS[restaurant.group] || '其他';
+                if (!groups.has(groupLabel)) groups.set(groupLabel, []);
+                groups.get(groupLabel).push(restaurant);
+                return groups;
+            }, new Map());
+            restaurantContainer.innerHTML = `
+                <button type="button" class="menu-restaurant-filter ${menuLookupState.restaurant === 'all' ? 'active' : ''}" data-menu-restaurant-filter="all">
+                    <span>全部餐廳</span><small>${sourceCount}</small>
+                </button>
+                ${Array.from(groupedRestaurants.entries()).map(([groupLabel, groupRestaurants]) => `
+                    <div class="menu-restaurant-group">
+                        <span class="menu-restaurant-group-label">${escapeHtml(groupLabel)}</span>
+                        ${groupRestaurants.map(restaurant => `
+                            <button type="button" class="menu-restaurant-filter ${restaurant.id === menuLookupState.restaurant ? 'active' : ''}" data-menu-restaurant-filter="${escapeHtml(restaurant.id)}">
+                                <span>${escapeHtml(restaurant.label)}</span><small>${escapeHtml(String(restaurant.count || 0))}</small>
+                            </button>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
+        }
+        if (courseContainer) {
+            courseContainer.innerHTML = MENU_COURSE_FILTERS.map(course => `
+                <button type="button" class="${course.id === menuLookupState.course ? 'active' : ''}" data-menu-course-filter="${escapeHtml(course.id)}">
+                    ${escapeHtml(course.label)}
+                </button>
+            `).join('');
+        }
+    }
+
+    function renderMenuQuickLookup() {
+        const input = document.getElementById('menu-lookup-input');
+        const summary = document.getElementById('menu-lookup-summary');
+        const resultsContainer = document.getElementById('menu-lookup-results');
+        const workspace = document.getElementById('menu-lookup-workspace');
+        const crewPane = document.getElementById('menu-crew-pane');
+        if (!resultsContainer) return;
+        if (!isMenuLookupDataReady()) {
+            renderMenuLookupLoadState(menuDataLoadState.status);
+            return;
+        }
+
+        const results = getMenuQuickResults(menuLookupState.query, menuLookupState.restaurant, menuLookupState.course, Infinity);
+        menuLookupState.lastResults = results;
+        const allRecords = getMenuLookupRecords();
+        const activeRecord = results.find(record => record.id === menuLookupState.activeCrewRecordId)
+            || allRecords.find(record => record.id === menuLookupState.activeCrewRecordId)
+            || null;
+        if (menuLookupState.activeCrewRecordId && !activeRecord) {
+            menuLookupState.activeCrewRecordId = '';
+        }
+
+        if (input && input.value !== menuLookupState.query) {
+            input.value = menuLookupState.query;
+        }
+        if (summary) {
+            const restaurantLabel = getMenuRestaurantEntry(menuLookupState.restaurant).label;
+            const courseLabel = getMenuCourseEntry(menuLookupState.course).label;
+            const totalCount = Number(window.MENU_LOOKUP_DATA?.recordsCount || window.MENU_LOOKUP_DATA?.sourceCount || allRecords.length);
+            summary.textContent = `${restaurantLabel} • ${courseLabel} • 顯示 ${results.length} / ${totalCount} 筆`;
+        }
+        if (workspace) {
+            workspace.classList.toggle('has-crew-preview', Boolean(activeRecord));
+            workspace.classList.toggle('restaurant-selected', menuLookupState.restaurant !== 'all');
+        }
+        if (crewPane) {
+            crewPane.hidden = !activeRecord;
+            crewPane.innerHTML = activeRecord ? buildCrewDisplayCard(activeRecord) : '';
+        }
+
+        renderMenuQuickFilters();
+
+        if (!results.length) {
+            resultsContainer.innerHTML = `
+                <div class="menu-lookup-empty">
+                    <strong>目前沒有符合的菜名</strong>
+                    <span>可以換餐廳、點餐段落，或用較短的關鍵字，例如：雞飯、Palo、Bacha、兒童餐。</span>
+                </div>
+            `;
+            return;
+        }
+
+        const sections = getMenuQuickSections(results, menuLookupState.restaurant);
+        resultsContainer.innerHTML = sections.map(section => `
+            <section class="menu-lookup-result-section">
+                <div class="menu-lookup-section-heading">
+                    <div>
+                        <h3>${escapeHtml(section.title)}</h3>
+                        ${section.subtitle ? `<span>${escapeHtml(section.subtitle)}</span>` : ''}
+                    </div>
+                    <strong>${section.records.length} 筆</strong>
+                </div>
+                <div class="menu-lookup-card-grid">
+                    ${section.records.map(record => {
+                        const location = getLookupRecordLocation(record);
+                        const chipLabels = getLookupResultChipLabels(record);
+                        const isExpanded = menuLookupState.expandedRecordIds.has(record.id);
+                        return `
+                            <article class="menu-lookup-card">
+                                <div class="menu-lookup-card-main">
+                                    <div class="lookup-result-meta">${escapeHtml(getLookupSourceDisplayLabel(record.sourceType))}</div>
+                                    <h4>${escapeHtml(record.zhLabel)}</h4>
+                                    <p class="lookup-result-en">${escapeHtml(record.englishName)}</p>
+                                    ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Restaurant / 餐廳</span>${escapeHtml(location)}</p>` : ''}
+                                    <div class="lookup-result-chips">
+                                        ${chipLabels.map(label => `<span>${escapeHtml(label)}</span>`).join('')}
+                                    </div>
+                                    ${record.descriptionZh ? `
+                                        <button type="button" class="menu-description-toggle" data-menu-description-id="${escapeHtml(record.id)}" aria-expanded="${isExpanded ? 'true' : 'false'}">
+                                            <i class="fa-regular fa-note-sticky"></i>
+                                            ${isExpanded ? '收合描述' : '看餐點描述'}
+                                        </button>
+                                        <p class="menu-lookup-description" ${isExpanded ? '' : 'hidden'}>${escapeHtml(record.descriptionZh)}</p>
+                                    ` : ''}
+                                </div>
+                                <button type="button" class="menu-crew-trigger lookup-crew-trigger" data-menu-lookup-id="${escapeHtml(record.id)}">
+                                    <i class="fa-solid fa-language"></i>
+                                    給 Crew 看
+                                </button>
+                            </article>
+                        `;
+                    }).join('')}
+                </div>
+            </section>
+        `).join('');
+    }
+
+    function initializeMenuQuickLookup() {
+        const root = document.getElementById('menu-lookup');
+        const input = document.getElementById('menu-lookup-input');
+        const restaurantContainer = document.getElementById('menu-group-filters');
+        const courseContainer = document.getElementById('menu-category-filters');
+        const workspace = document.getElementById('menu-lookup-workspace');
+        if (!root || !input || !workspace) return;
+
+        let menuDebounceTimer = null;
+        input.addEventListener('input', () => {
+            window.clearTimeout(menuDebounceTimer);
+            menuDebounceTimer = window.setTimeout(() => {
+                menuLookupState.query = input.value.trim();
+                menuLookupState.activeCrewRecordId = '';
+                if (!isMenuLookupDataReady()) {
+                    activateMenuLookup();
+                    return;
+                }
+                renderMenuQuickLookup();
+            }, 90);
+        });
+        input.addEventListener('focus', () => {
+            if (!isMenuLookupDataReady() && menuDataLoadState.status === 'idle') {
+                activateMenuLookup();
+            }
+        });
+
+        restaurantContainer?.addEventListener('click', event => {
+            const loadButton = event.target.closest('[data-menu-load-action]');
+            if (loadButton) {
+                event.preventDefault();
+                activateMenuLookup({ retry: loadButton.dataset.menuLoadAction === 'retry-menu' });
+                return;
+            }
+            const button = event.target.closest('[data-menu-restaurant-filter]');
+            if (!button) return;
+            menuLookupState.restaurant = getMenuRestaurantEntry(button.dataset.menuRestaurantFilter).id;
+            menuLookupState.activeCrewRecordId = '';
+            menuLookupState.expandedRecordIds.clear();
+            renderMenuQuickLookup();
+        });
+
+        courseContainer?.addEventListener('click', event => {
+            const button = event.target.closest('[data-menu-course-filter]');
+            if (!button) return;
+            if (!isMenuLookupDataReady()) {
+                activateMenuLookup();
+                return;
+            }
+            menuLookupState.course = getMenuCourseEntry(button.dataset.menuCourseFilter).id;
+            menuLookupState.activeCrewRecordId = '';
+            menuLookupState.expandedRecordIds.clear();
+            renderMenuQuickLookup();
+        });
+
+        workspace.addEventListener('click', event => {
+            const loadButton = event.target.closest('[data-menu-load-action]');
+            if (loadButton) {
+                event.preventDefault();
+                activateMenuLookup({ retry: loadButton.dataset.menuLoadAction === 'retry-menu' });
+                return;
+            }
+
+            const copyButton = event.target.closest('[data-copy-text]');
+            if (copyButton) {
+                event.preventDefault();
+                copyTextToClipboard(copyButton.dataset.copyText || '');
+                return;
+            }
+
+            const descriptionButton = event.target.closest('[data-menu-description-id]');
+            if (descriptionButton) {
+                event.preventDefault();
+                const recordId = descriptionButton.dataset.menuDescriptionId || '';
+                if (menuLookupState.expandedRecordIds.has(recordId)) {
+                    menuLookupState.expandedRecordIds.delete(recordId);
+                } else {
+                    menuLookupState.expandedRecordIds.add(recordId);
+                }
+                renderMenuQuickLookup();
+                return;
+            }
+
+            const crewButton = event.target.closest('[data-menu-lookup-id]');
+            if (crewButton) {
+                event.preventDefault();
+                menuLookupState.activeCrewRecordId = crewButton.dataset.menuLookupId || '';
+                renderMenuQuickLookup();
+                return;
+            }
+
+            const closeButton = event.target.closest('[data-lookup-crew-close]');
+            if (closeButton) {
+                event.preventDefault();
+                menuLookupState.activeCrewRecordId = '';
+                renderMenuQuickLookup();
+            }
+        });
+
+        document.querySelectorAll('a[href="#menu-lookup"]').forEach(link => {
+            link.addEventListener('click', () => {
+                activateMenuLookup();
+            });
+        });
+
+        window.addEventListener?.('hashchange', () => {
+            if (window.location?.hash === '#menu-lookup') {
+                activateMenuLookup();
+            }
+        });
+
+        if (window.IntersectionObserver) {
+            const observer = new IntersectionObserver(entries => {
+                if (entries.some(entry => entry.isIntersecting)) {
+                    activateMenuLookup();
+                    observer.disconnect();
+                }
+            }, { rootMargin: '160px 0px' });
+            observer.observe(root);
+        }
+
+        renderMenuQuickLookup();
+        if (window.location?.hash === '#menu-lookup') {
+            activateMenuLookup();
+        }
     }
 
     function renderSearchResults(results, queryContext) {
@@ -4205,7 +5248,31 @@
     }
 
     function performLookupSearch(query) {
-        const { queryData, results } = getBilingualLookupResults(query, { category: searchState.lookupCategory });
+        if (searchState.lookupCategory === 'dining' && !isMenuLookupDataReady()) {
+            const queryData = getSearchUnits(query);
+            searchState.lastQuery = queryData.normalizedQuery;
+            searchState.lastQueryData = queryData;
+            searchState.lastResults = [];
+            searchState.lookupResultsById = new Map();
+            renderLookupMenuLoadState(menuDataLoadState.status === 'error' ? 'error' : 'loading', menuDataLoadState.error);
+            ensureMenuLookupDataLoaded()
+                .then(() => {
+                    performLookupSearch(query);
+                    if (document.getElementById('menu-lookup')) {
+                        renderMenuQuickLookup();
+                    }
+                })
+                .catch(error => {
+                    renderLookupMenuLoadState('error', error);
+                });
+            return;
+        }
+
+        const { queryData, results } = getBilingualLookupResults(query, {
+            category: searchState.lookupCategory,
+            diningFilter: searchState.lookupDiningFilter,
+            restaurantFilter: searchState.lookupRestaurantFilter
+        });
         searchState.lastQuery = queryData.normalizedQuery;
         searchState.lastQueryData = queryData;
         searchState.lastResults = results;
@@ -4229,6 +5296,16 @@
         if (options.lookupCategory) {
             searchState.lookupCategory = compactSearchText(options.lookupCategory) || 'all';
         }
+        if (options.lookupDiningFilter) {
+            searchState.lookupDiningFilter = getMenuDiningFilterEntry(options.lookupDiningFilter).id;
+        }
+        if (options.lookupRestaurantFilter) {
+            searchState.lookupRestaurantFilter = getMenuRestaurantEntry(options.lookupRestaurantFilter).id;
+        }
+        if (searchState.lookupCategory !== 'dining') {
+            searchState.lookupDiningFilter = 'all';
+            searchState.lookupRestaurantFilter = 'all';
+        }
         if (searchState.mode === 'lookup') {
             searchState.shortcutOpen = false;
         }
@@ -4238,6 +5315,24 @@
 
     function setLookupCategory(category) {
         searchState.lookupCategory = compactSearchText(category) || 'all';
+        if (searchState.lookupCategory !== 'dining') {
+            searchState.lookupDiningFilter = 'all';
+            searchState.lookupRestaurantFilter = 'all';
+        }
+        searchState.activeCrewRecordId = '';
+        syncSearchModeUi();
+    }
+
+    function setLookupDiningFilter(filterId) {
+        searchState.lookupCategory = 'dining';
+        searchState.lookupDiningFilter = getMenuDiningFilterEntry(filterId).id;
+        searchState.activeCrewRecordId = '';
+        syncSearchModeUi();
+    }
+
+    function setLookupRestaurantFilter(restaurantId) {
+        searchState.lookupCategory = 'dining';
+        searchState.lookupRestaurantFilter = getMenuRestaurantEntry(restaurantId).id;
         searchState.activeCrewRecordId = '';
         syncSearchModeUi();
     }
@@ -4247,12 +5342,42 @@
         syncSearchModeUi();
     }
 
+    function renderLookupDiningControls() {
+        const select = document.getElementById('lookup-menu-restaurant-select');
+        const courseRow = document.getElementById('lookup-menu-course-row');
+        const isReady = isMenuLookupDataReady();
+        if (select) {
+            const restaurants = getMenuRestaurantOptions();
+            select.innerHTML = [
+                `<option value="all">全部餐廳</option>`,
+                ...restaurants.map(restaurant => `<option value="${escapeHtml(restaurant.id)}">${escapeHtml(restaurant.label)}</option>`)
+            ].join('');
+            select.disabled = !isReady;
+            const selectedRestaurant = getMenuRestaurantEntry(searchState.lookupRestaurantFilter).id;
+            const hasSelectedOption = Array.from(select.options).some(option => option.value === selectedRestaurant);
+            if (!hasSelectedOption && selectedRestaurant !== 'all') {
+                select.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(selectedRestaurant)}">${escapeHtml(selectedRestaurant)}</option>`);
+            }
+            select.value = selectedRestaurant;
+        }
+        if (courseRow) {
+            courseRow.innerHTML = MENU_COURSE_FILTERS.map(course => `
+                <button type="button" class="${course.id === searchState.lookupDiningFilter ? 'active' : ''}" data-lookup-dining-filter="${escapeHtml(course.id)}" ${isReady ? '' : 'disabled'}>
+                    ${escapeHtml(course.label)}
+                </button>
+            `).join('');
+        }
+    }
+
     function syncSearchModeUi() {
         const overlay = document.getElementById('search-overlay');
         const input = document.getElementById('search-input');
         const modeButtons = document.querySelectorAll('[data-search-tool-mode]');
         const lookupCategoryRow = document.getElementById('lookup-category-row');
+        const lookupDiningFilterRow = document.getElementById('lookup-dining-filter-row');
+        const lookupRestaurantSelect = document.getElementById('lookup-menu-restaurant-select');
         const categoryButtons = lookupCategoryRow?.querySelectorAll('[data-lookup-category]') || [];
+        const diningFilterButtons = lookupDiningFilterRow?.querySelectorAll('[data-lookup-dining-filter]') || [];
         const shortcutToggle = document.getElementById('search-shortcut-toggle');
         const shortcutDrawer = document.getElementById('search-shortcut-drawer');
 
@@ -4274,9 +5399,23 @@
             lookupCategoryRow.hidden = searchState.mode !== 'lookup';
         }
 
+        if (lookupDiningFilterRow) {
+            lookupDiningFilterRow.hidden = searchState.mode !== 'lookup' || searchState.lookupCategory !== 'dining';
+        }
+
+        renderLookupDiningControls();
+
         categoryButtons.forEach(button => {
             button.classList.toggle('active', button.dataset.lookupCategory === searchState.lookupCategory);
         });
+
+        diningFilterButtons.forEach(button => {
+            button.classList.toggle('active', button.dataset.lookupDiningFilter === searchState.lookupDiningFilter);
+        });
+
+        if (lookupRestaurantSelect) {
+            lookupRestaurantSelect.value = getMenuRestaurantEntry(searchState.lookupRestaurantFilter).id;
+        }
 
         if (shortcutToggle) {
             const canShowShortcuts = searchState.mode !== 'lookup';
@@ -4379,6 +5518,8 @@
         searchState.resultsById = new Map();
         searchState.lookupResultsById = new Map();
         searchState.activeCrewRecordId = '';
+        searchState.lookupRestaurantFilter = 'all';
+        searchState.lookupDiningFilter = 'all';
         searchState.shortcutOpen = false;
         searchState.lastQuery = '';
         searchState.lastResults = [];
@@ -4394,6 +5535,8 @@
         const results = document.getElementById('search-results');
         const modeButtons = document.querySelectorAll('[data-search-tool-mode]');
         const lookupCategoryRow = document.getElementById('lookup-category-row');
+        const lookupDiningFilterRow = document.getElementById('lookup-dining-filter-row');
+        const lookupRestaurantSelect = document.getElementById('lookup-menu-restaurant-select');
         const shortcutToggle = document.getElementById('search-shortcut-toggle');
         const backdrop = overlay?.querySelector('[data-search-close]');
 
@@ -4413,9 +5556,11 @@
 
         function applySearchQuery(query, options = {}) {
             const nextQuery = String(query || '').trim();
-            if (options.mode || options.lookupCategory) {
+            if (options.mode || options.lookupCategory || options.lookupDiningFilter || options.lookupRestaurantFilter) {
                 setSearchToolMode(options.mode || searchState.mode, {
-                    lookupCategory: options.lookupCategory || searchState.lookupCategory
+                    lookupCategory: options.lookupCategory || searchState.lookupCategory,
+                    lookupDiningFilter: options.lookupDiningFilter || searchState.lookupDiningFilter,
+                    lookupRestaurantFilter: options.lookupRestaurantFilter || searchState.lookupRestaurantFilter
                 });
             }
             if (!nextQuery && searchState.lookupCategory === 'all') return;
@@ -4444,7 +5589,9 @@
             const query = chip.dataset.searchQuery || chip.textContent || '';
             applySearchQuery(query, {
                 mode: chip.dataset.searchModeTarget,
-                lookupCategory: chip.dataset.lookupCategory
+                lookupCategory: chip.dataset.lookupCategory,
+                lookupDiningFilter: chip.dataset.lookupDiningFilter,
+                lookupRestaurantFilter: chip.dataset.lookupRestaurantFilter
             });
             setShortcutDrawerOpen(false);
         });
@@ -4464,6 +5611,24 @@
             const button = event.target.closest('[data-lookup-category]');
             if (!button) return;
             setSearchToolMode('lookup', { lookupCategory: button.dataset.lookupCategory });
+            performLookupSearch(input.value);
+        });
+
+        lookupDiningFilterRow?.addEventListener('click', event => {
+            const button = event.target.closest('[data-lookup-dining-filter]');
+            if (!button) return;
+            setSearchToolMode('lookup', {
+                lookupCategory: 'dining',
+                lookupDiningFilter: button.dataset.lookupDiningFilter
+            });
+            performLookupSearch(input.value);
+        });
+
+        lookupRestaurantSelect?.addEventListener('change', () => {
+            setSearchToolMode('lookup', {
+                lookupCategory: 'dining',
+                lookupRestaurantFilter: lookupRestaurantSelect.value
+            });
             performLookupSearch(input.value);
         });
 
@@ -4505,6 +5670,21 @@
         });
 
         results.addEventListener('click', event => {
+            const loadButton = event.target.closest('[data-menu-load-action]');
+            if (loadButton) {
+                event.preventDefault();
+                renderLookupMenuLoadState('loading');
+                ensureMenuLookupDataLoaded({ retry: loadButton.dataset.menuLoadAction === 'retry-search' })
+                    .then(() => {
+                        performLookupSearch(input.value);
+                        renderMenuQuickLookup();
+                    })
+                    .catch(error => {
+                        renderLookupMenuLoadState('error', error);
+                    });
+                return;
+            }
+
             const copyButton = event.target.closest('[data-copy-text]');
             if (copyButton) {
                 event.preventDefault();
@@ -4518,8 +5698,6 @@
                 event.preventDefault();
                 searchState.activeCrewRecordId = lookupButton.dataset.lookupId || '';
                 renderLookupResults(searchState.lastResults, searchState.lastQueryData || {});
-                const crewPane = document.querySelector('.lookup-crew-pane');
-                crewPane?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
                 return;
             }
 
@@ -4564,12 +5742,16 @@
             getBilingualLookupResults,
             buildCrewDisplayCard,
             getLookupRecords: () => searchState.lookupRecords.slice(),
+            getMenuLookupRecords,
+            getMenuQuickResults,
+            getMenuRestaurantOptions,
             getSearchDocuments: () => searchState.documents.slice()
         });
     }
 
     if (!window.__SEARCH_SKIP_BOOTSTRAP__) {
         initializeSearch();
+        initializeMenuQuickLookup();
     }
 
 });
