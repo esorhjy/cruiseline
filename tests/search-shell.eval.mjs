@@ -16,7 +16,10 @@ assert(!indexHtml.includes('search-ai-answer'), 'index.html should not render an
 assert(!indexHtml.includes('search-mode-switch'), 'index.html should not include search mode toggles');
 assert(!indexHtml.includes('/api/ai-answer'), 'index.html should not point to an AI endpoint');
 assert(indexHtml.includes('id="search-results"'), 'index.html should keep the keyword search results container');
-assert(indexHtml.includes('id="quick-start"'), 'index.html should expose a lightweight quick-start guide');
+assert(!indexHtml.includes('id="quick-start"'), 'the retired five-card introductory layer must stay removed');
+assert(indexHtml.includes('class="voyage-cover-image"'), 'the original cover remains a prominent image');
+assert(indexHtml.includes('data-view="journey"') && indexHtml.includes('data-view="explore"') && indexHtml.includes('data-view="prepare"'), 'notebook needs three navigable views');
+assert(indexHtml.includes('travel-reference-data.js'), 'shared travel notes should be loaded locally');
 assert(indexHtml.includes('search-command-bar'), 'index.html should use a compact search command bar');
 assert(indexHtml.includes('id="search-shortcut-toggle"'), 'index.html should expose a compact shortcut drawer toggle');
 assert(indexHtml.includes('id="search-shortcut-drawer" hidden'), 'quick search chips should be collapsed by default');
@@ -55,7 +58,7 @@ assert(scriptJs.includes('loadMenuLookupData('), 'script.js should lazy-load the
 assert(scriptJs.includes('data-menu-load-action'), 'script.js should render retry/load controls for menu data');
 assert(!scriptJs.includes('initializeMenuQuickLookup();'), 'script.js should not initialize a homepage menu lookup section');
 assert(scriptJs.includes('getMenuRestaurantOptions('), 'script.js should expose restaurant-first menu helpers');
-assert(scriptJs.includes('data-menu-course-filter'), 'script.js should render course filters for menu browsing');
+assert(scriptJs.includes('data-lookup-dining-filter'), 'script.js should render course filters in the lookup overlay');
 assert(scriptJs.includes('data-menu-description-id'), 'script.js should let menu cards expand source descriptions');
 assert(scriptJs.includes('buildCrewDisplayCard('), 'script.js should render a Crew-facing display card');
 assert(scriptJs.includes('setShortcutDrawerOpen('), 'script.js should manage collapsed shortcut drawer state');
@@ -75,11 +78,9 @@ assert(styleCss.includes('.lookup-crew-pane') && styleCss.includes('position: fi
 assert(styleCss.includes('.search-command-bar'), 'style.css should style the compact command bar');
 assert(styleCss.includes('.lookup-inline-label'), 'lookup micro labels should have compact bilingual helper styling');
 assert(styleCss.includes('.lookup-dining-filter-strip'), 'style.css should style lookup dining filters compactly');
-assert(styleCss.includes('.menu-lookup-workspace.has-crew-preview'), 'style.css should give the menu quick lookup a right-side Crew pane');
-assert(styleCss.includes('.menu-restaurant-panel'), 'style.css should style the restaurant-first menu panel');
-assert(styleCss.includes('.menu-lookup-result-section'), 'style.css should group menu results by restaurant or course');
 assert(styleCss.includes('.menu-lookup-description'), 'style.css should style expanded menu descriptions');
-assert(styleCss.includes('.menu-crew-pane') && styleCss.includes('position: fixed'), 'mobile menu Crew card should be able to display as a bottom sheet');
+assert(!scriptJs.includes('function initializeMenuQuickLookup'), 'retired homepage menu implementation should be removed');
+assert(!scriptJs.includes('createMickeyBubble') && !scriptJs.includes('createConfetti'), 'ambient animation loops should not return');
 
 assert(generatorJs.includes('SOURCE_PAGE_URL') && generatorJs.includes('SOURCE_DATA_URL'), 'menu generator should keep source URLs explicit');
 assert(generatorJs.includes('COURSE_CATEGORY_MAP'), 'menu generator should encode course grouping rules');

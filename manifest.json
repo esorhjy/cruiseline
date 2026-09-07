@@ -1,11 +1,11 @@
 ﻿{
-  "name": "Disney Adventure 迪士尼探險號｜星海攻略",
-  "short_name": "星海攻略",
+  "name": "Disney Adventure 迪士尼探險號｜航程手帳",
+  "short_name": "航程手帳",
   "description": "專為禮賓艙房家庭設計的迪士尼探險號實戰攻略",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#0A1A2F",
-  "theme_color": "#0A3A70",
+  "background_color": "#FFFFFF",
+  "theme_color": "#086F9A",
   "icons": [
     {
       "src": "icons/icon-192.png",

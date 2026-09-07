@@ -105,15 +105,24 @@ data.playbookGuideData.forEach((mission) => {
 });
 
 const dataKeys = {
-  deckFacilities: new Set(data.deckGuideData.flatMap((deck) => deck.facilities.map((_, index) => `${deck.id}:${index}`))),
-  shows: new Set(data.showGuideData.flatMap((group) => group.shows.map((_, index) => `${group.id}:${index}`))),
+  deckFacilities: new Set(data.deckGuideData.flatMap((deck) => deck.facilities.map(item => item.bindingKey))),
+  shows: new Set(data.showGuideData.flatMap((group) => group.shows.map(item => item.bindingKey))),
   scheduleEvents: new Set(data.cruiseSchedule.flatMap((day) =>
     day.periods.flatMap((period, periodIndex) =>
-      period.events.map((_, eventIndex) => `${day.id}:${periodIndex}:${eventIndex}`)
+      period.events.map(item => item.bindingKey)
     )
   )),
-  playbookItems: new Set(data.playbookGuideData.flatMap((mission) => mission.items.map((_, index) => `${mission.id}:${index}`)))
+  playbookItems: new Set(data.playbookGuideData.flatMap((mission) => mission.items.map(item => item.bindingKey)))
 };
+
+const contentItems = [
+  ...data.cruiseSchedule.flatMap(day => day.periods.flatMap(period => period.events)),
+  ...data.deckGuideData.flatMap(deck => deck.facilities),
+  ...data.showGuideData.flatMap(group => group.shows),
+  ...data.playbookGuideData.flatMap(group => group.items)
+];
+assertUniqueIds(contentItems, 'stable content');
+contentItems.forEach(item => { assertText(item.id, 'stable content id'); assertText(item.bindingKey, 'stable registry key'); });
 
 Object.entries(registry.bindings || {}).forEach(([groupName, bindings]) => {
   const knownKeys = dataKeys[groupName];
