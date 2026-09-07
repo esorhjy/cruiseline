@@ -350,6 +350,11 @@ assert(hasAnyTitle(lastBreakfastTitles, [/\u65e9\u9910\uff0b\u6700\u5f8c\u78ba\u
 
 assert.equal(titlesFor(hooks, 'zzzznotfound').length, 0, 'unknown queries should not fall back to unrelated generic cards');
 
+assert(hasAnyTitle(titlesFor(hooks, 'D Lounge'), [/D Lounge 家庭活動/]), 'D Lounge should find the family fallback guide');
+assert(hasAnyTitle(titlesFor(hooks, '吸菸區'), [/吸菸區與無菸座位/]), 'smoking query should surface the scoped safety guide');
+assert(hasAnyTitle(titlesFor(hooks, 'Sunnyside Pool'), [/Toy Story Pool/]), 'Sunnyside should find the shared water eligibility card');
+assert(hasAnyTitle(titlesFor(hooks, '停止排隊'), [/Ironcycle 提早嘗試/]), 'queue cutoff should find the conflict prevention guide');
+
 const swimPayload = hooks.getRankedSearchResults('\u6709\u54ea\u4e9b\u8a2d\u65bd\u53ef\u4ee5\u6e38\u6cf3');
 const swimTitles = swimPayload.results.map((item) => String(item.title || ''));
 assert(swimTitles.length > 0, 'swim/facility query should still return results');
