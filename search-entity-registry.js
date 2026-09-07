@@ -45,7 +45,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-05-25-menu-restaurant-v2',
+        version: '2026-09-07-family-plan-v4',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
@@ -780,13 +780,39 @@
                 aliases: ['Toy Story Pool', 'Splash Pad', 'Toy Story splash'],
                 deckHints: ['Deck 17'],
                 area: 'Toy Story Place',
-                relatedEntityIds: ['flying-saucer-splash-zone', 'woodys-wide-slide'],
+                relatedEntityIds: ['sunnyside-pool', 'flying-saucer-splash-zone', 'woodys-wide-slide'],
                 sourceUrls: [SOURCES.themedAreas]
+            }),
+            entity({
+                entityId: 'sunnyside-pool',
+                lastVerifiedDate: '2026-09-07',
+                officialNameEn: 'Sunnyside Pool',
+                displayNameZh: 'Sunnyside Pool 家庭泳池',
+                entityType: 'pool',
+                categoryFamilies: ['泳池', '場館'],
+                capabilityTags: ['swim', 'kids-play'],
+                aliases: ['Sunnyside Family Pool', '家庭泳池', '三童玩水'],
+                deckHints: ['Deck 17'],
+                area: 'Toy Story Place',
+                relatedEntityIds: ['toy-story-place', 'concierge-sundeck-pool'],
+                sourceUrls: ['https://disneycruise.disney.go.com/en/faq/onboard-activities/pool-restrictions/']
+            }),
+            entity({
+                entityId: 'd-lounge',
+                lastVerifiedDate: '2026-09-07',
+                officialNameEn: 'D Lounge',
+                displayNameZh: 'D Lounge 家庭活動酒廊',
+                entityType: 'venue',
+                categoryFamilies: ['活動', '酒廊', '場館'],
+                capabilityTags: ['kids-play', 'rest'],
+                aliases: ['D-Lounge', '家庭舞蹈', '家庭活動', '卡拉 OK'],
+                area: '依 Navigator 確認地點',
+                sourceUrls: ['https://disneycruise.disney.go.com/en-eu/onboard-activities/d-lounge-family-club/']
             }),
             entity({
                 entityId: 'flying-saucer-splash-zone',
                 officialNameEn: 'Flying Saucer Splash Zone',
-                displayNameZh: 'Flying Saucer Splash Zone',
+                displayNameZh: 'Flying Saucer Splash Zone 飛碟戲水區',
                 entityType: 'pool',
                 categoryFamilies: ['泳池', '場館'],
                 capabilityTags: ['swim', 'kids-play'],
@@ -968,12 +994,13 @@
             }),
             entity({
                 entityId: 'woodys-wide-slide',
-                officialNameEn: 'Woody’s Wide Slide',
-                displayNameZh: 'Woody’s Wide Slide',
+                lastVerifiedDate: '2026-09-07',
+                officialNameEn: 'Woody and Jessie’s Wild Slides',
+                displayNameZh: '胡迪與翠絲的瘋狂滑水道',
                 entityType: 'pool',
                 categoryFamilies: ['泳池', '場館'],
                 capabilityTags: ['swim', 'kids-play'],
-                aliases: ['Woodys Wide Slide', "Woody's Wide Slide"],
+                aliases: ['Woody’s Wide Slide', 'Woodys Wide Slide', "Woody's Wide Slide", "Woody and Jessie's Wild Slides", 'Wild Slides', '胡迪滑水道', '122 公分'],
                 deckHints: ['Deck 19'],
                 area: 'Toy Story Place',
                 relatedEntityIds: ['toy-story-place'],
@@ -1004,15 +1031,27 @@
             }),
             entity({
                 entityId: 'royal-meet-and-greet',
-                officialNameEn: 'Royal Meet & Greet',
-                displayNameZh: 'Royal Meet & Greet',
+                lastVerifiedDate: '2026-09-07',
+                officialNameEn: 'Royal Gathering',
+                displayNameZh: '皇家見面會',
                 entityType: 'activity',
                 categoryFamilies: ['活動', '服務'],
                 capabilityTags: ['kids-play'],
-                aliases: ['Meet and Greet'],
+                aliases: ['Royal Meet & Greet', 'Meet and Greet', '皇家見面會', '公主見面會'],
                 relatedEntityIds: ['concierge-lounge', 'disney-oceaneer-club'],
-                sourceAuthority: 'trusted-secondary',
-                sourceUrls: [SOURCES.concierge]
+                sourceUrls: ['https://disneycruise.disney.go.com/en-ca/faq/booking-reservations/disney-adventure-book-activities-faq/']
+            }),
+            entity({
+                entityId: 'navigators-club',
+                lastVerifiedDate: '2026-09-07',
+                officialNameEn: 'Navigator’s Club',
+                displayNameZh: '航海家俱樂部',
+                entityType: 'restaurant',
+                categoryFamilies: ['餐廳', '場館'],
+                capabilityTags: ['eat', 'watch-show'],
+                aliases: ["Navigator's Club", 'Navigator Club', '航海家餐廳'],
+                area: 'Town Square 附近，依 App 確認',
+                sourceUrls: [SOURCES.dining]
             }),
             entity({
                 entityId: 'navigator-onboard-fun',
@@ -1120,7 +1159,7 @@
                 'deck11:2': primary(['palo-trattoria']),
                 'deck11:3': primary(['castle-collection']),
                 'deck17:0': primary(['concierge-lounge']),
-                'deck17:1': primary(['toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
+                'deck17:1': primary(['toy-story-place', 'sunnyside-pool', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
                     keywordHints: ['玩水', '泳池', '防曬', '曬傷', '甲板曝曬', '登船日換裝']
                 }),
                 'deck17:2': primary(['pixar-market-restaurant', 'pizza-planet', 'wheezys-freezies']),
@@ -1151,7 +1190,7 @@
                 'day1:1:2': support(['toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
                     keywordHints: ['登船日 玩水 換裝', '防曬', '曬傷', '泳池人潮']
                 }),
-                'day1:2:0': support(['animators-palate']),
+                'day1:2:0': support(['animators-palate', 'hollywood-spotlight-club', 'navigators-club']),
                 'day1:2:1': support(['walt-disney-theatre', 'remember-show']),
                 'day1:2:2': support(['concierge-lounge']),
                 'day2:1:0': support(['marvel-landing']),
@@ -1162,22 +1201,26 @@
                 'day2:3:1': support(['edge']),
                 'day2:3:2': support(['concierge-lounge']),
                 'day2:3:3': support(['disney-imagination-garden']),
-                'day2:4:1': support(['disney-seas-the-adventure-show', 'walt-disney-theatre']),
+                'day2:4:1': support(['remember-show', 'disney-seas-the-adventure-show', 'walt-disney-theatre']),
                 'day2:4:2': support(['concierge-lounge']),
-                'day3:1:0': support(['toy-story-place', 'flying-saucer-splash-zone']),
+                'day3:1:0': support(['sunnyside-pool', 'concierge-sundeck-pool', 'woodys-wide-slide']),
                 'day3:1:1': support(['opulence-spa', 'fitness-center']),
                 'day3:2:0': support(['pixar-market-restaurant']),
-                'day3:3:0': support(['disney-oceaneer-club', 'royal-meet-and-greet']),
+                'day3:3:0': support(['big-hero-arcade', 'd-lounge', 'royal-meet-and-greet']),
                 'day3:3:1': support(['baymax-cinemas']),
                 'day3:3:2': support(['concierge-sundeck-pool']),
-                'day3:4:0': support(['hollywood-spotlight-club']),
+                'day3:4:0': support(['hollywood-spotlight-club', 'navigators-club', 'animators-palate']),
                 'day3:4:1': support(['disney-imagination-garden']),
-                'day3:4:2': support(['lion-king-celebration-in-the-sky', 'disney-imagination-garden']),
-                'day4:0:0': support(['animators-palate'], {
+                'day3:4:2': support(['lion-king-celebration-in-the-sky', 'discovery-reef']),
+                'day4:0:0': support([], {
                     keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'self assist', 'express walk off']
                 })
             },
             playbookItems: {
+                'family-planning:0': primary(['ironcycle-test-run', 'marvel-landing'], { keywordHints: ['停止排隊', '排隊風險', '停機', '主秀衝突'] }),
+                'family-planning:1': primary(['d-lounge'], { keywordHints: ['三童一起', '家庭備案', '家庭舞蹈'] }),
+                'family-planning:2': support(['concierge-lounge', 'infinity-pool'], { keywordHints: ['吸菸區', '菸味', '無菸座位', '17108', 'smoking'] }),
+                'family-planning:3': support(['royal-meet-and-greet', 'navigator-onboard-fun'], { keywordHints: ['預約驗收', '七人同桌', '禮賓回信'] }),
                 'embark-sprint:0': support(['concierge-lounge', 'toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
                     keywordHints: ['day one prep', 'water gear', 'pool clothes', '上船先做什麼', '登船日先做什麼', '防曬', '曬傷', '甲板曝曬']
                 }),
@@ -1208,7 +1251,7 @@
                 'concierge-plus:5': support(['concierge-lounge'], { keywordHints: ['wifi', 'internet', '24 hours'] }),
                 'concierge-plus:6': primary(['walt-disney-theatre', 'concierge-lounge']),
                 'stateroom-family:0': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環'] }),
-                'last-night:1': primary(['animators-palate'], {
+                'last-night:1': primary([], {
                     keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'Self-Assist', 'SGAC']
                 })
             }

@@ -112,6 +112,12 @@
 - `tests/search-keyword.smoke.mjs`
 - `tests/search-shell.eval.mjs`
 - `tests/content-data-integrity.eval.mjs`
+- `tests/family-plan.eval.mjs`：三童資格、彈性主秀／晚餐、兩次 SGAC、照片退款與家庭待辦回歸
+
+## 家庭行程維護基線
+- 2026/9/7 起採晚餐／主秀優先的三層安排，不能把歷史航次節目時間改成未來正式時刻表。
+- 旅客心得整合到既有行程、設施與 Playbook；不新增首頁大型來源表，不恢復首頁菜單。
+- 官方核對與未核對原文的摘要分開保留，詳見 `CONTENT_RULES.md` 與 `docs/CONTENT_UPDATE_2026-09-07.md`。
 
 ## 近期優化方向
 - 純搜尋結果卡的排序微調與弱命中去噪

@@ -4,8 +4,8 @@
         tabTitle: "Day 1 登船",
         dateTitle: "🌟 Day 1｜登船日（更早登船＋全家一起熟悉郵輪＋Open House）",
         goals: [
-            "越早登船越好，把登船日做成「熟悉郵輪＋定錨活動」的一天",
-            "優先完成：Open House → 動線熟悉 → 玩水暖身 → 晚餐與首秀節奏"
+            "1/25 依核准報到時間登船；先禮賓接待、全家一次 Open House，再熟悉動線",
+            "家庭草案，非正式節目表：晚餐與主秀優先 → 已確認預約 → 可替換活動；安全演練不可與玩水重疊"
         ],
         periods: [
             {
@@ -17,9 +17,9 @@
                         tag: "登船流程",
                         tagClass: "tag-boarding",
                         desc: [
-                            "<strong>目的：</strong>若住 DCL 合作飯店，可先聯繫安排接駁，通常會比一般自到客更早進入登船節奏。",
-                            "<strong>提醒：</strong>QR code 先截圖或列印最穩；接駁車行李通常另有處理，不用停在自助 drop-off。",
-                            "<strong>留意：</strong>飯店前一晚會公告集合時間與行李外放時間，早上照組別集合即可。",
+                            "<strong>依確認通知：</strong>報到與交通時間尚須核對，不把合作飯店接送或提早登船當作已訂妥。",
+                            "<strong>提醒：</strong>QR code 先截圖或列印；七人與行李的接送車容量、集合點及行李處理方式要先確認。",
+                            "<strong>留意：</strong>若另訂 DCL 接駁，依該筆接駁確認信辦理；否則按自行安排的交通與核准報到時間抵達。",
                             "<strong>拍照註記：</strong>登船入口與完成報到前後通常就是第一組正式合照時機，若重視開場照，這段先把全家狀態整理好最省力。"
                         ]
                     },
@@ -40,26 +40,27 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>請一併確認：</strong>晚餐第一時段（First Seating）、輪替餐廳順序。",
+                            "<strong>請一併確認：</strong>七人同桌、第一時段（First Seating）、實際輪替餐廳與桌號；保留角色晚宴與動畫互動體驗，爭取較好觀看視線。",
                             "<strong>請管家協助確認：</strong>",
                             "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
-                            "當晚 Walt Disney Theatre 主秀「免排隊提前入座」安排",
+                            "當晚 Walt Disney Theatre 分配場次與禮賓提前入場通知；先排除晚餐衝突，不把禮賓視為所有設施的快速通關。",
                             "<strong>登船補位：</strong>若先被引導回房卻還沒拿到房卡，先看門口信封，再不行就去 Deck 6 Mid 的 Guest Services。",
-                            "<strong>中午左右：</strong>留意 Navigator App 是否已開通，首日若有商品販售或活動預約要盡快看。"
+                            "<strong>登船預約：</strong>先取得 Lounge 角色時刻表，再查看 Baymax 杯麵與 Marvel 設施的預約／候位；杯麵需在舊京山街道登船後預約。",
+                            "<strong>座位確認：</strong>詢問 Deck 17 船頭左舷指定吸菸區邊界、無菸座位與日光甲板路線；沒有證據能判定 17108 受影響。"
                         ]
                     }
                 ]
             },
             {
-                name: "下午｜Open House 放最前＋全家熟悉核心動線＋登船日玩水",
+                name: "下午｜一次全家 Open House＋熟悉動線＋安全演練",
                 events: [
                     {
-                        time: "13:00–14:00",
+                        time: "依 Open House 公告",
                         title: "Disney Oceaneer Club Open House (Deck 8)",
                         tag: "孩子專屬",
                         tagClass: "tag-kids",
                         desc: [
-                            "全家一起參加：澤澤、彤妹先熟悉四大沉浸區域",
+                            "全家只安排一次 Open House：小寶 11、澤澤 9、彤妹 8 歲一起熟悉空間。正式活動限 3–10 歲；Open House 是全齡家庭開放，不是託管時段。",
                             "<strong>必做設定：</strong>取孩密語",
                             "<strong>登船優先任務：</strong>先到 Deck 8 FWD 完成報到、領手環，把孩子接送機制一次設定好，後面行程才真的能放手。"
                         ]
@@ -76,34 +77,34 @@
                         ]
                     },
                     {
-                        time: "15:00–16:00",
+                        time: "演練外的彈性空檔",
                         title: "Toy Story Pool／Splash Pad (Deck 17)",
                         tag: "玩水活動",
                         tagClass: "tag-water",
                         desc: [
-                            "<strong>目的：</strong>登船日越早換裝越好，通常比後面時段更適合暖身玩水。",
-                            "<strong>節奏判斷：</strong>越晚泳池越滿、滑水道越排，正午後甲板曝曬也會更強。",
+                            "<strong>可取消備案：</strong>只有安全演練前後足夠換裝與集合的空檔才玩水，否則移到海上日。",
+                            "<strong>共同主線：</strong>Sunnyside Pool 或禮賓泳池，三童都未滿 12 歲，安排成人監督。Flying Saucer 限 4–8 歲，只讓彤妹短暫分流。",
                             "<strong>點心補給：</strong>披薩星球、吱吱冰飲",
-                            "<strong>Woody’s Wide Slide（胡迪與翠絲的瘋狂滑水道入口）（Deck 17/19）</strong>"
+                            "<strong>Woody and Jessie’s Wild Slides：</strong>赤腳至少 122 公分；不穿水鞋、不帶浮潛面罩或鬆散物品，依現場量測。"
                         ]
                     },
                     {
-                        time: "16:00–16:30",
+                        time: "依當天集合通知",
                         title: "Mandatory Guest Assembly Drill (安全演練)",
                         tag: "安全演練",
                         tagClass: "tag-safety",
                         desc: [
-                            "也就是強制旅客集合演練，每個人都必須到，不要遲到。",
+                            "全員必到；先確定集合時間與路線，再決定是否有玩水空檔，不以這份家庭草案代替通知。",
                             "房卡上會寫集合區號，若不確定位置請提早問工作人員。"
                         ]
                     },
                     {
-                        time: "17:25–17:35",
+                        time: "依啟航公告／不衝突才去",
                         title: "到甲板上聽啟航汽笛",
                         tag: "啟航儀式",
                         tagClass: "tag-highlight",
                         desc: [
-                            "大約 5:30 左右會以汽笛播放音樂，第一次搭船很值得到甲板上感受一次。",
+                            "啟航汽笛與甲板活動依當天安排；若與第一時段晚餐重疊，優先保留晚餐。",
                             "離汽笛太近會非常大聲，想體驗氣氛但不必硬卡最近的位置。"
                         ]
                     }
@@ -113,12 +114,12 @@
                 name: "晚間｜第一輪晚餐＋首日晚秀＋宵夜收尾",
                 events: [
                     {
-                        time: "17:15–19:00",
-                        title: "第一時段晚餐：Animator’s Palate（餐廳）",
+                        time: "第一時段／依分配",
+                        title: "第一時段晚餐：依實際輪替餐廳",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "經典「黑白變彩色」動畫互動用餐體驗",
+                            "三晚保留三種輪替體驗，不預先指定每天餐廳；Hollywood Spotlight Club 與 Navigator’s Club 屬同類分流，不能預設都會排到。",
                             "若輪到 Animator's Palate：準備互動驚喜（手繪草圖變動畫）",
                             "<strong>提醒：</strong>專屬服務員開始跟隨你們",
                             "<strong>拍照註記：</strong>晚餐前後通常是最穩的正式全家照窗口，若重視餐廳合照，記得替這段多留 5–10 分鐘。",
@@ -127,14 +128,14 @@
                         ]
                     },
                     {
-                        time: "19:30–21:00",
+                        time: "依 App 分配主秀",
                         title: "Walt Disney Theatre 首日晚間大秀 (Deck 5–7)",
                         tag: "精彩看秀",
                         tagClass: "tag-show",
                         desc: [
-                            "音樂劇《Remember》",
-                            "晚間秀建議提早 30 分鐘入場；選中間區域視野最佳。",
-                            "若當晚 Navigator App 顯示可走禮賓提前入場，演前 40 分鐘到 Deck 5 forward 電梯大廳集合，帶金色房卡與 App 證明。"
+                            "《Remember》與《Disney Seas the Adventure》按正式分配日期觀看，不預設首晚是哪一場。",
+                            "先核對晚餐與主秀，再請禮賓確認集合點、提前入場截止與所需證明。",
+                            "舊航次通知的演前 40 分鐘集合／30 分鐘截止只供風險試算；19:00 秀的 18:20 集合會與 17:45 晚餐衝突，不照搬。"
                         ]
                     },
                     {
@@ -156,7 +157,8 @@
         tabTitle: "Day 2 海上",
         dateTitle: "🦸 Day 2｜海上日（Marvel 主題＋滑水道＋舊京山街區）",
         goals: [
-            "上午衝刺激、下午放鬆與合體、晚上看秀"
+            "1/26 先嘗試 Ironcycle、符合資格的滑水道；禮賓甲板用餐或休息，保留重要主秀",
+            "皇家見面會依 App 確認時段插入；今天完成 1/28 再入境的 SGAC，最遲明天複核"
         ],
         periods: [
             {
@@ -168,8 +170,8 @@
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "若早餐想靠 room service，建議預約 07:00 左右或更早。",
-                            "超過 08:00 後較容易晚到，會壓縮上午設施或預約行程。",
+                            "可在 17108 陽台安排一次 Room Service 早餐或休息餐點，先向禮賓確認菜單、供應與送達時間。",
+                            "免配送費不代表所有餐點飲料免費；有預約活動的早晨要預留等餐緩衝。",
                             "若仍想吃主餐，再視精神和時間補正式早餐。"
                         ]
                     }
@@ -185,7 +187,8 @@
                         tagClass: "tag-thrill",
                         desc: [
                             "<strong>主攻：Ironcycle Test Run（鋼鐵人測試車）</strong>",
-                            "接著：皮姆量子賽車、格魯特星系旋轉"
+                            "接著：Pym Quantum Racers 皮姆量子賽車、Groot Galaxy Spin 格魯特星系旋轉；依現場資格與 Navigator 的預約／免預約時段。",
+                            "Ironcycle 在 Day 1 或 Day 2 就觀察可玩機會，不只留最後一天；停機就改行程，接近晚餐、主秀或孩子疲累就停止排隊。"
                         ]
                     },
                     {
@@ -194,7 +197,8 @@
                         tag: "玩水活動",
                         tagClass: "tag-water",
                         desc: [
-                            "戶外無邊際泳池與吧台 (Jetfinity Bar)"
+                            "Infinity Pool 官方目前未設年齡門檻，未滿 12 歲需成人監督；實際仍核對現場時段與告示，不逕稱成人限定。",
+                            "Deck 18 船尾左舷 Infinity Pool Sundeck 有指定吸菸區，休息座位與路線先避開該區。"
                         ]
                     },
                     {
@@ -238,11 +242,12 @@
                     },
                     {
                         time: "14:00–15:00",
-                        title: "澤澤、小寶：Deck 7 Edge",
+                        title: "小寶可選 Edge；其他人家庭備案",
                         tag: "孩子專屬",
                         tagClass: "tag-kids",
                         desc: [
-                            "少年會所 (11–14 歲)；其他人逛街"
+                            "Edge 限 11–14 歲，小寶 11 歲符合；澤澤 9 歲、彤妹 8 歲不能當作一般參加者。",
+                            "想三人一起就改 Big Hero Arcade 或 D Lounge 家庭活動；Royal Gathering 若確認在此時段，優先調整這個彈性空檔。"
                         ]
                     },
                     {
@@ -271,24 +276,24 @@
                 name: "晚間",
                 events: [
                     {
-                        time: "17:15–19:00",
-                        title: "晚餐：Navigator’s Club (航海家俱樂部)",
+                        time: "第一時段／依分配",
+                        title: "第一時段晚餐：依當日餐廳與桌號",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "有米奇米妮的船長晚餐。",
+                            "保留角色晚宴與動畫互動餐廳體驗，不要求三晚同時排 Hollywood 與 Navigator’s。",
                             "<strong>拍照註記：</strong>若這晚想補正式餐廳照，最好在進場或甜點前留一個短空檔，不要把拍照擠到衝秀的最後幾分鐘。",
                             "<strong>First Seating 提醒：</strong>若晚餐互動或餐廳秀拉長，別吃到最後一刻，否則還是會壓縮後面劇院排隊時間。"
                         ]
                     },
                     {
-                        time: "19:30–21:15",
-                        title: "劇院主秀《Disney Seas the Adventure》",
+                        time: "依 App 分配／開放場次",
+                        title: "重要主秀：Remember／Disney Seas the Adventure",
                         tag: "精彩看秀",
                         tagClass: "tag-show",
                         desc: [
-                            "百老匯等級主題秀",
-                            "若當晚 Navigator App 顯示可走禮賓提前入場，演前 40 分鐘到 Deck 5 forward 電梯大廳集合，帶金色房卡與 App 證明。"
+                            "以實際分配的一場重要演出為當晚主線；其他角色或設施不壓縮主秀入場。",
+                            "禮賓集合時間以當晚通知為準，先和晚餐一起核對，不把舊航次 40／30 分鐘規則當保證。"
                         ]
                     },
                     {
@@ -308,9 +313,10 @@
     {
         id: "day3",
         tabTitle: "Day 3 海上",
-        dateTitle: "💦 Day 3｜海上日（水域大日＋Oceaneer＋皇家見面會＋海上煙火）",
+        dateTitle: "💦 Day 3｜海上日（三童玩水＋Big Hero＋家庭備案＋提早收行李）",
         goals: [
-            "水域玩足＋完成公主見面會＋大人禮賓放鬆時間要確保到"
+            "1/27 三童共同玩水，Big Hero 遊戲與禮賓角色／D Lounge 擇一；保留補玩空間",
+            "晚餐與主秀前停止長隊；下午先收行李、複核七人 1/28 SGAC，不把煙火固定在今晚"
         ],
         periods: [
             {
@@ -336,8 +342,8 @@
                         tag: "玩水活動",
                         tagClass: "tag-water",
                         desc: [
-                            "<strong>Woody’s Wide Slide（滑水道入口在 Deck 19）</strong>",
-                            "<strong>目的：</strong>趁早排隊、避免後段失控"
+                            "<strong>共同主線：</strong>Sunnyside Pool 或 Concierge Pool；三童都未滿 12 歲，指定成人監督，不以救生員代替家長。",
+                            "<strong>滑水道：</strong>Woody and Jessie’s Wild Slides 赤腳至少 122 公分；Flying Saucer 限 4–8 歲，只列彤妹有興趣時短暫分流。"
                         ]
                     },
                     {
@@ -346,8 +352,8 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>Spa 水療中心：</strong>禮賓專屬門區＋進階療程 (請禮賓代訂)",
-                            "<strong>Fitness Center：</strong>禮賓專用健身空間"
+                            "<strong>大人可選：</strong>Spa 或健身只放在已安排另一位成人照顧孩子的空檔；療程需確認預約與費用。",
+                            "<strong>不拆隊也可以：</strong>改禮賓甲板用餐、休息或補玩，不為使用權益增加趕場。"
                         ]
                     }
                 ]
@@ -367,17 +373,17 @@
                 ]
             },
             {
-                name: "下午｜唯一一次 Oceaneer 完整入場＋大人放鬆窗口",
+                name: "下午｜家庭活動與補玩空間＋提早收行李",
                 events: [
                     {
                         time: "12:30–13:30",
-                        title: "Disney Oceaneer Club & Royal Meet & Greet",
+                        title: "Big Hero Arcade／D Lounge 家庭活動",
                         tag: "亮點活動",
                         tagClass: "tag-highlight",
                         desc: [
-                            "<strong>澤澤、彤妹：</strong>完整參與活動",
-                            "<strong>大人帶小寶：</strong>Royal Meet & Greet（免費皇家見面會）",
-                            "<strong>拍照註記：</strong>角色見面會本來就是高價值官方攝影時段，若有買方案，這段最不值得臨時錯過。"
+                            "<strong>三童一起：</strong>Big Hero Arcade 輪流遊戲，或依 Navigator 參加 D Lounge 舞蹈／家庭活動。",
+                            "<strong>禮賓備案：</strong>依 Lounge 當天時刻表見角色；D Lounge 旅客曾遇米奇不代表每場都有。",
+                            "<strong>皇家見面會：</strong>只依已確認時段插入任何一天，不固定 Day 3 下午；預約仍可能等待，後面不緊接不能遲到的主秀。"
                         ]
                     },
                     {
@@ -407,17 +413,18 @@
                         tag: "準備返家",
                         tagClass: "tag-prepare",
                         desc: [
-                            "整理大型行李放在房門外"
+                            "先整理大件行李、核對房帳與七人 SGAC，外放時間依下船通知，不現在就把行李送出。",
+                            "護照、藥品、隔日衣物、孩子晨間包與機場用品留隨身；通知司機實際下船集合安排。"
                         ]
                     }
                 ]
             },
             {
-                name: "晚間｜晚餐＋海上派對煙火＋最後宵夜",
+                name: "晚間｜保留晚餐與主秀＋可選礁區散步",
                 events: [
                     {
-                        time: "17:15–19:00",
-                        title: "第一時段晚餐：Hollywood Spotlight Club",
+                        time: "第一時段／依分配",
+                        title: "第一時段晚餐：完成三晚輪替體驗",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
@@ -426,23 +433,23 @@
                         ]
                     },
                     {
-                        time: "19:00–21:00",
+                        time: "依當晚節目／有空才補",
                         title: "Disney Imagination Garden 表演 (Deck 10/11)",
                         tag: "精彩看秀",
                         tagClass: "tag-show",
                         desc: [
-                            "觀賞：Avengers Assemble! 特技秀／或 Duffy 大型派對"
+                            "優先當天分配主秀；有不衝突場次再補 Avengers Assemble! 或 Duffy and The Friend Ship，不因演出主題就保證角色合照。"
                         ]
                     },
                     {
-                        time: "22:00–23:00",
-                        title: "甲板煙火派對：The Lion King (全球獨家)",
+                        time: "依煙火公告／無場次則散步",
+                        title: "Celebration in the Sky／Discovery Reef 夜間散步",
                         tag: "絕美煙火",
                         tagClass: "tag-highlight",
                         desc: [
-                            "<strong>獅子王主題海上煙火：Celebration in the Sky</strong>",
-                            "接近 10:30 會直接施放，通常不太暖場，先找空曠少遮擋的位置。",
-                            "<strong>提醒：</strong>別只等房內廣播，約 10:00 後就開始留意 App 與甲板即時動靜，房內常常聽不清楚。"
+                            "<strong>煙火是跨日候選：</strong>The Lion King: Celebration in the Sky 依本航次公告，可能安排在其他晚上，不固定最後一晚或 22:30。",
+                            "沒有煙火或孩子累了，就在 Disney Discovery Reef 探索礁區短散步，取代重複逛街。",
+                            "<strong>提醒：</strong>以 Navigator 與現場公告為準，受天氣影響可調整；不要為等煙火延誤行李外放或睡眠。"
                         ]
                     }
                 ]
@@ -454,7 +461,7 @@
         tabTitle: "Day 4 下船",
         dateTitle: "🧳 Day 4｜下船日（禮賓節奏）",
         goals: [
-            "優雅吃完早餐，憑禮賓通道安靜下船，前往樟宜機場。"
+            "1/28 早餐、下船與前往機場依正式通知；SGAC 提前在 1/26–1/27 完成，接送時間不以優先通道推估"
         ],
         periods: [
             {
@@ -466,13 +473,13 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "最後一天早餐不必完全被動照 App 分配；若有最喜歡的主餐廳，通常一早去排第一輪會更有彈性。",
-                            "若偏好 Animator's Table / Animator’s Palate 這類點餐早餐，早點到通常較容易先吃到。",
+                            "先確認下船日早餐供應與分配；想換餐廳先詢問，不以舊航次現場排隊經驗當保證。",
+                            "再次檢查七人 SGAC 的抵達日是 1/28；第一次 1/24 入境申報不能代替本次。",
                             "<strong>提醒：</strong>船上通知與 App 仍值得先看；大型行李若前晚已外放，證件、外套、點心與孩子晨間用品要留在手提包，前晚也先核對房帳。"
                         ]
                     },
                     {
-                        time: "08:00–09:00",
+                        time: "依放行與交通確認",
                         title: "下船、找行李、前往樟宜機場",
                         tag: "極速通關",
                         tagClass: "tag-boarding",
@@ -480,7 +487,7 @@
                             "禮賓優先通道（如 D Lounge）通常可更快下船，實際以船上通知為準。",
                             "若交給 DCL 帶行李，港口角色吊牌區不一定集中，請預留找行李時間。",
                             "若自己搬行李通常能略早下船，但時間差不必當成保證。",
-                            "接港口後續交通時，Grab、limo 或行李推車都可現場再決定。"
+                            "事先確認可容納七人與實際行李的接送，約定集合點、司機聯絡與延遲處理；接送時間依實際下船調整。"
                         ]
                     }
                 ]
@@ -494,32 +501,43 @@ const checklistData = [
     {
         category: "登船重要手續",
         items: [
-            { id: "pay-full", text: "完成全額支付，支付線上小費" },
+            { id: "pay-full", text: "核對原船費付款與小費是否入帳（兩房各自驗收，不預設已付清）" },
+            { id: "both-cabins-balance-202609", text: "高｜9 月禮賓窗口前核對兩房尾款：各家確認餘額、付款入帳與預約資格" },
             { id: "online-checkin", text: "出發前 40 天完成線上辦理登船手續" },
-            { id: "concierge-10am", text: "禮賓艙房 10:00 即可抵達碼頭報到" },
+            { id: "concierge-10am", text: "核對本航次禮賓報到通知與抵達時間，不預設 10:00 一定可進港" },
             { id: "health-form", text: "登船前完成線上健康問卷填寫" },
-            { id: "sgac-twice", text: "新加坡入境卡 (SGAC) 需填寫兩次 (入境+回船)" },
+            { id: "sgac-twice", text: "SG Arrival Card (SGAC) 需申報兩次：飛抵入境＋郵輪返抵下船入境" },
+            { id: "sgac-arrival-20270124", text: "1/22–1/24｜七人提交 1/24 飛抵新加坡 SGAC，核對抵達日與收件確認" },
+            { id: "sgac-return-20270128", text: "1/26–1/28｜七人重新提交 1/28 郵輪返抵 SGAC，計畫 1/26 完成、1/27 複核" },
             { id: "phone-timezone-off", text: "上船前關閉手機自動時區，船上以 Navigator App 時間為準" }
         ]
     },
     {
         category: "預約與購買",
         items: [
-            { id: "royal-meet-130d", text: "130 天前禮賓預約：皇家公主見面會" },
-            { id: "dinner-table", text: "聯絡管家確認用餐需求 (如併桌安排)" },
+            { id: "royal-meet-130d", text: "130 天前向禮賓提出 Royal Gathering 需求，回 App 核對七人名單與確認時段，不只看回信" },
+            { id: "dinner-table", text: "請禮賓協調七人同桌、第一時段、角色晚宴與動畫互動體驗、較好視線；以實際輪替為準" },
             { id: "photo-package", text: "付完全額後，先決定要不要預購拍照套裝；若要買，記得在出發前 3 天前完成調整" },
             { id: "wifi-buy", text: "確認是否需要額外 Wi-Fi；禮賓房每位房客含 24 小時連續網路，不必太早啟用" },
-            { id: "kids-club-booking", text: "預定 Oceaneer Club 兒童俱樂部時段" }
+            { id: "kids-club-booking", text: "查看一次全家 Oceaneer Open House；正式活動 3–10 歲，不能把開放參觀當作託管" },
+            { id: "onboard-reservations", text: "登船後先拿禮賓角色表，再查看 Baymax 杯麵、Ironcycle、Pym、Groot 預約或候位" },
+            { id: "photo-two-families-scope", text: "兩家核對攝影套裝範圍：訂房連結不等於另一家獨照／家庭照全包；保留退款就先不下載" }
         ]
     },
     {
         category: "事先準備",
         items: [
-            { id: "passport-expiry", text: "確認護照效期 (6 個月以上) 與旅遊保險" },
+            { id: "passport-expiry", text: "高｜核對七人護照效期及英文姓名：船票、機票、入境文件一致，符合官方有效期要求" },
+            { id: "hotel-20270124", text: "高｜確認 1/24 新加坡住宿：訂房編號、七人入住名單／房型、取消期限及早餐" },
+            { id: "other-family-flights", text: "高｜確認另一家航班：是否同行、抵達／回程時間與兩家集合方式" },
+            { id: "ground-transfers-three-legs", text: "高｜安排機場→飯店、飯店→碼頭、碼頭→機場：車可裝七人與全部行李，訂明接送點" },
+            { id: "cruise-insurance-review", text: "中高｜核對現有保單：郵輪、海外醫療、緊急運送、延誤／取消；未買 Disney 保險不等於無保障" },
+            { id: "school-calendars", text: "中｜核對兩所學校寒假與返校日，三童出國日期不與必到校活動衝突" },
+            { id: "children-barefoot-height", text: "先量三童赤腳身高：Wild Slides 至少 122 公分；Flying Saucer 4–8 歲僅彤妹符合" },
             { id: "personal-essentials", text: "攜帶個人備品 (牙刷、購物袋、防曬/曬後舒緩用品、幼童防水小凳、常備藥)" },
-            { id: "door-decor", text: "準備房門布置磁鐵或給家人的驚喜小禮" },
+            { id: "door-decor", text: "中｜決定門貼採購與分工：確認磁吸材質、門面適用性及官方裝飾規則，避免重複購買" },
             { id: "swimsuit-bag", text: "先玩滑道：登船日將泳裝放於隨身包" },
-            { id: "last-night-luggage", text: "下船前一晚 10:00 前將大型行李放於門口" }
+            { id: "last-night-luggage", text: "1/27 下午先收行李，外放截止依通知；證件、藥品、隔日衣物與孩子晨間包留隨身" }
         ]
     }
 ];
@@ -529,17 +547,17 @@ const deckGuideData = [
     {
         id: "deck5",
         label: "Deck 5",
-        title: "Deck 5｜首日晚秀與動畫晚餐節奏",
+        title: "Deck 5｜劇院主秀與動畫晚餐節奏",
         theme: "劇院主秀、Animator’s Palate、散場後補逛周邊",
-        tripFocus: "Day 1 晚餐加上《Remember》最容易把整個晚間都待在這一帶。",
-        badges: ["Day 1 首日晚秀", "晚餐前先卡位", "散場後人潮最明顯"],
+        tripFocus: "依 App 分配的晚餐與主秀安排動線，不預設《Remember》在首晚。",
+        badges: ["主秀依 App", "先核對晚餐", "散場人潮"],
         facilities: [
             {
                 icon: "fa-solid fa-masks-theater",
                 name: "Walt Disney Theatre",
-                summary: "百老匯等級大劇場，首日晚間秀《Remember》就是這趟最有儀式感的開場。",
-                bestTime: "開演前 20–30 分鐘進場，優先找中間區。",
-                tripUse: "Day 1 晚餐後直接來這裡，節奏最順。",
+                summary: "《Remember》與《Disney Seas the Adventure》的主劇院；依 App 分配或先到先入場場次觀看。",
+                bestTime: "先確認當晚禮賓集合與截止時間，不照搬舊航次演前 40／30 分鐘規則。",
+                tripUse: "保留三晚輪替晚餐與重要主秀，先解決衝突再安排角色與排隊。",
                 highlight: true
             },
             {
@@ -621,7 +639,7 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-user-secret",
                 name: "Edge 隱藏入口 / Vibe 青年會所",
-                summary: "入口偽裝在街區立面裡，本身就像一個孩子會記住的彩蛋。",
+                summary: "Edge 11–14 歲，小寶 11 歲符合，澤澤 9 歲與彤妹 8 歲不符合；Vibe 為 14–17 歲。入口偽裝在街區立面裡。",
                 bestTime: "首日先帶孩子走一次，順便確認活動表。",
                 tripUse: "Day 1 熟悉位置後，後續孩子比較敢自己回來找活動。",
                 highlight: true
@@ -672,8 +690,8 @@ const deckGuideData = [
                 icon: "fa-solid fa-child-reaching",
                 name: "Disney Oceaneer Club",
                 summary: "3–10 歲孩子的沉浸式主場，四大主題區域夠讓首日下午就玩出興趣。",
-                bestTime: "Day 1 下午一開放就先帶著走一次完整動線。",
-                tripUse: "澤澤、彤妹先把空間熟起來，後面家長才有餘裕拆隊。",
+                bestTime: "依 Navigator 的 Open House 時段，全家只安排一次參觀；不預設 13:00。",
+                tripUse: "小寶 11 歲只在全齡 Open House 與家人同遊；澤澤 9、彤妹 8 歲才符合正式 3–10 歲活動。開放參觀不能當作託管交接。",
                 highlight: true
             },
             {
@@ -725,7 +743,7 @@ const deckGuideData = [
         label: "Deck 10",
         title: "Deck 10｜花園舞台與快餐動線主戰場",
         theme: "Imagination Garden、Wayfinder Bay、Discovery Reef、快餐群",
-        tripFocus: "Day 1 熟悉舞台、Day 2 看 Avengers、Day 3 看 Duffy 與煙火前集結都會繞回這一圈。",
+        tripFocus: "Day 1 熟悉舞台；海上日依公告挑 Avengers 或 Duffy，晚間可短逛 Discovery Reef，不固定煙火日期。",
         badges: ["花園舞台主場", "快餐分流", "白天活動最多"],
         facilities: [
             {
@@ -740,7 +758,7 @@ const deckGuideData = [
                 icon: "fa-solid fa-water-ladder",
                 name: "Wayfinder Bay + Discovery Reef",
                 summary: "莫阿娜主題泳池與海景最舒服，旁邊還能順手買到烏蘇拉主題飲品；Discovery Reef 船尾也可留意 Dory & Nemo Statue 這類合照點。",
-                bestTime: "上午或秀前空檔比較舒服，避開正午最熱。",
+                bestTime: "白天避開正午曝曬；Discovery Reef 夜間散步可替代重複購物，不壓縮主秀與睡眠。",
                 tripUse: "Day 2 上午很適合玩水、拍照、買一杯珍奶當小獎勵；如果當天想補海底總動員主題照片，這一帶可順手檢查。",
                 highlight: true
             },
@@ -833,15 +851,15 @@ const deckGuideData = [
                 name: "Concierge Lounge",
                 summary: "禮賓家庭最穩的補給基地；每日供應與酒水節奏請直接看 Playbook「禮賓隱藏加值」卡片。",
                 bestTime: "Day 1 報到後先熟路線；每晚晚餐前後再回來做中轉補位。",
-                tripUse: "把 Lounge 當集合與節奏切換點即可，詳細時段與注意事項不在這裡重複。",
+                tripUse: "先索取免預約角色時刻表。Deck 17 船頭左舷有指定吸菸區，詢問無菸座位與通往日光甲板路線；不代表室內全區可吸菸，也無證據判定 17108 受影響。",
                 highlight: true
             },
             {
                 icon: "fa-solid fa-water",
                 name: "Toy Story Pool / Splash Pad / Flying Saucer Splash Zone",
-                summary: "最適合家庭暖身與放電的玩具總動員水區，孩子很容易一待就不想走。",
-                bestTime: "登船日下午或海上日早段，人通常比較友善。",
-                tripUse: "Day 1 暖身玩水、Day 3 再衝一次，這層是你們的固定回訪點。",
+                summary: "三童共同玩水選 Sunnyside Pool：無年齡門檻，未滿 12 歲需成人監督。Flying Saucer Splash Zone 限 4–8 歲，三人僅彤妹符合，不當共同主活動。",
+                bestTime: "海上日依開放時段；登船日不得和安全演練重疊。",
+                tripUse: "小寶 11、澤澤 9、彤妹 8 歲以 Sunnyside 或禮賓泳池同遊；Wild Slides 另看赤腳 122 公分資格。<a href='https://disneycruise.disney.go.com/en/faq/onboard-activities/pool-restrictions/' target='_blank' rel='noopener noreferrer'>官方泳池與滑水道限制</a>（2026/9/7 核對）。",
                 highlight: true
             },
             {
@@ -875,15 +893,15 @@ const deckGuideData = [
                 name: "Marvel Landing",
                 summary: "漫威主題區就是 Day 2 上午最有速度感的開局，適合先衝再慢下來。",
                 bestTime: "越早越好，風勢穩時最容易玩得順；Quantum Racers 要避免亂撞卡住全場。",
-                tripUse: "Day 2 先攻 Ironcycle 與周邊設施，早上完成最省排隊。",
+                tripUse: "Ironcycle 在 Day 1 或 Day 2 就觀察可玩機會；三項設施依 Navigator 預約／候位，不把禮賓當快速通關。接近晚餐、主秀或孩子疲累就停止長隊。",
                 highlight: true
             },
             {
                 icon: "fa-solid fa-water-ladder",
                 name: "Infinity Pool & Jetfinity Bar",
-                summary: "無邊際泳池配海景視野很強，除了看海和放鬆，池邊 bar 也常被熟門熟路的人當成隱藏補給點。",
+                summary: "Infinity Pool 官方目前無年齡門檻，未滿 12 歲需成人監督；仍須核對現場時段與告示，不逕稱成人限定。",
                 bestTime: "常見時段大約 09:00–23:00；上午玩完設施後或午後放鬆都很適合，夕陽前氣氛也很好，風大要注意保暖。",
-                tripUse: "Day 2 Marvel 行程之後順接最自然，不用再跨太多層；若孩子在 Deck 18 玩到一半餓了，池邊常可順手補免費 hotdog 麵包，不必急著離開這層找食物。",
+                tripUse: "Marvel 設施後可休息；Deck 18 船尾左舷 Infinity Pool Sundeck 有指定吸菸區，先確認無菸座位與路線。",
                 highlight: true
             },
             {
@@ -915,7 +933,7 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-sun",
                 name: "Concierge Sundeck & Pool",
-                summary: "禮賓專屬空間的最大價值不是奢華，而是能在最吵的時候快速抽離；整區 07:00–22:00 開放。",
+                summary: "禮賓泳池各年齡房客可使用，未滿 12 歲需成人監督；適合小寶、澤澤、彤妹共同玩水，開放時間以當天公告為準。",
                 bestTime: "11:00–16:30 最適合補 light bites 與 hot items；07:00–22:00 都能回來休息和補基本飲品。",
                 tripUse: "可當作 Day 2、Day 3 的中場休息點，重新整理體力；基本免費飲品供應到 22:00，付費酒水則從 11:00–22:00 可點。",
                 highlight: true
@@ -923,9 +941,9 @@ const deckGuideData = [
             {
                 icon: "fa-solid fa-person-swimming",
                 name: "Woody’s Wide Slide 入口",
-                summary: "從 19 樓入口一路滑回 17 樓，透明段伸出船外的視覺刺激感很強。",
+                summary: "正式英文 Woody and Jessie’s Wild Slides；赤腳身高至少 122 公分，不允許水鞋、浮潛面罩與鬆散物品。",
                 bestTime: "登船日下午或海上日早段通常排得最輕。",
-                tripUse: "和 Deck 17 玩水區打包成一組玩最順，先確認身高限制。",
+                tripUse: "先量三童身高，依現場量測與限制決定可玩者，不以年齡推定資格；不符合就改共同泳池。",
                 highlight: true
             },
             {
@@ -952,14 +970,14 @@ const showGuideData = [
                 theme: "以瓦力與伊芙為主線，串起可可夜總會、小美人魚、阿拉丁等迪士尼記憶的原創音樂劇。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
                 timingTip: "建議提早 20–30 分鐘進場，優先搶一樓中間區；若是 First Seating 又遇到餐廳秀或晚餐拖長，更要提早收尾，二樓視野也較容易被前排遮住。",
-                tripLink: "Day 1 晚餐後直接銜接，是首日晚間最重要的一場。"
+                tripLink: "列為重要主秀，日期與場次依 App；晚餐、集合時間先核對，不固定 Day 1。"
             },
             {
                 name: "《Disney Seas the Adventure》",
                 theme: "由經典角色串起的海上百老匯式大秀，節奏熱鬧、全家都容易進入狀況。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
                 timingTip: "和晚餐時段綁在一起看最順，但 First Seating 若晚餐拖長仍可能壓縮排隊時間；進場時仍建議優先搶一樓區域。",
-                tripLink: "適合作為另一晚的正式看秀主線，沿用 Day 1 的進場策略即可。"
+                tripLink: "列為另一場重要主秀，以 App 分配場次與當晚禮賓通知為準。"
             }
         ]
     },
@@ -974,14 +992,14 @@ const showGuideData = [
                 theme: "漫威特技秀，英雄群像加上死侍的吐槽節奏，很適合全家一起看熱鬧。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
                 timingTip: "這場比一般花園秀更值得早到，至少提早 45 分鐘到 Deck 10 MID 中間草皮區卡位最穩；若只是想看英雄進場，開演前約 15 分鐘也可先去 Deck 11 後方電梯一帶碰碰運氣。",
-                tripLink: "Day 2 下午最對味，和 Marvel Landing 主題可以串成完整的一天；兩天都有場次，但常會有一場和晚餐打架，先選 Avengers 的時間再排角色見面會最不容易衝突。"
+                tripLink: "海上日候選，先保留晚餐與劇院主秀，再挑不衝突的場次；不保證每天演出。"
             },
             {
                 name: "《Duffy and The Friend Ship》",
                 theme: "達菲與好友的海上派對，是偏可愛與合照氛圍的大型演出。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
                 timingTip: "若孩子偏愛達菲系，建議提早卡視野好的邊側區。",
-                tripLink: "Day 3 下午很適合安排這場，和花園舞台活動自然接在一起。"
+                tripLink: "依當次節目安排；達菲或史黛拉兔有主題演出／商店，不代表一定有個別合照。"
             },
             {
                 name: "《Let’s Set Sail》/《Baymax Super Exercise Expo》",
@@ -1009,8 +1027,8 @@ const showGuideData = [
                 name: "《The Lion King: Celebration in the Sky》",
                 theme: "獅子王主題海上煙火，配樂與旁白都走大型慶典級別的震撼路線。",
                 location: "高層戶外甲板與開放視野區",
-                timingTip: "通常約 10:30 準時施放、暖場不多；先找空曠少遮擋的位置，並留意當天即時公告。房內廣播不一定清楚，接近 10:00 後就應主動看 App 或甲板現場動靜。",
-                tripLink: "Day 3 晚間是你們目前行程裡最明確的壓軸安排。"
+                timingTip: "日期、時間、觀賞區及天氣調整以本航次 Navigator 與現場公告為準，不沿用其他航次的晚上 10:30。",
+                tripLink: "不固定最後一晚；有公告才插入相應日期，無場次可改 Discovery Reef 夜間散步。"
             }
         ]
     }
@@ -1104,7 +1122,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-route",
                 sourceType: "community",
                 whenToUse: "真正踏上船後的第一個下午。",
-                action: "把節奏固定成：接駁車下車後直接跟指引前進 → QR code 安檢與 check-in → 坐下式午餐 → 禮賓 Lounge 短補給 → Kids Club Open House → 水區放電，只保留最重要的第一圈。",
+                action: "依登船指引 → 快速補給 → 禮賓接待核對晚餐、主秀與皇家預約 → 先拿 Lounge 角色表，再查看 Baymax 杯麵／Marvel 設施預約 → 一次全家 Oceaneer Open House → 熟悉動線。先圈出安全演練，剩餘空檔才玩水。",
                 tripFit: "這條路線能同時滿足大人報到、孩子熟悉環境與第一天放電，最適合你們兩家同行的協作節奏。",
                 caution: "房卡與行李常不會同時到位，先別急著把回房當第一優先；接駁客的行李也通常不用停在自助 drop-off。若現場拿到行李吊牌，只撕尾端貼紙固定即可，不要整條撕開。",
                 relatedSectionId: "checkin"
@@ -1161,9 +1179,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-cheese",
                 sourceType: "community",
                 whenToUse: "孩子洗好澡、全家回房後想吃點熱食時，或隔天早餐想先靠 room service 墊一下時。",
-                action: "App 內的 Room Service 入口通常藏得很深，可先走 Explore -> Dining and lounges -> 滑到最底下 -> Room Service 看菜單；真要點餐多半還是直接打給 room service team。一般情況下，電話可能要先等 10–20 分鐘才接到客服，點完餐再等約 30–40 分鐘送達。若想 12 點前後剛好吃到，通常在看完秀、回房整理一下就該先打，不要等真的餓了才叫；可先把小桌子打開，方便工作人員把餐點送進房，若要自己搬整盤進房也可以，但托盤通常偏重。",
-                tripFit: "這會把『還要不要再去找東西吃』變成簡單、固定又很有記憶點的收尾儀式，特別適合孩子洗完澡後直接在房內安靜補一輪。",
-                caution: "小費可用社群常見抓法：每項約 1–2 USD 或每托盤約 5 USD；吃完後托盤可放門外或留房內等房務收走。一般情況下可能是 10–20 分鐘接通、30–40 分鐘送達，但半夜高峰也可能接線超過 30 分鐘、送來已是 1–2 小時後；早餐若排超過 08:00 也較容易晚到而卡住上午預約。菜單仍以當次供應為準，wonton soup noodle 與可嘗試詢問的 cookie & milk 偏推薦，Dan Dan noodle 則屬主觀不推；熱食送到時也可能已經變溫，先有這個預期會比較舒服。",
+                action: "先在 Navigator 查 Room Service 菜單，再用房內電話點餐，確認供應、費用與預估送達。17108 陽台可留一次早餐或休息餐點，不必每天為使用 Lounge 來回移動。",
+                tripFit: "AsiaOne 2026/6/4 更新報導：6/4 航次起一般送餐每單 US$5，加 18% 小費；禮賓與符合規定的歐陸早餐掛卡訂單免配送費。<a href='https://www.asiaone.com/lifestyle/disney-adventure-cruise-charging-in-room-dining-fees' target='_blank' rel='noopener noreferrer'>收費變動報導</a>。",
+                caution: "這是營運報導，不是 2027 報價承諾；免配送費不等於全部餐點、飲品免費。先核對當次菜單與帳單，避免重複加給；等待會浮動，不在等餐後緊接不能遲到的活動。",
                 relatedSectionId: "tips"
             },
             {
@@ -1171,9 +1189,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-camera-retro",
                 sourceType: "community",
                 whenToUse: "海上日早上與一般 meet-and-greet 前。",
-                action: "角色合照通常提早 10–15 分鐘排最省時間；若想拍空景，D2、D3 的 07:30–08:30 是最容易拍到乾淨甲板的時段。這張卡只處理『什麼時候去拍比較省力』，不把套裝購買、下載與帳號規則混在一起。",
-                tripFit: "這種『早點去就省很多力』的節奏，比臨時在人潮中硬排更適合多孩家庭。",
-                caution: "Royal Gathering 本身仍回到原本的時間軸與預約邏輯；若是有人數控管的角色場次，登船後與隔日下午多刷幾次 App 看是否釋出通常比死守單一時段更有效。Deck 7 也常是 roaming character 會經過的走廊，但移動中的公主不一定都會停下互動。",
+                action: "先拿 Concierge Lounge 免預約角色表，再補孩子最想見、Lounge 沒涵蓋的角色。Baymax 杯麵在 San Fransokyo Street，需登船後預約；Royal Gathering 依確認時段，不固定下午。",
+                tripFit: "使用者提供的 goma0609 9/5 遊記摘要（8/20–24 搭乘）提到已預約米妮仍等約 45 分鐘；只作緩衝提醒，非每場預估等待。",
+                caution: "預約不代表立即完成，後面不要緊接不能遲到的晚餐／主秀。達菲與史黛拉兔是否合照看當次節目，不能由商店或演出主題推定。<a href='https://disneycruise.disney.go.com/en-ca/faq/booking-reservations/disney-adventure-book-activities-faq/' target='_blank' rel='noopener noreferrer'>官方 Adventure 預約說明</a>。",
                 relatedSectionId: "timeline"
             },
             {
@@ -1181,7 +1199,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-heart-circle-check",
                 sourceType: "community",
                 whenToUse: "登船後第一次開始整理活動、想避免花園秀與晚餐打架時。",
-                action: "先進 App 的 Explore -> Live Shows，把 Garden Stage 和 Wayfinder Bay 想看的秀都點愛心，My Plan 會更容易幫你把演出節奏排出來；若要約隔天活動，再從 App 的「＋」或 Onboard Fun 檢查可預約項目。真正要先確定的通常是 Avengers Assemble! 的場次，再去排角色見面會，會比反過來更不容易和晚餐、主秀或其他甲板活動撞期。",
+                action: "先核對 App 的正式晚餐與主秀，再把 Live Shows 想看的秀點愛心；接著確認 Onboard Fun／角色與設施預約，最後才補 Big Hero、D Lounge、散步。點愛心只是收藏，不代表預約成功。",
                 tripFit: "你們這趟花園舞台和戶外秀很多，先把秀程定下來，再往外排角色與其他活動，整體衝突會少很多。",
                 caution: "這不是保證一定自動排得完美，而是先把高優先秀固定下來的實戰技巧；角色場次與開放時間仍以當天 App 顯示為準。",
                 relatedSectionId: "entertainment"
@@ -1192,8 +1210,8 @@ const playbookGuideData = [
                 sourceType: "official",
                 whenToUse: "付完全額船費後，到航程最後一天前都值得再確認一次。",
                 action: "拍照套裝可在 My Cruise Plans / Onboard Fun 內查看，一房通常只需一人購買。若想保留最大彈性，重點不是一開始就急著下載，而是先確認照片都有順利進到帳號；官方 FAQ 也建議航程中至少去 Pics 或 kiosks 看幾次，確保角色見面、晚餐與背景點的照片都有被抓到。",
-                tripFit: "這張卡最適合拿來當『購買與下載規則表』：付完全額後才看得到預購，出發前 3 天前都還能調整；若在船上購買後尚未下載任何數位照片，航程結束前仍可取消。船上只能單張下載，下船後登入 Disney Cruise Line Photos 才能用 Download All 一次抓回，且每張照片自拍攝日起 45 天內可下載。",
-                caution: "可能價格與早鳥折扣會依航次、方案與購買時間浮動，是否有 85 折、15 張或 10 張套裝，都以當次 My Cruise Plans 顯示為準。若已決定購買，最好在船上就完成購買與至少一次下載；額外照片購買通常必須在下船前完成。",
+                tripFit: "套裝照片需含至少一位購買房間成員。兩家訂房已連結，不代表另一家的獨照、四人家庭照全包；跨房合併僅有同一家庭未滿 21 歲子女等特定條件，須到 Pics 請工作人員核對。",
+                caution: "預購訂單可在出發前 3 天以前線上取消，或航程結束前船上取消，但不得已下載數位照片。若還在決定，先檢視入帳，不要試下載；解鎖／單張數位購買另有不可退款條款。價格與下載期限依當次方案。<a href='https://disneycruise.disney.go.com/en-ca/photos-terms-and-conditions/' target='_blank' rel='noopener noreferrer'>官方攝影條款</a>。",
                 relatedSectionId: "entertainment"
             },
             {
@@ -1250,7 +1268,7 @@ const playbookGuideData = [
                 whenToUse: "遇到限額活動、劇院座位或臨時需求時。",
                 action: "若孩子想要限額活動、你們想確認劇院提前入座、或有需要協調的特殊需求，第一步先問管家能不能協助，而不是自己先去碰運氣；人在房內時也可以先按電話上的 Concierge 或 Guest Services，不一定要全家走去 Lounge。",
                 tripFit: "禮賓價值最大的地方不是尊榮感，而是把你們從某些排隊與來回溝通裡解放出來。",
-                caution: "可協助不等於保證一定有位，越早提出越有機會。",
+                caution: "可協助不等於保證有位或零等待，禮賓不是所有設施的快速通關。岸上團隊回信後仍要在 App 核對實際預約、人數與時段。",
                 relatedSectionId: "deck-guide"
             },
             {
@@ -1259,7 +1277,7 @@ const playbookGuideData = [
                 sourceType: "concierge",
                 whenToUse: "午後空檔、晚餐前、看秀後與全家需要安靜休息時。",
                 action: "把 Lounge 視為整天可切換節奏的基地：07:00–10:30 晨間輕食、11:00–14:30 午間補給、15:00–16:30 下午茶、17:00–20:00 晚間輕食、20:30–22:00 甜點收尾；它最大的價值是舒服與安靜，不是取代所有餐食。",
-                tripFit: "這種『進可補給、退可躲人潮』的空間，很適合兩家同行時當作每日中轉站。",
+                tripFit: "先取得 Lounge 免預約角色時刻表，再補公共場次，減少重複排同一角色；歡迎午餐與角色活動仍可能等待，不把禮賓當零延誤保證。",
                 caution: "基本飲品幾乎全天可用，17:00–22:00 通常還有免費 beer / wine / cocktails；但早晨部分 specialty beverages 可能另外計費，不同船與時段供應內容也會有差異。",
                 relatedSectionId: "deck-guide"
             },
@@ -1287,10 +1305,10 @@ const playbookGuideData = [
                 title: "劇院優先入場 SOP",
                 icon: "fa-solid fa-door-open",
                 sourceType: "concierge",
-                whenToUse: "每次主秀當晚、開演前 40 分鐘。",
+                whenToUse: "每天核對晚餐與 App 主秀分配時，再確認當晚禮賓通知。",
                 action: "全員先到 Deck 5 船頭（forward）集合點，身上帶好金色房卡與 Navigator App 預訂證明，再一起走優先入場流程；實際集合細節仍以當晚禮賓通知信為主。",
                 tripFit: "把集合點、時間與證明文件固定成 SOP，最能避免孩子累了時還要臨場找資料。",
-                caution: "若錯過集合或壓線到場，優先通道可能關閉並改回一般入場；演前 30 分鐘後通常不建議再壓線。現場常可拿免費新鮮爆米花；若想兼顧舞台與左右螢幕，社群常把第二區第一排視為很穩的視野選擇，但仍以當晚現場座位狀況為準。",
+                caution: "使用者提供的舊航次通知為演前 40 分鐘集合、30 分鐘截止，不是本航次保證。若 19:00 演出就需 18:20 集合，會與 17:45 晚餐衝突，先請禮賓協調。設好停止排隊時間，不用壓縮晚餐換入場。",
                 relatedSectionId: "entertainment"
             }
         ]
@@ -1353,6 +1371,53 @@ const playbookGuideData = [
         ]
     },
     {
+        id: "family-planning",
+        label: "家庭避衝突與備案",
+        intro: "2026/9/7 更新：官方限制與家庭安排分開看，旅客心得只用來準備緩衝，不照搬其他航次時刻表。",
+        items: [
+            {
+                title: "Ironcycle 提早嘗試，晚餐與主秀前停止長隊",
+                icon: "fa-solid fa-clock",
+                sourceType: "community",
+                whenToUse: "Day 1 或 Day 2 先看營運，之後每次排隊前再決定。",
+                action: "每天先保留晚餐與主秀，再插已確認預約，最後才補家庭遊戲。以最近一場必到活動倒推換裝、步行與集合時間；若候位無法在那之前結束，就停止等候，孩子疲累也直接換備案。",
+                tripFit: "使用者提供 goma0609 8/29 攻略、9/5 分日遊記摘要：夫妻帶 7 歲女兒於 8/20–24 搭乘，整體順利，但 Ironcycle 排隊／系統調整曾壓縮《Remember》入場；不只沿用試航負面預期，也不把設施留最後一天。",
+                caution: "遊記原文連結尚待補核，不能把單趟等待推算為 2027 人潮。官方允許部分 Marvel 時段預約、部分免預約；Navigator 與現場才是當日依據，禮賓不保證快速通關。",
+                relatedSectionId: "deck-guide"
+            },
+            {
+                title: "D Lounge 家庭活動：三童一起的室內備案",
+                icon: "fa-solid fa-people-group",
+                sourceType: "official",
+                whenToUse: "海上日想一起玩、戶外停機、太熱或不想長時間排隊時。",
+                action: "在 Navigator 搜尋 D Lounge，挑家庭舞蹈、問答或卡拉 OK 等當次活動；亦可換 Big Hero Arcade，晚間改 Discovery Reef 短散步。地點與場次以 App 確認。",
+                tripFit: "適合小寶 11、澤澤 9、彤妹 8 歲共同活動，不必為湊行程再安排一次 Oceaneer。使用者提供的 goma0609 9/5 第四天摘要曾記錄未點餐也能觀看舞蹈、當次遇米奇。",
+                caution: "<a href='https://disneycruise.disney.go.com/en-eu/onboard-activities/d-lounge-family-club/' target='_blank' rel='noopener noreferrer'>官方確認家庭娛樂定位</a>；旅客個案不代表每場免費、不需點餐或一定有米奇，參加方式依活動公告。",
+                relatedSectionId: "entertainment"
+            },
+            {
+                title: "禮賓吸菸區與無菸座位：上船先問清楚",
+                icon: "fa-solid fa-ban-smoking",
+                sourceType: "official",
+                whenToUse: "Day 1 Concierge Lounge 報到、安排孩子休息點時。",
+                action: "詢問 Deck 17 船頭左舷 Concierge Lounge 指定吸菸範圍、無菸座位、通往日光甲板路線及較不受菸味影響的位置；Deck 18 船尾左舷 Infinity Pool Sundeck 也有指定區。",
+                tripFit: "禮賓是休息與協調基地，不保證整個周邊無菸味。現無證據能判定 17108 一定受影響，不因這項資訊直接換房。",
+                caution: "這不是整間室內 Lounge 可吸菸；官方另列 Deck 7 船頭右舷外甲板。範圍依現場標示。<a href='https://disneycruise.disney.go.com/en-gb/faq/booking-reservations/designated-smoking-areas/' target='_blank' rel='noopener noreferrer'>官方指定吸菸區</a>（2026/9/7 核對）。",
+                relatedSectionId: "deck-guide"
+            },
+            {
+                title: "禮賓回信後，回 App 驗收七人預約",
+                icon: "fa-solid fa-list-check",
+                sourceType: "community",
+                whenToUse: "9 月禮賓預約窗口前後，以及登船當天。",
+                action: "先核對兩房付款資格，再提交 Royal Gathering 與餐飲需求；逐項回 App 確認七人名單、日期時間與狀態。晚餐願望寫七人同桌、第一時段、角色晚宴與動畫體驗、較好視線，不指定三晚一定同時排 Hollywood 與 Navigator’s。",
+                tripFit: "使用者提供「りーママ」6/24 發文、7 月補充摘要：135 天收到通知、130 天寄需求、123 天 App 看見結果。這只是預約流程經驗，不是入住後評價，也不是本航次保證。",
+                caution: "原文待補核。另有使用者整理的 Reddit 首批四晚禮賓家庭肯定 Lounge 與早餐，但午餐慢、角色延誤仍發生；《換日線》凱倫 5/28（5/4–7 三晚搭乘）推薦輪替晚餐、Remember 與夜間礁區。只採作保留晚餐和增加緩衝的參考。",
+                relatedSectionId: "timeline"
+            }
+        ]
+    },
+    {
         id: "last-night",
         label: "最後一晚與撤船",
         intro: "這組不是重講下船流程，而是把最後一晚真正容易手忙腳亂的決策先幫你排好。",
@@ -1362,7 +1427,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-bag-shopping",
                 sourceType: "community",
                 whenToUse: "大型行李要放門外之前。",
-                action: "把隔天早餐後會用到的證件、外套、濕紙巾、簡單點心、孩子換洗衣物與機場路上要用的東西先留在手提包，別等行李 22:00 外放後才發現還需要翻大箱。",
+                action: "把隔天早餐後會用到的證件、外套、濕紙巾、簡單點心、孩子換洗衣物與機場路上要用的東西先留在手提包，別等依通知外放行李後才發現還需要翻大箱。",
                 tripFit: "這會讓你們下船當天的節奏從容很多，不會在大件行李已經外放後才發現重要物品還在箱內。",
                 caution: "孩子最常臨時需要的是外套、零食和小玩具，這三樣特別值得先留下。",
                 relatedSectionId: "tips"
@@ -1372,9 +1437,9 @@ const playbookGuideData = [
                 icon: "fa-solid fa-utensils",
                 sourceType: "community",
                 whenToUse: "最後一晚安排隔天早上的節奏時。",
-                action: "若想吃自己最喜歡的早餐餐廳，通常早點去排第一輪會比完全被動照 App 分配更有彈性；若怕孩子起床後先餓，可以前一晚就留簡單點心在房內。若想走快速下船節奏，也把早餐、行李與移民時間一起算進去：Self-Assist 通常約 07:00 開始，一般下船則多半約 07:30 左右。",
+                action: "下船日早餐、房務供應與集合點先問禮賓；想換餐廳先詢問。1/26–1/27 完成七人 1/28 再入境 SGAC，接送時間依實際放行，預留找行李與通關時間。",
                 tripFit: "你們回程航班時間很充裕，真正重要的是早上不要餓著、也不要趕著找吃的。",
-                caution: "撤船日的房務供應常和一般早晨不同，別用平常的節奏去預期；若行李交給 DCL 帶下船，也要把港口找行李時間算進去。抵達碼頭移民前，全員都要先完成 SGAC；港口現場若行李多，也可再看要不要用推車、Grab 或 limo。",
+                caution: "SGAC 申報窗口包含抵達當天：1/24 入境為 1/22–1/24，1/28 再入境為 1/26–1/28。不要直到港口才找七人加行李的車；司機集合點、容量與延遲處理事先確認。",
                 relatedSectionId: "checkin"
             },
             {
