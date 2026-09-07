@@ -14,9 +14,9 @@ function loadData() {
   return sandbox.module.exports;
 }
 
-function loadSearchHooks() {
+export function loadSearchHooks(transformData = data => data) {
   const hooks = {};
-  const data = loadData();
+  const data = transformData(loadData());
 
   class NoopIntersectionObserver {
     observe() {}
@@ -109,6 +109,7 @@ function loadSearchHooks() {
   };
 
   const registrySource = fs.readFileSync(path.resolve('search-entity-registry.js'), 'utf8');
+  vm.runInNewContext(fs.readFileSync(path.resolve('travel-reference-data.js'), 'utf8'), sandbox, { filename: 'travel-reference-data.js' });
   vm.runInNewContext(registrySource, sandbox, { filename: 'search-entity-registry.js' });
 
   const taxonomySource = fs.readFileSync(path.resolve('search-keyword-taxonomy.js'), 'utf8');
@@ -180,6 +181,9 @@ hooks.getMenuLookupRecords().forEach((item) => {
 });
 
 const guestServiceLookup = lookupResultsFor('\u5ba2\u52d9\u4e2d\u5fc3');
+assert.equal(lookupResultsFor('zzzznotarealcruiseitem', 'dining').length, 0, 'category boosts must not create unrelated lookup matches');
+const completeDiningLookup = lookupResultsFor('', 'dining');
+assert.equal(completeDiningLookup.reduce((count, record) => count + (record.menuVariants?.length || 0), 0), 550, 'merged results must preserve all menu variants without a result cap');
 assert.equal(guestServiceLookup[0]?.englishName, 'Guest Services', 'Chinese Guest Services lookup should surface the official English name');
 
 const diningLookup = lookupResultsFor('\u9910\u5ef3', 'dining');

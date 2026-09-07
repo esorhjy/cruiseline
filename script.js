@@ -36,33 +36,6 @@ document.addEventListener('DOMContentLoaded', function () {
         shop: 'Shopping',
         wellness: 'Spa / Fitness'
     };
-    const MENU_DINING_FILTERS = [
-        { id: 'all', label: '全部', match: () => true },
-        { id: 'rotational', label: '主餐廳', match: record => record.restaurantGroup === 'rotational' },
-        { id: 'palo', label: 'Palo', match: record => record.restaurantGroup === 'palo' },
-        { id: 'sulley', label: '怪獸餐廳', match: record => record.restaurantGroup === 'sulley' },
-        { id: 'beverage', label: '酒吧飲品', match: record => record.restaurantGroup === 'beverage' },
-        { id: 'kids', label: '兒童餐', match: record => record.menuCategory === 'kids' || (record.tags || []).includes('kids') || (record.tags || []).includes('kids-disney') },
-        { id: 'vegetarian', label: '素食', match: record => (record.tags || []).some(tag => ['vegetarian', 'vegan'].includes(tag)) },
-        { id: 'paid', label: '付費', match: record => Boolean(record.price) },
-        { id: 'alcoholic', label: '酒精', match: record => (record.tags || []).includes('alcoholic') || ['cocktails', 'beer', 'wine', 'rum', 'whiskey', 'sake'].includes(record.menuCategory) }
-    ];
-    const MENU_QUICK_GROUPS = [
-        { id: 'all', label: '全部' },
-        { id: 'rotational', label: '主餐廳' },
-        { id: 'palo', label: 'Palo' },
-        { id: 'sulley', label: '怪獸餐廳' },
-        { id: 'beverage', label: '酒吧飲品' }
-    ];
-    const MENU_QUICK_CATEGORIES = [
-        { id: 'all', label: '全部' },
-        { id: 'kids', label: '兒童餐' },
-        { id: 'vegetarian', label: '素食' },
-        { id: 'paid', label: '付費' },
-        { id: 'alcoholic', label: '酒精' },
-        { id: 'dessert', label: '甜點' },
-        { id: 'drinks', label: '飲品' }
-    ];
     const MENU_RESTAURANT_GROUP_LABELS = {
         rotational: '主餐廳',
         sulley: '怪獸餐廳',
@@ -251,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function () {
         'shops'
     ];
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const finePointerQuery = window.matchMedia('(pointer: fine)');
     const searchState = {
         documents: [],
         lookupRecords: [],
@@ -270,25 +242,21 @@ document.addEventListener('DOMContentLoaded', function () {
         lastResults: [],
         lastQueryData: null
     };
-    const menuLookupState = {
-        query: '',
-        restaurant: 'all',
-        course: 'all',
-        activeCrewRecordId: '',
-        lastResults: [],
-        expandedRecordIds: new Set()
-    };
     const menuDataLoadState = {
         status: Array.isArray(window.MENU_LOOKUP_DATA?.records) ? 'ready' : 'idle',
         promise: null,
         error: null
     };
     const MENU_LOOKUP_DATA_SCRIPT_PATH = 'menu-lookup-data.js';
-    const runtimeState = {
-        bubbleTimer: null,
-        countdownTimer: null,
-        scrollTicking: false
+    const runtimeState = { scrollTicking: false };
+    const notebookState = {
+        view: 'journey', exploreTab: 'facilities', purpose: 'all', deck: 'all',
+        checklistFilter: 'all', scroll: {}, day: 'day1', ready: false
     };
+    let openNotebookSearch = () => {};
+    let savedChecklistStatus = {};
+    let notebookReturnFocus = null;
+    let crewReturnFocus = null;
 
     function buildSynonymMap(groups) {
         const map = new Map();
@@ -485,14 +453,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return hash.toString(36);
     }
 
-    function shouldPauseAmbientEffects() {
-        return document.hidden || prefersReducedMotion.matches;
-    }
-
-    function canUseCursorSparkles() {
-        return finePointerQuery.matches && !shouldPauseAmbientEffects();
-    }
-
     function getSearchSignalLength(text) {
         return normalizeSearchText(text).replace(/\s+/g, '').length;
     }
@@ -537,19 +497,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getScheduleEventId(dayId, periodIndex, eventIndex) {
-        return `search-schedule-${dayId}-${periodIndex}-${eventIndex}`;
+        return cruiseSchedule.find(day => day.id === dayId)?.periods[periodIndex]?.events[eventIndex]?.id || `search-schedule-${dayId}-${periodIndex}-${eventIndex}`;
     }
 
     function getDeckFacilityId(deckId, facilityIndex) {
-        return `search-deck-${deckId}-${facilityIndex}`;
+        return deckGuideData.find(deck => deck.id === deckId)?.facilities[facilityIndex]?.id || `search-deck-${deckId}-${facilityIndex}`;
     }
 
     function getShowItemId(categoryId, showIndex) {
-        return `search-show-${categoryId}-${showIndex}`;
+        return showGuideData.find(group => group.id === categoryId)?.shows[showIndex]?.id || `search-show-${categoryId}-${showIndex}`;
     }
 
     function getPlaybookItemId(missionId, itemIndex) {
-        return `search-playbook-${missionId}-${itemIndex}`;
+        return playbookGuideData.find(group => group.id === missionId)?.items[itemIndex]?.id || `search-playbook-${missionId}-${itemIndex}`;
     }
 
     function getStaticCardId(sectionId, cardIndex) {
@@ -626,108 +586,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateScrollUi();
     }
 
-    // 2. 元素淡入動畫
-    const reveals = document.querySelectorAll('.reveal');
-    const revealOptions = {
-        threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
-    };
-
-    const revealOnScroll = new IntersectionObserver(function (entries, observer) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-                if (entry.target.id === 'ship-stats') {
-                    animateShipStats();
-                }
-                observer.unobserve(entry.target);
-            }
-        });
-    }, revealOptions);
-
-    reveals.forEach(reveal => {
-        revealOnScroll.observe(reveal);
-    });
-
-    function animateShipStats() {
-        const numbers = document.querySelectorAll('.stat-number');
-        numbers.forEach(num => {
-            const target = +num.getAttribute('data-target');
-            const increment = target / 50;
-            let count = 0;
-            const updateCount = () => {
-                if (count < target) {
-                    count += increment;
-                    num.innerText = Math.ceil(count).toLocaleString();
-                    setTimeout(updateCount, 30);
-                } else {
-                    num.innerText = target.toLocaleString();
-                }
-            };
-            updateCount();
-        });
-        const bars = document.querySelectorAll('.stat-progress-fill');
-        bars.forEach(bar => {
-            const width = bar.getAttribute('data-width');
-            if (bar) bar.style.width = width + '%';
-        });
-    }
-
     if (backToTopBtn) {
-        backToTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        backToTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: prefersReducedMotion.matches ? 'instant' : 'smooth' }));
     }
-
-    // 4. 倒數計時
-    const targetDate = new Date("2027-01-25T11:00:00+08:00").getTime();
-    const cdDays = document.getElementById("cd-days");
-    const cdHours = document.getElementById("cd-hours");
-    const cdMinutes = document.getElementById("cd-minutes");
-    const cdSeconds = document.getElementById("cd-seconds");
-    const countdownContainer = document.getElementById("countdown");
-
-    function stopCountdownTimer() {
-        if (runtimeState.countdownTimer) {
-            window.clearInterval(runtimeState.countdownTimer);
-            runtimeState.countdownTimer = null;
-        }
-    }
-
-    function syncCountdownTimer() {
-        if (!countdownContainer) return;
-        if (shouldPauseAmbientEffects()) {
-            stopCountdownTimer();
-            return;
-        }
-        if (runtimeState.countdownTimer) return;
-
-        runtimeState.countdownTimer = window.setInterval(() => {
-            if (!document.hidden) {
-                updateCountdown();
-            }
-        }, 1000);
-    }
-
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
-        if (distance < 0) {
-            if (countdownContainer) countdownContainer.innerHTML = "<div class='countdown-item' style='width:auto; padding: 10px 30px;'><span class='cd-num' style='font-size: 1.8rem;'>✨ 魔法已啟航！ ✨</span></div>";
-            stopCountdownTimer();
-            return;
-        }
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        if (cdDays) cdDays.innerText = days.toString().padStart(2, '0');
-        if (cdHours) cdHours.innerText = hours.toString().padStart(2, '0');
-        if (cdMinutes) cdMinutes.innerText = minutes.toString().padStart(2, '0');
-        if (cdSeconds) cdSeconds.innerText = seconds.toString().padStart(2, '0');
-    }
-    updateCountdown();
-    syncCountdownTimer();
 
     // 5. 新加坡天氣
     async function fetchSingaporeWeather() {
@@ -759,198 +620,45 @@ document.addEventListener('DOMContentLoaded', function () {
             descEl.innerHTML = "<i class='fa-solid fa-circle-exclamation'></i> 暫時無法取得天氣";
         }
     }
-    fetchSingaporeWeather();
 
-    // 6. 魔法彩蛋
-    let eggClicks = 0;
-    const eggTrigger = document.getElementById('easter-egg-trigger');
-    if (eggTrigger) {
-        eggTrigger.addEventListener('click', () => {
-            eggClicks++;
-            eggTrigger.style.transform = `scale(${1 + eggClicks * 0.05})`;
-            if (eggClicks === 3) {
-                triggerMagic();
-                eggClicks = 0;
-                setTimeout(() => { eggTrigger.style.transform = 'scale(1)'; }, 1000);
-            }
-        });
-    }
-
-    function triggerMagic() {
-        const modal = document.createElement('div');
-        modal.className = 'magic-modal';
-        modal.innerHTML = `
-            <div class="magic-modal-content">
-                <div class="mickey-shape" style="font-size: 45px; color: var(--dcl-gold); margin: 0 auto 15px;"></div>
-                <h2 style="color: var(--dcl-navy); font-size: 1.8rem; margin-bottom: 15px;">✨ 專屬魔法解鎖 ✨</h2>
-                <p style="color: var(--text-gray); font-size: 1.15rem; line-height: 1.6;"><strong>小寶、澤澤、彤妹：</strong><br>準備好跟我們一起迎接<br>最棒的迪士尼海上探險了嗎？</p>
-                <button class="modal-close-btn" style="margin-top: 25px; padding: 12px 30px; background: var(--dcl-red); color: white; border: none; border-radius: 30px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(225, 24, 55, 0.4); transition: transform 0.2s;">進入魔法世界</button>
-            </div>`;
-        document.body.appendChild(modal);
-
-        modal.querySelector('.modal-close-btn').onclick = () => modal.remove();
-        if (!prefersReducedMotion.matches) {
-            createConfetti();
-        }
-    }
-
-    function createConfetti() {
-        const colors = ['#E11837', '#F3B500', '#0A3A70', '#FFFFFF'];
-        const container = document.createElement('div');
-        container.style.position = 'fixed'; container.style.top = '0'; container.style.left = '0';
-        container.style.width = '100vw'; container.style.height = '100vh';
-        container.style.pointerEvents = 'none'; container.style.zIndex = '9999';
-        container.style.overflow = 'hidden';
-        document.body.appendChild(container);
-        for (let i = 0; i < 100; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'confetti-particle';
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            if (Math.random() > 0.5) {
-                particle.innerHTML = '<i class="fa-solid fa-star"></i>';
-                particle.style.color = color;
-                particle.style.fontSize = (Math.random() * 12 + 10) + 'px';
-            } else {
-                particle.innerHTML = '<div class="mickey-shape"></div>';
-                particle.style.color = color;
-                particle.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            }
-            container.appendChild(particle);
-        }
-        setTimeout(() => container.remove(), 6000);
-    }
-
-    // 7. 游標魔法 (PC)
-    let lastSparkleTime = 0;
-    if (finePointerQuery.matches) {
-        document.addEventListener('mousemove', (e) => {
-            if (!canUseCursorSparkles()) return;
-            const now = Date.now();
-            if (now - lastSparkleTime < 60) return;
-            lastSparkleTime = now;
-            if (Math.random() > 0.4) {
-                const sparkle = document.createElement('i');
-                sparkle.className = 'fa-solid fa-star cursor-sparkle';
-                sparkle.style.left = e.clientX + 'px';
-                sparkle.style.top = e.clientY + 'px';
-                document.body.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 800);
-            }
-        });
-    }
-
-    // 8. 漂浮泡泡
-    function createMickeyBubble() {
-        if (shouldPauseAmbientEffects()) return;
-        const bubble = document.createElement('div');
-        bubble.className = 'mickey-shape mickey-bubble';
-        bubble.style.left = Math.random() * 90 + 'vw';
-        const size = Math.random() * 20 + 20;
-        bubble.style.fontSize = `${size}px`;
-        bubble.addEventListener('click', function () {
-            this.classList.add('bubble-pop');
-            this.innerHTML = '<i class="fa-solid fa-sparkles"></i>';
-            setTimeout(() => this.remove(), 300);
-        });
-        document.body.appendChild(bubble);
-        setTimeout(() => { if (document.body.contains(bubble)) bubble.remove(); }, 12000);
-    }
-
-    function stopBubbleLoop() {
-        if (runtimeState.bubbleTimer) {
-            window.clearInterval(runtimeState.bubbleTimer);
-            runtimeState.bubbleTimer = null;
-        }
-    }
-
-    function syncBubbleLoop() {
-        if (shouldPauseAmbientEffects()) {
-            stopBubbleLoop();
-            return;
-        }
-        if (runtimeState.bubbleTimer) return;
-
-        runtimeState.bubbleTimer = window.setInterval(() => {
-            if (!document.hidden) {
-                createMickeyBubble();
-            }
-        }, 6000);
-    }
-
-    syncBubbleLoop();
-
-    function syncAmbientRuntime() {
-        updateCountdown();
-        syncCountdownTimer();
-        syncBubbleLoop();
-    }
-
-    document.addEventListener('visibilitychange', () => {
-        syncAmbientRuntime();
-    });
-
-    if (typeof prefersReducedMotion.addEventListener === 'function') {
-        prefersReducedMotion.addEventListener('change', syncAmbientRuntime);
-    } else if (typeof prefersReducedMotion.addListener === 'function') {
-        prefersReducedMotion.addListener(syncAmbientRuntime);
-    }
 
     // 9. 動態渲染行程表資料
     function renderSchedule() {
         if (typeof cruiseSchedule === 'undefined') return;
-
-        cruiseSchedule.forEach(dayData => {
-            const container = document.getElementById(dayData.id);
-            if (!container) return;
-
-            // 清空容器 (防範二次渲染)
-            container.innerHTML = '';
-
-            // 1. 生成標題與目標
-            let html = `
-                <div class="day-header">
-                    <h3>${dayData.dateTitle}</h3>
+        cruiseSchedule.forEach(day => {
+            const root = document.getElementById(day.id);
+            if (!root) return;
+            const events = day.periods.flatMap(period => period.events);
+            const priorities = events.filter(event => event.planKind === 'fixed').slice(0, 3);
+            root.innerHTML = `
+                <div class="day-priorities" aria-label="當日優先事項">
+                    <span>今日保留</span>
+                    ${priorities.map(event => `<a href="#${event.id}">${escapeHtml(event.title.split('：')[0])}</a>`).join('')}
                 </div>
-                <div class="day-goal">
-                    <strong>核心目標：</strong>
-                    <ul style="margin: 5px 0 0 20px; padding: 0;">
-                        ${dayData.goals.map(g => `<li>${g}</li>`).join('')}
-                    </ul>
-                </div>
+                <details class="day-goals"><summary>當日安排重點</summary><ul>${day.goals.map(goal => `<li>${goal}</li>`).join('')}</ul></details>
                 <div class="schedule-list">
-            `;
-
-            // 2. 生成各個時段 (Periods)
-            dayData.periods.forEach((period, periodIndex) => {
-                html += `
-                    <div class="period-header">
-                        <h4>${period.name}</h4>
-                    </div>
-                `;
-
-                // 3. 生成時段內的事件 (Events)
-                period.events.forEach((event, eventIndex) => {
-                    const eventId = getScheduleEventId(dayData.id, periodIndex, eventIndex);
-                    html += `
-                        <div class="schedule-item" id="${eventId}" data-search-id="${eventId}">
-                            <div class="schedule-time">${event.time}</div>
-                            <div class="schedule-marker"></div>
-                            <div class="schedule-content">
-                                <span class="schedule-tag ${event.tagClass}">${event.tag}</span>
-                                <span class="schedule-title">${event.title}</span>
-                                <ul class="schedule-desc-list">
-                                    ${event.desc.map(d => `<li>${d}</li>`).join('')}
-                                </ul>
-                            </div>
-                        </div>
-                    `;
-                });
-            });
-
-            html += `</div>`; // Close .schedule-list
-            container.innerHTML = html;
+                    ${day.periods.map((period, pi) => `
+                        <h3 class="period-header">${escapeHtml(period.name)}</h3>
+                        ${period.events.map((event, ei) => {
+                            const id = getScheduleEventId(day.id, pi, ei);
+                            const kind = event.planKind || 'flexible';
+                            const labels = {fixed: '固定保留', confirm: '依確認安排', flexible: '彈性活動'};
+                            const binding = getAiEntityBinding('scheduleEvents', event.bindingKey);
+                            const important = event.desc.filter(text => /限 |限[0-9]|至少|不得|不以救生員|成人監督|不等於|不是託管|不能|必到/.test(text));
+                            const visible = uniqueItems([event.desc[0], ...important]);
+                            return `<article class="schedule-item" id="${id}" data-search-id="${id}">
+                                <div class="schedule-time">${/^\d/.test(event.time) ? '<small>建議時段</small>' : ''}${escapeHtml(event.time)}</div>
+                                <div class="schedule-content">
+                                    <span class="plan-kind ${kind}">${labels[kind]}</span>
+                                    <h4 class="schedule-title">${event.title}</h4>
+                                    <ul class="schedule-essential">${visible.map(text => `<li>${text}</li>`).join('')}</ul>
+                                    ${renderEntityLinks(binding?.entityRefs)}
+                                    ${event.desc.some(text => !visible.includes(text)) ? `<details class="event-detail"><summary>行動細節 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><ul>${event.desc.filter(text => !visible.includes(text)).map(text => `<li>${text}</li>`).join('')}</ul></details>` : ''}
+                                </div>
+                            </article>`;
+                        }).join('')}
+                    `).join('')}
+                </div>`;
         });
     }
 
@@ -958,171 +666,154 @@ document.addEventListener('DOMContentLoaded', function () {
     renderSchedule();
 
     // 10. 行前準備清單渲染與邏輯 (Phase 4)
-    function renderChecklist() {
-        const grid = document.getElementById('checklist-grid');
-        if (!grid || typeof checklistData === 'undefined') return;
+    function readChecklistStatus() {
+        try {
+            const data = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
+            return data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+        } catch {
+            const notice = document.getElementById('checklist-storage-status');
+            if (notice) notice.textContent = '無法讀取裝置記錄；本次勾選仍可使用。';
+            return {};
+        }
+    }
 
-        // 讀取本地儲存狀態
-        const savedStatus = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
-
-        checklistData.forEach(category => {
-            const catDiv = document.createElement('div');
-            catDiv.className = 'checklist-category';
-            
-            catDiv.innerHTML = `
-                <h3><i class="fa-solid fa-star"></i> ${category.category}</h3>
-                <div class="checklist-items"></div>
-            `;
-            
-            const itemsDiv = catDiv.querySelector('.checklist-items');
-            
-            category.items.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = `checklist-item ${savedStatus[item.id] ? 'checked' : ''}`;
-                itemDiv.dataset.id = item.id;
-                
-                itemDiv.innerHTML = `
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-item-text">${item.text}</div>
-                `;
-                
-                itemDiv.addEventListener('click', () => {
-                    const isChecked = itemDiv.classList.toggle('checked');
-                    
-                    // 更新本地儲存
-                    const currentStatus = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
-                    currentStatus[item.id] = isChecked;
-                    localStorage.setItem('dcl_checklist_status', JSON.stringify(currentStatus));
-                });
-                
-                itemsDiv.appendChild(itemDiv);
-            });
-            
-            grid.appendChild(catDiv);
+    function updateChecklistVisibility() {
+        const root = document.getElementById('checklist-grid');
+        if (!root) return;
+        root.querySelectorAll('.checklist-item').forEach(row => {
+            row.hidden = notebookState.checklistFilter === 'pending' && Boolean(savedChecklistStatus[row.dataset.id]);
         });
+        root.querySelectorAll('.checklist-category').forEach(group => {
+            group.hidden = !Array.from(group.querySelectorAll('.checklist-item')).some(row => !row.hidden);
+        });
+        const items = checklistData.flatMap(group => group.items);
+        const done = items.filter(item => savedChecklistStatus[item.id]).length;
+        document.getElementById('checklist-progress').textContent = `${done} / ${items.length} 已完成`;
+        let empty = root.querySelector('.checklist-empty');
+        if (!empty) {
+            empty = document.createElement('p');
+            empty.className = 'checklist-empty';
+            empty.textContent = '待辦都完成了，準備迎接海上假期。';
+            root.appendChild(empty);
+        }
+        empty.hidden = !(notebookState.checklistFilter === 'pending' && done === items.length);
+    }
+
+    function renderChecklist() {
+        const root = document.getElementById('checklist-grid');
+        if (!root || typeof checklistData === 'undefined') return;
+        savedChecklistStatus = readChecklistStatus();
+        root.innerHTML = checklistData.map(group => `
+            <section class="checklist-category"><h3>${group.category}</h3>
+                ${group.items.map(item => `<label class="checklist-item" data-id="${escapeHtml(item.id)}">
+                    <input type="checkbox" ${savedChecklistStatus[item.id] ? 'checked' : ''}>
+                    <span>${item.text}</span>
+                </label>`).join('')}
+            </section>`).join('');
+        root.addEventListener('change', event => {
+            const row = event.target.closest('[data-id]');
+            if (!row) return;
+            savedChecklistStatus = { ...readChecklistStatus(), ...savedChecklistStatus, [row.dataset.id]: event.target.checked };
+            try { localStorage.setItem('dcl_checklist_status', JSON.stringify(savedChecklistStatus)); }
+            catch { document.getElementById('checklist-storage-status').textContent = '此裝置無法儲存；關閉頁面後勾選可能不保留。'; }
+            updateChecklistVisibility();
+        });
+        document.querySelectorAll('[data-checklist-filter]').forEach(button => {
+            button.addEventListener('click', () => {
+                notebookState.checklistFilter = button.dataset.checklistFilter;
+                document.querySelectorAll('[data-checklist-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+                updateChecklistVisibility();
+            });
+        });
+        updateChecklistVisibility();
     }
 
     renderChecklist();
 
     // 11. 甲板與表演設施導覽 (Phase 5)
     function renderDeckGuide() {
-        const tabsContainer = document.getElementById('deck-tabs');
-        const contentContainer = document.getElementById('deck-guide-content');
-        if (!tabsContainer || !contentContainer || typeof deckGuideData === 'undefined' || typeof showGuideData === 'undefined') return;
-
-        const tabs = [
-            ...deckGuideData.map(deck => ({ id: deck.id, label: deck.label })),
-            { id: 'shows', label: '表演精華' }
+        const root = document.getElementById('deck-guide-content');
+        const select = document.getElementById('deck-filter');
+        if (!root || !select || typeof deckGuideData === 'undefined') return;
+        const purposes = [
+            ['all', '全部'], ['swim', '玩水'], ['eat', '餐飲'], ['kids-play', '親子'],
+            ['watch-show', '看秀'], ['photo', '拍照'], ['rest', '休息'], ['shop', '購物'], ['service', '服務']
         ];
+        select.innerHTML = '<option value="all">全部甲板</option>' + deckGuideData.map(deck => `<option value="${deck.id}">${deck.label}</option>`).join('');
+        const filters = document.getElementById('facility-purpose-filters');
+        filters.innerHTML = purposes.map(([id, label]) => `<button type="button" data-purpose="${id}" aria-pressed="${id === 'all'}">${label}</button>`).join('');
 
-        const defaultDeck = deckGuideData.find(deck => deck.id === 'deck17') || deckGuideData[0];
-        let activeTab = defaultDeck.id;
-
-        tabsContainer.innerHTML = tabs.map(tab => `
-            <button type="button" class="deck-tab-btn ${tab.id === activeTab ? 'active' : ''}" data-deck-tab="${tab.id}">
-                ${tab.label}
-            </button>
-        `).join('');
-
-        const tabButtons = tabsContainer.querySelectorAll('.deck-tab-btn');
-
-        function buildDeckMarkup(deck) {
-            return `
-                <div class="deck-info-header">
-                    <div class="deck-info-copy">
-                        <span class="deck-kicker">${deck.label}</span>
-                        <h3>${deck.title}</h3>
-                        <div class="deck-theme">${deck.theme}</div>
-                    </div>
-                    <div class="deck-trip-focus">
-                        <i class="fa-solid fa-route"></i>
-                        <span>${deck.tripFocus}</span>
-                    </div>
-                </div>
-                <div class="deck-badges">
-                    ${deck.badges.map(badge => `
-                        <span class="deck-badge">
-                            <i class="fa-solid fa-star"></i>${badge}
-                        </span>
-                    `).join('')}
-                </div>
-                <div class="facility-grid">
-                    ${deck.facilities.map((facility, facilityIndex) => {
-                        const facilityId = getDeckFacilityId(deck.id, facilityIndex);
-                        const bilingualEntity = getPrimaryEntityForBinding('deckFacilities', `${deck.id}:${facilityIndex}`);
-                        return `
-                        <article class="facility-card ${facility.highlight ? 'highlight' : ''}" id="${facilityId}" data-search-id="${facilityId}">
-                            <div class="facility-icon">
-                                <i class="${facility.icon}"></i>
-                            </div>
-                            <div class="facility-content">
-                                <span class="facility-name">${facility.name}</span>
-                                ${getBilingualStripMarkup(bilingualEntity)}
-                                <p class="facility-desc">${facility.summary}</p>
-                                <div class="facility-meta">
-                                    <span><i class="fa-regular fa-clock"></i> 最佳時機：${facility.bestTime}</span>
-                                    <span><i class="fa-solid fa-wand-magic-sparkles"></i> 這趟用途：${facility.tripUse}</span>
-                                </div>
-                            </div>
-                        </article>
-                    `;
-                    }).join('')}
-                </div>
-            `;
-        }
-
-        function buildShowMarkup() {
-            return `
-                <div class="performance-grid">
-                    ${showGuideData.map(category => `
-                        <section class="performance-category">
-                            <h3><i class="${category.icon}"></i> ${category.title}</h3>
-                            <p class="performance-intro">${category.intro}</p>
-                            ${category.shows.map((show, showIndex) => {
-                                const showId = getShowItemId(category.id, showIndex);
-                                const bilingualEntity = getPrimaryEntityForBinding('shows', `${category.id}:${showIndex}`);
-                                return `
-                                <article class="show-item" id="${showId}" data-search-id="${showId}">
-                                    <span class="show-title">${show.name}</span>
-                                    ${getBilingualStripMarkup(bilingualEntity)}
-                                    <p class="show-desc">${show.theme}</p>
-                                    <div class="show-meta">
-                                        <span><i class="fa-solid fa-location-dot"></i> ${show.location}</span>
-                                        <span><i class="fa-regular fa-clock"></i> ${show.timingTip}</span>
-                                        <span><i class="fa-solid fa-calendar-check"></i> ${show.tripLink}</span>
-                                    </div>
-                                </article>
-                            `;
-                            }).join('')}
-                        </section>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        function updateDeckGuide(targetId) {
-            activeTab = targetId;
-            tabButtons.forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.deckTab === activeTab);
-            });
-
-            if (activeTab === 'shows') {
-                contentContainer.innerHTML = buildShowMarkup();
+        function update(target = notebookState.deck) {
+            if (target === 'shows') notebookState.exploreTab = 'shows';
+            else notebookState.deck = target;
+            const renderKey = [notebookState.exploreTab, notebookState.deck, notebookState.purpose].join(':');
+            if (root.dataset.renderKey === renderKey) return;
+            root.dataset.renderKey = renderKey;
+            const shows = notebookState.exploreTab === 'shows';
+            document.getElementById('facility-controls').hidden = shows;
+            const count = document.getElementById('facility-result-count');
+            if (shows) {
+                count.textContent = `${showGuideData.reduce((total, group) => total + group.shows.length, 0)} 場表演 · 時間依本航次公告`;
+                root.innerHTML = showGuideData.map(category => `<section class="performance-category">
+                    <h2>${category.title}</h2><p class="group-note">${category.intro}</p>
+                    <div class="facility-grid">${category.shows.map((show, index) => {
+                        const binding = getAiEntityBinding('shows', show.bindingKey);
+                        return `<article class="show-item" id="${show.id}">
+                            <div class="item-eyebrow"><i class="fa-solid fa-masks-theater" aria-hidden="true"></i> ${escapeHtml(show.location)}</div>
+                            <h3>${show.name}</h3>${getBilingualStripMarkup(getPrimaryEntityForBinding('shows', show.bindingKey), show.name)}
+                            <p>${show.theme}</p>
+                            <p class="essential-note">${show.timingTip}</p>
+                            <details><summary>觀賞安排</summary><p>${show.tripLink}</p>${renderEntityLinks(binding?.entityRefs, show.id)}</details>
+                        </article>`;
+                    }).join('')}</div></section>`).join('');
                 return;
             }
-
-            const deck = deckGuideData.find(item => item.id === activeTab) || defaultDeck;
-            contentContainer.innerHTML = buildDeckMarkup(deck);
+            const facilities = deckGuideData.flatMap(deck => deck.facilities.map(facility => ({deck, facility})))
+                .filter(({deck}) => notebookState.deck === 'all' || deck.id === notebookState.deck)
+                .filter(({facility}) => facilityMatchesPurpose(facility, notebookState.purpose));
+            count.textContent = `${facilities.length} 個地點`;
+            select.value = notebookState.deck;
+            filters.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.purpose === notebookState.purpose)));
+            root.innerHTML = '<div class="facility-grid">' + facilities.map(({deck, facility}) => {
+                const entity = getPrimaryEntityForBinding('deckFacilities', facility.bindingKey);
+                return `<article class="facility-card" id="${facility.id}" data-search-id="${facility.id}">
+                    <div class="item-eyebrow"><i class="${facility.icon}" aria-hidden="true"></i> ${escapeHtml(deck.label)}${entity?.area ? ' · ' + escapeHtml(entity.area) : ''}</div>
+                    <h3>${facility.name}</h3>${getBilingualStripMarkup(entity, facility.name)}
+                    <p>${facility.summary}</p>
+                    ${/不得|禁止|不允許/.test(facility.bestTime) ? `<p class="essential-note">${facility.bestTime}</p>` : ''}
+                    ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? `<p class="essential-note">${facility.tripUse}</p>` : ''}
+                    <details><summary>安排與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                        ${/不得|禁止|不允許/.test(facility.bestTime) ? '' : `<p>${facility.bestTime}</p>`}
+                        ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? '' : `<p>${facility.tripUse}</p>`}
+                        ${entity ? `<button type="button" class="text-command" data-search-mode-target="lookup" data-lookup-category="${getEntityLookupCategory(entity)}" data-search-query="${escapeHtml(entity.officialNameEn)}"><i class="fa-solid fa-language" aria-hidden="true"></i> 中英對照</button>` : ''}
+                    </details>
+                </article>`;
+            }).join('') + '</div>' + (!facilities.length ? '<p class="empty-state">這個甲板沒有符合用途的地點，可改選全部甲板。</p>' : '')
+                + `<details class="ship-about"><summary>甲板介紹與動線 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>${deckGuideData.filter(deck => notebookState.deck === 'all' || deck.id === notebookState.deck).map(deck => `<section id="${deck.id}" class="deck-context"><h3>${deck.label} · ${deck.title}</h3><p>${deck.theme}</p><p>${deck.tripFocus}</p><p class="group-note">${deck.badges.join(' · ')}</p></section>`).join('')}</details>`;
         }
-
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                updateDeckGuide(button.dataset.deckTab);
-            });
+        filters.addEventListener('click', event => {
+            const button = event.target.closest('[data-purpose]');
+            if (!button) return;
+            notebookState.purpose = button.dataset.purpose;
+            update();
         });
+        select.addEventListener('change', () => update(select.value));
+        setDeckGuideTab = update;
+        update();
+    }
 
-        setDeckGuideTab = updateDeckGuide;
-        updateDeckGuide(activeTab);
+    function facilityMatchesPurpose(facility, purpose) {
+        if (purpose === 'all') return true;
+        const binding = getAiEntityBinding('deckFacilities', facility.bindingKey);
+        const entities = (binding?.entityRefs || []).map(getAiEntityRegistryEntry).filter(Boolean);
+        const text = normalizeSearchText([facility.name, facility.summary, ...entities.flatMap(entity => [entity.entityType, ...entity.categoryFamilies, ...entity.capabilityTags])].join(' '));
+        const terms = {
+            swim: ['swim','pool','玩水','泳池','slides'], eat: ['eat','drink','餐廳','快餐','酒廊','restaurant','bar'],
+            'kids-play': ['kids','遊戲','兒童','arcade','marvel','親子'], 'watch-show': ['watch show','表演','劇院'],
+            photo: ['photo','拍照','pics'], rest: ['rest','休息','lounge','spa'], shop: ['shop','商店','購物'],
+            service: ['service','服務','rfid','手環']
+        };
+        return (terms[purpose] || []).some(term => text.includes(term));
     }
 
     renderDeckGuide();
@@ -1133,46 +824,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const contentContainer = document.getElementById('playbook-content');
         if (!missionsContainer || !contentContainer || typeof playbookGuideData === 'undefined') return;
 
-        const relatedSectionLabels = {
-            checklist: '行前防呆清單',
-            timeline: '準備時間軸',
-            checkin: '通關與登船',
-            facilities: '兒童育樂',
-            'deck-guide': '甲板導覽',
-            entertainment: '娛樂大秀',
-            tips: '購物、預算與離船',
-            'local-info': '在地工具'
-        };
-
         const sourceMeta = {
-            official: { label: '官方規則', icon: 'fa-solid fa-shield-heart' },
-            concierge: { label: '禮賓加值', icon: 'fa-solid fa-crown' },
-            community: { label: '社群心得', icon: 'fa-solid fa-comments' }
+            official: { label: '規則與適用條件', icon: 'fa-solid fa-circle-info' },
+            concierge: { label: '禮賓安排 · 依通知', icon: 'fa-solid fa-crown' },
+            community: { label: '旅客經驗 · 非保證', icon: 'fa-solid fa-comments' }
         };
-
-        const missionIcons = {
-            pretrip: 'fa-solid fa-passport',
-            'embark-sprint': 'fa-solid fa-bolt',
-            'daily-ops': 'fa-solid fa-wand-magic-sparkles',
-            'concierge-plus': 'fa-solid fa-crown',
-            'stateroom-family': 'fa-solid fa-bed',
-            'last-night': 'fa-solid fa-anchor'
-        };
-
-        const missionPriorityIndexes = {
-            pretrip: [0, 2, 3],
-            'embark-sprint': [1, 0, 2],
-            'daily-ops': [3, 5, 6],
-            'concierge-plus': [4, 6, 5],
-            'stateroom-family': [0, 3, 2],
-            'last-night': [1, 0, 2]
-        };
-
         let activeMission = playbookGuideData[0]?.id;
 
         missionsContainer.innerHTML = playbookGuideData.map(mission => `
             <button type="button" class="playbook-mission-btn ${mission.id === activeMission ? 'active' : ''}" data-playbook-mission="${mission.id}">
-                <i class="${missionIcons[mission.id] || 'fa-solid fa-compass'}"></i>
+                <i class="fa-solid fa-compass" aria-hidden="true"></i>
                 <span>${mission.label}</span>
             </button>
         `).join('');
@@ -1181,90 +842,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function buildItemMarkup(item, missionId, itemIndex) {
             const source = sourceMeta[item.sourceType] || sourceMeta.community;
-            const relatedLabel = item.relatedSectionId ? relatedSectionLabels[item.relatedSectionId] : '';
-            const itemId = getPlaybookItemId(missionId, itemIndex);
-            const relatedMarkup = relatedLabel ? `
-                <a class="playbook-related-link" href="#${item.relatedSectionId}">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    延伸看法：這張是進階玩法，基本資訊已整理在「${relatedLabel}」
-                </a>
-            ` : '';
-
-            return `
-                <details class="playbook-card source-${item.sourceType}" id="${itemId}" data-search-id="${itemId}">
-                    <summary class="playbook-summary">
-                        <div class="playbook-card-icon">
-                            <i class="${item.icon}"></i>
-                        </div>
-                        <div class="playbook-card-head">
-                            <span class="playbook-source-chip ${item.sourceType}">
-                                <i class="${source.icon}"></i>${source.label}
-                            </span>
-                            <h4>${item.title}</h4>
-                            <p class="playbook-preview">${item.tripFit}</p>
-                        </div>
-                        <span class="playbook-toggle" aria-hidden="true">
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </span>
-                    </summary>
-                    <div class="playbook-body">
-                        <div class="playbook-meta-grid">
-                            <div class="playbook-meta-block">
-                                <span class="playbook-meta-label">何時用</span>
-                                <p>${item.whenToUse}</p>
-                            </div>
-                            <div class="playbook-meta-block">
-                                <span class="playbook-meta-label">這趟怎麼用</span>
-                                <p>${item.action}</p>
-                            </div>
-                        </div>
-                        <div class="playbook-emphasis">
-                            <div class="playbook-note playbook-tripfit">
-                                <i class="fa-solid fa-route"></i>
-                                <div>
-                                    <span class="playbook-meta-label">這趟最有感的原因</span>
-                                    <p>${item.tripFit}</p>
-                                </div>
-                            </div>
-                            <div class="playbook-note playbook-caution">
-                                <i class="fa-solid fa-triangle-exclamation"></i>
-                                <div>
-                                    <span class="playbook-meta-label">避免踩雷</span>
-                                    <p>${item.caution}</p>
-                                </div>
-                            </div>
-                        </div>
-                        ${relatedMarkup}
-                    </div>
-                </details>
-            `;
-        }
-
-        function buildPriorityMarkup(mission) {
-            const priorityIndexes = missionPriorityIndexes[mission.id] || [];
-            const links = priorityIndexes
-                .map(itemIndex => {
-                    const item = mission.items[itemIndex];
-                    if (!item) return '';
-                    const itemId = getPlaybookItemId(mission.id, itemIndex);
-                    return `
-                        <a class="playbook-priority-link" href="#${itemId}" data-playbook-priority="${itemId}">
-                            <i class="fa-solid fa-bookmark"></i>
-                            ${item.title}
-                        </a>
-                    `;
-                })
-                .filter(Boolean)
-                .join('');
-
-            if (!links) return '';
-
-            return `
-                <div class="playbook-priority-row" aria-label="${mission.label} 先看這幾張">
-                    <span class="playbook-priority-label">先看這幾張</span>
-                    ${links}
+            const id = getPlaybookItemId(missionId, itemIndex);
+            const binding = getAiEntityBinding('playbookItems', item.bindingKey);
+            const supplements = (window.TRAVEL_REFERENCE_DATA?.records || []).filter(record => record.targetId === id);
+            return `<details class="playbook-card" id="${id}" data-search-id="${id}">
+                <summary class="playbook-summary">
+                    <i class="${item.icon}" aria-hidden="true"></i>
+                    <span><span class="item-eyebrow">${source.label}</span><h3>${item.title}</h3><span class="playbook-preview">${item.whenToUse}</span></span>
+                    <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                </summary>
+                <div class="playbook-body">
+                    <p class="playbook-action">${item.action}</p>
+                    <p class="essential-note">${item.caution}</p>
+                    <p class="playbook-context">${item.tripFit}</p>
+                    ${supplements.map(record => `<div id="${record.id}" class="reference-supplement">${record.bodyHtml}</div>`).join('')}
+                    ${renderEntityLinks(binding?.entityRefs, id)}
+                    ${item.relatedSectionId ? `<a class="text-command" href="#${item.relatedSectionId}">相關資料 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>` : ''}
                 </div>
-            `;
+            </details>`;
         }
 
         function updatePlaybook(targetId, options = {}) {
@@ -1279,12 +874,10 @@ document.addEventListener('DOMContentLoaded', function () {
             contentContainer.innerHTML = `
                 <div class="playbook-panel-header">
                     <div class="playbook-panel-copy">
-                        <span class="playbook-kicker">Captain's Pocket Guide</span>
                         <h3>${mission.label}</h3>
                         <p>${mission.intro}</p>
                     </div>
                 </div>
-                ${buildPriorityMarkup(mission)}
                 <div class="playbook-grid">
                     ${mission.items.map((item, itemIndex) => buildItemMarkup(item, mission.id, itemIndex)).join('')}
                 </div>
@@ -1326,11 +919,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabContents = document.querySelectorAll('.tab-content');
 
     function activateScheduleTab(targetId) {
+        notebookState.day = targetId;
         tabBtns.forEach(button => {
             button.classList.toggle('active', button.getAttribute('data-tab') === targetId);
+            button.setAttribute('aria-selected', String(button.getAttribute('data-tab') === targetId));
         });
         tabContents.forEach(content => {
             content.classList.toggle('active', content.id === targetId);
+            content.hidden = content.id !== targetId;
         });
     }
 
@@ -1341,23 +937,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     setScheduleTab = activateScheduleTab;
-
-    // 14. 導覽列與漢堡選單
-    const hamburger = document.getElementById('hamburger');
-    const navLinks = document.getElementById('nav-links');
-    const navItems = document.querySelectorAll('.nav-links a');
-
-    if (hamburger && navLinks) {
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-    }
 
     // 15. 全站搜尋
     function stripHtmlTags(text) {
@@ -1587,13 +1166,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return entityId ? getAiEntityRegistryEntry(entityId) : null;
     }
 
-    function getBilingualStripMarkup(entity) {
+    function getBilingualStripMarkup(entity, title = '') {
         if (!entity?.officialNameEn || !entity?.displayNameZh) return '';
+        const englishInTitle = normalizeSearchText(title).includes(normalizeSearchText(entity.officialNameEn));
+        const chineseInTitle = normalizeSearchText(title).includes(normalizeSearchText(entity.displayNameZh));
+        if (englishInTitle && chineseInTitle) return '';
         return `
             <div class="bilingual-strip">
-                <span class="bilingual-strip-label">English</span>
-                <span class="bilingual-strip-en">${escapeHtml(entity.officialNameEn)}</span>
-                <span class="bilingual-strip-zh">${escapeHtml(entity.displayNameZh)}</span>
+                <span class="bilingual-strip-label">${englishInTitle ? '中文' : '英文 / English'}</span>
+                ${englishInTitle ? '' : `<span class="bilingual-strip-en">${escapeHtml(entity.officialNameEn)}</span>`}
+                ${chineseInTitle ? '' : `<span class="bilingual-strip-zh">${escapeHtml(entity.displayNameZh)}</span>`}
             </div>
         `;
     }
@@ -1616,10 +1198,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getMenuDiningFilterEntry(filterId) {
         return getMenuCourseEntry(filterId);
-    }
-
-    function getMenuQuickCategoryEntry(categoryId) {
-        return getMenuCourseEntry(categoryId);
     }
 
     function getMenuCourseEntry(courseId) {
@@ -1726,16 +1304,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function getLookupResultChipLabels(result = {}) {
         if (result.sourceType === 'menu-item') {
             return uniqueItems([
-                result.restaurantGroupLabel,
-                result.courseGroupLabel,
-                result.menuCategoryLabel,
-                result.price,
                 ...(Array.isArray(result.tagLabels) ? result.tagLabels.slice(0, 2) : []),
                 result.occurrenceCount > 1 ? `合併 ${result.occurrenceCount} 筆` : ''
             ].filter(Boolean)).slice(0, 5);
         }
         return uniqueItems([
-            getLookupCategoryLabel(result.category),
             result.occurrenceCount > 1 ? `合併 ${result.occurrenceCount} 筆` : ''
         ].filter(Boolean));
     }
@@ -2808,7 +2381,7 @@ document.addEventListener('DOMContentLoaded', function () {
             dayData.periods.flatMap((period, periodIndex) =>
                 period.events.flatMap((event, eventIndex) => {
                     const eventId = getScheduleEventId(dayData.id, periodIndex, eventIndex);
-                    const binding = getAiEntityBinding('scheduleEvents', `${dayData.id}:${periodIndex}:${eventIndex}`);
+                    const binding = getAiEntityBinding('scheduleEvents', event.bindingKey || `${dayData.id}:${periodIndex}:${eventIndex}`);
                     const locationLabel = `${dayData.tabTitle} · ${period.name}`;
                     const navTarget = {
                         type: 'schedule',
@@ -2867,7 +2440,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return deckGuideData.flatMap(deck =>
             deck.facilities.flatMap((facility, facilityIndex) => {
                 const facilityId = getDeckFacilityId(deck.id, facilityIndex);
-                const binding = getAiEntityBinding('deckFacilities', `${deck.id}:${facilityIndex}`);
+                const binding = getAiEntityBinding('deckFacilities', facility.bindingKey || `${deck.id}:${facilityIndex}`);
                 const locationLabel = `${deck.label} · ${deck.title}`;
                 const normalizedFacility = normalizeSearchText([facility.name, facility.summary, facility.tripUse, deck.title, deck.theme].join(' '));
                 const isTheatreFacility = hasQueryHint(normalizedFacility, ['walt disney theatre', '劇院', 'theatre', '主秀']);
@@ -2932,7 +2505,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return showGuideData.flatMap(category =>
             category.shows.flatMap((show, showIndex) => {
                 const showId = getShowItemId(category.id, showIndex);
-                const binding = getAiEntityBinding('shows', `${category.id}:${showIndex}`);
+                const binding = getAiEntityBinding('shows', show.bindingKey || `${category.id}:${showIndex}`);
                 const locationLabel = `表演精華 · ${category.title}`;
                 const normalizedShow = normalizeSearchText([show.name, show.location, show.theme, category.title, category.intro].join(' '));
                 const isTheatreShow = hasQueryHint(normalizedShow, ['walt disney theatre', '劇院', 'theatre', '主秀']);
@@ -2997,7 +2570,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return playbookGuideData.flatMap(mission =>
             mission.items.map((item, itemIndex) => {
                 const itemId = getPlaybookItemId(mission.id, itemIndex);
-                const binding = getAiEntityBinding('playbookItems', `${mission.id}:${itemIndex}`);
+                const binding = getAiEntityBinding('playbookItems', item.bindingKey || `${mission.id}:${itemIndex}`);
                 const locationLabel = `攻略本 · ${mission.label}`;
                 const normalizedPlaybook = normalizeSearchText([item.title, item.whenToUse, item.action, item.tripFit, item.caution, mission.label].join(' '));
                 const isTheatrePlaybook = hasQueryHint(normalizedPlaybook, ['walt disney theatre', '劇院', 'theatre', '主秀', '優先入場', '看秀']);
@@ -3072,56 +2645,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function buildStaticSearchDocuments() {
-        const sectionConfigs = [
-            { sectionId: 'quick-start', selector: '.quick-start-card' },
-            { sectionId: 'overview', selector: '.card' },
-            { sectionId: 'timeline', selector: '.timeline-content' },
-            { sectionId: 'checkin', selector: '.card' },
-            { sectionId: 'facilities', selector: '.card' },
-            { sectionId: 'entertainment', selector: '.card' },
-            { sectionId: 'tips', selector: '.card' },
-            { sectionId: 'local-info', selector: '.card' }
-        ];
-
-        return sectionConfigs.flatMap(config => {
-            const section = document.getElementById(config.sectionId);
-            if (!section) return [];
-
-            const sectionLabel = getSectionLabel(config.sectionId);
-            const cards = section.querySelectorAll(config.selector);
-            return Array.from(cards).map((card, cardIndex) => {
-                if (!card.id) {
-                    card.id = getStaticCardId(config.sectionId, cardIndex);
-                }
-
-                const titleNode = card.querySelector('h3, h4');
-                const title = titleNode ? titleNode.textContent.trim() : sectionLabel;
-                const text = card.textContent.replace(/\s+/g, ' ').trim();
-
-                return {
-                    id: card.id,
-                    parentId: card.id,
-                    sourceType: 'static',
-                    sourceDetailType: 'general',
-                    sectionId: config.sectionId,
-                    groupLabel: '其他資訊',
-                    title,
-                    text,
-                    structuredText: text,
-                    keywords: [sectionLabel, title],
-                    locationLabel: sectionLabel,
-                    navTarget: {
-                        type: 'static',
-                        itemId: card.id
-                    },
-                    fieldType: 'parent',
-                    fieldLabel: getAiFieldLabel('parent'),
-                    timeHint: '',
-                    bestTimeHint: '',
-                    evidenceRoleHints: [],
-                    aiOnly: false
-                };
-            });
+        return (window.TRAVEL_REFERENCE_DATA?.records || []).map(record => {
+            const sectionLabel = getSectionLabel(record.sectionId);
+            const text = compactSearchText(record.title + ' ' + record.bodyHtml);
+            return {
+                id: record.id, parentId: record.id, sourceType: 'static', sourceDetailType: 'general',
+                sectionId: record.sectionId, groupLabel: '其他資訊', title: record.title,
+                text, structuredText: text, keywords: [sectionLabel, record.title],
+                locationLabel: sectionLabel, navTarget: { type: 'static', itemId: record.id },
+                fieldType: 'parent', fieldLabel: getAiFieldLabel('parent'),
+                timeHint: '', bestTimeHint: '', evidenceRoleHints: [], aiOnly: false
+            };
         });
     }
 
@@ -3403,6 +2937,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 searchText: record.searchText,
                 aliases: [
                     ...(Array.isArray(record.aliases) ? record.aliases : []),
+                    ...aiEntityRegistry.entities
+                        .filter(entity => normalizeSearchText(entity.officialNameEn) === normalizeSearchText(record.restaurantEnglish || record.restaurantLabel))
+                        .flatMap(entity => [entity.displayNameZh, ...entity.aliases]),
                     record.restaurantId,
                     record.restaurantLabel,
                     record.restaurantEnglish,
@@ -3469,6 +3006,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (record.searchText.includes(unit)) score += 12;
         });
 
+        if (score === 0) return 0;
         if (record.sourceType === 'entity') score += 12;
         if (record.sourceType === 'menu-item') score += 10;
         if (selectedCategory && selectedCategory !== 'all') score += 10;
@@ -3480,12 +3018,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function mergeLookupResults(scoredResults = []) {
         const merged = new Map();
         scoredResults.forEach(result => {
-            const key = normalizeSearchText(result.englishName) || result.id;
+            const key = (result.sourceType === 'menu-item' ? 'menu:' : '') + (normalizeSearchText(result.englishName) || result.id);
             const existing = merged.get(key);
             if (!existing) {
                 merged.set(key, {
                     ...result,
                     occurrenceCount: 1,
+                    menuVariants: result.sourceType === 'menu-item' ? [result] : [],
                     sampleVenues: uniqueItems([getLookupRecordLocation(result), result.venueEnglish, result.deckHint].filter(Boolean)),
                     sourceHints: uniqueItems([result.sourceDayLabel, result.sourceTimeHint].filter(Boolean))
                 });
@@ -3494,6 +3033,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             existing.score = Math.max(existing.score, result.score);
             existing.occurrenceCount += 1;
+            if (result.sourceType === 'menu-item') existing.menuVariants.push(result);
             existing.sampleVenues = uniqueItems([
                 ...(existing.sampleVenues || []),
                 getLookupRecordLocation(result),
@@ -3519,8 +3059,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         return Array.from(merged.values())
-            .sort((a, b) => b.score - a.score || (a.sourceType === 'entity' ? -1 : 1) || (a.sourceType === 'menu-item' ? -1 : 1) || a.englishName.localeCompare(b.englishName))
-            .slice(0, 24);
+            .sort((a, b) => b.score - a.score || Number(b.sourceType === 'entity') - Number(a.sourceType === 'entity') || (a.restaurantOrder ?? 999) - (b.restaurantOrder ?? 999) || (a.sourceRecordIndex ?? 0) - (b.sourceRecordIndex ?? 0) || a.englishName.localeCompare(b.englishName));
     }
 
     function getBilingualLookupResults(query = '', options = {}) {
@@ -4376,6 +3915,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getLookupResultMetaLine(result) {
+        if (result.sourceType === 'menu-item') return '餐點 / Menu item';
         const parts = [
             getLookupSourceDisplayLabel(result.sourceType),
             getLookupCategoryDisplayLabel(result.category)
@@ -4423,7 +3963,7 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = `
             <div class="search-empty-state search-menu-load-state">
                 <p><strong>${isError ? '菜單資料無法載入' : '正在準備餐點中英對照'}</strong></p>
-                <p>${isError ? escapeHtml(error?.message || '請確認 menu-lookup-data.js 已部署，或稍後再試。') : '完整 550 筆菜單資料會在餐點查詢時才下載，避免拖慢首頁。'}</p>
+                <p>${isError ? escapeHtml(error?.message || '請確認 menu-lookup-data.js 已部署，或稍後再試。') : '請稍候。'}</p>
                 <button type="button" class="menu-load-button" data-menu-load-action="${isError ? 'retry-search' : 'load-search'}">
                     <i class="fa-solid fa-utensils"></i>
                     ${isLoading ? '載入中...' : (isError ? '重新載入菜單' : '載入菜單資料')}
@@ -4437,13 +3977,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!container) return;
         const normalizedQuery = queryContext.normalizedQuery || '';
         const selectedCategory = queryContext.selectedCategory || searchState.lookupCategory || 'all';
-        const activeRecord = searchState.lookupResultsById.get(searchState.activeCrewRecordId) || null;
 
         if (!normalizedQuery && selectedCategory === 'all') {
             container.innerHTML = `
                 <div class="search-empty-state">
                     <p><strong>切到中英對照了</strong></p>
-                    <p>輸入中文或英文，或點上方分類，快速找出可以拿給 Crew 看的正式英文名稱。</p>
+                    <p>可查設施、活動、餐點與服務。</p>
                 </div>
             `;
             return;
@@ -4469,6 +4008,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h3>${escapeHtml(result.zhLabel)}</h3>
                         <p class="lookup-result-en">${escapeHtml(result.englishName)}</p>
                         ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
+                        ${result.sourceType === 'menu-item' ? `<details class="menu-lookup-description" data-menu-description-id="${escapeHtml(result.id)}"><summary>餐點說明${result.menuVariants?.length > 1 ? '與各餐廳版本' : ''}</summary>${(result.menuVariants || [result]).map(variant => `<div class="menu-variant"><strong>${escapeHtml(variant.restaurantLabel)} · ${escapeHtml(variant.courseGroupLabel)}${variant.price ? ' · ' + escapeHtml(variant.price) : ''}</strong><p>${escapeHtml(variant.descriptionZh || '來源未提供其他描述。')}</p></div>`).join('')}</details>` : ''}
                         <div class="lookup-result-chips">
                             ${chipLabels.map(label => `<span class="${label.startsWith('合併') ? 'lookup-count' : ''}">${escapeHtml(label)}</span>`).join('')}
                         </div>
@@ -4485,19 +4025,15 @@ document.addEventListener('DOMContentLoaded', function () {
             <section class="search-group lookup-group">
                 <div class="search-group-title">
                     <i class="fa-solid fa-language"></i>
-                    <span>中英對照</span>
+                    <span>${results.length} 項中英對照</span>
                 </div>
-                <div class="lookup-workspace ${activeRecord ? 'has-crew-preview' : ''}">
+                <div class="lookup-workspace">
                     <div class="lookup-result-column">
                         <div class="lookup-result-list">
                             ${cards}
                         </div>
                     </div>
-                    ${activeRecord ? `
-                        <aside class="lookup-crew-pane">
-                            ${buildCrewDisplayCard(activeRecord)}
-                        </aside>
-                    ` : ''}
+                    <aside class="lookup-crew-pane" hidden aria-label="給 Crew 看"></aside>
                 </div>
             </section>
         `;
@@ -4518,32 +4054,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return records;
     }
 
-    function menuRecordMatchesQuickCategory(record, categoryId) {
-        const normalized = getMenuQuickCategoryEntry(categoryId).id;
-        if (normalized === 'all') return true;
-        if (normalized === 'kids') {
-            return record.menuCategory === 'kids'
-                || (record.tags || []).includes('kids')
-                || (record.tags || []).includes('kids-disney');
-        }
-        if (normalized === 'vegetarian') {
-            return (record.tags || []).some(tag => ['vegetarian', 'vegan'].includes(tag));
-        }
-        if (normalized === 'paid') return Boolean(record.price);
-        if (normalized === 'alcoholic') {
-            return (record.tags || []).includes('alcoholic')
-                || ['cocktails', 'beer', 'wine', 'rum', 'whiskey', 'sake'].includes(record.menuCategory);
-        }
-        if (normalized === 'dessert') {
-            return record.menuCategory === 'desserts'
-                || (record.tags || []).some(tag => ['dessert', 'dessert-vegan'].includes(tag));
-        }
-        if (normalized === 'drinks') {
-            return isMenuDrinkRecord(record);
-        }
-        return true;
-    }
-
     function scoreMenuQuickRecord(record, normalizedQuery, index) {
         if (!normalizedQuery) return Math.max(8, 64 - Math.floor(index / 3));
         const units = normalizedQuery.split(' ').filter(Boolean);
@@ -4560,208 +4070,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (record.normalizedZhLabel.includes(unit)) score += 22;
             if (record.normalizedRestaurant.includes(unit)) score += 16;
             if (record.normalizedMenuCategory.includes(unit)) score += 14;
-            if (record.searchText.includes(unit)) score += 10;
-        });
-        return score;
-    }
-
-    function getMenuQuickResults(query = '', group = 'all', category = 'all', limit = 48) {
-        const normalizedQuery = normalizeSearchText(query);
-        const selectedGroup = compactSearchText(group || 'all');
-        const selectedCategory = getMenuQuickCategoryEntry(category).id;
-
-        return getMenuLookupRecords()
-            .map((record, index) => ({
-                ...record,
-                menuQuickIndex: index,
-                menuQuickScore: scoreMenuQuickRecord(record, normalizedQuery, index)
-            }))
-            .filter(record => selectedGroup === 'all' || record.restaurantGroup === selectedGroup)
-            .filter(record => menuRecordMatchesQuickCategory(record, selectedCategory))
-            .filter(record => !normalizedQuery || record.menuQuickScore > 0)
-            .sort((a, b) => b.menuQuickScore - a.menuQuickScore || a.menuQuickIndex - b.menuQuickIndex)
-            .slice(0, limit);
-    }
-
-    function renderMenuQuickFilters() {
-        const groupContainer = document.getElementById('menu-group-filters');
-        const categoryContainer = document.getElementById('menu-category-filters');
-        if (groupContainer) {
-            groupContainer.innerHTML = MENU_QUICK_GROUPS.map(group => `
-                <button type="button" class="${group.id === menuLookupState.group ? 'active' : ''}" data-menu-group-filter="${escapeHtml(group.id)}">
-                    ${escapeHtml(group.label)}
-                </button>
-            `).join('');
-        }
-        if (categoryContainer) {
-            categoryContainer.innerHTML = MENU_QUICK_CATEGORIES.map(category => `
-                <button type="button" class="${category.id === menuLookupState.category ? 'active' : ''}" data-menu-category-filter="${escapeHtml(category.id)}">
-                    ${escapeHtml(category.label)}
-                </button>
-            `).join('');
-        }
-    }
-
-    function renderMenuQuickLookup() {
-        const input = document.getElementById('menu-lookup-input');
-        const summary = document.getElementById('menu-lookup-summary');
-        const resultsContainer = document.getElementById('menu-lookup-results');
-        const workspace = document.getElementById('menu-lookup-workspace');
-        const crewPane = document.getElementById('menu-crew-pane');
-        if (!resultsContainer) return;
-
-        const results = getMenuQuickResults(menuLookupState.query, menuLookupState.group, menuLookupState.category);
-        menuLookupState.lastResults = results;
-        const activeRecord = results.find(record => record.id === menuLookupState.activeCrewRecordId)
-            || getMenuLookupRecords().find(record => record.id === menuLookupState.activeCrewRecordId)
-            || null;
-        if (menuLookupState.activeCrewRecordId && !activeRecord) {
-            menuLookupState.activeCrewRecordId = '';
-        }
-
-        if (input && input.value !== menuLookupState.query) {
-            input.value = menuLookupState.query;
-        }
-        if (input) {
-            input.disabled = false;
-        }
-        if (summary) {
-            const groupLabel = MENU_QUICK_GROUPS.find(group => group.id === menuLookupState.group)?.label || '全部';
-            const categoryLabel = getMenuQuickCategoryEntry(menuLookupState.category).label;
-            summary.textContent = `${groupLabel} · ${categoryLabel} · 顯示 ${results.length} 筆`;
-        }
-        if (workspace) {
-            workspace.classList.toggle('has-crew-preview', Boolean(activeRecord));
-        }
-        if (crewPane) {
-            crewPane.hidden = !activeRecord;
-            crewPane.innerHTML = activeRecord ? buildCrewDisplayCard(activeRecord) : '';
-        }
-
-        if (!results.length) {
-            resultsContainer.innerHTML = `
-                <div class="menu-lookup-empty">
-                    <strong>目前沒有符合的菜名</strong>
-                    <span>可以換短一點的關鍵字，例如：雞飯、Palo、Bacha、兒童餐。</span>
-                </div>
-            `;
-            renderMenuQuickFilters();
-            return;
-        }
-
-        resultsContainer.innerHTML = results.map(record => {
-            const location = getLookupRecordLocation(record);
-            const chipLabels = getLookupResultChipLabels(record);
-            return `
-                <article class="menu-lookup-card">
-                    <div class="menu-lookup-card-main">
-                        <div class="lookup-result-meta">${escapeHtml(getLookupSourceDisplayLabel(record.sourceType))}</div>
-                        <h3>${escapeHtml(record.zhLabel)}</h3>
-                        <p class="lookup-result-en">${escapeHtml(record.englishName)}</p>
-                        ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Restaurant / 餐廳</span>${escapeHtml(location)}</p>` : ''}
-                        <div class="lookup-result-chips">
-                            ${chipLabels.map(label => `<span>${escapeHtml(label)}</span>`).join('')}
-                        </div>
-                    </div>
-                    <button type="button" class="menu-crew-trigger lookup-crew-trigger" data-menu-lookup-id="${escapeHtml(record.id)}">
-                        <i class="fa-solid fa-language"></i>
-                        給 Crew 看
-                    </button>
-                </article>
-            `;
-        }).join('');
-        renderMenuQuickFilters();
-    }
-
-    function initializeMenuQuickLookup() {
-        const root = document.getElementById('menu-lookup');
-        const input = document.getElementById('menu-lookup-input');
-        const groupContainer = document.getElementById('menu-group-filters');
-        const categoryContainer = document.getElementById('menu-category-filters');
-        const workspace = document.getElementById('menu-lookup-workspace');
-        if (!root || !input || !workspace) return;
-
-        if (!searchState.lookupRecords.length) {
-            prepareSearchDocuments();
-        }
-
-        let menuDebounceTimer = null;
-        input.addEventListener('input', () => {
-            window.clearTimeout(menuDebounceTimer);
-            menuDebounceTimer = window.setTimeout(() => {
-                menuLookupState.query = input.value.trim();
-                menuLookupState.activeCrewRecordId = '';
-                renderMenuQuickLookup();
-            }, 90);
-        });
-
-        groupContainer?.addEventListener('click', event => {
-            const button = event.target.closest('[data-menu-group-filter]');
-            if (!button) return;
-            menuLookupState.group = compactSearchText(button.dataset.menuGroupFilter || 'all') || 'all';
-            menuLookupState.activeCrewRecordId = '';
-            renderMenuQuickLookup();
-        });
-
-        categoryContainer?.addEventListener('click', event => {
-            const button = event.target.closest('[data-menu-category-filter]');
-            if (!button) return;
-            menuLookupState.category = getMenuQuickCategoryEntry(button.dataset.menuCategoryFilter).id;
-            menuLookupState.activeCrewRecordId = '';
-            renderMenuQuickLookup();
-        });
-
-        workspace.addEventListener('click', event => {
-            const copyButton = event.target.closest('[data-copy-text]');
-            if (copyButton) {
-                event.preventDefault();
-                copyTextToClipboard(copyButton.dataset.copyText || '');
-                return;
-            }
-
-            const crewButton = event.target.closest('[data-menu-lookup-id]');
-            if (crewButton) {
-                event.preventDefault();
-                menuLookupState.activeCrewRecordId = crewButton.dataset.menuLookupId || '';
-                renderMenuQuickLookup();
-                return;
-            }
-
-            const closeButton = event.target.closest('[data-lookup-crew-close]');
-            if (closeButton) {
-                event.preventDefault();
-                menuLookupState.activeCrewRecordId = '';
-                renderMenuQuickLookup();
-            }
-        });
-
-        renderMenuQuickLookup();
-    }
-
-    function menuRecordMatchesQuickCategory(record, categoryId) {
-        const normalized = getMenuCourseEntry(categoryId).id;
-        if (normalized === 'all') return true;
-        return record.courseGroup === normalized;
-    }
-
-    function scoreMenuQuickRecord(record, normalizedQuery, index) {
-        if (!normalizedQuery) return Math.max(8, 1200 - (record.restaurantOrder || 999) * 30 - (record.sourceRecordIndex || index));
-        const units = normalizedQuery.split(' ').filter(Boolean);
-        let score = 0;
-        if (record.normalizedEnglishName === normalizedQuery || record.normalizedZhLabel === normalizedQuery) score += 180;
-        if (record.normalizedEnglishName.includes(normalizedQuery)) score += 125;
-        if (record.normalizedZhLabel.includes(normalizedQuery)) score += 120;
-        if (record.normalizedRestaurant.includes(normalizedQuery)) score += 82;
-        if (record.normalizedMenuCategory.includes(normalizedQuery)) score += 76;
-        if (record.normalizedDescriptionZh.includes(normalizedQuery)) score += 42;
-        if (record.searchText.includes(normalizedQuery)) score += 70;
-        units.forEach(unit => {
-            if (unit.length < 2) return;
-            if (record.normalizedEnglishName.includes(unit)) score += 24;
-            if (record.normalizedZhLabel.includes(unit)) score += 22;
-            if (record.normalizedRestaurant.includes(unit)) score += 16;
-            if (record.normalizedMenuCategory.includes(unit)) score += 14;
-            if (record.normalizedDescriptionZh.includes(unit)) score += 8;
             if (record.searchText.includes(unit)) score += 10;
         });
         return score;
@@ -4812,335 +4120,6 @@ document.addEventListener('DOMContentLoaded', function () {
             .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title));
     }
 
-    function renderMenuLookupLoadState(status = menuDataLoadState.status, error = menuDataLoadState.error) {
-        const input = document.getElementById('menu-lookup-input');
-        const summary = document.getElementById('menu-lookup-summary');
-        const restaurantContainer = document.getElementById('menu-group-filters');
-        const courseContainer = document.getElementById('menu-category-filters');
-        const resultsContainer = document.getElementById('menu-lookup-results');
-        const workspace = document.getElementById('menu-lookup-workspace');
-        const crewPane = document.getElementById('menu-crew-pane');
-        if (!resultsContainer) return;
-
-        const isLoading = status === 'loading';
-        const isError = status === 'error';
-        if (input) input.disabled = isLoading;
-        if (summary) {
-            summary.textContent = isError
-                ? '菜單資料載入失敗，請重新載入。'
-                : (isLoading ? '菜單資料載入中...' : '打開菜單時才載入完整餐點資料。');
-        }
-        if (workspace) {
-            workspace.classList.remove('has-crew-preview', 'restaurant-selected');
-        }
-        if (crewPane) {
-            crewPane.hidden = true;
-            crewPane.innerHTML = '';
-        }
-        if (restaurantContainer) {
-            restaurantContainer.innerHTML = `
-                <button type="button" class="menu-restaurant-filter active" data-menu-load-action="${isError ? 'retry-menu' : 'load-menu'}">
-                    <span>${isError ? '重新載入菜單' : '載入菜單'}</span><small>550</small>
-                </button>
-            `;
-        }
-        if (courseContainer) {
-            courseContainer.innerHTML = MENU_COURSE_FILTERS.map(course => `
-                <button type="button" ${course.id === 'all' ? 'class="active"' : ''} disabled>${escapeHtml(course.label)}</button>
-            `).join('');
-        }
-
-        resultsContainer.innerHTML = `
-            <div class="menu-lookup-empty menu-lookup-load-state">
-                <strong>${isError ? '菜單資料無法載入' : (isLoading ? '正在載入完整菜單' : '菜單資料尚未載入')}</strong>
-                <span>${isError ? escapeHtml(error?.message || '請確認 menu-lookup-data.js 已部署，或稍後再試。') : '為了讓首頁更快，完整 550 筆餐點資料會在需要查菜單時才下載。'}</span>
-                <button type="button" class="menu-load-button" data-menu-load-action="${isError ? 'retry-menu' : 'load-menu'}">
-                    <i class="fa-solid fa-utensils"></i>
-                    ${isLoading ? '載入中...' : (isError ? '重新載入菜單' : '載入完整菜單')}
-                </button>
-            </div>
-        `;
-    }
-
-    function activateMenuLookup(options = {}) {
-        syncMenuDataLoadStateFromWindow();
-        if (menuDataLoadState.status === 'ready') {
-            renderMenuQuickLookup();
-            return Promise.resolve(window.MENU_LOOKUP_DATA);
-        }
-        renderMenuLookupLoadState('loading');
-        return ensureMenuLookupDataLoaded({ retry: Boolean(options.retry) })
-            .then(data => {
-                renderMenuQuickLookup();
-                return data;
-            })
-            .catch(error => {
-                renderMenuLookupLoadState('error', error);
-                return null;
-            });
-    }
-
-    function renderMenuQuickFilters() {
-        const restaurantContainer = document.getElementById('menu-group-filters');
-        const courseContainer = document.getElementById('menu-category-filters');
-        const restaurants = getMenuRestaurantOptions();
-        const sourceCount = Number(window.MENU_LOOKUP_DATA?.recordsCount || window.MENU_LOOKUP_DATA?.sourceCount || getMenuLookupRecords().length);
-        if (restaurantContainer) {
-            const groupedRestaurants = restaurants.reduce((groups, restaurant) => {
-                const groupLabel = restaurant.groupLabel || MENU_RESTAURANT_GROUP_LABELS[restaurant.group] || '其他';
-                if (!groups.has(groupLabel)) groups.set(groupLabel, []);
-                groups.get(groupLabel).push(restaurant);
-                return groups;
-            }, new Map());
-            restaurantContainer.innerHTML = `
-                <button type="button" class="menu-restaurant-filter ${menuLookupState.restaurant === 'all' ? 'active' : ''}" data-menu-restaurant-filter="all">
-                    <span>全部餐廳</span><small>${sourceCount}</small>
-                </button>
-                ${Array.from(groupedRestaurants.entries()).map(([groupLabel, groupRestaurants]) => `
-                    <div class="menu-restaurant-group">
-                        <span class="menu-restaurant-group-label">${escapeHtml(groupLabel)}</span>
-                        ${groupRestaurants.map(restaurant => `
-                            <button type="button" class="menu-restaurant-filter ${restaurant.id === menuLookupState.restaurant ? 'active' : ''}" data-menu-restaurant-filter="${escapeHtml(restaurant.id)}">
-                                <span>${escapeHtml(restaurant.label)}</span><small>${escapeHtml(String(restaurant.count || 0))}</small>
-                            </button>
-                        `).join('')}
-                    </div>
-                `).join('')}
-            `;
-        }
-        if (courseContainer) {
-            courseContainer.innerHTML = MENU_COURSE_FILTERS.map(course => `
-                <button type="button" class="${course.id === menuLookupState.course ? 'active' : ''}" data-menu-course-filter="${escapeHtml(course.id)}">
-                    ${escapeHtml(course.label)}
-                </button>
-            `).join('');
-        }
-    }
-
-    function renderMenuQuickLookup() {
-        const input = document.getElementById('menu-lookup-input');
-        const summary = document.getElementById('menu-lookup-summary');
-        const resultsContainer = document.getElementById('menu-lookup-results');
-        const workspace = document.getElementById('menu-lookup-workspace');
-        const crewPane = document.getElementById('menu-crew-pane');
-        if (!resultsContainer) return;
-        if (!isMenuLookupDataReady()) {
-            renderMenuLookupLoadState(menuDataLoadState.status);
-            return;
-        }
-
-        const results = getMenuQuickResults(menuLookupState.query, menuLookupState.restaurant, menuLookupState.course, Infinity);
-        menuLookupState.lastResults = results;
-        const allRecords = getMenuLookupRecords();
-        const activeRecord = results.find(record => record.id === menuLookupState.activeCrewRecordId)
-            || allRecords.find(record => record.id === menuLookupState.activeCrewRecordId)
-            || null;
-        if (menuLookupState.activeCrewRecordId && !activeRecord) {
-            menuLookupState.activeCrewRecordId = '';
-        }
-
-        if (input && input.value !== menuLookupState.query) {
-            input.value = menuLookupState.query;
-        }
-        if (summary) {
-            const restaurantLabel = getMenuRestaurantEntry(menuLookupState.restaurant).label;
-            const courseLabel = getMenuCourseEntry(menuLookupState.course).label;
-            const totalCount = Number(window.MENU_LOOKUP_DATA?.recordsCount || window.MENU_LOOKUP_DATA?.sourceCount || allRecords.length);
-            summary.textContent = `${restaurantLabel} • ${courseLabel} • 顯示 ${results.length} / ${totalCount} 筆`;
-        }
-        if (workspace) {
-            workspace.classList.toggle('has-crew-preview', Boolean(activeRecord));
-            workspace.classList.toggle('restaurant-selected', menuLookupState.restaurant !== 'all');
-        }
-        if (crewPane) {
-            crewPane.hidden = !activeRecord;
-            crewPane.innerHTML = activeRecord ? buildCrewDisplayCard(activeRecord) : '';
-        }
-
-        renderMenuQuickFilters();
-
-        if (!results.length) {
-            resultsContainer.innerHTML = `
-                <div class="menu-lookup-empty">
-                    <strong>目前沒有符合的菜名</strong>
-                    <span>可以換餐廳、點餐段落，或用較短的關鍵字，例如：雞飯、Palo、Bacha、兒童餐。</span>
-                </div>
-            `;
-            return;
-        }
-
-        const sections = getMenuQuickSections(results, menuLookupState.restaurant);
-        resultsContainer.innerHTML = sections.map(section => `
-            <section class="menu-lookup-result-section">
-                <div class="menu-lookup-section-heading">
-                    <div>
-                        <h3>${escapeHtml(section.title)}</h3>
-                        ${section.subtitle ? `<span>${escapeHtml(section.subtitle)}</span>` : ''}
-                    </div>
-                    <strong>${section.records.length} 筆</strong>
-                </div>
-                <div class="menu-lookup-card-grid">
-                    ${section.records.map(record => {
-                        const location = getLookupRecordLocation(record);
-                        const chipLabels = getLookupResultChipLabels(record);
-                        const isExpanded = menuLookupState.expandedRecordIds.has(record.id);
-                        return `
-                            <article class="menu-lookup-card">
-                                <div class="menu-lookup-card-main">
-                                    <div class="lookup-result-meta">${escapeHtml(getLookupSourceDisplayLabel(record.sourceType))}</div>
-                                    <h4>${escapeHtml(record.zhLabel)}</h4>
-                                    <p class="lookup-result-en">${escapeHtml(record.englishName)}</p>
-                                    ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Restaurant / 餐廳</span>${escapeHtml(location)}</p>` : ''}
-                                    <div class="lookup-result-chips">
-                                        ${chipLabels.map(label => `<span>${escapeHtml(label)}</span>`).join('')}
-                                    </div>
-                                    ${record.descriptionZh ? `
-                                        <button type="button" class="menu-description-toggle" data-menu-description-id="${escapeHtml(record.id)}" aria-expanded="${isExpanded ? 'true' : 'false'}">
-                                            <i class="fa-regular fa-note-sticky"></i>
-                                            ${isExpanded ? '收合描述' : '看餐點描述'}
-                                        </button>
-                                        <p class="menu-lookup-description" ${isExpanded ? '' : 'hidden'}>${escapeHtml(record.descriptionZh)}</p>
-                                    ` : ''}
-                                </div>
-                                <button type="button" class="menu-crew-trigger lookup-crew-trigger" data-menu-lookup-id="${escapeHtml(record.id)}">
-                                    <i class="fa-solid fa-language"></i>
-                                    給 Crew 看
-                                </button>
-                            </article>
-                        `;
-                    }).join('')}
-                </div>
-            </section>
-        `).join('');
-    }
-
-    function initializeMenuQuickLookup() {
-        const root = document.getElementById('menu-lookup');
-        const input = document.getElementById('menu-lookup-input');
-        const restaurantContainer = document.getElementById('menu-group-filters');
-        const courseContainer = document.getElementById('menu-category-filters');
-        const workspace = document.getElementById('menu-lookup-workspace');
-        if (!root || !input || !workspace) return;
-
-        let menuDebounceTimer = null;
-        input.addEventListener('input', () => {
-            window.clearTimeout(menuDebounceTimer);
-            menuDebounceTimer = window.setTimeout(() => {
-                menuLookupState.query = input.value.trim();
-                menuLookupState.activeCrewRecordId = '';
-                if (!isMenuLookupDataReady()) {
-                    activateMenuLookup();
-                    return;
-                }
-                renderMenuQuickLookup();
-            }, 90);
-        });
-        input.addEventListener('focus', () => {
-            if (!isMenuLookupDataReady() && menuDataLoadState.status === 'idle') {
-                activateMenuLookup();
-            }
-        });
-
-        restaurantContainer?.addEventListener('click', event => {
-            const loadButton = event.target.closest('[data-menu-load-action]');
-            if (loadButton) {
-                event.preventDefault();
-                activateMenuLookup({ retry: loadButton.dataset.menuLoadAction === 'retry-menu' });
-                return;
-            }
-            const button = event.target.closest('[data-menu-restaurant-filter]');
-            if (!button) return;
-            menuLookupState.restaurant = getMenuRestaurantEntry(button.dataset.menuRestaurantFilter).id;
-            menuLookupState.activeCrewRecordId = '';
-            menuLookupState.expandedRecordIds.clear();
-            renderMenuQuickLookup();
-        });
-
-        courseContainer?.addEventListener('click', event => {
-            const button = event.target.closest('[data-menu-course-filter]');
-            if (!button) return;
-            if (!isMenuLookupDataReady()) {
-                activateMenuLookup();
-                return;
-            }
-            menuLookupState.course = getMenuCourseEntry(button.dataset.menuCourseFilter).id;
-            menuLookupState.activeCrewRecordId = '';
-            menuLookupState.expandedRecordIds.clear();
-            renderMenuQuickLookup();
-        });
-
-        workspace.addEventListener('click', event => {
-            const loadButton = event.target.closest('[data-menu-load-action]');
-            if (loadButton) {
-                event.preventDefault();
-                activateMenuLookup({ retry: loadButton.dataset.menuLoadAction === 'retry-menu' });
-                return;
-            }
-
-            const copyButton = event.target.closest('[data-copy-text]');
-            if (copyButton) {
-                event.preventDefault();
-                copyTextToClipboard(copyButton.dataset.copyText || '');
-                return;
-            }
-
-            const descriptionButton = event.target.closest('[data-menu-description-id]');
-            if (descriptionButton) {
-                event.preventDefault();
-                const recordId = descriptionButton.dataset.menuDescriptionId || '';
-                if (menuLookupState.expandedRecordIds.has(recordId)) {
-                    menuLookupState.expandedRecordIds.delete(recordId);
-                } else {
-                    menuLookupState.expandedRecordIds.add(recordId);
-                }
-                renderMenuQuickLookup();
-                return;
-            }
-
-            const crewButton = event.target.closest('[data-menu-lookup-id]');
-            if (crewButton) {
-                event.preventDefault();
-                menuLookupState.activeCrewRecordId = crewButton.dataset.menuLookupId || '';
-                renderMenuQuickLookup();
-                return;
-            }
-
-            const closeButton = event.target.closest('[data-lookup-crew-close]');
-            if (closeButton) {
-                event.preventDefault();
-                menuLookupState.activeCrewRecordId = '';
-                renderMenuQuickLookup();
-            }
-        });
-
-        document.querySelectorAll('a[href="#menu-lookup"]').forEach(link => {
-            link.addEventListener('click', () => {
-                activateMenuLookup();
-            });
-        });
-
-        window.addEventListener?.('hashchange', () => {
-            if (window.location?.hash === '#menu-lookup') {
-                activateMenuLookup();
-            }
-        });
-
-        if (window.IntersectionObserver) {
-            const observer = new IntersectionObserver(entries => {
-                if (entries.some(entry => entry.isIntersecting)) {
-                    activateMenuLookup();
-                    observer.disconnect();
-                }
-            }, { rootMargin: '160px 0px' });
-            observer.observe(root);
-        }
-
-        renderMenuQuickLookup();
-        if (window.location?.hash === '#menu-lookup') {
-            activateMenuLookup();
-        }
-    }
-
     function renderSearchResults(results, queryContext) {
         const container = document.getElementById('search-results');
         if (!container) return;
@@ -5179,51 +4158,21 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const groupedResults = new Map();
-        results.forEach(result => {
-            if (!groupedResults.has(result.groupLabel)) {
-                groupedResults.set(result.groupLabel, []);
-            }
-            groupedResults.get(result.groupLabel).push(result);
-        });
-
-        const groupOrder = ['行程', '甲板與表演', '攻略本', '其他資訊'];
-        container.innerHTML = groupOrder
-            .filter(groupLabel => groupedResults.has(groupLabel))
-            .map(groupLabel => {
-                const cards = groupedResults.get(groupLabel)
-                    .map(result => {
-                        const metaChips = getSearchResultMetaChips(result);
+        container.innerHTML = `
+            <section class="search-group">
+                <div class="search-group-title">${results.length} 項攻略</div>
+                <div class="search-group-list">
+                    ${results.map(result => {
                         const summaryLine = buildSearchResultSummaryLine(result, resolvedQueryData);
                         const metaLine = getSearchResultMetaLine(result);
-
-                        return `
-                            <button type="button" class="search-result-card" data-result-id="${result.id}">
-                                <div class="search-result-meta">${escapeHtml(metaLine)}</div>
-                                <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
-                                ${metaChips.length ? `
-                                    <div class="search-result-chip-row">
-                                        ${metaChips.map(chip => `<span class="search-result-chip">${escapeHtml(chip)}</span>`).join('')}
-                                    </div>
-                                ` : ''}
-                                ${summaryLine ? `<div class="search-result-summary">${escapeHtml(summaryLine)}</div>` : ''}
-                            </button>
-                        `;
-                    })
-                    .join('');
-
-                return `
-                    <section class="search-group">
-                        <div class="search-group-title">
-                            <i class="${SEARCH_GROUP_ICONS[groupLabel] || 'fa-solid fa-magnifying-glass'}"></i>
-                            <span>${groupLabel}</span>
-                        </div>
-                        <div class="search-group-list">
-                            ${cards}
-                        </div>
-                    </section>
-                `;
-            }).join('');
+                        return `<button type="button" class="search-result-card" data-result-id="${result.id}">
+                            <div class="search-result-meta">${escapeHtml(metaLine)}</div>
+                            <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
+                            ${summaryLine ? `<div class="search-result-summary">${escapeHtml(summaryLine)}</div>` : ''}
+                        </button>`;
+                    }).join('')}
+                </div>
+            </section>`;
     }
 
     function renderSearchResultsError(message) {
@@ -5257,13 +4206,10 @@ document.addEventListener('DOMContentLoaded', function () {
             renderLookupMenuLoadState(menuDataLoadState.status === 'error' ? 'error' : 'loading', menuDataLoadState.error);
             ensureMenuLookupDataLoaded()
                 .then(() => {
-                    performLookupSearch(query);
-                    if (document.getElementById('menu-lookup')) {
-                        renderMenuQuickLookup();
-                    }
+                    if (searchState.mode === 'lookup' && searchState.lookupCategory === 'dining') performLookupSearch(document.getElementById('search-input')?.value || '');
                 })
                 .catch(error => {
-                    renderLookupMenuLoadState('error', error);
+                    if (searchState.mode === 'lookup' && searchState.lookupCategory === 'dining') renderLookupMenuLoadState('error', error);
                 });
             return;
         }
@@ -5284,6 +4230,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function performActiveSearch(query) {
+        hideCrewPreview(false);
+        const body = document.getElementById('search-panel-body');
+        if (body) body.scrollTop = 0;
         if (searchState.mode === 'lookup') {
             performLookupSearch(query);
             return;
@@ -5345,6 +4294,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderLookupDiningControls() {
         const select = document.getElementById('lookup-menu-restaurant-select');
         const courseRow = document.getElementById('lookup-menu-course-row');
+        const focusedCourse = document.activeElement?.dataset?.lookupDiningFilter;
         const isReady = isMenuLookupDataReady();
         if (select) {
             const restaurants = getMenuRestaurantOptions();
@@ -5366,6 +4316,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${escapeHtml(course.label)}
                 </button>
             `).join('');
+            if (focusedCourse) courseRow.querySelector(`[data-lookup-dining-filter="${focusedCourse}"]`)?.focus({preventScroll: true});
         }
     }
 
@@ -5429,101 +4380,115 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function copyTextToClipboard(text) {
+    async function copyTextToClipboard(text, button) {
         const value = String(text || '').trim();
-        if (!value) return;
-        if (navigator.clipboard?.writeText) {
-            navigator.clipboard.writeText(value).catch(() => null);
-            return;
+        let copied = false;
+        try { if (navigator.clipboard?.writeText) {await navigator.clipboard.writeText(value); copied = true;} } catch {}
+        if (!copied) {
+            const textarea = document.createElement('textarea');
+            textarea.value = value; textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+            document.querySelector('.lookup-crew-pane')?.appendChild(textarea);
+            textarea.select();
+            try { copied = document.execCommand('copy'); } catch {}
+            textarea.remove();
         }
-        const textarea = document.createElement('textarea');
-        textarea.value = value;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            document.execCommand('copy');
-        } catch (error) {
-            // Older browsers may reject copy; the visible text remains available.
+        if (button) {
+            const original = button.innerHTML;
+            button.textContent = copied ? '已複製' : '無法複製，請選取英文文字';
+            button.focus({preventScroll: true});
+            window.setTimeout(() => {if (button.isConnected) button.innerHTML = original;}, 2000);
         }
-        textarea.remove();
     }
 
     function navigateToSearchResult(result) {
         if (!result?.navTarget) return;
-
-        closeSearchOverlay();
-
-        window.setTimeout(() => {
-            const { navTarget } = result;
-
-            if (navTarget.type === 'schedule') {
-                setScheduleTab(navTarget.dayId);
-                waitForTargetAndScroll(navTarget.itemId);
-                return;
-            }
-
-            if (navTarget.type === 'deck') {
-                setDeckGuideTab(navTarget.tabId);
-                waitForTargetAndScroll(navTarget.itemId);
-                return;
-            }
-
-            if (navTarget.type === 'show') {
-                setDeckGuideTab(navTarget.tabId);
-                waitForTargetAndScroll(navTarget.itemId);
-                return;
-            }
-
-            if (navTarget.type === 'playbook') {
-                setPlaybookMission(navTarget.missionId, { openItemId: navTarget.itemId });
-                waitForTargetAndScroll(navTarget.itemId);
-                return;
-            }
-
-            waitForTargetAndScroll(navTarget.itemId);
-        }, 140);
+        closeSearchOverlay({fromRoute: true});
+        history.replaceState(null, '', '#' + result.navTarget.itemId);
+        navigateNotebook(result.navTarget.itemId);
     }
 
-    function openSearchOverlay() {
+    function setSearchBackgroundInert(isOpen) {
+        document.querySelectorAll('main, .sticky-nav, .mobile-nav, .notebook-footer, #back-to-top').forEach(element => { element.inert = isOpen; });
+    }
+
+    function openSearchOverlay(options = {}) {
         const overlay = document.getElementById('search-overlay');
         const input = document.getElementById('search-input');
-        const panelBody = document.getElementById('search-panel-body');
-        if (!overlay || !input) return;
-
+        if (!overlay || !input || !overlay.hidden) return;
+        notebookReturnFocus = document.activeElement;
+        searchState.returnScroll = window.scrollY;
+        searchState.returnHash = ['#search','#menu-search','#menu-lookup','#crew'].includes(window.location.hash) ? '#' + notebookState.view : window.location.hash || '#journey';
         searchState.isComposing = false;
         searchState.pendingSubmit = false;
         overlay.hidden = false;
         document.body.classList.add('search-open');
+        setSearchBackgroundInert(true);
         syncSearchModeUi();
-        performActiveSearch(input.value);
-        if (panelBody) panelBody.scrollTop = 0;
-        window.setTimeout(() => input.focus(), 40);
+        if (!options.fromRoute) {
+            history.pushState({search: true}, '', options.menu ? '#menu-search' : '#search');
+            searchState.historyEntry = true;
+        } else searchState.historyEntry = Boolean(history.state?.search);
+        if ((!searchState.lastQueryData || normalizeSearchText(input.value) !== searchState.lastQuery) && !options.skipSearch) performActiveSearch(input.value);
+        if (options.focusInput !== false) input.focus({preventScroll: true});
+        else document.getElementById('search-close-btn').focus({preventScroll: true});
     }
 
-    function closeSearchOverlay() {
+    function closeSearchOverlay(options = {}) {
         const overlay = document.getElementById('search-overlay');
-        const input = document.getElementById('search-input');
-        const panelBody = document.getElementById('search-panel-body');
         if (!overlay || overlay.hidden) return;
-
+        const wasCrew = window.location.hash === '#crew';
+        hideCrewPreview(false);
         overlay.hidden = true;
         document.body.classList.remove('search-open');
-        if (input) input.value = '';
-        if (panelBody) panelBody.scrollTop = 0;
+        setSearchBackgroundInert(false);
         searchState.isComposing = false;
         searchState.pendingSubmit = false;
-        searchState.resultsById = new Map();
-        searchState.lookupResultsById = new Map();
+        clearTimeout(searchState.debounceTimer);
+        notebookReturnFocus?.focus?.({preventScroll: true});
+        window.scrollTo({top: searchState.returnScroll || 0, behavior: 'instant'});
+        if (!options.fromRoute) {
+            searchState.closingHash = searchState.returnHash || '#journey';
+            if (searchState.historyEntry) history.go(wasCrew ? -2 : -1);
+            else {
+                history.replaceState(null, '', searchState.returnHash || '#journey');
+                searchState.closingHash = null;
+            }
+        }
+    }
+
+    function showCrewPreview(id, trigger) {
+        const record = searchState.lookupResultsById.get(id);
+        const pane = document.querySelector('.lookup-crew-pane');
+        if (!pane || !record) return;
+        searchState.activeCrewRecordId = id;
+        crewReturnFocus = trigger;
+        pane.innerHTML = buildCrewDisplayCard(record);
+        pane.hidden = false;
+        pane.closest('.lookup-workspace').classList.add('has-crew-preview');
+        if (window.matchMedia('(max-width: 760px)').matches) {
+            pane.setAttribute('role', 'dialog'); pane.setAttribute('aria-modal', 'true');
+            pane.closest('.lookup-workspace').querySelector('.lookup-result-column').inert = true;
+            document.querySelector('.search-command-bar').inert = true;
+        }
+        if (window.location.hash !== '#crew') history.pushState({crew: true, lookupId: id}, '', '#crew');
+        pane.querySelector('[data-lookup-crew-close]').focus({preventScroll: true});
+    }
+
+    function hideCrewPreview(restore = true) {
+        const pane = document.querySelector('.lookup-crew-pane');
         searchState.activeCrewRecordId = '';
-        searchState.lookupRestaurantFilter = 'all';
-        searchState.lookupDiningFilter = 'all';
-        searchState.shortcutOpen = false;
-        searchState.lastQuery = '';
-        searchState.lastResults = [];
-        searchState.lastQueryData = null;
+        if (pane) {
+            pane.hidden = true;
+            pane.closest('.lookup-workspace')?.classList.remove('has-crew-preview');
+            const column = pane.closest('.lookup-workspace')?.querySelector('.lookup-result-column');
+            if (column) column.inert = false;
+        }
+        const command = document.querySelector('.search-command-bar');
+        if (command) command.inert = false;
+        if (restore) {
+            crewReturnFocus?.focus?.({preventScroll: true});
+            if (window.location.hash === '#crew') history.back();
+        }
     }
 
     function initializeSearch() {
@@ -5556,30 +4521,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function applySearchQuery(query, options = {}) {
             const nextQuery = String(query || '').trim();
-            if (options.mode || options.lookupCategory || options.lookupDiningFilter || options.lookupRestaurantFilter) {
+            if (options.mode || options.lookupCategory) {
                 setSearchToolMode(options.mode || searchState.mode, {
-                    lookupCategory: options.lookupCategory || searchState.lookupCategory,
-                    lookupDiningFilter: options.lookupDiningFilter || searchState.lookupDiningFilter,
-                    lookupRestaurantFilter: options.lookupRestaurantFilter || searchState.lookupRestaurantFilter
+                    lookupCategory: options.lookupCategory || 'all',
+                    lookupDiningFilter: options.lookupDiningFilter || 'all',
+                    lookupRestaurantFilter: options.lookupRestaurantFilter || 'all'
                 });
             }
-            if (!nextQuery && searchState.lookupCategory === 'all') return;
-
-            if (overlay.hidden) {
-                openSearchOverlay();
-            }
-
             input.value = nextQuery;
-            performActiveSearch(input.value);
-            input.focus();
-
-            const panelBody = document.getElementById('search-panel-body');
-            if (panelBody) panelBody.scrollTop = 0;
+            if (overlay.hidden) openSearchOverlay({...options, menu: options.lookupCategory === 'dining' && !nextQuery, skipSearch: true, focusInput: options.focusInput ?? Boolean(nextQuery)});
+            performActiveSearch(nextQuery);
+            if (options.focusInput ?? Boolean(nextQuery)) input.focus({preventScroll: true});
         }
+        openNotebookSearch = applySearchQuery;
 
-        trigger.addEventListener('click', openSearchOverlay);
-        closeBtn.addEventListener('click', closeSearchOverlay);
-        backdrop?.addEventListener('click', closeSearchOverlay);
+        trigger.addEventListener('click', () => openSearchOverlay());
+        closeBtn.addEventListener('click', () => closeSearchOverlay());
+        backdrop?.addEventListener('click', () => searchState.activeCrewRecordId ? hideCrewPreview() : closeSearchOverlay());
 
         document.addEventListener('click', event => {
             const chip = event.target.closest('[data-search-query]');
@@ -5679,7 +4637,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 ensureMenuLookupDataLoaded({ retry: loadButton.dataset.menuLoadAction === 'retry-search' })
                     .then(() => {
                         performLookupSearch(input.value);
-                        renderMenuQuickLookup();
                     })
                     .catch(error => {
                         renderLookupMenuLoadState('error', error);
@@ -5691,15 +4648,16 @@ document.addEventListener('DOMContentLoaded', function () {
             if (copyButton) {
                 event.preventDefault();
                 event.stopPropagation();
-                copyTextToClipboard(copyButton.dataset.copyText || '');
+                copyTextToClipboard(copyButton.dataset.copyText || '', copyButton);
                 return;
             }
 
             const lookupButton = event.target.closest('.lookup-crew-trigger');
             if (lookupButton) {
                 event.preventDefault();
-                searchState.activeCrewRecordId = lookupButton.dataset.lookupId || '';
-                renderLookupResults(searchState.lastResults, searchState.lastQueryData || {});
+                window.clearTimeout(searchState.debounceTimer);
+                if (normalizeSearchText(input.value) !== searchState.lastQuery) performActiveSearch(input.value);
+                showCrewPreview(lookupButton.dataset.lookupId || '', lookupButton);
                 return;
             }
 
@@ -5707,8 +4665,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (crewCloseButton) {
                 event.preventDefault();
                 event.stopPropagation();
-                searchState.activeCrewRecordId = '';
-                renderLookupResults(searchState.lastResults, searchState.lastQueryData || {});
+                hideCrewPreview();
                 return;
             }
 
@@ -5721,7 +4678,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape' && !overlay.hidden) {
-                closeSearchOverlay();
+                event.preventDefault();
+                if (searchState.activeCrewRecordId) hideCrewPreview(); else closeSearchOverlay();
+            }
+            if (event.key === 'Tab' && !overlay.hidden) {
+                const pane = overlay.querySelector('.lookup-crew-pane:not([hidden])');
+                const root = pane && window.matchMedia('(max-width: 760px)').matches ? pane : overlay;
+                const focusable = Array.from(root.querySelectorAll('button, input, select, a[href], summary')).filter(element => !element.disabled && !element.closest('[hidden], [inert]') && element.getClientRects().length);
+                const first = focusable[0], last = focusable[focusable.length - 1];
+                if (event.shiftKey && document.activeElement === first) {event.preventDefault(); last?.focus();}
+                else if (!event.shiftKey && document.activeElement === last) {event.preventDefault(); first?.focus();}
             }
             if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
                 event.preventDefault();
@@ -5730,6 +4696,165 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         renderSearchResults([], '');
+    }
+
+    function getEntityDestination(entityId) {
+        for (const [groups, field, bindingGroup] of [[showGuideData, 'shows', 'shows'], [deckGuideData, 'facilities', 'deckFacilities']]) {
+            for (const group of groups) {
+                const item = group[field].find(record => getAiEntityBinding(bindingGroup, record.bindingKey)?.entityRefs.includes(entityId));
+                if (item) return item.id;
+            }
+        }
+        return '';
+    }
+
+    function renderEntityLinks(entityIds = [], excludeId = '') {
+        const destinations = new Set();
+        const links = entityIds.map(id => {
+            const entity = getAiEntityRegistryEntry(id);
+            const destination = getEntityDestination(id);
+            if (!entity || !destination || destination === excludeId || destinations.has(destination)) return '';
+            destinations.add(destination);
+            return `<a href="#${destination}"><i class="fa-solid fa-location-dot" aria-hidden="true"></i> ${escapeHtml(entity.displayNameZh)}</a>`;
+        }).filter(Boolean).slice(0, 3);
+        return links.length ? `<div class="entity-links">${links.join('')}</div>` : '';
+    }
+
+    function setExploreTab(tab) {
+        notebookState.exploreTab = ['shows','playbook'].includes(tab) ? tab : 'facilities';
+        document.querySelectorAll('[data-explore-tab]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.exploreTab === notebookState.exploreTab)));
+        document.getElementById('playbook').hidden = notebookState.exploreTab !== 'playbook';
+        document.getElementById('deck-guide').hidden = notebookState.exploreTab === 'playbook';
+        document.getElementById('ship-stats').hidden = notebookState.exploreTab !== 'facilities';
+        if (notebookState.exploreTab !== 'playbook') setDeckGuideTab(notebookState.exploreTab === 'shows' ? 'shows' : notebookState.deck);
+    }
+
+    function renderTravelReferences() {
+        const root = document.getElementById('travel-reference-content');
+        if (!root) return;
+        const records = (window.TRAVEL_REFERENCE_DATA?.records || []).filter(record => !record.targetId);
+        const labels = { overview: '同行與交通', timeline: '預約與報到', checkin: '入境與登船', 'local-info': '新加坡與機場' };
+        root.innerHTML = Object.entries(labels).map(([section, label]) => `
+            <section class="reference-group" id="${section}"><h3>${label}</h3>
+                ${records.filter(record => record.sectionId === section).map(record => `<details class="reference-item" id="${record.id}"><summary>${escapeHtml(record.title)}<i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><div class="reference-body">${record.bodyHtml}</div></details>`).join('')}
+            </section>`).join('');
+    }
+
+    function revealNotebookTarget(id) {
+        const target = document.getElementById(id);
+        if (!target) return;
+        if (target.tagName === 'DETAILS') target.open = true;
+        let parent = target.parentElement;
+        while (parent) { if (parent.tagName === 'DETAILS') parent.open = true; parent = parent.parentElement; }
+        target.setAttribute('tabindex', '-1');
+        target.focus({preventScroll: true});
+        scrollToTarget(target);
+    }
+
+    function navigateNotebook(rawHash, options = {}) {
+        if (!notebookState.ready) return;
+        let id = String(rawHash || 'journey').replace(/^#/, '');
+        const references = window.TRAVEL_REFERENCE_DATA || {};
+        if (searchState.closingHash === '#' + id) {
+            searchState.closingHash = null;
+            window.scrollTo({top: searchState.returnScroll || 0, behavior: 'instant'});
+            return;
+        }
+        if (id === 'crew') {
+            const lookupId = history.state?.lookupId;
+            const trigger = Array.from(document.querySelectorAll('[data-lookup-id]')).find(button => button.dataset.lookupId === lookupId);
+            if (trigger) showCrewPreview(lookupId, trigger);
+            else {
+                history.replaceState(null, '', '#search');
+                openSearchOverlay({fromRoute: true, focusInput: false});
+            }
+            return;
+        }
+        if (id === 'search' || id === 'menu-search' || id === 'menu-lookup') {
+            if (searchState.activeCrewRecordId) {
+                hideCrewPreview(false);
+                crewReturnFocus?.focus?.({preventScroll: true});
+            }
+            if (document.getElementById('search-overlay').hidden) {
+                if (id === 'search') openSearchOverlay({fromRoute: true});
+                else openNotebookSearch('', {mode: 'lookup', lookupCategory: 'dining', lookupDiningFilter: 'all', lookupRestaurantFilter: 'all', fromRoute: true, focusInput: false});
+            }
+            return;
+        }
+        if (!document.getElementById('search-overlay').hidden) {
+            const returning = '#' + id === searchState.returnHash;
+            closeSearchOverlay({fromRoute: true});
+            if (returning) return;
+        }
+        id = references.redirects?.[id] || id;
+        const supplement = references.records?.find(record => record.id === id && record.targetId);
+        const routeId = supplement?.targetId || id;
+        let view = ['explore', 'prepare'].includes(id) ? id : references.legacySections?.[id] || 'journey';
+        let focusId = null;
+        let tab = null;
+        let matched = false;
+        for (const day of cruiseSchedule) {
+            if (id === day.id || day.periods.some(period => period.events.some(event => event.id === id))) {
+                view = 'journey'; setScheduleTab(day.id); focusId = id; matched = true;
+            }
+        }
+        for (const deck of deckGuideData) {
+            if (deck.id === id || deck.facilities.some(item => item.id === routeId)) {
+                view = 'explore'; tab = 'facilities'; notebookState.deck = deck.id; notebookState.purpose = 'all'; focusId = routeId; matched = true;
+            }
+        }
+        for (const group of showGuideData) {
+            if (group.shows.some(item => item.id === routeId)) { view = 'explore'; tab = 'shows'; focusId = routeId; matched = true; }
+        }
+        for (const mission of playbookGuideData) {
+            if (mission.items.some(item => item.id === routeId)) {
+                view = 'explore'; tab = 'playbook'; setPlaybookMission(mission.id, {openItemId: routeId}); focusId = id; matched = true;
+            }
+        }
+        if (view === 'shows' || id === 'explore/shows') {view = 'explore'; tab = 'shows';}
+        if (view === 'playbook' || id === 'explore/playbook') {view = 'explore'; tab = 'playbook';}
+        if (id === 'facilities') {tab = 'facilities'; notebookState.purpose = 'all'; notebookState.deck = 'all';}
+        if (id === 'tips') setPlaybookMission('daily-ops');
+        if (references.records?.some(record => record.id === id && !record.targetId)) {view = 'prepare'; focusId = id;}
+        if (['overview','timeline','checkin','local-info','checklist','ship-stats'].includes(id)) focusId = id;
+        if (notebookState.view !== view) notebookState.scroll[notebookState.view] = window.scrollY;
+        notebookState.view = view;
+        document.querySelectorAll('[data-view]').forEach(element => {element.hidden = element.dataset.view !== view;});
+        document.querySelectorAll('[data-view-link]').forEach(link => {
+            if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+        });
+        if (view === 'explore') setExploreTab(tab || notebookState.exploreTab);
+        if (options.push) history.pushState(null, '', '#' + String(rawHash).replace(/^#/, ''));
+        if (focusId) requestAnimationFrame(() => revealNotebookTarget(focusId));
+        else if (options.scroll !== false) window.scrollTo({top: notebookState.scroll[view] || 0, behavior: 'instant'});
+    }
+
+    function initializeNotebook() {
+        if (!document.getElementById('main-content')) return;
+        // The notebook restores each view itself, including after dialog history entries.
+        history.scrollRestoration = 'manual';
+        renderTravelReferences();
+        notebookState.ready = true;
+        const singaporeDate = new Intl.DateTimeFormat('en-CA', {timeZone: 'Asia/Singapore', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+        const travelDates = {'2027-01-25':'day1','2027-01-26':'day2','2027-01-27':'day3','2027-01-28':'day4'};
+        setScheduleTab(travelDates[singaporeDate] || 'day1');
+        document.querySelectorAll('[data-explore-tab]').forEach(button => button.addEventListener('click', () => {
+            setExploreTab(button.dataset.exploreTab);
+            history.replaceState(null, '', button.dataset.exploreTab === 'facilities' ? '#explore' : '#explore/' + button.dataset.exploreTab);
+        }));
+        document.addEventListener('click', event => {
+            const link = event.target.closest('a[href^="#"]');
+            if (!link || link.hasAttribute('data-search-query')) return;
+            const hash = link.getAttribute('href');
+            if (hash === '#main-content') return;
+            event.preventDefault();
+            navigateNotebook(hash, {push: true});
+        });
+        window.addEventListener('hashchange', () => navigateNotebook(window.location.hash));
+        navigateNotebook(window.location.hash, {scroll: false});
+        document.getElementById('prepare').addEventListener('toggle', event => {
+            if (event.target.open && event.target.querySelector('#weather-widget')) fetchSingaporeWeather();
+        }, true);
     }
 
     if (window.__SEARCH_TEST_HOOKS__ && typeof window.__SEARCH_TEST_HOOKS__ === 'object') {
@@ -5747,12 +4872,14 @@ document.addEventListener('DOMContentLoaded', function () {
             getMenuLookupRecords,
             getMenuQuickResults,
             getMenuRestaurantOptions,
+            getSearchUiState: () => ({ mode: searchState.mode, query: searchState.lastQuery, category: searchState.lookupCategory }),
             getSearchDocuments: () => searchState.documents.slice()
         });
     }
 
     if (!window.__SEARCH_SKIP_BOOTSTRAP__) {
         initializeSearch();
+        initializeNotebook();
     }
 
 });

@@ -12,6 +12,9 @@
                 name: "早／中午｜提早登船＋Open House 優先＋禮賓報到",
                 events: [
                     {
+                        id: "search-schedule-day1-0-0",
+                        bindingKey: "day1:0:0",
+                        planKind: "confirm",
                         time: "10:30–11:30",
                         title: "抵達碼頭、完成報到",
                         tag: "登船流程",
@@ -24,6 +27,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-0-1",
+                        bindingKey: "day1:0:1",
+                        planKind: "flexible",
                         time: "11:45–12:30",
                         title: "快速補給（自助餐／Concierge Lounge）",
                         tag: "美食餐飲",
@@ -35,6 +41,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-0-2",
+                        bindingKey: "day1:0:2",
+                        planKind: "confirm",
                         time: "12:30–13:00",
                         title: "禮賓酒廊報到：Concierge Lounge (Deck 17)",
                         tag: "禮賓專屬",
@@ -55,6 +64,9 @@
                 name: "下午｜一次全家 Open House＋熟悉動線＋安全演練",
                 events: [
                     {
+                        id: "search-schedule-day1-1-0",
+                        bindingKey: "day1:1:0",
+                        planKind: "confirm",
                         time: "依 Open House 公告",
                         title: "Disney Oceaneer Club Open House (Deck 8)",
                         tag: "孩子專屬",
@@ -66,6 +78,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-1-1",
+                        bindingKey: "day1:1:1",
+                        planKind: "flexible",
                         time: "14:00–15:00",
                         title: "全家熟悉郵輪核心動線 (Deck 8 → 7 → 10/11 → 17)",
                         tag: "熟悉郵輪",
@@ -77,6 +92,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-1-2",
+                        bindingKey: "day1:1:2",
+                        planKind: "flexible",
                         time: "演練外的彈性空檔",
                         title: "Toy Story Pool／Splash Pad (Deck 17)",
                         tag: "玩水活動",
@@ -89,6 +107,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-1-3",
+                        bindingKey: "day1:1:3",
+                        planKind: "fixed",
                         time: "依當天集合通知",
                         title: "Mandatory Guest Assembly Drill (安全演練)",
                         tag: "安全演練",
@@ -99,6 +120,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-1-4",
+                        bindingKey: "day1:1:4",
+                        planKind: "flexible",
                         time: "依啟航公告／不衝突才去",
                         title: "到甲板上聽啟航汽笛",
                         tag: "啟航儀式",
@@ -114,6 +138,9 @@
                 name: "晚間｜第一輪晚餐＋首日晚秀＋宵夜收尾",
                 events: [
                     {
+                        id: "search-schedule-day1-2-0",
+                        bindingKey: "day1:2:0",
+                        planKind: "fixed",
                         time: "第一時段／依分配",
                         title: "第一時段晚餐：依實際輪替餐廳",
                         tag: "美食餐飲",
@@ -128,6 +155,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-2-1",
+                        bindingKey: "day1:2:1",
+                        planKind: "fixed",
                         time: "依 App 分配主秀",
                         title: "Walt Disney Theatre 首日晚間大秀 (Deck 5–7)",
                         tag: "精彩看秀",
@@ -139,6 +169,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day1-2-2",
+                        bindingKey: "day1:2:2",
+                        planKind: "flexible",
                         time: "21:05–21:40",
                         title: "Concierge Lounge (Deck 17) 宵夜收尾",
                         tag: "禮賓專屬",
@@ -165,6 +198,9 @@
                 name: "早上｜海景樣台房早餐",
                 events: [
                     {
+                        id: "search-schedule-day2-0-0",
+                        bindingKey: "day2:0:0",
+                        planKind: "flexible",
                         time: "07:00–09:00",
                         title: "早餐時間",
                         tag: "美食餐飲",
@@ -181,6 +217,9 @@
                 name: "上午｜同樓層連打（動線最順）",
                 events: [
                     {
+                        id: "search-schedule-day2-1-0",
+                        bindingKey: "day2:1:0",
+                        planKind: "confirm",
                         time: "09:00–09:30",
                         title: "Marvel Landing (Deck 18/19)",
                         tag: "刺激設施",
@@ -192,6 +231,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-1-1",
+                        bindingKey: "day2:1:1",
+                        planKind: "flexible",
                         time: "09:30–10:30",
                         title: "Infinity Pool & Bar (Deck 18)",
                         tag: "玩水活動",
@@ -202,6 +244,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-1-2",
+                        bindingKey: "day2:1:2",
+                        planKind: "flexible",
                         time: "10:30–11:00",
                         title: "Wayfinder Bay (Deck 10 船尾)",
                         tag: "玩水活動",
@@ -217,6 +262,9 @@
                 name: "中午",
                 events: [
                     {
+                        id: "search-schedule-day2-2-0",
+                        bindingKey: "day2:2:0",
+                        planKind: "flexible",
                         time: "11:00–12:00",
                         title: "午餐：Enchanted Summer Restaurant (Deck 6)",
                         tag: "美食餐飲",
@@ -231,6 +279,9 @@
                 name: "下午｜街區電玩＋電影／購物＋下午茶整理狀態",
                 events: [
                     {
+                        id: "search-schedule-day2-3-0",
+                        bindingKey: "day2:3:0",
+                        planKind: "flexible",
                         time: "12:00–14:00",
                         title: "舊京山街道 (Deck 7)",
                         tag: "漫步探索",
@@ -241,6 +292,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-3-1",
+                        bindingKey: "day2:3:1",
+                        planKind: "flexible",
                         time: "14:00–15:00",
                         title: "小寶可選 Edge；其他人家庭備案",
                         tag: "孩子專屬",
@@ -251,6 +305,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-3-2",
+                        bindingKey: "day2:3:2",
+                        planKind: "flexible",
                         time: "15:00–15:30",
                         title: "Concierge Lounge 下午茶補給",
                         tag: "禮賓專屬",
@@ -262,6 +319,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-3-3",
+                        bindingKey: "day2:3:3",
+                        planKind: "flexible",
                         time: "15:30–17:10",
                         title: "Disney Imagination Garden (Deck 10/11)",
                         tag: "精彩看秀",
@@ -276,6 +336,9 @@
                 name: "晚間",
                 events: [
                     {
+                        id: "search-schedule-day2-4-0",
+                        bindingKey: "day2:4:0",
+                        planKind: "fixed",
                         time: "第一時段／依分配",
                         title: "第一時段晚餐：依當日餐廳與桌號",
                         tag: "美食餐飲",
@@ -287,6 +350,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-4-1",
+                        bindingKey: "day2:4:1",
+                        planKind: "fixed",
                         time: "依 App 分配／開放場次",
                         title: "重要主秀：Remember／Disney Seas the Adventure",
                         tag: "精彩看秀",
@@ -297,6 +363,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-4-2",
+                        bindingKey: "day2:4:2",
+                        planKind: "flexible",
                         time: "21:20–21:50",
                         title: "Concierge Lounge 收尾",
                         tag: "禮賓專屬",
@@ -323,6 +392,9 @@
                 name: "早上｜早餐",
                 events: [
                     {
+                        id: "search-schedule-day3-0-0",
+                        bindingKey: "day3:0:0",
+                        planKind: "flexible",
                         time: "07:00–08:00",
                         title: "早餐時間",
                         tag: "美食餐飲",
@@ -337,6 +409,9 @@
                 name: "上午｜水域集中",
                 events: [
                     {
+                        id: "search-schedule-day3-1-0",
+                        bindingKey: "day3:1:0",
+                        planKind: "flexible",
                         time: "08:00–10:00",
                         title: "Toy Story Pool / Splash Pad (Deck 17)",
                         tag: "玩水活動",
@@ -347,6 +422,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-1-1",
+                        bindingKey: "day3:1:1",
+                        planKind: "flexible",
                         time: "10:00–11:00",
                         title: "Opulence Spa & Fitness Center (Deck 18)",
                         tag: "禮賓專屬",
@@ -362,6 +440,9 @@
                 name: "中午",
                 events: [
                     {
+                        id: "search-schedule-day3-2-0",
+                        bindingKey: "day3:2:0",
+                        planKind: "flexible",
                         time: "11:00–12:00",
                         title: "午餐：Pixar Market (Deck 17)",
                         tag: "美食餐飲",
@@ -376,6 +457,9 @@
                 name: "下午｜家庭活動與補玩空間＋提早收行李",
                 events: [
                     {
+                        id: "search-schedule-day3-3-0",
+                        bindingKey: "day3:3:0",
+                        planKind: "flexible",
                         time: "12:30–13:30",
                         title: "Big Hero Arcade／D Lounge 家庭活動",
                         tag: "亮點活動",
@@ -387,6 +471,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-3-1",
+                        bindingKey: "day3:3:1",
+                        planKind: "flexible",
                         time: "13:30–15:30",
                         title: "Baymax Cinemas 看電影 (Deck 7)",
                         tag: "休閒時光",
@@ -397,6 +484,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-3-2",
+                        bindingKey: "day3:3:2",
+                        planKind: "flexible",
                         time: "15:30–16:30",
                         title: "Concierge Sundeck & Pool (Deck 19)",
                         tag: "禮賓專屬",
@@ -408,6 +498,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-3-3",
+                        bindingKey: "day3:3:3",
+                        planKind: "fixed",
                         time: "16:30–17:00",
                         title: "回房間收拾行李",
                         tag: "準備返家",
@@ -423,6 +516,9 @@
                 name: "晚間｜保留晚餐與主秀＋可選礁區散步",
                 events: [
                     {
+                        id: "search-schedule-day3-4-0",
+                        bindingKey: "day3:4:0",
+                        planKind: "fixed",
                         time: "第一時段／依分配",
                         title: "第一時段晚餐：完成三晚輪替體驗",
                         tag: "美食餐飲",
@@ -433,6 +529,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-4-1",
+                        bindingKey: "day3:4:1",
+                        planKind: "confirm",
                         time: "依當晚節目／有空才補",
                         title: "Disney Imagination Garden 表演 (Deck 10/11)",
                         tag: "精彩看秀",
@@ -442,6 +541,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day3-4-2",
+                        bindingKey: "day3:4:2",
+                        planKind: "confirm",
                         time: "依煙火公告／無場次則散步",
                         title: "Celebration in the Sky／Discovery Reef 夜間散步",
                         tag: "絕美煙火",
@@ -468,6 +570,9 @@
                 name: "下船日｜禮賓優勢",
                 events: [
                     {
+                        id: "search-schedule-day4-0-0",
+                        bindingKey: "day4:0:0",
+                        planKind: "fixed",
                         time: "07:00–08:00",
                         title: "早餐＋最後確認手提物品",
                         tag: "禮賓專屬",
@@ -479,6 +584,9 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day4-0-1",
+                        bindingKey: "day4:0:1",
+                        planKind: "fixed",
                         time: "依放行與交通確認",
                         title: "下船、找行李、前往樟宜機場",
                         tag: "極速通關",
@@ -553,6 +661,8 @@ const deckGuideData = [
         badges: ["主秀依 App", "先核對晚餐", "散場人潮"],
         facilities: [
             {
+                id: "search-deck-deck5-0",
+                bindingKey: "deck5:0",
                 icon: "fa-solid fa-masks-theater",
                 name: "Walt Disney Theatre",
                 summary: "《Remember》與《Disney Seas the Adventure》的主劇院；依 App 分配或先到先入場場次觀看。",
@@ -561,6 +671,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck5-1",
+                bindingKey: "deck5:1",
                 icon: "fa-solid fa-palette",
                 name: "Animator’s Palate",
                 summary: "經典黑白變彩色互動餐廳，晚餐過程本身就是一場秀。",
@@ -569,6 +681,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck5-2",
+                bindingKey: "deck5:2",
                 icon: "fa-solid fa-music",
                 name: "Tiana’s Bayou Lounge",
                 summary: "紐奧良爵士氛圍很濃，像是秀前後可以換口味的輕鬆轉場區。",
@@ -577,6 +691,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck5-3",
+                bindingKey: "deck5:3",
                 icon: "fa-solid fa-bag-shopping",
                 name: "World of Disney / World of Disney Too",
                 summary: "探險號限定與迪士尼皮克斯周邊最集中的一層，兩邊店面可一路拿著商品逛完再集中結帳。",
@@ -595,6 +711,8 @@ const deckGuideData = [
         badges: ["Day 2 午餐點", "客務中心備援", "秀前爆米花補給"],
         facilities: [
             {
+                id: "search-deck-deck6-0",
+                bindingKey: "deck6:0",
                 icon: "fa-solid fa-utensils",
                 name: "Enchanted Summer Restaurant",
                 summary: "花園與仲夏氛圍很適合慢慢吃，白天與晚間都各有表情。",
@@ -603,6 +721,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck6-1",
+                bindingKey: "deck6:1",
                 icon: "fa-solid fa-headset",
                 name: "Guest Services 客務中心",
                 summary: "帳單、網路、遺失物、需求協助都在這裡處理，登船日若房卡或現場引導有落差時也常要回來補位。",
@@ -611,6 +731,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck6-2",
+                bindingKey: "deck6:2",
                 icon: "fa-solid fa-candy-cane",
                 name: "Premier Sips & Snacks",
                 summary: "劇院入口旁的付費小食站，爆米花與紀念杯很容易讓孩子分心；船頭一帶也可留意 Stitch Magic Shots 這類短拍照點。",
@@ -619,6 +741,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck6-3",
+                bindingKey: "deck6:3",
                 icon: "fa-solid fa-wand-magic-sparkles",
                 name: "Spellbound / Royal Court Lounge / Buccaneer Bar",
                 summary: "這層的大人系空間很多，適合把它視為備用夜生活清單。",
@@ -637,6 +761,8 @@ const deckGuideData = [
         badges: ["Day 1 探索", "Day 2 電玩分流", "看秀後短休"],
         facilities: [
             {
+                id: "search-deck-deck7-0",
+                bindingKey: "deck7:0",
                 icon: "fa-solid fa-user-secret",
                 name: "Edge 隱藏入口 / Vibe 青年會所",
                 summary: "Edge 11–14 歲，小寶 11 歲符合，澤澤 9 歲與彤妹 8 歲不符合；Vibe 為 14–17 歲。入口偽裝在街區立面裡。",
@@ -645,6 +771,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck7-1",
+                bindingKey: "deck7:1",
                 icon: "fa-solid fa-gamepad",
                 name: "Big Hero Arcade",
                 summary: "房卡就能啟動的大英雄天團體感電玩，四款遊戲都需要全身互動，是下午最好的放電分流點。",
@@ -653,6 +781,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck7-2",
+                bindingKey: "deck7:2",
                 icon: "fa-solid fa-film",
                 name: "Baymax Cinemas",
                 summary: "兩個小影廳節奏安靜，當孩子需要降噪休息時非常好用，也很適合安排在 Baymax 合照前後當室內分流點。",
@@ -661,6 +791,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck7-3",
+                bindingKey: "deck7:3",
                 icon: "fa-solid fa-mug-hot",
                 name: "Alley Cat Café / 商店街",
                 summary: "咖啡、輕補給與商店街都集中在這一帶，很適合邊走邊補貨，也方便當作 Deck 7 的中繼站。",
@@ -669,6 +801,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck7-4",
+                bindingKey: "deck7:4",
                 icon: "fa-solid fa-camera-retro",
                 name: "Pics Photo Shop / Disney Cruise Line Photos",
                 summary: "這裡是船上檢查、挑選、購買與下載照片的主站；Adventure 實體店名叫 Pics，也常聚集 Duffy、Pixar、Spider-Man、Aladdin、Lion King、Princess、Marvel portraits / Magic Shots 等主題拍照點。",
@@ -687,6 +821,8 @@ const deckGuideData = [
         badges: ["Day 1 Open House", "RFID 手環", "取孩密語"],
         facilities: [
             {
+                id: "search-deck-deck8-0",
+                bindingKey: "deck8:0",
                 icon: "fa-solid fa-child-reaching",
                 name: "Disney Oceaneer Club",
                 summary: "3–10 歲孩子的沉浸式主場，四大主題區域夠讓首日下午就玩出興趣。",
@@ -695,6 +831,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck8-1",
+                bindingKey: "deck8:1",
                 icon: "fa-solid fa-shield-heart",
                 name: "RFID 手環與取孩密語機制",
                 summary: "白色防水手環加上房卡與密語的雙重接送機制，是這層最重要的安心感來源。",
@@ -703,6 +841,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck8-2",
+                bindingKey: "deck8:2",
                 icon: "fa-solid fa-crown",
                 name: "Royal Society for Friendship and Tea",
                 summary: "付費活動雖不是必排，但若孩子超吃公主主題，這裡要提早決定。",
@@ -711,6 +851,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck8-3",
+                bindingKey: "deck8:3",
                 icon: "fa-solid fa-camera-retro",
                 name: "Hollywood Spotlight Club",
                 summary: "家庭舞會、合照與親子活動常在這裡出現，節奏比俱樂部更開放；Deck 8 船尾電扶梯附近也可留意 Thor’s Hammer / Mjolnir 這類漫威拍照點。",
@@ -729,6 +871,8 @@ const deckGuideData = [
         badges: ["拍照點快查", "Pics Photo Observatory", "航行中檢查"],
         facilities: [
             {
+                id: "search-deck-deck9-0",
+                bindingKey: "deck9:0",
                 icon: "fa-solid fa-camera-retro",
                 name: "Pics Photo Observatory",
                 summary: "Deck 9 船尾可作為背景拍照集中點來看，常見整理包含 Frozen、Star Wars Lightsaber、Rapunzel’s Lantern 與 Lifestyle Portraits 等主題。",
@@ -747,6 +891,8 @@ const deckGuideData = [
         badges: ["花園舞台主場", "快餐分流", "白天活動最多"],
         facilities: [
             {
+                id: "search-deck-deck10-0",
+                bindingKey: "deck10:0",
                 icon: "fa-solid fa-tree-city",
                 name: "Disney Imagination Garden",
                 summary: "全船最核心的花園舞台，白天活動與夜間表演都靠這裡帶節奏。",
@@ -755,6 +901,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck10-1",
+                bindingKey: "deck10:1",
                 icon: "fa-solid fa-water-ladder",
                 name: "Wayfinder Bay + Discovery Reef",
                 summary: "莫阿娜主題泳池與海景最舒服，旁邊還能順手買到烏蘇拉主題飲品；Discovery Reef 船尾也可留意 Dory & Nemo Statue 這類合照點。",
@@ -763,6 +911,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck10-2",
+                bindingKey: "deck10:2",
                 icon: "fa-solid fa-bowl-food",
                 name: "Gramma Tala’s Kitchen",
                 summary: "Deck 10 中段少數偏亞洲口味的補給點，想念熟悉飯食時會比一直吃西式快餐更有安定感。",
@@ -771,6 +921,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck10-3",
+                bindingKey: "deck10:3",
                 icon: "fa-solid fa-drumstick-bite",
                 name: "Mowgli’s Eatery",
                 summary: "Deck 10 上很值得記住的印度料理快餐點，和一般 buffet 或披薩相比更像一個有主題、有香氣的口味切換站。",
@@ -779,6 +931,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck10-4",
+                bindingKey: "deck10:4",
                 icon: "fa-solid fa-burger",
                 name: "Stitch’s ’Ohana Grill",
                 summary: "Deck 10 船尾最有飽足感的快餐主力，漢堡、熱狗和薯條都是這層最容易讓全家快速吃飽的選項。",
@@ -787,6 +941,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck10-5",
+                bindingKey: "deck10:5",
                 icon: "fa-solid fa-spa",
                 name: "Spa / Fitness Center / Wayfinder Bar",
                 summary: "大人系節奏主要在這一帶，適合把它當成機動備案而不是主軸。",
@@ -805,6 +961,8 @@ const deckGuideData = [
         badges: ["舞台俯瞰位", "大人感補位", "秀前緩衝"],
         facilities: [
             {
+                id: "search-deck-deck11-0",
+                bindingKey: "deck11:0",
                 icon: "fa-solid fa-eye",
                 name: "Imagination Garden 上層環繞區",
                 summary: "想看整個花園舞台的動態，站在上層環繞區比平面更容易掌握全場；Deck 11 中段也可留意 Sorcerer Mickey Topiary 這類不太打斷行程的拍照點。",
@@ -813,6 +971,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck11-1",
+                bindingKey: "deck11:1",
                 icon: "fa-solid fa-martini-glass-citrus",
                 name: "Garden Bar / Taverna Portorosso",
                 summary: "比較像是大人能喘口氣的輕餐與酒吧帶，不必特別為它拉出主行程。",
@@ -821,6 +981,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck11-2",
+                bindingKey: "deck11:2",
                 icon: "fa-solid fa-champagne-glasses",
                 name: "Palo Trattoria 入口層",
                 summary: "成人專屬餐廳入口與候位區，屬於禮賓可協助安排的高級選項。",
@@ -829,6 +991,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck11-3",
+                bindingKey: "deck11:3",
                 icon: "fa-solid fa-crown",
                 name: "Castle Collection",
                 summary: "比較偏公主系與禮品型周邊，適合快速補買小物。",
@@ -847,6 +1011,8 @@ const deckGuideData = [
         badges: ["預設主頁", "玩水補給主場", "禮賓回氣站"],
         facilities: [
             {
+                id: "search-deck-deck17-0",
+                bindingKey: "deck17:0",
                 icon: "fa-solid fa-crown",
                 name: "Concierge Lounge",
                 summary: "禮賓家庭最穩的補給基地；每日供應與酒水節奏請直接看 Playbook「禮賓隱藏加值」卡片。",
@@ -855,6 +1021,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck17-1",
+                bindingKey: "deck17:1",
                 icon: "fa-solid fa-water",
                 name: "Toy Story Pool / Splash Pad / Flying Saucer Splash Zone",
                 summary: "三童共同玩水選 Sunnyside Pool：無年齡門檻，未滿 12 歲需成人監督。Flying Saucer Splash Zone 限 4–8 歲，三人僅彤妹符合，不當共同主活動。",
@@ -863,6 +1031,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck17-2",
+                bindingKey: "deck17:2",
                 icon: "fa-solid fa-pizza-slice",
                 name: "Pixar Market Restaurant / Pizza Planet / Wheezy’s Freezies",
                 summary: "濕答答也能快速補能量，尤其 Pizza Planet 是最不打斷節奏的披薩補給點之一，剛出爐時表現通常特別好。",
@@ -871,6 +1041,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck17-3",
+                bindingKey: "deck17:3",
                 icon: "fa-solid fa-gem",
                 name: "Market Bar / 3 Wishes / Palace Treasures",
                 summary: "想順手補看精品或喝一杯可以留意，但不需要和主行程綁太死。",
@@ -889,6 +1061,8 @@ const deckGuideData = [
         badges: ["Day 2 上午主場", "刺激設施", "高空海景"],
         facilities: [
             {
+                id: "search-deck-deck18-0",
+                bindingKey: "deck18:0",
                 icon: "fa-solid fa-bolt",
                 name: "Marvel Landing",
                 summary: "漫威主題區就是 Day 2 上午最有速度感的開局，適合先衝再慢下來。",
@@ -897,6 +1071,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck18-1",
+                bindingKey: "deck18:1",
                 icon: "fa-solid fa-water-ladder",
                 name: "Infinity Pool & Jetfinity Bar",
                 summary: "Infinity Pool 官方目前無年齡門檻，未滿 12 歲需成人監督；仍須核對現場時段與告示，不逕稱成人限定。",
@@ -905,6 +1081,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck18-2",
+                bindingKey: "deck18:2",
                 icon: "fa-solid fa-heart-pulse",
                 name: "Running Track / Concierge Fitness Center",
                 summary: "若有人真的想晨跑或健身，這層是少數能把運動和海景結合起來的地方。",
@@ -913,6 +1091,8 @@ const deckGuideData = [
                 highlight: false
             },
             {
+                id: "search-deck-deck18-3",
+                bindingKey: "deck18:3",
                 icon: "fa-solid fa-spa",
                 name: "Opulence Spa – Elemis at Sea",
                 summary: "較進階的大人享受都在這層，熱門時段最好讓禮賓先幫忙看位。",
@@ -931,6 +1111,8 @@ const deckGuideData = [
         badges: ["禮賓避峰", "滑水道入口", "高空視野打卡"],
         facilities: [
             {
+                id: "search-deck-deck19-0",
+                bindingKey: "deck19:0",
                 icon: "fa-solid fa-sun",
                 name: "Concierge Sundeck & Pool",
                 summary: "禮賓泳池各年齡房客可使用，未滿 12 歲需成人監督；適合小寶、澤澤、彤妹共同玩水，開放時間以當天公告為準。",
@@ -939,6 +1121,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck19-1",
+                bindingKey: "deck19:1",
                 icon: "fa-solid fa-person-swimming",
                 name: "Woody’s Wide Slide 入口",
                 summary: "正式英文 Woody and Jessie’s Wild Slides；赤腳身高至少 122 公分，不允許水鞋、浮潛面罩與鬆散物品。",
@@ -947,6 +1131,8 @@ const deckGuideData = [
                 highlight: true
             },
             {
+                id: "search-deck-deck19-2",
+                bindingKey: "deck19:2",
                 icon: "fa-solid fa-jet-fighter-up",
                 name: "Ironcycle Test Run 高空段 / 打卡視野",
                 summary: "這裡的高空軌道與風勢會直接影響體驗，能玩時請把握。",
@@ -966,6 +1152,8 @@ const showGuideData = [
         intro: "最值得提早卡位的大秀都集中在劇院，通常會依晚餐時段自動分流，不一定會出現在可預約清單裡；就算已經預排到時段，晚餐節奏一拉長，還是可能壓縮排隊搶位時間。",
         shows: [
             {
+                id: "search-show-stage-musicals-0",
+                bindingKey: "stage-musicals:0",
                 name: "《Remember》",
                 theme: "以瓦力與伊芙為主線，串起可可夜總會、小美人魚、阿拉丁等迪士尼記憶的原創音樂劇。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
@@ -973,6 +1161,8 @@ const showGuideData = [
                 tripLink: "列為重要主秀，日期與場次依 App；晚餐、集合時間先核對，不固定 Day 1。"
             },
             {
+                id: "search-show-stage-musicals-1",
+                bindingKey: "stage-musicals:1",
                 name: "《Disney Seas the Adventure》",
                 theme: "由經典角色串起的海上百老匯式大秀，節奏熱鬧、全家都容易進入狀況。",
                 location: "Walt Disney Theatre（Deck 5–7 船頭）",
@@ -988,6 +1178,8 @@ const showGuideData = [
         intro: "第 10/11 層的花園舞台是白天到夜晚最常啟動全船氣氛的地方，真正好看的不是只衝最前面，而是提早卡好能兼顧視野與退場的位子。",
         shows: [
             {
+                id: "search-show-garden-shows-0",
+                bindingKey: "garden-shows:0",
                 name: "《Avengers Assemble!》",
                 theme: "漫威特技秀，英雄群像加上死侍的吐槽節奏，很適合全家一起看熱鬧。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
@@ -995,6 +1187,8 @@ const showGuideData = [
                 tripLink: "海上日候選，先保留晚餐與劇院主秀，再挑不衝突的場次；不保證每天演出。"
             },
             {
+                id: "search-show-garden-shows-1",
+                bindingKey: "garden-shows:1",
                 name: "《Duffy and The Friend Ship》",
                 theme: "達菲與好友的海上派對，是偏可愛與合照氛圍的大型演出。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
@@ -1002,6 +1196,8 @@ const showGuideData = [
                 tripLink: "依當次節目安排；達菲或史黛拉兔有主題演出／商店，不代表一定有個別合照。"
             },
             {
+                id: "search-show-garden-shows-2",
+                bindingKey: "garden-shows:2",
                 name: "《Let’s Set Sail》/《Baymax Super Exercise Expo》",
                 theme: "一場偏啟航儀式感、一場偏歡樂體操互動，都是氣氛型活動。",
                 location: "Disney Imagination Garden（Deck 10/11 船中）",
@@ -1017,6 +1213,8 @@ const showGuideData = [
         intro: "這一類表演最吃天氣、風勢與現場節奏，建議把它們當成海上日的晚間高潮來安排，而不是最後一刻才決定去哪裡看。",
         shows: [
             {
+                id: "search-show-open-air-night-0",
+                bindingKey: "open-air-night:0",
                 name: "《Moana: Call of the Sea》",
                 theme: "把莫阿娜的航海故事搬進夜間露天海景環境裡，氛圍會比室內劇場更開闊。",
                 location: "Wayfinder Bay（船尾戶外舞台區）",
@@ -1024,6 +1222,8 @@ const showGuideData = [
                 tripLink: "若 Day 2 晚上想走海景演出路線，這場最值得鎖定。"
             },
             {
+                id: "search-show-open-air-night-1",
+                bindingKey: "open-air-night:1",
                 name: "《The Lion King: Celebration in the Sky》",
                 theme: "獅子王主題海上煙火，配樂與旁白都走大型慶典級別的震撼路線。",
                 location: "高層戶外甲板與開放視野區",
@@ -1041,6 +1241,8 @@ const playbookGuideData = [
         intro: "把最容易卡在報到前的錯誤先排除。這區只保留網站其他地方沒講清楚的技術準備、資料整理與老手小技巧。",
         items: [
             {
+                id: "search-playbook-pretrip-0",
+                bindingKey: "pretrip:0",
                 title: "手機時間不要自己亂跳，進入公海後一律跟 Navigator App 對時",
                 icon: "fa-solid fa-clock",
                 sourceType: "community",
@@ -1051,6 +1253,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-pretrip-1",
+                bindingKey: "pretrip:1",
                 title: "住 DCL 合作飯店的話，接駁車要提早打電話確認",
                 icon: "fa-solid fa-hotel",
                 sourceType: "community",
@@ -1061,6 +1265,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-pretrip-2",
+                bindingKey: "pretrip:2",
                 title: "英文帳號加上兩家人資料夾，先整理再開搶",
                 icon: "fa-solid fa-folder-tree",
                 sourceType: "community",
@@ -1071,6 +1277,8 @@ const playbookGuideData = [
                 relatedSectionId: "timeline"
             },
             {
+                id: "search-playbook-pretrip-3",
+                bindingKey: "pretrip:3",
                 title: "線上報到五步驟不要在倒數時才想",
                 icon: "fa-solid fa-list-ol",
                 sourceType: "official",
@@ -1081,6 +1289,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-pretrip-4",
+                bindingKey: "pretrip:4",
                 title: "禁帶電器先排雷，充電頭走輕量化",
                 icon: "fa-solid fa-plug-circle-xmark",
                 sourceType: "official",
@@ -1091,6 +1301,8 @@ const playbookGuideData = [
                 relatedSectionId: "checklist"
             },
             {
+                id: "search-playbook-pretrip-5",
+                bindingKey: "pretrip:5",
                 title: "爆米花桶先進隨身包，不要上船後才想起來",
                 icon: "fa-solid fa-bucket",
                 sourceType: "community",
@@ -1108,6 +1320,8 @@ const playbookGuideData = [
         intro: "這區不是再重講登船流程，而是把 Day 1 最容易失控的前三小時整理成家庭版節奏卡。",
         items: [
             {
+                id: "search-playbook-embark-sprint-0",
+                bindingKey: "embark-sprint:0",
                 title: "隨身包要以『下午先玩』為前提",
                 icon: "fa-solid fa-suitcase-rolling",
                 sourceType: "community",
@@ -1118,6 +1332,8 @@ const playbookGuideData = [
                 relatedSectionId: "checklist"
             },
             {
+                id: "search-playbook-embark-sprint-1",
+                bindingKey: "embark-sprint:1",
                 title: "登船 3 小時 SOP：只跑第一圈，不要一開始就滿船亂衝",
                 icon: "fa-solid fa-route",
                 sourceType: "community",
@@ -1128,6 +1344,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-embark-sprint-2",
+                bindingKey: "embark-sprint:2",
                 title: "Lounge 要當緩衝區，不要把它當正餐替代",
                 icon: "fa-solid fa-couch",
                 sourceType: "concierge",
@@ -1145,6 +1363,8 @@ const playbookGuideData = [
         intro: "這組是整趟旅程最值得反覆翻看的日常攻略，目標是少排一次隊、多留一點玩的體力。",
         items: [
             {
+                id: "search-playbook-daily-ops-0",
+                bindingKey: "daily-ops:0",
                 title: "免費飲料站比套票更值得先熟",
                 icon: "fa-solid fa-glass-water",
                 sourceType: "official",
@@ -1155,6 +1375,8 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
+                id: "search-playbook-daily-ops-1",
+                bindingKey: "daily-ops:1",
                 title: "爆米花桶加免費汽水，就是最順手的觀影組合",
                 icon: "fa-solid fa-film",
                 sourceType: "community",
@@ -1165,6 +1387,8 @@ const playbookGuideData = [
                 relatedSectionId: "entertainment"
             },
             {
+                id: "search-playbook-daily-ops-2",
+                bindingKey: "daily-ops:2",
                 title: "首日購物不要空手上陣，袋子和入房帳都能救節奏",
                 icon: "fa-solid fa-bag-shopping",
                 sourceType: "community",
@@ -1175,6 +1399,8 @@ const playbookGuideData = [
                 relatedSectionId: "tips"
             },
             {
+                id: "search-playbook-daily-ops-3",
+                bindingKey: "daily-ops:3",
                 title: "Room Service 很適合儀式感，但一定要提早下單",
                 icon: "fa-solid fa-cheese",
                 sourceType: "community",
@@ -1185,6 +1411,8 @@ const playbookGuideData = [
                 relatedSectionId: "tips"
             },
             {
+                id: "search-playbook-daily-ops-4",
+                bindingKey: "daily-ops:4",
                 title: "角色排隊和空景拍照，都盡量搶早檔",
                 icon: "fa-solid fa-camera-retro",
                 sourceType: "community",
@@ -1195,6 +1423,8 @@ const playbookGuideData = [
                 relatedSectionId: "timeline"
             },
             {
+                id: "search-playbook-daily-ops-5",
+                bindingKey: "daily-ops:5",
                 title: "想看的秀先在 Live Shows 點愛心，再排角色見面會",
                 icon: "fa-solid fa-heart-circle-check",
                 sourceType: "community",
@@ -1205,6 +1435,8 @@ const playbookGuideData = [
                 relatedSectionId: "entertainment"
             },
             {
+                id: "search-playbook-daily-ops-6",
+                bindingKey: "daily-ops:6",
                 title: "拍照套裝怎麼買才不浪費，下載時機更重要",
                 icon: "fa-solid fa-camera",
                 sourceType: "official",
@@ -1215,6 +1447,8 @@ const playbookGuideData = [
                 relatedSectionId: "entertainment"
             },
             {
+                id: "search-playbook-daily-ops-7",
+                bindingKey: "daily-ops:7",
                 title: "App 出錯先現場問，不要直接放棄",
                 icon: "fa-solid fa-triangle-exclamation",
                 sourceType: "community",
@@ -1225,6 +1459,8 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
+                id: "search-playbook-daily-ops-8",
+                bindingKey: "daily-ops:8",
                 title: "把官方拍照點刻意排進每天動線，才拍得到夠多",
                 icon: "fa-solid fa-camera",
                 sourceType: "community",
@@ -1242,6 +1478,8 @@ const playbookGuideData = [
         intro: "這區只放網站其他地方沒明講的 concierge bonus，重點不是『有什麼』，而是『怎麼用才真的省力』。",
         items: [
             {
+                id: "search-playbook-concierge-plus-0",
+                bindingKey: "concierge-plus:0",
                 title: "歡迎午宴與迎賓小禮，是登船情緒的第一個加速器",
                 icon: "fa-solid fa-gift",
                 sourceType: "concierge",
@@ -1252,6 +1490,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-concierge-plus-1",
+                bindingKey: "concierge-plus:1",
                 title: "房內冰箱的軟飲與瓶水，用完就請管家補",
                 icon: "fa-solid fa-bottle-water",
                 sourceType: "concierge",
@@ -1262,6 +1502,8 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
+                id: "search-playbook-concierge-plus-2",
+                bindingKey: "concierge-plus:2",
                 title: "需要省力時，先想到的是管家，不是自己排隊",
                 icon: "fa-solid fa-user-tie",
                 sourceType: "concierge",
@@ -1272,6 +1514,8 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                id: "search-playbook-concierge-plus-3",
+                bindingKey: "concierge-plus:3",
                 title: "Lounge 的正確打開方式：下午茶、中轉站、偶遇角色",
                 icon: "fa-solid fa-martini-glass-citrus",
                 sourceType: "concierge",
@@ -1282,6 +1526,8 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                id: "search-playbook-concierge-plus-4",
+                bindingKey: "concierge-plus:4",
                 title: "禮賓每日供應與酒水時段怎麼用",
                 icon: "fa-solid fa-wine-glass",
                 sourceType: "concierge",
@@ -1292,6 +1538,8 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                id: "search-playbook-concierge-plus-5",
+                bindingKey: "concierge-plus:5",
                 title: "24 小時網路方案不要太早開",
                 icon: "fa-solid fa-wifi",
                 sourceType: "concierge",
@@ -1302,6 +1550,8 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
+                id: "search-playbook-concierge-plus-6",
+                bindingKey: "concierge-plus:6",
                 title: "劇院優先入場 SOP",
                 icon: "fa-solid fa-door-open",
                 sourceType: "concierge",
@@ -1319,6 +1569,8 @@ const playbookGuideData = [
         intro: "這裡放的是最容易被忽略、但一旦做對就能讓全家舒服很多的客艙與孩子攻略。",
         items: [
             {
+                id: "search-playbook-stateroom-family-0",
+                bindingKey: "stateroom-family:0",
                 title: "RFID 手環的進階用法：整天戴、最後記得還",
                 icon: "fa-solid fa-id-badge",
                 sourceType: "official",
@@ -1329,6 +1581,8 @@ const playbookGuideData = [
                 relatedSectionId: "facilities"
             },
             {
+                id: "search-playbook-stateroom-family-1",
+                bindingKey: "stateroom-family:1",
                 title: "磁吸掛勾很值得，它會直接提升客艙秩序感",
                 icon: "fa-solid fa-magnet",
                 sourceType: "community",
@@ -1339,6 +1593,8 @@ const playbookGuideData = [
                 relatedSectionId: "checklist"
             },
             {
+                id: "search-playbook-stateroom-family-2",
+                bindingKey: "stateroom-family:2",
                 title: "睡眠與暈船備援包，別等孩子不舒服才開始補救",
                 icon: "fa-solid fa-moon",
                 sourceType: "community",
@@ -1349,6 +1605,8 @@ const playbookGuideData = [
                 relatedSectionId: ""
             },
             {
+                id: "search-playbook-stateroom-family-3",
+                bindingKey: "stateroom-family:3",
                 title: "房內與走廊的實用細節，比你以為的更有用",
                 icon: "fa-solid fa-bed",
                 sourceType: "community",
@@ -1359,6 +1617,8 @@ const playbookGuideData = [
                 relatedSectionId: "tips"
             },
             {
+                id: "search-playbook-stateroom-family-4",
+                bindingKey: "stateroom-family:4",
                 title: "洗衣時間抓在晚餐或看秀時，最不打擾主行程",
                 icon: "fa-solid fa-shirt",
                 sourceType: "community",
@@ -1376,6 +1636,8 @@ const playbookGuideData = [
         intro: "2026/9/7 更新：官方限制與家庭安排分開看，旅客心得只用來準備緩衝，不照搬其他航次時刻表。",
         items: [
             {
+                id: "search-playbook-family-planning-0",
+                bindingKey: "family-planning:0",
                 title: "Ironcycle 提早嘗試，晚餐與主秀前停止長隊",
                 icon: "fa-solid fa-clock",
                 sourceType: "community",
@@ -1386,6 +1648,8 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                id: "search-playbook-family-planning-1",
+                bindingKey: "family-planning:1",
                 title: "D Lounge 家庭活動：三童一起的室內備案",
                 icon: "fa-solid fa-people-group",
                 sourceType: "official",
@@ -1396,6 +1660,8 @@ const playbookGuideData = [
                 relatedSectionId: "entertainment"
             },
             {
+                id: "search-playbook-family-planning-2",
+                bindingKey: "family-planning:2",
                 title: "禮賓吸菸區與無菸座位：上船先問清楚",
                 icon: "fa-solid fa-ban-smoking",
                 sourceType: "official",
@@ -1406,6 +1672,8 @@ const playbookGuideData = [
                 relatedSectionId: "deck-guide"
             },
             {
+                id: "search-playbook-family-planning-3",
+                bindingKey: "family-planning:3",
                 title: "禮賓回信後，回 App 驗收七人預約",
                 icon: "fa-solid fa-list-check",
                 sourceType: "community",
@@ -1423,6 +1691,8 @@ const playbookGuideData = [
         intro: "這組不是重講下船流程，而是把最後一晚真正容易手忙腳亂的決策先幫你排好。",
         items: [
             {
+                id: "search-playbook-last-night-0",
+                bindingKey: "last-night:0",
                 title: "最後一晚先做一個『孩子晨間包』",
                 icon: "fa-solid fa-bag-shopping",
                 sourceType: "community",
@@ -1433,6 +1703,8 @@ const playbookGuideData = [
                 relatedSectionId: "tips"
             },
             {
+                id: "search-playbook-last-night-1",
+                bindingKey: "last-night:1",
                 title: "撤船日早餐與房務供應，要先分清楚",
                 icon: "fa-solid fa-utensils",
                 sourceType: "community",
@@ -1443,6 +1715,8 @@ const playbookGuideData = [
                 relatedSectionId: "checkin"
             },
             {
+                id: "search-playbook-last-night-2",
+                bindingKey: "last-night:2",
                 title: "額外小費信封是感謝工具，不用變成床頭壓力",
                 icon: "fa-solid fa-envelope-open-text",
                 sourceType: "community",
@@ -1453,6 +1727,8 @@ const playbookGuideData = [
                 relatedSectionId: "tips"
             },
             {
+                id: "search-playbook-last-night-3",
+                bindingKey: "last-night:3",
                 title: "密封汽水能自帶，酒精規則則一定要最後再核對",
                 icon: "fa-solid fa-wine-bottle",
                 sourceType: "official",

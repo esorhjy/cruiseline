@@ -4,70 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disney Adventure 迪士尼探險號｜星海攻略</title>
-    <meta name="app-build" content="2026-09-07-family-plan-v4">
+    <title>Disney Adventure 迪士尼探險號｜航程手帳</title>
+    <meta name="app-build" content="2026-09-07-voyage-notebook-v1">
     <script>
-window.__DCL_GUIDE_BUILD__ = '2026-09-07-family-plan-v4';
+        window.__DCL_GUIDE_BUILD__ = '2026-09-07-voyage-notebook-v1';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-09-07-family-plan-v4">
-    <link rel="manifest" href="manifest.json?v=2026-09-07-family-plan-v4">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-09-07-family-plan-v4">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-09-07-family-plan-v4">
-    <meta name="theme-color" content="#0A3A70">
+    <link rel="stylesheet" href="style.css?v=2026-09-07-voyage-notebook-v1">
+    <link rel="manifest" href="manifest.json?v=2026-09-07-voyage-notebook-v1">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-09-07-voyage-notebook-v1">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-09-07-voyage-notebook-v1">
+    <meta name="theme-color" content="#086F9A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="星海攻略">
+    <meta name="apple-mobile-web-app-title" content="航程手帳">
 </head>
 
 <body>
-
-    <!-- 導覽列 -->
-    <nav class="sticky-nav">
-        <div class="nav-container">
-            <a href="#overview" class="nav-logo">Disney Adventure</a>
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#schedule"><i class="fa-solid fa-calendar-days"></i> 行程</a></li>
-                <li><a href="#checklist"><i class="fa-solid fa-list-check"></i> 清單</a></li>
-                <li><a href="#ship-stats"><i class="fa-solid fa-ship"></i> 船艦</a></li>
-                <li><a href="#deck-guide"><i class="fa-solid fa-map-location-dot"></i> 甲板</a></li>
-                <li><a href="#overview"><i class="fa-solid fa-circle-info"></i> 概覽</a></li>
-                <li><a href="#timeline"><i class="fa-solid fa-clock-rotate-left"></i> 時間軸</a></li>
-                <li><a href="#playbook"><i class="fa-solid fa-book-open-reader"></i> 攻略</a></li>
-                <li><a href="#menu-search" data-search-mode-target="lookup" data-lookup-category="dining"
-                        data-search-query=""><i class="fa-solid fa-utensils"></i> 菜單</a></li>
-                <li><a href="#local-info"><i class="fa-solid fa-toolbox"></i> 工具</a></li>
-            </ul>
-            <div class="nav-utilities">
-                <button type="button" class="nav-search-trigger" id="nav-search-trigger" aria-haspopup="dialog"
-                    aria-controls="search-overlay" aria-label="開啟搜尋">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <span>搜尋</span>
-                </button>
-                <div class="hamburger" id="hamburger">
-                    <i class="fa-solid fa-bars"></i>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <div id="scroll-progress"></div>
-
+<a class="skip-link" href="#main-content">跳到主要內容</a>
+<nav class="sticky-nav" aria-label="主要導覽">
+ <div class="nav-container">
+  <a href="#journey" class="nav-logo"><i class="fa-solid fa-ship" aria-hidden="true"></i> 航程手帳</a>
+  <div class="nav-links" id="nav-links"><a href="#journey" data-view-link="journey"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>航程</span></a>
+<a href="#explore" data-view-link="explore"><i class="fa-solid fa-compass" aria-hidden="true"></i><span>船上探索</span></a>
+<a href="#prepare" data-view-link="prepare"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>行前準備</span></a>
+<a href="#menu-search" data-search-mode-target="lookup" data-lookup-category="dining" data-search-query=""><i class="fa-solid fa-utensils" aria-hidden="true"></i><span>菜單</span></a></div>
+  <button type="button" class="nav-search-trigger" id="nav-search-trigger" aria-haspopup="dialog" aria-controls="search-overlay" aria-label="開啟搜尋"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>搜尋 / 中英</span></button>
+ </div>
+</nav>
     <div class="search-overlay" id="search-overlay" hidden>
         <div class="search-backdrop" data-search-close></div>
         <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-panel-title">
             <div class="search-command-bar">
                 <div class="search-command-top">
                     <div class="search-panel-copy">
-                        <span class="search-kicker">Quick Find</span>
-                        <h2 id="search-panel-title">快速搜尋郵輪重點</h2>
+                        <h2 id="search-panel-title">快速查詢</h2>
                     </div>
                     <div class="search-tool-mode" role="tablist" aria-label="搜尋模式">
                         <button type="button" class="active" data-search-tool-mode="guide" role="tab"
@@ -91,7 +64,7 @@ window.__DCL_GUIDE_BUILD__ = '2026-09-07-family-plan-v4';
                 </div>
                 <form class="search-input-shell" id="search-form">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="search" id="search-input" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
+                    <input type="search" id="search-input" aria-label="搜尋中文或英文" placeholder="輸入關鍵字，例如：禮賓、Baymax、Room Service"
                         autocomplete="off">
                 </form>
                 <div class="lookup-filter-strip" id="lookup-category-row" aria-label="中英對照分類" hidden>
@@ -189,553 +162,72 @@ window.__DCL_GUIDE_BUILD__ = '2026-09-07-family-plan-v4';
         </div>
     </div>
 
-    <header class="hero">
-        <div class="hero-glow hero-glow-left"></div>
-        <div class="hero-glow hero-glow-right"></div>
-        <div class="hero-content">
-            <div class="hero-copy">
-                <div class="hero-kicker"><i class="fa-solid fa-sparkles"></i> Storybook Sailing Companion</div>
-                <h1>Disney Adventure</h1>
-                <p>星海實戰攻略｜專為 4大3小 禮賓艙房設計，像翻開一本海上故事書一樣，帶著全家一起優雅啟航。</p>
-                <div class="date-badge"><i class="fa-regular fa-compass"></i> 啟航日期：2027/1/25 - 1/28</div>
 
-                <div class="countdown-container" id="countdown">
-                    <div class="countdown-item"><span class="cd-num" id="cd-days">00</span><span class="cd-label">天</span>
-                    </div>
-                    <div class="countdown-item"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">時</span>
-                    </div>
-                    <div class="countdown-item"><span class="cd-num" id="cd-minutes">00</span><span
-                            class="cd-label">分</span></div>
-                    <div class="countdown-item"><span class="cd-num" id="cd-seconds">00</span><span
-                            class="cd-label">秒</span></div>
-                </div>
-            </div>
-
-            <div class="hero-visual">
-                <span class="hero-sparkle hero-sparkle-a"><i class="fa-solid fa-star"></i></span>
-                <span class="hero-sparkle hero-sparkle-b"><i class="fa-solid fa-sparkles"></i></span>
-                <span class="hero-sparkle hero-sparkle-c"><i class="fa-solid fa-star"></i></span>
-                <div class="hero-story-card">
-                    <div class="hero-story-arch">
-                        <img src="1772539078755-hero.jpg" alt="兔兔站在 Disney Adventure 船首迎接啟航" loading="eager">
-                    </div>
-                    <div class="hero-story-plaque">
-                        <span class="hero-story-title">Disney Adventure</span>
-                        <span class="hero-story-caption">這趟的航行起點</span>
-                    </div>
-                </div>
-                <p class="hero-story-note"><i class="fa-solid fa-heart"></i> 這次最夢幻的登船視角</p>
-            </div>
-        </div>
-        <div class="wave-divider">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
-                preserveAspectRatio="none">
-                <path
-                    d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-                    opacity=".25" class="shape-fill"></path>
-                <path
-                    d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5V0Z"
-                    opacity=".5" class="shape-fill"></path>
-                <path
-                    d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
-                    class="shape-fill"></path>
-            </svg>
-        </div>
-    </header>
-
-    <section id="quick-start" class="quick-start-section reveal" aria-labelledby="quick-start-title">
-        <div class="quick-start-heading">
-            <span class="quick-start-kicker"><i class="fa-solid fa-ticket-simple"></i> Boarding Pass Guide</span>
-            <h2 id="quick-start-title" class="section-title">第一次打開，先選你的任務</h2>
-            <p>不用從頭讀完整份攻略。先用這 5 張航海任務卡，直接跳到最適合現在情境的行程、甲板或攻略本。</p>
-        </div>
-        <div class="quick-start-track" aria-label="攻略速讀入口">
-            <article class="quick-start-card card">
-                <div class="quick-start-icon"><i class="fa-solid fa-compass"></i></div>
-                <h3>第一次看</h3>
-                <p>先抓住行程、甲板、攻略本各自解決什麼問題。</p>
-                <div class="quick-start-actions">
-                    <a href="#schedule">看行程</a>
-                    <button type="button" data-search-query="第一次看 攻略速讀">直接搜尋</button>
-                </div>
-            </article>
-            <article class="quick-start-card card">
-                <div class="quick-start-icon"><i class="fa-solid fa-bolt"></i></div>
-                <h3>登船日現場</h3>
-                <p>手環、換裝玩水、午餐補給和晚餐看秀先排順。</p>
-                <div class="quick-start-actions">
-                    <a href="#schedule">看 Day 1</a>
-                    <button type="button" data-search-query="上船先做什麼">直接搜尋</button>
-                </div>
-            </article>
-            <article class="quick-start-card card">
-                <div class="quick-start-icon"><i class="fa-solid fa-child-reaching"></i></div>
-                <h3>帶小孩</h3>
-                <p>先看 Oceaneer 手環、玩水、防曬和休息點。</p>
-                <div class="quick-start-actions">
-                    <a href="#facilities">看親子區</a>
-                    <button type="button" data-search-query="小孩 RFID 手環 玩水 防曬">直接搜尋</button>
-                </div>
-            </article>
-            <article class="quick-start-card card">
-                <div class="quick-start-icon"><i class="fa-solid fa-crown"></i></div>
-                <h3>禮賓房</h3>
-                <p>快速確認 Lounge、Sundeck、劇院入場與網路權益。</p>
-                <div class="quick-start-actions">
-                    <a href="#deck-guide">看甲板</a>
-                    <button type="button" data-search-query="禮賓 Lounge 劇院 網路">直接搜尋</button>
-                </div>
-            </article>
-            <article class="quick-start-card card">
-                <div class="quick-start-icon"><i class="fa-solid fa-camera-retro"></i></div>
-                <h3>看秀與拍照</h3>
-                <p>先排 Avengers、劇院卡位、Photo Package 與 Deck 9 拍照點。</p>
-                <div class="quick-start-actions">
-                    <a href="#deck-guide">看導覽</a>
-                    <button type="button" data-search-query="Avengers Assemble 拍照點">直接搜尋</button>
-                </div>
-            </article>
-        </div>
-    </section>
-
-    <!-- 3. 每日推薦行程 (Mock Schedule) -->
-    <section id="schedule" class="reveal">
-        <h2 class="section-title">每日魔法行程推薦</h2>
-        <p class="deck-guide-intro">家庭草案，非正式時刻表。先保留晚餐與主秀，再排已確認預約；其餘時段可替換，依本航次 Navigator 與現場通知調整。</p>
-
-        <!-- 頁籤按鈕 (Tabs) -->
-        <div class="schedule-tabs">
-            <button class="tab-btn active" data-tab="day1">Day 1 登船</button>
-            <button class="tab-btn" data-tab="day2">Day 2 海上</button>
-            <button class="tab-btn" data-tab="day3">Day 3 水域</button>
-            <button class="tab-btn" data-tab="day4">Day 4 下船</button>
-        </div>
-
-        <!-- Day 1 -->
-        <div id="day1" class="day-container tab-content active"></div>
-
-        <!-- Day 2 -->
-        <div id="day2" class="day-container tab-content"></div>
-
-        <!-- Day 3 -->
-        <div id="day3" class="day-container tab-content"></div>
-
-        <!-- Day 4 -->
-        <div id="day4" class="day-container tab-content" style="border-bottom: 5px solid var(--dcl-gold);"></div>
-    </section>
-
-    <!-- 2. 行前準備清單 (Phase 4) -->
-    <section id="checklist" class="reveal">
-        <h2 class="section-title">行前防呆清單</h2>
-        <p style="text-align: center; color: var(--text-gray); margin-top: -20px; margin-bottom: 30px;">
-            <i class="fa-solid fa-floppy-disk"></i> 狀態會自動儲存在您的手機中，離線也可查看。
-        </p>
-        <div id="checklist-grid" class="checklist-grid">
-            <!-- 由 JavaScript 動態生成 -->
-        </div>
-    </section>
-
-    <!-- 2. 巨艦數據 -->
-    <section id="ship-stats" class="reveal"
-        style="background-color: #FFFFFF; border-radius: 30px; padding: 50px 30px; box-shadow: var(--shadow-sm); margin-bottom: 30px;">
-        <h2 class="section-title" style="margin-bottom: 20px;">巨艦數據與人流分流</h2>
-        <div class="ship-stats-grid">
-            <div class="stat-card">
-                <i class="fa-solid fa-arrows-left-right stat-icon"></i>
-                <span class="stat-number" data-target="342">0</span>
-                <span class="stat-label">船隻全長 (公尺)</span>
-                <div class="stat-progress-container">
-                    <div class="stat-progress-fill" data-width="100"><i class="fa-solid fa-ship stat-boat-icon"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-layer-group stat-icon"></i>
-                <span class="stat-number" data-target="20">0</span>
-                <span class="stat-label">甲板層數</span>
-                <div class="stat-progress-container">
-                    <div class="stat-progress-fill" data-width="85"></div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-users-viewfinder stat-icon"></i>
-                <span class="stat-number" data-target="6700">0</span>
-                <span class="stat-label">乘載旅客數量</span>
-                <div class="stat-progress-container">
-                    <div class="stat-progress-fill" data-width="95"></div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-star stat-icon"></i>
-                <span class="stat-number" data-target="7">0</span>
-                <span class="stat-label">分流主題區域</span>
-                <div class="stat-progress-container">
-                    <div class="stat-progress-fill" data-width="70"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 2.5 甲板與表演設施介紹 (Phase 5) -->
-    <section id="deck-guide" class="reveal">
-        <h2 class="section-title">甲板與表演設施介紹</h2>
-        <p class="deck-guide-intro">
-            <i class="fa-solid fa-compass"></i> 依家庭草案整理；2026/9/7 核對限制，正式活動、餐廳與集合時間仍以本航次 Navigator 為準。
-        </p>
-        <div class="deck-guide-shell">
-            <div class="deck-tabs-container">
-                <div class="deck-tabs" id="deck-tabs"></div>
-            </div>
-            <div id="deck-guide-content" class="deck-details-container"></div>
-        </div>
-    </section>
-
-    <!-- 1. 核心資訊 -->
-    <section id="overview" class="reveal">
-        <h2 class="section-title">團隊核心資訊</h2>
-        <div class="grid-container">
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=600&q=80"
-                        alt="同行成員" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-users"></i></div>
-                    <i class="fa-solid fa-users card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>同行成員與艙房</h3>
-                    <p>兩家共 4 大 3 小 (11歲、9歲、8歲)。<br>入住<strong>專屬禮賓艙房與海景陽台房</strong>。享有禮賓專屬提早預訂特權與優先通道，尊榮啟航。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80"
-                        alt="航班配置" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-plane-departure"></i></div>
-                    <i class="fa-solid fa-plane-departure card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>航班配置</h3>
-                    <p>目前一家三人的機票資料：星宇 JX771，1/24 08:25 去程；JX772，1/28 14:45 回程（依航空公司通知複核）。<br>另一家航班與兩家集合方式待確認；七人加行李的三段接送需另行安排，不能把優先下船當交通保證。</p>
-                </div>
-            </div>
-            <div class="card alert">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80"
-                        alt="帳務死線" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-file-invoice"></i></div>
-                    <i class="fa-solid fa-triangle-exclamation card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>帳務與資料死線</h3>
-                    <p>2026/10/27 為全額付款期限。<br>可追蹤匯率<strong>還有固定小費需線上支付</strong>。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 4. 預約時間軸 -->
-    <section id="timeline" class="reveal">
-        <h2 class="section-title">禮賓預約黃金時間軸</h2>
-        <div class="timeline">
-            <div class="timeline-item left highlight reveal">
-                <div class="timeline-content">
-                    <h3><i class="fa-solid fa-crown" style="margin-right: 8px;"></i> 出發前 130 天 (禮賓特權)</h3>
-                    <p style="color: var(--text-dark); font-weight: bold; margin-bottom: 10px;">先核對兩房付款資格，再請禮賓協助 Royal Gathering（皇家見面會）；回信後仍須回 App 驗收七人名單、狀態與時段。</p>
-                    <p style="font-size: 0.95rem;">
-                        <strong>客製需求：</strong>七人同桌、第一時段，保留角色晚宴與動畫互動體驗，爭取較好視線。Hollywood 與 Navigator’s 為同類分流，不預設三晚一定排到兩間。
-                    </p>
-                </div>
-            </div>
-            <div class="timeline-item right reveal">
-                <div class="timeline-content">
-                    <h3>出發前 125 天</h3>
-                    <p>系統開放禮賓客房進行<strong>一般預訂</strong>，若有其他臨時起意的付費活動（如沙龍等）可在此階段佛系補齊。</p>
-                </div>
-            </div>
-            <div class="timeline-item left reveal">
-                <div class="timeline-content">
-                    <h3>出發前 60 天</h3>
-                    <p><strong>必備動作：</strong>全員下載「Disney Cruise Line Navigator App」，這是船上查行程、地圖與角色時間的核心中樞。</p>
-                </div>
-            </div>
-            <div class="timeline-item right reveal">
-                <div class="timeline-content">
-                    <h3>出發前 40 天 (線上報到)</h3>
-                    <p>依帳號與禮賓通知核對開放時間、所需文件及港口抵達安排，不以舊攻略的 11:00 或時區換算作保證。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 5. 報到與登船 -->
-    <section id="checkin" class="reveal">
-        <h2 class="section-title">零失誤通關與登船實戰</h2>
-        <div class="grid-container">
-            <div class="card alert">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=600&q=80"
-                        alt="SGAC" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-passport"></i></div>
-                    <i class="fa-solid fa-file-contract card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>新加坡入境卡 (SGAC) 填兩次！</h3>
-                    <p>提交窗口為抵達日前三天內，<strong>包含抵達當天</strong>。<br>1/24 飛抵：<strong>1/22–1/24</strong> 提交。<br>1/28 郵輪返抵再入境：<strong>1/26–1/28</strong> 重新提交，安排 1/26 完成、1/27 複核七人。<br>使用 <a href="https://eservices.ica.gov.sg/sgarrivalcard/" target="_blank" rel="noopener noreferrer">ICA 官方免費申報</a> 或 MyICA，不是回船申報。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&w=600&q=80"
-                        alt="極速登船" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-ship"></i></div>
-                    <i class="fa-solid fa-bolt card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>合作飯店接駁與登船編組</h3>
-                    <p>1/24 住宿與三段地面交通仍需確認，訂位未包含接送。若另外選 DCL 合作飯店接駁，先確認可訂資格與費用，再核對<strong>集合組別、時間與行李規則</strong>；不把飯店接駁當提早登船保證。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80"
-                        alt="啟航派對" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-music"></i></div>
-                    <i class="fa-solid fa-music card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>QR、安檢與首日節奏</h3>
-                    <p>先把報到 <strong>QR code 截圖或列印</strong>，依現場指引登船。船上時間以 Navigator 為準。先禮賓接待、查看杯麵與設施預約，再一次全家 Open House 與熟悉動線；<strong>安全演練依通知，玩水不得重疊</strong>。啟航活動不壓縮第一時段晚餐。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 5.5 實戰攻略 Playbook -->
-    <section id="playbook" class="reveal">
-        <h2 class="section-title">實戰攻略 Playbook</h2>
-        <p class="playbook-intro">
-            <i class="fa-solid fa-book-open-reader"></i> 只收錄網站其他地方沒講完的老手技巧、禮賓加值與家庭實用 SOP。重複的基本規則不再重寫，卡片底部會直接帶你回原本區塊。
-        </p>
-        <div class="playbook-shell">
-            <div class="playbook-missions-container">
-                <div class="playbook-missions" id="playbook-missions"></div>
-            </div>
-            <div id="playbook-content" class="playbook-content"></div>
-        </div>
-    </section>
-
-    <!-- 6. 設施與水區 -->
-    <section id="facilities" class="reveal">
-        <h2 class="section-title">兒童育樂與水區防雷</h2>
-        <div class="grid-container">
-            <div class="card alert">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1519340333755-56e9c1d04579?auto=format&fit=crop&w=600&q=80"
-                        alt="泳池" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-water"></i></div>
-                    <i class="fa-solid fa-life-ring card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>水區深度警告 (家長注意)</h3>
-                    <p>三童共同玩水選 <strong>Sunnyside Pool 或禮賓泳池</strong>，11、9、8 歲都需成人監督，救生衣不代替照看。Flying Saucer Splash Zone 限 4–8 歲，只有彤妹符合；Wild Slides 赤腳至少 122 公分，禁水鞋、浮潛面罩及鬆散物品。Infinity Pool 不逕稱成人限定，仍核對現場告示。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1511268559489-34b624fbfba3?auto=format&fit=crop&w=600&q=80"
-                        alt="手環" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-child"></i></div>
-                    <i class="fa-solid fa-id-badge card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>Oceaneer Open House 全家一次</h3>
-                    <p>家庭開放時段以 Navigator 為準，小寶 11、澤澤 9、彤妹 8 歲可一起參觀。<strong>正式活動限 3–10 歲，Open House 不等於託管</strong>；若澤澤、彤妹要參加正式活動，再確認註冊、RFID 手環、取孩密語與交接時段。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 7. 獨家大秀與餐飲 -->
-    <section id="entertainment" class="reveal">
-        <h2 class="section-title">娛樂大秀與極致餐飲</h2>
-        <div class="grid-container">
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80"
-                        alt="劇院" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-masks-theater"></i></div>
-                    <i class="fa-solid fa-masks-theater card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>必看海上大秀</h3>
-                    <p><strong>《Remember》：</strong>列為重要主秀；先核對 Navigator 分配、晚餐及禮賓集合時間，不固定首晚。<br><strong>《The Lion King: Celebration in the Sky》：</strong>日期與時間依本航次公告及天氣，不固定最後一晚；無場次可改 Discovery Reef 夜間短散步。
-                    </p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80"
-                        alt="美食" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-burger"></i></div>
-                    <i class="fa-solid fa-burger card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>極致快餐地圖</h3>
-                    <div class="bilingual-strip">
-                        <span class="bilingual-strip-label">English</span>
-                        <span class="bilingual-strip-en">Mowgli’s Eatery / Cosmic Kebabs / Bewitching Boba / Mickey Ice Cream Bar</span>
-                        <span class="bilingual-strip-zh">快餐、珍奶與隱藏甜點英文對照</span>
-                    </div>
-                    <p>白天遊玩別錯過甲板快餐：印度料理 <strong>Mowgli's Eatery</strong>、中東烤肉口袋餅 <strong>Cosmic
-                            Kebabs</strong>，以及打卡聖地：<strong>烏蘇拉主題珍奶</strong>。若去 Pixar Market，也可留意特殊造型杯；主餐廳若想來個隱藏甜點，也可直接口頭點 <strong>Mickey Ice Cream Bar</strong>；若有訂 Mike &amp; Sulley，記得看衣著規範。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"
-                        alt="角色" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-camera-retro"></i></div>
-                    <i class="fa-solid fa-camera-retro card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>野生捕獲角色 & 電影院</h3>
-                    <p>走廊與吃飯時間角色會主動互動，靠 App 極易收集。建議先備一本簽名本；預約擺拍通常更適合簽名。<strong>Deck 7</strong> 也是值得留意的偶遇走廊，但移動中的公主不一定都會停下互動。想休息時，隱藏的 <strong>Baymax Cinemas</strong> 很好用，Baymax 預約拍照也值得留意。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 8. 隱藏攻略、購物與離船 -->
-    <section id="tips" class="reveal">
-        <h2 class="section-title">購物、隱藏預算與離船</h2>
-        <div class="grid-container">
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80"
-                        alt="購物" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-bag-shopping"></i></div>
-                    <i class="fa-solid fa-bag-shopping card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>獨家購物策略</h3>
-                    <p><strong>World of Disney / Too</strong> 首日排隊常最久，建議早逛、先自備袋子，若能直接入房帳會比現場刷卡順。船上還有 Bacha Coffee 迪士尼聯名與 TWG 美女與野獸限定茶，看準就下手。</p>
-                </div>
-            </div>
-            <div class="card alert">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=600&q=80"
-                        alt="飯店房內" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-bed"></i></div>
-                    <i class="fa-solid fa-wallet card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>自備物品與隱藏帳單</h3>
-                    <p><strong>房內基本洗浴用品有，但牙刷等個人用品仍要自備。</strong><br>床底可收大行李、水龍頭的水可直接喝、Wi-Fi 整體算穩但影音支援有限；房內洗衣袋與床毯也不是可帶走備品，若帶走可能直接入帳。一般小費與加值消費仍要留意房帳。</p>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-image">
-                    <img src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=600&q=80"
-                        alt="行李走廊" onerror="this.style.opacity='0';">
-                    <div class="fallback-bg"><i class="fa-solid fa-suitcase"></i></div>
-                    <i class="fa-solid fa-door-open card-icon"></i>
-                </div>
-                <div class="card-content">
-                    <h3>離船前置與當日 (1/27-1/28)</h3>
-                    <p><strong>1/27 下午先整理</strong>：核對房帳與七人 SGAC，行李外放截止依正式通知；證件、藥品、換洗衣物及孩子晨間包留隨身。<br><strong>1/28 早上</strong>：早餐與下船依通知，預留找行李及移民時間。事先確認七人加行李的接送車、集合點與延遲處理，時間依實際下船調整。</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 9. 在地資訊與小工具 -->
-    <section id="local-info" class="reveal">
-        <h2 class="section-title">在地資訊與小工具</h2>
-        <div class="grid-container" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-
-            <div class="card">
-                <div class="card-content"
-                    style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                    <h3 style="justify-content: center;"><i class="fa-solid fa-cloud-sun"></i> 新加坡即時天氣</h3>
-                    <div id="weather-widget"
-                        style="margin-top: 20px; padding: 20px; background: var(--bg-body); border-radius: 16px;">
-                        <div style="font-size: 3.5rem; color: var(--dcl-navy); font-weight: 700; line-height: 1.2;"
-                            id="w-temp">--°C</div>
-                        <div style="font-size: 1.2rem; color: var(--text-gray); font-weight: 500; margin-top: 5px;"
-                            id="w-desc"><i class="fa-solid fa-spinner fa-spin"></i> 載入中...</div>
-                    </div>
-                    <p
-                        style="margin-top: 20px; font-size: 0.95rem; color: var(--text-gray); text-align: left; padding: 0 10px;">
-                        <i class="fa-solid fa-circle-info" style="color: var(--dcl-gold);"></i>
-                        <strong>1月穿搭建議：</strong>新加坡全年炎熱，1月偶有陣雨。建議穿著透氣夏裝，並隨身攜帶輕薄雨具與應付室內冷氣的薄外套。
-                    </p>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-content"
-                    style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                    <h3 style="justify-content: center;"><i class="fa-solid fa-coins"></i> 實用匯率參考</h3>
-                    <div style="margin-top: 20px;">
-                        <div
-                            style="display: flex; justify-content: space-around; align-items: center; margin-bottom: 15px; background: var(--bg-body); padding: 15px 20px; border-radius: 12px;">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-navy);">1 USD</div>
-                            <i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--dcl-gold);"></i>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-red);">~ 32 TWD</div>
-                        </div>
-                        <div
-                            style="display: flex; justify-content: space-around; align-items: center; background: var(--bg-body); padding: 15px 20px; border-radius: 12px;">
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-navy);">1 SGD</div>
-                            <i class="fa-solid fa-arrow-right-arrow-left" style="color: var(--dcl-gold);"></i>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: var(--dcl-red);">~ 24 TWD</div>
-                        </div>
-                        <p
-                            style="margin-top: 20px; font-size: 0.95rem; color: var(--text-gray); text-align: left; padding: 0 10px;">
-                            <i class="fa-solid fa-circle-info" style="color: var(--dcl-gold);"></i>
-                            <strong>消費建議：</strong>郵輪上全為<strong>美金(USD)</strong>計價；新加坡市區則使用<strong>新幣(SGD)</strong>。建議綁定海外免手續費信用卡(如
-                            Wise)。
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-content"
-                    style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
-                    <h3 style="justify-content: center;"><i class="fa-solid fa-plane-arrival"></i> 樟宜機場小提醒</h3>
-                    <div style="margin-top: 20px; padding: 20px; background: var(--bg-body); border-radius: 16px; text-align: left;">
-                        <p style="margin: 0 0 12px; color: var(--text-dark);"><strong>T2 B1</strong> 有寄放行李服務，太早到可先利用，記得帶護照。</p>
-                        <p style="margin: 0; color: var(--text-gray);">新加坡出境通常很快，但<strong>安檢在登機門前</strong>，不要用平常機場的節奏預估最後登機前的時間。</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <div id="back-to-top" title="回到頂端">
-        <i class="fa-solid fa-anchor"></i>
-    </div>
-
-    <footer>
-        <h2>準備好迎接魔法了嗎？</h2>
-        <p style="margin-top: 15px; color: #B0C4DE; font-size: 1.2rem;">祝 兩家人航行順利！收穫滿滿的回憶！</p>
-
-        <div id="easter-egg-trigger" title="點擊召喚魔法！">
-            <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--dcl-gold);"></i>
-            <span class="egg-hint">給孩子們的專屬驚喜 (點擊 3 次)</span>
-            <div class="mickey-shape" style="color: var(--dcl-gold);"></div>
-        </div>
-
-        <p style="margin-top: 40px; font-size: 0.9rem; color: rgba(255,255,255,0.4); letter-spacing: 1px;">Disney
-            Adventure Cruise Guide © 2027</p>
-    </footer>
-
-<script src="data.js?v=2026-09-07-family-plan-v4"></script>
-<script src="search-entity-registry.js?v=2026-09-07-family-plan-v4"></script>
-<script src="search-keyword-taxonomy.js?v=2026-09-07-family-plan-v4"></script>
-<script src="onboard-lookup-data.js?v=2026-09-07-family-plan-v4"></script>
-<script src="script.js?v=2026-09-07-family-plan-v4"></script>
+<main id="main-content">
+ <div id="journey" class="notebook-view" data-view="journey">
+  <header class="voyage-cover">
+   <div class="voyage-identity"><p class="eyebrow">我們的海上假期</p><h1>Disney Adventure</h1><p>2027.01.25 — 01.28 <span class="passenger-count">4 大 3 小</span></p></div>
+   <img class="voyage-cover-image" src="1772539078755-hero.jpg" alt="我們的旅程封面：主角與 Disney Adventure 船身" width="960" height="644" fetchpriority="high">
+  </header>
+  <section id="schedule" aria-label="四日航程">
+   <div class="schedule-tabs" role="tablist" aria-label="航程日期">
+    <button type="button" class="tab-btn active" data-tab="day1" role="tab" aria-selected="true" aria-controls="day1"><span>1/25</span>登船日</button>
+    <button type="button" class="tab-btn" data-tab="day2" role="tab" aria-selected="false" aria-controls="day2"><span>1/26</span>海上日</button>
+    <button type="button" class="tab-btn" data-tab="day3" role="tab" aria-selected="false" aria-controls="day3"><span>1/27</span>海上日</button>
+    <button type="button" class="tab-btn" data-tab="day4" role="tab" aria-selected="false" aria-controls="day4"><span>1/28</span>下船日</button>
+   </div>
+   <p class="schedule-disclaimer"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 家庭草案，非正式時刻表；集合、晚餐與主秀依本航次 Navigator。</p>
+   <div id="day1" class="day-container tab-content active" role="tabpanel"></div>
+   <div id="day2" class="day-container tab-content" role="tabpanel" hidden></div>
+   <div id="day3" class="day-container tab-content" role="tabpanel" hidden></div>
+   <div id="day4" class="day-container tab-content" role="tabpanel" hidden></div>
+  </section>
+ </div>
+ <div id="explore" class="notebook-view" data-view="explore" hidden>
+  <header class="view-heading"><p class="eyebrow">ON BOARD / 船上</p><h1>今天想去哪裡？</h1></header>
+  <div class="explore-tabs segmented" aria-label="船上內容">
+   <button type="button" data-explore-tab="facilities" aria-pressed="true">設施</button>
+   <button type="button" data-explore-tab="shows" aria-pressed="false">表演</button>
+   <button type="button" data-explore-tab="playbook" aria-pressed="false">攻略</button>
+  </div>
+  <section id="deck-guide" aria-label="設施與表演">
+   <div id="facility-controls" class="facility-controls">
+    <div id="facility-purpose-filters" class="horizontal-filters" aria-label="設施用途"></div>
+    <label class="deck-select-label">甲板 <select id="deck-filter" aria-label="篩選甲板"><option value="all">全部甲板</option></select></label>
+   </div>
+   <p id="facility-result-count" class="result-count" role="status"></p>
+   <div id="deck-guide-content"></div>
+  </section>
+  <section id="playbook" aria-label="情境攻略" hidden>
+   <div id="playbook-missions" class="horizontal-filters"></div>
+   <div id="playbook-content"></div>
+  </section>
+  <details id="ship-stats" class="ship-about"><summary>認識這艘船 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><dl><div><dt>船長</dt><dd>342 公尺</dd></div><div><dt>甲板</dt><dd>20 層</dd></div><div><dt>旅客容量</dt><dd>6,700 人</dd></div><div><dt>主題區</dt><dd>7 區</dd></div></dl></details>
+ </div>
+ <div id="prepare" class="notebook-view" data-view="prepare" hidden>
+  <header class="view-heading"><p class="eyebrow">BEFORE WE SAIL / 出發前</p><h1>準備好了，安心出發</h1></header>
+  <section id="checklist" aria-labelledby="checklist-title">
+   <div class="section-heading"><h2 id="checklist-title">行前清單</h2><span id="checklist-progress" role="status"></span></div>
+   <div class="segmented checklist-filters" aria-label="清單篩選"><button type="button" data-checklist-filter="all" aria-pressed="true">全部</button><button type="button" data-checklist-filter="pending" aria-pressed="false">未完成</button></div>
+   <p id="checklist-storage-status" class="storage-status" role="status"></p>
+   <div id="checklist-grid"></div>
+  </section>
+  <section id="travel-reference" aria-labelledby="travel-reference-title"><h2 id="travel-reference-title">文件、交通與旅程資料</h2><div id="travel-reference-content"></div></section>
+ </div>
+</main>
+<nav class="mobile-nav" aria-label="手機主要導覽"><a href="#journey" data-view-link="journey"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>航程</span></a>
+<a href="#explore" data-view-link="explore"><i class="fa-solid fa-compass" aria-hidden="true"></i><span>船上探索</span></a>
+<a href="#prepare" data-view-link="prepare"><i class="fa-solid fa-list-check" aria-hidden="true"></i><span>行前準備</span></a>
+<a href="#menu-search" data-search-mode-target="lookup" data-lookup-category="dining" data-search-query=""><i class="fa-solid fa-utensils" aria-hidden="true"></i><span>菜單</span></a></nav>
+<button type="button" id="back-to-top" title="回到頂端" aria-label="回到頂端"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
+<div id="app-announcement" role="status" class="sr-only"></div>
+<footer class="notebook-footer">Disney Adventure · 我們的 2027 海上假期</footer>
+<script src="travel-reference-data.js?v=2026-09-07-voyage-notebook-v1"></script>
+<script src="data.js?v=2026-09-07-voyage-notebook-v1"></script>
+<script src="search-entity-registry.js?v=2026-09-07-voyage-notebook-v1"></script>
+<script src="search-keyword-taxonomy.js?v=2026-09-07-voyage-notebook-v1"></script>
+<script src="onboard-lookup-data.js?v=2026-09-07-voyage-notebook-v1"></script>
+<script src="script.js?v=2026-09-07-voyage-notebook-v1"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {

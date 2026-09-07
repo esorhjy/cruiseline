@@ -45,7 +45,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-09-07-family-plan-v4',
+        version: '2026-09-07-voyage-notebook-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({

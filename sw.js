@@ -1,4 +1,4 @@
-const APP_BUILD_ID = '2026-09-07-family-plan-v4';
+const APP_BUILD_ID = '2026-09-07-voyage-notebook-v1';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [
@@ -8,6 +8,7 @@ const VERSIONED_CORE_ASSETS = [
   'search-keyword-taxonomy.js',
   'onboard-lookup-data.js',
   'data.js',
+  'travel-reference-data.js',
   'manifest.json',
   'icons/icon-192.png',
   'icons/icon-512.png'
@@ -16,7 +17,6 @@ const CORE_ASSETS_TO_CACHE = [
   'index.html',
   ...VERSIONED_CORE_ASSETS,
   '1772539078755-hero.jpg',
-  '1772539078755.png',
   'icons/icon-192.png',
   'icons/icon-512.png'
 ];
@@ -26,8 +26,8 @@ const EXCLUDED_HOSTS = new Set(['api.open-meteo.com']);
 const RUNTIME_CACHEABLE_DESTINATIONS = new Set(['document', 'style', 'script', 'image', 'font']);
 const CORE_ASSET_PATHS = new Set(
   CORE_ASSETS_TO_CACHE
-    .map((asset) => new URL(asset, self.location.origin).pathname)
-    .concat(['/', '/index.html'])
+    .map((asset) => new URL(asset, self.registration.scope).pathname)
+    .concat([new URL('./', self.registration.scope).pathname])
 );
 
 function isCacheableResponse(response) {
@@ -138,11 +138,6 @@ self.addEventListener('activate', (event) => {
       );
 
       await self.clients.claim();
-
-      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      await Promise.all(
-        clients.map((client) => client.navigate(client.url).catch(() => null))
-      );
     })()
   );
 });
