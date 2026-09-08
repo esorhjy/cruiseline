@@ -112,6 +112,32 @@ try {
     assert.equal(await page.locator('.lookup-result-column').evaluate(el => el.scrollTop),scrollBefore);
     assert.deepEqual(errors, []);
     console.log('Lookup', viewport.width, {ratio,records:allMenu.length,errors});
+    await page.goto(base + '#search-deck-deck5-0', {waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#search-deck-deck5-0');
+    assert((await page.locator('#search-deck-deck5-0 .item-eyebrow').textContent()).includes('Deck 6'));
+    await page.goto(base + '#search-show-garden-shows-1', {waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#search-show-garden-shows-1');
+    assert((await page.locator('#search-show-garden-shows-1').textContent()).includes('Walt Disney Theatre'));
+    await page.goto(base + '#search-deck-deck11-2', {waitUntil:'domcontentloaded'});
+    await page.waitForSelector('#search-deck-deck11-2');
+    assert((await page.locator('#search-deck-deck11-2').textContent()).includes('10 歲以上'));
+    await page.waitForFunction(() => {
+      const top = document.querySelector('#search-deck-deck11-2').getBoundingClientRect().top;
+      return top >= 0 && top < innerHeight - 250;
+    });
+    await page.screenshot({path:path.join(output, 'boarding-palo-'+viewport.width+'.png'), animations:'disabled'});
+    await nav.locator('a[href="#menu-search"]').click();
+    await page.waitForSelector('.lookup-result-card');
+    await page.locator('#lookup-menu-restaurant-select').selectOption('bev-taverna');
+    await page.locator('#lookup-menu-course-row [data-lookup-dining-filter="drinks"]').click();
+    await page.locator('#search-input').fill("Bruno's Fizz");
+    await page.waitForFunction(() => document.querySelectorAll('.lookup-result-card').length === 1);
+    await page.locator('.menu-lookup-description summary').click();
+    assert((await page.locator('.menu-variant').textContent()).includes('蜜桃與薑'));
+    await page.locator('.lookup-crew-trigger').click();
+    assert((await page.locator('.lookup-crew-card').textContent()).includes('Could I order this drink, please?'));
+    await page.screenshot({path:path.join(output, 'boarding-drink-crew-'+viewport.width+'.png'), animations:'disabled'});
+    assert.deepEqual(errors, []);
     await context.close();
   }
 

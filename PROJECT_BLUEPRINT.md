@@ -109,6 +109,7 @@
 - 新增高價值攻略卡時，應同步考慮 registry binding 與搜尋 smoke case，而不是只改 `data.js`。
 
 ## 測試基線
+- `tests/boarding-update.eval.mjs`：9/8 附件資訊、既有 ID、完整菜單及可重跑修正；搬移對照見 `docs/CONTENT_UPDATE_2026-09-08.md`。
 - `tests/search-entity-registry.eval.mjs`
 - `tests/search-keyword.smoke.mjs`
 - `tests/search-shell.eval.mjs`

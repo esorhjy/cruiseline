@@ -1,5 +1,11 @@
 # 搜尋規則
 
+## 附件內容查詢回歸
+- 2026/9/8 內容以 `docs/CONTENT_UPDATE_2026-09-08.md` 為準；地點更正必須同步 registry、binding 與主卡，不改穩定 ID。
+- `provided-document` 顯示附件來源，不用「官方查核」標籤取代；來源註記放在詳情，不擠壓結果第一屏。
+- 新增 smoke：`dclwifi.com`、`Rainforest Day Pass`、`咖啡集點`、`Bruno's Fizz`、`Beignet Shake`。後兩者必須能以飲料段落篩到，Crew 使用點飲品短句。
+- Garden Bar 菜單別名保留舊 Garden Stage；查 Animator’s Table 亦可找到對應配對菜單。
+
 ## 目標
 - 網站只保留純關鍵字搜尋，不再保留任何 AI 搜尋、AI 回答、遠端 Worker 或版本握手流程。
 - 搜尋體驗以「簡單、快速、可預期」為優先，讓使用者輸入關鍵字後直接看到最核心、最可用的卡片。

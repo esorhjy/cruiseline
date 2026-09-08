@@ -349,7 +349,7 @@ const gardenRouteTitles = titlesFor(hooks, '\u82b1\u5712\u821e\u53f0\u600e\u9ebc
 assert.equal(gardenRouteTitles[0], 'Disney Imagination Garden', 'garden stage route query should prioritize the Imagination Garden deck card');
 
 const lastBreakfastTitles = titlesFor(hooks, '\u6700\u5f8c\u4e00\u5929\u65e9\u9910');
-assert.equal(lastBreakfastTitles[0], '撤船日早餐與房務供應，要先分清楚', 'last-day breakfast query should prioritize the disembarkation breakfast guide');
+assert.equal(lastBreakfastTitles[0], '下船日：06:30 早餐、08:00 離房、09:00 下船', 'last-day breakfast query should prioritize the disembarkation breakfast guide');
 assert(hasAnyTitle(lastBreakfastTitles, [/\u65e9\u9910\uff0b\u6700\u5f8c\u78ba\u8a8d/]), 'last-day breakfast query should retain the Day 4 schedule event as support');
 
 assert.equal(titlesFor(hooks, 'zzzznotfound').length, 0, 'unknown queries should not fall back to unrelated generic cards');

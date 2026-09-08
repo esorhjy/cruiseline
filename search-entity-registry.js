@@ -45,9 +45,166 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-09-08-readable-type-v1',
+        version: '2026-09-08-boarding-info-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
+            entity({
+                "entityId": "animators-table",
+                "officialNameEn": "Animator’s Table",
+                "displayNameZh": "動畫家餐桌",
+                "entityType": "restaurant",
+                "categoryFamilies": [
+                    "餐廳"
+                ],
+                "capabilityTags": [
+                    "eat"
+                ],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "deckHints": [
+                    "Deck 9"
+                ],
+                "relatedEntityIds": [
+                    "animators-palate"
+                ]
+            }),
+            entity({
+                "entityId": "its-a-small-world-nursery",
+                "officialNameEn": "It’s a Small World Nursery",
+                "displayNameZh": "小小世界育嬰室",
+                "entityType": "service",
+                "categoryFamilies": [
+                    "兒童",
+                    "服務"
+                ],
+                "capabilityTags": [
+                    "kids-play"
+                ],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "deckHints": [
+                    "Deck 8"
+                ],
+                "aliases": [
+                    "nursery",
+                    "育嬰室",
+                    "托育",
+                    "6 個月至 3 歲"
+                ]
+            }),
+            entity({
+                "entityId": "mickey-color-spin-dance-party",
+                "officialNameEn": "Mickey Color Spin Dance Party",
+                "displayNameZh": "米奇繽紛舞會",
+                "entityType": "show",
+                "categoryFamilies": [
+                    "表演",
+                    "活動"
+                ],
+                "capabilityTags": [
+                    "watch-show"
+                ],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "deckHints": [
+                    "Deck 10"
+                ],
+                "area": "Disney Imagination Garden；有場次才安排",
+                "relatedEntityIds": [
+                    "disney-imagination-garden"
+                ]
+            }),
+            entity({
+                "entityId": "infinite-bliss-spa",
+                "officialNameEn": "Infinite Bliss Spa – Elemis at Sea",
+                "displayNameZh": "Infinite Bliss 水療中心",
+                "entityType": "service",
+                "categoryFamilies": [
+                    "服務"
+                ],
+                "capabilityTags": [
+                    "rest"
+                ],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "area": "位置依 Navigator 確認；附件未提供甲板",
+                "aliases": [
+                    "Infinite Bliss Spa",
+                    "Elemis at Sea",
+                    "水療",
+                    "桑拿",
+                    "浸泡池"
+                ],
+                "relatedEntityIds": [
+                    "rainforest-day-pass"
+                ]
+            }),
+            entity({
+                "entityId": "rainforest-day-pass",
+                "officialNameEn": "Rainforest Day Pass",
+                "displayNameZh": "雨林水療一日通行證",
+                "entityType": "service",
+                "categoryFamilies": [
+                    "服務"
+                ],
+                "capabilityTags": [
+                    "rest"
+                ],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "area": "Infinite Bliss Spa；甲板依 App 確認",
+                "aliases": [
+                    "Rainforest",
+                    "雨林日票",
+                    "水療日票",
+                    "體驗淋浴"
+                ],
+                "relatedEntityIds": [
+                    "infinite-bliss-spa"
+                ]
+            }),
+            entity({
+                "entityId": "navigator-app-wifi",
+                "officialNameEn": "Disney Cruise Line Navigator App",
+                "displayNameZh": "領航員 App 與船上 Wi-Fi",
+                "entityType": "service",
+                "categoryFamilies": [
+                    "服務"
+                ],
+                "capabilityTags": [],
+                "sourceAuthority": "provided-document",
+                "lastVerifiedDate": "2026-09-08",
+                "sourceUrls": [
+                    "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"
+                ],
+                "aliases": [
+                    "DCL-GUEST",
+                    "dclwifi.com",
+                    "免費 Wi-Fi",
+                    "免費網路",
+                    "登入",
+                    "飛航模式"
+                ],
+                "relatedEntityIds": [
+                    "guest-services",
+                    "navigator-onboard-fun"
+                ]
+            }),
             entity({
                 entityId: 'walt-disney-theatre',
                 officialNameEn: 'Walt Disney Theatre',
@@ -56,10 +213,13 @@
                 categoryFamilies: ['場館', '表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Walt Disney Theater', 'Disney Theatre', '華特劇院', '劇院'],
-                deckHints: ['Deck 5', 'Deck 6', 'Deck 7'],
+                deckHints: ["Deck 6","Deck 7"],
                 area: 'Town Square',
                 relatedEntityIds: ['remember-show', 'disney-seas-the-adventure-show'],
-                sourceUrls: [SOURCES.entertainment, SOURCES.themedAreas]
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'remember-show',
@@ -69,10 +229,13 @@
                 categoryFamilies: ['表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Remember show', 'Remember musical'],
-                deckHints: ['Deck 5', 'Deck 6', 'Deck 7'],
+                deckHints: ["Deck 6","Deck 7"],
                 area: 'Walt Disney Theatre',
                 relatedEntityIds: ['walt-disney-theatre'],
-                sourceUrls: [SOURCES.entertainment]
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'disney-seas-the-adventure-show',
@@ -82,10 +245,13 @@
                 categoryFamilies: ['表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Disney Seas Adventure', 'Disney Seas the Adventure show'],
-                deckHints: ['Deck 5', 'Deck 6', 'Deck 7'],
+                deckHints: ["Deck 6","Deck 7"],
                 area: 'Walt Disney Theatre',
                 relatedEntityIds: ['walt-disney-theatre'],
-                sourceUrls: [SOURCES.entertainment]
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'animators-palate',
@@ -530,10 +696,13 @@
                 categoryFamilies: ['表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Duffy and the Friend Ship'],
-                deckHints: ['Deck 10', 'Deck 11'],
-                area: 'Disney Imagination Garden',
-                relatedEntityIds: ['disney-imagination-garden', 'duffy-and-friends-shop'],
-                sourceUrls: [SOURCES.entertainment]
+                deckHints: ["Deck 6","Deck 7"],
+                area: "Walt Disney Theatre（附件中文補充）",
+                relatedEntityIds: ["walt-disney-theatre"],
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'lets-set-sail-show',
@@ -696,7 +865,11 @@
                 capabilityTags: ['eat', 'drink'],
                 deckHints: ['Deck 11'],
                 area: 'Disney Imagination Garden',
-                sourceUrls: [SOURCES.dining]
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                aliases: ["Palo","帕洛餐廳","10 歲以上","早午餐","brunch","dinner"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'mike-sulleys-flavors-of-asia',
@@ -973,7 +1146,7 @@
                 entityType: 'service',
                 categoryFamilies: ['Spa / 健身', '場館'],
                 capabilityTags: ['spa', 'rest'],
-                aliases: ['Elemis at Sea', 'Spa'],
+                aliases: ["Opulence","禮賓 Spa"],
                 deckHints: ['Deck 18'],
                 area: 'Opulence Spa',
                 relatedEntityIds: ['fitness-center'],
@@ -1043,15 +1216,18 @@
             }),
             entity({
                 entityId: 'navigators-club',
-                lastVerifiedDate: '2026-09-07',
+                lastVerifiedDate: "2026-09-08",
                 officialNameEn: 'Navigator’s Club',
                 displayNameZh: '航海家俱樂部',
                 entityType: 'restaurant',
                 categoryFamilies: ['餐廳', '場館'],
                 capabilityTags: ['eat', 'watch-show'],
                 aliases: ["Navigator's Club", 'Navigator Club', '航海家餐廳'],
-                area: 'Town Square 附近，依 App 確認',
-                sourceUrls: [SOURCES.dining]
+                area: "Aft 船尾",
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                deckHints: ["Deck 6"],
+                sourceAuthority: "provided-document",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'navigator-onboard-fun',
@@ -1060,10 +1236,12 @@
                 entityType: 'service',
                 categoryFamilies: ['服務', '活動'],
                 capabilityTags: ['watch-show', 'kids-play'],
-                aliases: ['Onboard Fun', 'App +', 'App plus', 'Navigator Onboard Fun', 'My Plan', '預約入口', '活動預約'],
+                aliases: ["Onboard Fun","Characters","Booking Guests","角色預約","Navigator Onboard Fun","My Plan","預約入口","活動預約"],
                 relatedEntityIds: ['royal-meet-and-greet', 'disney-imagination-garden'],
-                sourceAuthority: 'trusted-secondary',
-                sourceUrls: [SOURCES.communityPhotoMap]
+                sourceAuthority: "provided-document",
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'lion-king-celebration-in-the-sky',
@@ -1073,10 +1251,13 @@
                 categoryFamilies: ['表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Lion King fireworks'],
-                deckHints: ['Deck 10', 'Deck 11'],
-                area: 'Disney Imagination Garden',
-                relatedEntityIds: ['disney-imagination-garden'],
-                sourceUrls: [SOURCES.entertainment]
+                deckHints: ["Deck 17","Deck 18"],
+                area: "Upper Decks 戶外甲板，觀賞區依公告",
+                relatedEntityIds: [],
+                sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
+                sourceAuthority: "provided-document",
+                lastVerifiedDate: "2026-09-08",
+                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
             }),
             entity({
                 entityId: 'duffy-and-friends-shop',
@@ -1126,6 +1307,9 @@
         ],
         bindings: {
             deckFacilities: {
+                'deck6:navigators-club': primary(['navigators-club']),
+                'deck9:animators-table': primary(['animators-table']),
+                'deck8:nursery': primary(['its-a-small-world-nursery']),
                 'deck5:0': primary(['walt-disney-theatre'], { keywordHints: ['劇院', '主秀', 'theatre'] }),
                 'deck5:1': primary(['animators-palate']),
                 'deck5:2': primary(['tianas-bayou-lounge']),
@@ -1153,7 +1337,7 @@
                 'deck10:2': primary(['gramma-talas-kitchen']),
                 'deck10:3': primary(['mowglis-eatery']),
                 'deck10:4': primary(['stitchs-ohana-grill']),
-                'deck10:5': primary(['wayfinder-bar', 'fitness-center', 'opulence-spa']),
+                'deck10:5': primary(['wayfinder-bar']),
                 'deck11:0': primary(['disney-imagination-garden', 'sorcerer-mickey-topiary-photo-spot']),
                 'deck11:1': primary(['garden-bar', 'taverna-portorosso']),
                 'deck11:2': primary(['palo-trattoria']),
@@ -1173,18 +1357,19 @@
                 'deck19:2': primary(['ironcycle-test-run'])
             },
             shows: {
+                'garden-shows:mickey-color-spin': primary(['mickey-color-spin-dance-party', 'disney-imagination-garden']),
                 'stage-musicals:0': primary(['remember-show', 'walt-disney-theatre']),
                 'stage-musicals:1': primary(['disney-seas-the-adventure-show', 'walt-disney-theatre']),
                 'garden-shows:0': primary(['avengers-assemble-show', 'disney-imagination-garden'], {
                     keywordHints: ['Avengers Assemble', '45分鐘', 'Deck 10 MID', '花園舞台卡位', '復仇者']
                 }),
-                'garden-shows:1': primary(['duffy-and-the-friend-ship-show', 'disney-imagination-garden']),
+                'garden-shows:1': primary(['duffy-and-the-friend-ship-show', 'walt-disney-theatre']),
                 'garden-shows:2': primary(['lets-set-sail-show', 'baymax-super-exercise-expo', 'disney-imagination-garden']),
                 'open-air-night:0': primary(['moana-call-of-the-sea', 'wayfinder-bay']),
-                'open-air-night:1': primary(['lion-king-celebration-in-the-sky', 'disney-imagination-garden'])
+                'open-air-night:1': primary(['lion-king-celebration-in-the-sky'])
             },
             scheduleEvents: {
-                'day1:0:1': support(['concierge-lounge'], { keywordHints: ['補給', 'lounge'] }),
+                'day1:0:1': support(['hollywood-spotlight-club', 'navigators-club', 'enchanted-summer-restaurant', 'pixar-market-restaurant'], { keywordHints: ['補給', '登船午餐'] }),
                 'day1:0:2': support(['concierge-lounge']),
                 'day1:1:0': support(['disney-oceaneer-club']),
                 'day1:1:2': support(['toy-story-place', 'flying-saucer-splash-zone', 'sun-protection-deck-tip'], {
@@ -1210,13 +1395,16 @@
                 'day3:3:1': support(['baymax-cinemas']),
                 'day3:3:2': support(['concierge-sundeck-pool']),
                 'day3:4:0': support(['hollywood-spotlight-club', 'navigators-club', 'animators-palate']),
-                'day3:4:1': support(['disney-imagination-garden']),
+                'day3:4:1': support(['disney-imagination-garden', 'walt-disney-theatre', 'duffy-and-the-friend-ship-show']),
                 'day3:4:2': support(['lion-king-celebration-in-the-sky', 'discovery-reef']),
                 'day4:0:0': support([], {
                     keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'self assist', 'express walk off']
                 })
             },
             playbookItems: {
+                'daily-ops:dining-pairs': primary(['navigators-club', 'animators-table', 'enchanted-summer-restaurant', 'mike-sulleys-flavors-of-asia'], { keywordHints: ['輪替餐廳', '三種體驗', '四晚航程', '付費餐廳'] }),
+                'daily-ops:drink-offers': primary(['garden-bar', 'taverna-portorosso', 'buccaneer-bar', 'tianas-bayou-lounge'], { keywordHints: ['咖啡集點', '買五送一', 'Drink of the Day', '葡萄酒套裝', '啤酒套裝', 'Dead Man’s Chest', 'Bruno’s Fizz', 'Beignet Shake', 'Teatime Tini'] }),
+                'daily-ops:rainforest-day-pass': primary(['rainforest-day-pass', 'infinite-bliss-spa']),
                 'family-planning:0': primary(['ironcycle-test-run', 'marvel-landing'], { keywordHints: ['停止排隊', '排隊風險', '停機', '主秀衝突'] }),
                 'family-planning:1': primary(['d-lounge'], { keywordHints: ['三童一起', '家庭備案', '家庭舞蹈'] }),
                 'family-planning:2': support(['concierge-lounge', 'infinity-pool'], { keywordHints: ['吸菸區', '菸味', '無菸座位', '17108', 'smoking'] }),
@@ -1239,11 +1427,11 @@
                 'daily-ops:6': primary(['photo-unlimited-package', 'disney-cruise-line-photos', 'pics-photo-shop'], {
                     keywordHints: ['photo package', '拍照套裝', '照片下載', 'download all', 'shutters']
                 }),
-                'daily-ops:7': support(['guest-services'], { keywordHints: ['app error', '預約補位'] }),
+                'daily-ops:7': primary(['navigator-app-wifi'], { keywordHints: ['app error', '預約補位', 'dclwifi.com', '免費網路', '登入'] }),
                 'daily-ops:8': support(['pics-photo-shop', 'disney-cruise-line-photos', 'royal-meet-and-greet', 'disney-imagination-garden', 'pics-photo-observatory', 'stitch-magic-shots', 'thor-mjolnir-photo-spot', 'dory-nemo-statue-photo-spot', 'sorcerer-mickey-topiary-photo-spot'], {
                     keywordHints: ['每日拍照點', '拍照點', '拍照動線', 'magic shots', 'atrium', '角色合照', 'Deck 9', 'Pics Photo Observatory', '光劍', '天燈', '冰雪奇緣']
                 }),
-                'concierge-plus:0': support(['concierge-lounge'], { keywordHints: ['welcome lunch', 'welcome amenity'] }),
+                'concierge-plus:0': support(['hollywood-spotlight-club', 'concierge-lounge'], { keywordHints: ['welcome lunch', 'welcome amenity'] }),
                 'concierge-plus:1': support(['concierge-lounge'], { keywordHints: ['minibar', 'soft drinks', 'bottled water'] }),
                 'concierge-plus:2': support(['concierge-lounge'], { keywordHints: ['concierge support', 'butler help'] }),
                 'concierge-plus:3': primary(['concierge-lounge']),

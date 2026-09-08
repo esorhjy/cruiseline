@@ -96,7 +96,7 @@ data.playbookGuideData.forEach((mission) => {
   mission.items.forEach((item, itemIndex) => {
     assertText(item.title, `${mission.id}:${itemIndex} title`);
     assertText(item.icon, `${mission.id}:${itemIndex} icon`);
-    assert(['official', 'concierge', 'community'].includes(item.sourceType), `${mission.id}:${itemIndex} sourceType should be recognized`);
+    assert(['official', 'concierge', 'community', 'provided-document'].includes(item.sourceType), `${mission.id}:${itemIndex} sourceType should be recognized`);
     assertText(item.whenToUse, `${mission.id}:${itemIndex} whenToUse`);
     assertText(item.action, `${mission.id}:${itemIndex} action`);
     assertText(item.tripFit, `${mission.id}:${itemIndex} tripFit`);
