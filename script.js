@@ -647,9 +647,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             const important = event.desc.filter(text => /限 |限[0-9]|至少|不得|不以救生員|成人監督|不等於|不是託管|不能|必到/.test(text));
                             const visible = uniqueItems([event.desc[0], ...important]);
                             return `<article class="schedule-item" id="${id}" data-search-id="${id}">
-                                <div class="schedule-time">${/^\d/.test(event.time) ? '<small>建議時段</small>' : ''}${escapeHtml(event.time)}</div>
+                                <div class="schedule-time">${/^\d/.test(event.time) ? '<small>建議時段</small>' : ''}${escapeHtml(event.time)}<span class="plan-kind ${kind}">${labels[kind]}</span></div>
                                 <div class="schedule-content">
-                                    <span class="plan-kind ${kind}">${labels[kind]}</span>
                                     <h4 class="schedule-title">${event.title}</h4>
                                     <ul class="schedule-essential">${visible.map(text => `<li>${text}</li>`).join('')}</ul>
                                     ${renderEntityLinks(binding?.entityRefs)}
