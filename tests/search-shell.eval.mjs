@@ -81,6 +81,10 @@ assert(styleCss.includes('.lookup-dining-filter-strip'), 'style.css should style
 assert(styleCss.includes('.menu-lookup-description'), 'style.css should style expanded menu descriptions');
 assert(!scriptJs.includes('function initializeMenuQuickLookup'), 'retired homepage menu implementation should be removed');
 assert(!scriptJs.includes('createMickeyBubble') && !scriptJs.includes('createConfetti'), 'ambient animation loops should not return');
+assert(!/font-size:\s*[\d.]+px/.test(styleCss), 'text sizes should use rem rather than fixed px');
+assert(styleCss.includes('--text-body: 1.0625rem'), 'reading text should default to 17px at the standard root size');
+assert(styleCss.includes('--text-meta: .875rem'), 'supporting text should not shrink below 14px');
+assert(!/user-scalable\s*=\s*no|maximum-scale\s*=\s*1\b/.test(indexHtml), 'browser zoom must remain available');
 
 assert(generatorJs.includes('SOURCE_PAGE_URL') && generatorJs.includes('SOURCE_DATA_URL'), 'menu generator should keep source URLs explicit');
 assert(generatorJs.includes('COURSE_CATEGORY_MAP'), 'menu generator should encode course grouping rules');

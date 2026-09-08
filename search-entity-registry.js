@@ -45,7 +45,7 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-09-07-voyage-notebook-v1',
+        version: '2026-09-08-readable-type-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
             entity({
