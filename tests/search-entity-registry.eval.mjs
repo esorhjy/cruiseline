@@ -39,7 +39,7 @@ requiredEntities.forEach((entityId) => {
   assert.equal(typeof entry.displayNameZh, 'string');
   assert(entry.displayNameZh.trim().length > 0, `${entityId} displayNameZh should not be empty`);
   assert(entry.translationType === 'official' || entry.translationType === 'site-localized');
-  assert(entry.sourceAuthority === 'official' || entry.sourceAuthority === 'trusted-secondary');
+  assert(['official', 'trusted-secondary', 'provided-document'].includes(entry.sourceAuthority));
   assert(Array.isArray(entry.aliases), `${entityId} aliases should be an array`);
   assert(Array.isArray(entry.categoryFamilies), `${entityId} categoryFamilies should be an array`);
   assert(Array.isArray(entry.capabilityTags), `${entityId} capabilityTags should be an array`);

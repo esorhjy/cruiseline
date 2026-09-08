@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <h3>${show.name}</h3>${getBilingualStripMarkup(getPrimaryEntityForBinding('shows', show.bindingKey), show.name)}
                             <p>${show.theme}</p>
                             <p class="essential-note">${show.timingTip}</p>
-                            <details><summary>觀賞安排</summary><p>${show.tripLink}</p>${renderEntityLinks(binding?.entityRefs, show.id)}</details>
+                            <details><summary>觀賞安排</summary><p>${show.tripLink}</p>${show.sourceNote ? `<p class="group-note">${escapeHtml(show.sourceNote)}</p>` : ''}${renderEntityLinks(binding?.entityRefs, show.id)}</details>
                         </article>`;
                     }).join('')}</div></section>`).join('');
                 return;
@@ -782,6 +782,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${/不得|禁止|不允許/.test(facility.bestTime) ? `<p class="essential-note">${facility.bestTime}</p>` : ''}
                     ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? `<p class="essential-note">${facility.tripUse}</p>` : ''}
                     <details><summary>安排與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                        ${facility.sourceNote ? `<p class="group-note">${escapeHtml(facility.sourceNote)}</p>` : ''}
                         ${/不得|禁止|不允許/.test(facility.bestTime) ? '' : `<p>${facility.bestTime}</p>`}
                         ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? '' : `<p>${facility.tripUse}</p>`}
                         ${entity ? `<button type="button" class="text-command" data-search-mode-target="lookup" data-lookup-category="${getEntityLookupCategory(entity)}" data-search-query="${escapeHtml(entity.officialNameEn)}"><i class="fa-solid fa-language" aria-hidden="true"></i> 中英對照</button>` : ''}
@@ -824,6 +825,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!missionsContainer || !contentContainer || typeof playbookGuideData === 'undefined') return;
 
         const sourceMeta = {
+            'provided-document': { label: '附件更新 · 9/8 整理', icon: 'fa-solid fa-file-lines' },
             official: { label: '規則與適用條件', icon: 'fa-solid fa-circle-info' },
             concierge: { label: '禮賓安排 · 依通知', icon: 'fa-solid fa-crown' },
             community: { label: '旅客經驗 · 非保證', icon: 'fa-solid fa-comments' }
@@ -854,6 +856,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p class="playbook-action">${item.action}</p>
                     <p class="essential-note">${item.caution}</p>
                     <p class="playbook-context">${item.tripFit}</p>
+                    ${item.sourceNote ? `<p class="group-note">${escapeHtml(item.sourceNote)}</p>` : ''}
                     ${supplements.map(record => `<div id="${record.id}" class="reference-supplement">${record.bodyHtml}</div>`).join('')}
                     ${renderEntityLinks(binding?.entityRefs, id)}
                     ${item.relatedSectionId ? `<a class="text-command" href="#${item.relatedSectionId}">相關資料 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>` : ''}
@@ -2143,6 +2146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getAiSourceDetailLabel(sourceDetailType) {
         const labels = {
+            'provided-document': '附件更新',
             official: '官方規則',
             concierge: '禮賓加值',
             community: '社群實戰',

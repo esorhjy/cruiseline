@@ -1,4 +1,4 @@
-const APP_BUILD_ID = '2026-09-08-readable-type-v1';
+const APP_BUILD_ID = '2026-09-08-boarding-info-v1';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [

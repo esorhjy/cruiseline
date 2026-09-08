@@ -11,7 +11,7 @@ const all = [
   ...data.showGuideData.flatMap(group => group.shows),
   ...data.playbookGuideData.flatMap(group => group.items)
 ];
-assert.equal(all.length, 120);
+assert.equal(all.length, 127);
 assert.equal(new Set(all.map(item => item.id)).size, all.length);
 const sandbox = {window:{}};
 vm.runInNewContext(fs.readFileSync('travel-reference-data.js','utf8'), sandbox);
@@ -52,4 +52,4 @@ assert(sw.isCoreAssetRequest({url:scope+'travel-reference-data.js?v=test',mode:'
 assert(sw.isCoreAssetRequest({url:scope+'style.css?v=test',mode:'cors'}));
 assert(!sw.isCoreAssetRequest({url:scope+'menu-lookup-data.js?v=test',mode:'cors'}));
 assert(!sw.CORE_ASSETS_TO_CACHE.includes('1772539078755.png'), 'unused full-size source image is not precached');
-console.log('Notebook data: all 120 cards, 21 legacy cards, reordered IDs, and scoped cache passed.');
+console.log('Notebook data: all 127 cards, 21 legacy cards, reordered IDs, and scoped cache passed.');

@@ -72,7 +72,7 @@ window.MENU_LOOKUP_DATA = {
     {
       "id": "animator",
       "label": "動畫家調色盤",
-      "englishName": "Animator's Palate",
+      "englishName": "Animator’s Palate / Animator’s Table",
       "group": "rotational",
       "groupLabel": "主餐廳",
       "order": 3,
@@ -80,7 +80,7 @@ window.MENU_LOOKUP_DATA = {
     },
     {
       "id": "night4",
-      "label": "第四晚限定",
+      "label": "第四晚特別菜單（四晚航程適用）",
       "englishName": "Night 4 Specials",
       "group": "rotational",
       "groupLabel": "主餐廳",
@@ -197,8 +197,8 @@ window.MENU_LOOKUP_DATA = {
     },
     {
       "id": "bev-garden",
-      "label": "Garden Stage",
-      "englishName": "Garden Stage",
+      "label": "Garden Bar 花園酒吧",
+      "englishName": "Garden Bar",
       "group": "beverage",
       "groupLabel": "酒吧飲品",
       "order": 17,
@@ -2539,7 +2539,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Garlic · Soft White · Whole Wheat Rolls",
       "descriptionZh": "",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2561,7 +2561,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 garlic soft white whole wheat rolls night4 第四晚限定 night 4 specials rotational 主餐廳 bread 麵包 appetizer 前菜",
+      "searchText": "魔法烘焙綜合麵包 garlic soft white whole wheat rolls night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 bread 麵包 appetizer 前菜",
       "sourceRecordIndex": 62
     },
     {
@@ -2571,7 +2571,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Seared Vegetable Dumplings",
       "descriptionZh": "搭配青江菜絲、毛豆與特調黑醋醬油",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2598,7 +2598,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "翠玉精靈香煎蔬菜餃 seared vegetable dumplings 搭配青江菜絲 毛豆與特調黑醋醬油 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "翠玉精靈香煎蔬菜餃 seared vegetable dumplings 搭配青江菜絲 毛豆與特調黑醋醬油 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 63
     },
     {
@@ -2608,7 +2608,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Pickled Gulf Shrimp",
       "descriptionZh": "佐薩摩蜜橘沙拉、油封紅洋蔥、鮮嫩菠菜葉與皺葉萵苣",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2635,7 +2635,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "亞特蘭提斯秘製海灣蝦 pickled gulf shrimp 佐薩摩蜜橘沙拉 油封紅洋蔥 鮮嫩菠菜葉與皺葉萵苣 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
+      "searchText": "亞特蘭提斯秘製海灣蝦 pickled gulf shrimp 佐薩摩蜜橘沙拉 油封紅洋蔥 鮮嫩菠菜葉與皺葉萵苣 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
       "sourceRecordIndex": 64
     },
     {
@@ -2645,7 +2645,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Cucumber Garden Roll",
       "descriptionZh": "鮮脆紅蘿蔔、甜椒、櫛瓜、香菜佐白醬油檸檬醬汁",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2672,7 +2672,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "愛麗絲的秘密花園黃瓜捲 cucumber garden roll 鮮脆紅蘿蔔 甜椒 櫛瓜 香菜佐白醬油檸檬醬汁 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "愛麗絲的秘密花園黃瓜捲 cucumber garden roll 鮮脆紅蘿蔔 甜椒 櫛瓜 香菜佐白醬油檸檬醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 65
     },
     {
@@ -2682,7 +2682,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Vegetable Samosa",
       "descriptionZh": "融合馬鈴薯、青豆、大蒜、孜然、生薑、羅望子與薄荷酸辣醬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2709,7 +2709,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "辛巴達的黃金蔬菜咖哩餃 vegetable samosa 融合馬鈴薯 青豆 大蒜 孜然 生薑 羅望子與薄荷酸辣醬 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "辛巴達的黃金蔬菜咖哩餃 vegetable samosa 融合馬鈴薯 青豆 大蒜 孜然 生薑 羅望子與薄荷酸辣醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 66
     },
     {
@@ -2719,7 +2719,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Dill and Meyer Lemon-marinated Shrimp",
       "descriptionZh": "明尼奧拉橘、英國黃瓜、法式酸奶油與鮭魚子",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2746,7 +2746,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海洋奇緣蒔蘿梅爾檸檬醃鮮蝦 dill and meyer lemon marinated shrimp 明尼奧拉橘 英國黃瓜 法式酸奶油與鮭魚子 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
+      "searchText": "海洋奇緣蒔蘿梅爾檸檬醃鮮蝦 dill and meyer lemon marinated shrimp 明尼奧拉橘 英國黃瓜 法式酸奶油與鮭魚子 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
       "sourceRecordIndex": 67
     },
     {
@@ -2756,7 +2756,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Watermelon, Orange, Daikon Radish Salad",
       "descriptionZh": "苦苣、酪梨佐萊姆德麥拉拉蔗糖醬汁",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2783,7 +2783,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夏日綠洲西瓜蜜橘白蘿蔔沙拉 watermelon orange daikon radish salad 苦苣 酪梨佐萊姆德麥拉拉蔗糖醬汁 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "夏日綠洲西瓜蜜橘白蘿蔔沙拉 watermelon orange daikon radish salad 苦苣 酪梨佐萊姆德麥拉拉蔗糖醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 68
     },
     {
@@ -2793,7 +2793,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Chilled Mango Soup",
       "descriptionZh": "點綴百香果、生薑與椰奶",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2820,7 +2820,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熱帶叢林冰鎮芒果濃湯 chilled mango soup 點綴百香果 生薑與椰奶 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "熱帶叢林冰鎮芒果濃湯 chilled mango soup 點綴百香果 生薑與椰奶 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 69
     },
     {
@@ -2830,7 +2830,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Carrot and Cilantro Soup",
       "descriptionZh": "搭配香甜香蕉麵包脆丁",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2857,7 +2857,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "兔子雷哥的最愛 胡蘿蔔香菜濃湯 carrot and cilantro soup 搭配香甜香蕉麵包脆丁 night4 第四晚限定 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "兔子雷哥的最愛 胡蘿蔔香菜濃湯 carrot and cilantro soup 搭配香甜香蕉麵包脆丁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 70
     },
     {
@@ -2867,7 +2867,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Hong Kong Wonton",
       "descriptionZh": "雞肉雲吞、濃郁雞骨高湯、蜜汁叉燒、雞蛋麵與季節時蔬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2894,7 +2894,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木蘭家鄉味港式雲吞麵 hong kong wonton 雞肉雲吞 濃郁雞骨高湯 蜜汁叉燒 雞蛋麵與季節時蔬 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree pork 豬肉",
+      "searchText": "木蘭家鄉味港式雲吞麵 hong kong wonton 雞肉雲吞 濃郁雞骨高湯 蜜汁叉燒 雞蛋麵與季節時蔬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree pork 豬肉",
       "sourceRecordIndex": 71
     },
     {
@@ -2904,7 +2904,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Chicken Breast Katsu",
       "descriptionZh": "搭配白飯、日式咖哩與日式豬排醬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2931,7 +2931,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "幸運貓滿腹酥炸雞胸肉 chicken breast katsu 搭配白飯 日式咖哩與日式豬排醬 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "幸運貓滿腹酥炸雞胸肉 chicken breast katsu 搭配白飯 日式咖哩與日式豬排醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 72
     },
     {
@@ -2941,7 +2941,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Chungdi Malai Shrimp Curry",
       "descriptionZh": "薑黃、椰香葛拉姆馬薩拉香料，佐印度煎餅、印度香米與萊姆",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -2968,7 +2968,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "阿格拉巴宮廷瑪萊鮮蝦咖哩 chungdi malai shrimp curry 薑黃 椰香葛拉姆馬薩拉香料 佐印度煎餅 印度香米與萊姆 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "阿格拉巴宮廷瑪萊鮮蝦咖哩 chungdi malai shrimp curry 薑黃 椰香葛拉姆馬薩拉香料 佐印度煎餅 印度香米與萊姆 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 73
     },
     {
@@ -2978,7 +2978,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Shittake and Tofu Udon",
       "descriptionZh": "烏龍麵、迷你青江菜、青蔥、昆布、蠔菇與味噌香菇高湯",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3005,7 +3005,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "禪意花園香菇豆腐烏龍麵 shittake and tofu udon 烏龍麵 迷你青江菜 青蔥 昆布 蠔菇與味噌香菇高湯 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
+      "searchText": "禪意花園香菇豆腐烏龍麵 shittake and tofu udon 烏龍麵 迷你青江菜 青蔥 昆布 蠔菇與味噌香菇高湯 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
       "sourceRecordIndex": 74
     },
     {
@@ -3015,7 +3015,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Grilled Tuna Steak",
       "descriptionZh": "黑豆泥、新鮮乾酪、酥脆木薯與烤玉米墨西哥辣椒莎莎醬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3042,7 +3042,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "尋夢環遊記碳烤鮪魚排 grilled tuna steak 黑豆泥 新鮮乾酪 酥脆木薯與烤玉米墨西哥辣椒莎莎醬 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "尋夢環遊記碳烤鮪魚排 grilled tuna steak 黑豆泥 新鮮乾酪 酥脆木薯與烤玉米墨西哥辣椒莎莎醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 75
     },
     {
@@ -3052,7 +3052,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Ginger-Teriyaki Dusted Angus Beef Tenderloin",
       "descriptionZh": "芥末馬鈴薯泥、青江菜與羅望子燒烤濃縮醬汁",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3079,7 +3079,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "龍之焰薑汁照燒安格斯牛菲力 ginger teriyaki dusted angus beef tenderloin 芥末馬鈴薯泥 青江菜與羅望子燒烤濃縮醬汁 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
+      "searchText": "龍之焰薑汁照燒安格斯牛菲力 ginger teriyaki dusted angus beef tenderloin 芥末馬鈴薯泥 青江菜與羅望子燒烤濃縮醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
       "sourceRecordIndex": 76
     },
     {
@@ -3089,7 +3089,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Paneer Jalfrezi",
       "descriptionZh": "印度茅屋起司、甜椒、番茄、綠辣椒、萊姆葉、香菜，佐印度香米、印度煎餅與薄荷優格醬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3116,7 +3116,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "寶萊塢狂歡乳酪蔬菜咖哩 paneer jalfrezi 印度茅屋起司 甜椒 番茄 綠辣椒 萊姆葉 香菜 佐印度香米 印度煎餅與薄荷優格醬 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
+      "searchText": "寶萊塢狂歡乳酪蔬菜咖哩 paneer jalfrezi 印度茅屋起司 甜椒 番茄 綠辣椒 萊姆葉 香菜 佐印度香米 印度煎餅與薄荷優格醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
       "sourceRecordIndex": 77
     },
     {
@@ -3126,7 +3126,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Lamb Shawarma Salad",
       "descriptionZh": "慢烤孜然手撕羊腿肉、洋蔥、美生菜、藤蔓番茄、醃紫高麗菜、烤鷹嘴豆、檸檬優格醬與口袋餅",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3153,7 +3153,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神燈精靈的羊肉沙威瑪沙拉 lamb shawarma salad 慢烤孜然手撕羊腿肉 洋蔥 美生菜 藤蔓番茄 醃紫高麗菜 烤鷹嘴豆 檸檬優格醬與口袋餅 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "神燈精靈的羊肉沙威瑪沙拉 lamb shawarma salad 慢烤孜然手撕羊腿肉 洋蔥 美生菜 藤蔓番茄 醃紫高麗菜 烤鷹嘴豆 檸檬優格醬與口袋餅 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 78
     },
     {
@@ -3163,7 +3163,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Hainanese Chicken, Rice",
       "descriptionZh": "經典海南雞佐甜黑醬油、薑蒜醬與秘製辣椒醬",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3190,7 +3190,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 79
     },
     {
@@ -3200,7 +3200,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Banana Leaf Steamed Fillet of Salmon",
       "descriptionZh": "清蒸鮭魚菲力佐白飯與青江菜",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3227,7 +3227,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed fillet of salmon 清蒸鮭魚菲力佐白飯與青江菜 night4 第四晚限定 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed fillet of salmon 清蒸鮭魚菲力佐白飯與青江菜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 80
     },
     {
@@ -3237,7 +3237,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Mango-Passion Fruit Creme",
       "descriptionZh": "芒果果盤、椰香馬卡龍底與芭樂法式水果軟糖",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3262,7 +3262,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "盛夏陽光芒果百香果慕斯 mango passion fruit creme 芒果果盤 椰香馬卡龍底與芭樂法式水果軟糖 night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "盛夏陽光芒果百香果慕斯 mango passion fruit creme 芒果果盤 椰香馬卡龍底與芭樂法式水果軟糖 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 81
     },
     {
@@ -3272,7 +3272,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Warm Banana Sticky Toffee Pudding",
       "descriptionZh": "佐海鹽焦糖醬與香草冰淇淋",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3297,7 +3297,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "泰山的叢林香蕉太妃糖暖布丁 warm banana sticky toffee pudding 佐海鹽焦糖醬與香草冰淇淋 night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "泰山的叢林香蕉太妃糖暖布丁 warm banana sticky toffee pudding 佐海鹽焦糖醬與香草冰淇淋 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 82
     },
     {
@@ -3307,7 +3307,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Caramel-Macadamia Nut Cheesecake Tart",
       "descriptionZh": "牛奶巧克力慕斯與焦糖甘納許",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3332,7 +3332,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇奇蒂蒂的焦糖夏威夷豆起司塔 caramel macadamia nut cheesecake tart 牛奶巧克力慕斯與焦糖甘納許 night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "奇奇蒂蒂的焦糖夏威夷豆起司塔 caramel macadamia nut cheesecake tart 牛奶巧克力慕斯與焦糖甘納許 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 83
     },
     {
@@ -3342,7 +3342,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "The Captain's Table Sundae",
       "descriptionZh": "薄荷巧克力碎片冰淇淋、濃郁巧克力醬、鮮奶油與酥脆蛋白霜",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3367,7 +3367,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "船長專屬星空聖代 the captain s table sundae 薄荷巧克力碎片冰淇淋 濃郁巧克力醬 鮮奶油與酥脆蛋白霜 night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "船長專屬星空聖代 the captain s table sundae 薄荷巧克力碎片冰淇淋 濃郁巧克力醬 鮮奶油與酥脆蛋白霜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 84
     },
     {
@@ -3377,7 +3377,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Raspberry Creme Brulee",
       "descriptionZh": "",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3404,7 +3404,7 @@ window.MENU_LOOKUP_DATA = {
         "無糖"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "睡美人覆盆子烤布蕾 raspberry creme brulee night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
+      "searchText": "睡美人覆盆子烤布蕾 raspberry creme brulee night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
       "sourceRecordIndex": 85
     },
     {
@@ -3414,7 +3414,7 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Chocolate Cheesecake",
       "descriptionZh": "巧克力戚風蛋糕與巧克力鏡面糖霜",
       "restaurantId": "night4",
-      "restaurantLabel": "第四晚限定",
+      "restaurantLabel": "第四晚特別菜單（四晚航程適用）",
       "restaurantEnglish": "Night 4 Specials",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3439,7 +3439,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑魔女的魔鏡巧克力起司蛋糕 chocolate cheesecake 巧克力戚風蛋糕與巧克力鏡面糖霜 night4 第四晚限定 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "黑魔女的魔鏡巧克力起司蛋糕 chocolate cheesecake 巧克力戚風蛋糕與巧克力鏡面糖霜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 86
     },
     {
@@ -3450,7 +3450,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3471,7 +3471,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 spring onion cheese soft white whole wheat rolls animator 動畫家調色盤 animator s palate rotational 主餐廳 bread 麵包 appetizer 前菜",
+      "searchText": "魔法烘焙綜合麵包 spring onion cheese soft white whole wheat rolls animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 bread 麵包 appetizer 前菜",
       "sourceRecordIndex": 87
     },
     {
@@ -3482,7 +3482,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配醃黃瓜與韓式苦椒海鮮醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3508,7 +3508,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "尋龍使者韓式烤牛肉刈包 korean barbecue beef steamed bao 搭配醃黃瓜與韓式苦椒海鮮醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
+      "searchText": "尋龍使者韓式烤牛肉刈包 korean barbecue beef steamed bao 搭配醃黃瓜與韓式苦椒海鮮醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
       "sourceRecordIndex": 88
     },
     {
@@ -3519,7 +3519,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "白蘿蔔、黃瓜、紅蘿蔔、荷蘭豆、辣椒、香菜、甜洋蔥，佐米醋與龍舌蘭萊姆醬汁",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3545,7 +3545,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熊貓村清爽米線沙拉 rice noodle salad 白蘿蔔 黃瓜 紅蘿蔔 荷蘭豆 辣椒 香菜 甜洋蔥 佐米醋與龍舌蘭萊姆醬汁 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "熊貓村清爽米線沙拉 rice noodle salad 白蘿蔔 黃瓜 紅蘿蔔 荷蘭豆 辣椒 香菜 甜洋蔥 佐米醋與龍舌蘭萊姆醬汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 89
     },
     {
@@ -3556,7 +3556,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "辣味鮪魚捲、蒲燒淡水鰻魚、酪梨與特製鰻魚醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3582,7 +3582,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神龍秘製壽司捲 dragon roll 辣味鮪魚捲 蒲燒淡水鰻魚 酪梨與特製鰻魚醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
+      "searchText": "神龍秘製壽司捲 dragon roll 辣味鮪魚捲 蒲燒淡水鰻魚 酪梨與特製鰻魚醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
       "sourceRecordIndex": 90
     },
     {
@@ -3593,7 +3593,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配椰香飯、黃瓜、印尼甜醬油與烤花生沾醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3619,7 +3619,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林探險沙嗲烤雞串 chicken satay 搭配椰香飯 黃瓜 印尼甜醬油與烤花生沾醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
+      "searchText": "叢林探險沙嗲烤雞串 chicken satay 搭配椰香飯 黃瓜 印尼甜醬油與烤花生沾醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
       "sourceRecordIndex": 91
     },
     {
@@ -3630,7 +3630,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "香菜與萊姆、黃瓜、紫洋蔥、甜椒、地瓜、香料黃甜椒、柑橘醬汁，並點綴歡樂爆米花",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3656,7 +3656,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇幻綠洲棕櫚心沙拉 hearts of palm 香菜與萊姆 黃瓜 紫洋蔥 甜椒 地瓜 香料黃甜椒 柑橘醬汁 並點綴歡樂爆米花 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "奇幻綠洲棕櫚心沙拉 hearts of palm 香菜與萊姆 黃瓜 紫洋蔥 甜椒 地瓜 香料黃甜椒 柑橘醬汁 並點綴歡樂爆米花 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 92
     },
     {
@@ -3667,7 +3667,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "蘿蔓之心、櫻桃番茄、帕馬森乾酪、烤巧巴達麵包丁與凱薩醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3693,7 +3693,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奧林帕斯經典凱薩沙拉 romaine heart caesar salad 蘿蔓之心 櫻桃番茄 帕馬森乾酪 烤巧巴達麵包丁與凱薩醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "奧林帕斯經典凱薩沙拉 romaine heart caesar salad 蘿蔓之心 櫻桃番茄 帕馬森乾酪 烤巧巴達麵包丁與凱薩醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 93
     },
     {
@@ -3704,7 +3704,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "軟嫩雞肉雲吞、濃郁雞高湯、生薑、大白菜與青蔥",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3730,7 +3730,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木蘭家傳鮮雞雲吞湯 wonton soup 軟嫩雞肉雲吞 濃郁雞高湯 生薑 大白菜與青蔥 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
+      "searchText": "木蘭家傳鮮雞雲吞湯 wonton soup 軟嫩雞肉雲吞 濃郁雞高湯 生薑 大白菜與青蔥 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
       "sourceRecordIndex": 94
     },
     {
@@ -3741,7 +3741,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "鮮甜黃玉米粒與青蔥段",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3767,7 +3767,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "史迪奇的夏威夷玉米芋頭濃湯 molokai corn and taro chowder 鮮甜黃玉米粒與青蔥段 animator 動畫家調色盤 animator s palate rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "史迪奇的夏威夷玉米芋頭濃湯 molokai corn and taro chowder 鮮甜黃玉米粒與青蔥段 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
       "sourceRecordIndex": 95
     },
     {
@@ -3778,7 +3778,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "鮮蝦、豆卜（油豆腐）、叻沙葉與些許辣椒",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3804,7 +3804,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "獅城尋寶椰香叻沙 laksa lemak 鮮蝦 豆卜 油豆腐 叻沙葉與些許辣椒 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "獅城尋寶椰香叻沙 laksa lemak 鮮蝦 豆卜 油豆腐 叻沙葉與些許辣椒 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 96
     },
     {
@@ -3815,7 +3815,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "葛拉姆馬薩拉香料、香菜，佐茉莉香米、薄荷優格醬與印度煎餅",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3841,7 +3841,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "茉莉公主的奶油燉雞 murgh makhani butter chicken 葛拉姆馬薩拉香料 香菜 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "茉莉公主的奶油燉雞 murgh makhani butter chicken 葛拉姆馬薩拉香料 香菜 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 97
     },
     {
@@ -3852,7 +3852,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配松露洋菇燉飯、烤榛果與芝麻葉檸檬油點綴",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3878,7 +3878,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "川頓國王的香煎太平洋干貝 pan seared pacific scallops 搭配松露洋菇燉飯 烤榛果與芝麻葉檸檬油點綴 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "川頓國王的香煎太平洋干貝 pan seared pacific scallops 搭配松露洋菇燉飯 烤榛果與芝麻葉檸檬油點綴 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 98
     },
     {
@@ -3889,7 +3889,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "豆腐、無麩質醬油、黃瓜、紫高麗菜、糙米、芝麻、酪梨、香菜佐芥末檸檬醬汁",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3915,7 +3915,7 @@ window.MENU_LOOKUP_DATA = {
         "純素"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "莫娜的島嶼風味豆腐波奇碗 tofu poke 豆腐 無麩質醬油 黃瓜 紫高麗菜 糙米 芝麻 酪梨 香菜佐芥末檸檬醬汁 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree vegan 純素",
+      "searchText": "莫娜的島嶼風味豆腐波奇碗 tofu poke 豆腐 無麩質醬油 黃瓜 紫高麗菜 糙米 芝麻 酪梨 香菜佐芥末檸檬醬汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree vegan 純素",
       "sourceRecordIndex": 99
     },
     {
@@ -3926,7 +3926,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "茴香、白腰豆、切里尼奧拉油橄欖、甜椒、育空馬鈴薯與拉曼查番紅花高湯",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3952,7 +3952,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "水手香煎地中海鱸魚排 pan seared branzino fillet 茴香 白腰豆 切里尼奧拉油橄欖 甜椒 育空馬鈴薯與拉曼查番紅花高湯 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "水手香煎地中海鱸魚排 pan seared branzino fillet 茴香 白腰豆 切里尼奧拉油橄欖 甜椒 育空馬鈴薯與拉曼查番紅花高湯 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 100
     },
     {
@@ -3963,7 +3963,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配第戎蜂蜜烤防風草泥、奶油四季豆與卡本內百里香肉汁",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -3989,7 +3989,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "野獸莊園慢烤迷迭香牛菲力 carved slow roasted rosemary beef tenderloin 搭配第戎蜂蜜烤防風草泥 奶油四季豆與卡本內百里香肉汁 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
+      "searchText": "野獸莊園慢烤迷迭香牛菲力 carved slow roasted rosemary beef tenderloin 搭配第戎蜂蜜烤防風草泥 奶油四季豆與卡本內百里香肉汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
       "sourceRecordIndex": 101
     },
     {
@@ -4000,7 +4000,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "小豆蔻、肉桂、辣椒、腰果、椰漿，佐茉莉香米、薄荷優格醬與印度煎餅",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4026,7 +4026,7 @@ window.MENU_LOOKUP_DATA = {
         "純素"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "森林王子香料蔬菜庫瑪咖哩 chettinad vegetable korma 小豆蔻 肉桂 辣椒 腰果 椰漿 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree vegan 純素",
+      "searchText": "森林王子香料蔬菜庫瑪咖哩 chettinad vegetable korma 小豆蔻 肉桂 辣椒 腰果 椰漿 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree vegan 純素",
       "sourceRecordIndex": 102
     },
     {
@@ -4037,7 +4037,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "白蘿蔔、白菜、甜椒、紫紅洋蔥、青蔥、石榴籽、烤芝麻佐味噌薑汁醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4063,7 +4063,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "唐老鴨也瘋狂 蜜汁醬烤鴨肉木瓜沙拉 honey soy roasted duck and papaya salad 白蘿蔔 白菜 甜椒 紫紅洋蔥 青蔥 石榴籽 烤芝麻佐味噌薑汁醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "唐老鴨也瘋狂 蜜汁醬烤鴨肉木瓜沙拉 honey soy roasted duck and papaya salad 白蘿蔔 白菜 甜椒 紫紅洋蔥 青蔥 石榴籽 烤芝麻佐味噌薑汁醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 103
     },
     {
@@ -4074,7 +4074,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "經典海南雞佐甜黑醬油、薑蒜醬與秘製辣椒醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4100,7 +4100,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
       "sourceRecordIndex": 104
     },
     {
@@ -4111,7 +4111,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "清蒸鮭魚菲力佐白飯與青江菜",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4137,7 +4137,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 animator 動畫家調色盤 animator s palate rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
       "sourceRecordIndex": 105
     },
     {
@@ -4148,7 +4148,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "糖水燉洋梨、杏仁奶油餡、抹茶脆土與香草冰淇淋",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4172,7 +4172,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法森林杏仁洋梨塔 almond pear tart 糖水燉洋梨 杏仁奶油餡 抹茶脆土與香草冰淇淋 animator 動畫家調色盤 animator s palate rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "魔法森林杏仁洋梨塔 almond pear tart 糖水燉洋梨 杏仁奶油餡 抹茶脆土與香草冰淇淋 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 106
     },
     {
@@ -4183,7 +4183,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "香草起司蛋糕、焦糖牛奶糖霜與花生醬米香脆餅",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4207,7 +4207,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "料理鼠王的焦糖海鹽起司蛋糕 salted caramel cheesecake 香草起司蛋糕 焦糖牛奶糖霜與花生醬米香脆餅 animator 動畫家調色盤 animator s palate rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "料理鼠王的焦糖海鹽起司蛋糕 salted caramel cheesecake 香草起司蛋糕 焦糖牛奶糖霜與花生醬米香脆餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 107
     },
     {
@@ -4218,7 +4218,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "苦甜巧克力慕斯、松露巧克力慕斯與榛果戚風蛋糕",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4242,7 +4242,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夢幻極致巧克力三重奏 chocolate decadence 苦甜巧克力慕斯 松露巧克力慕斯與榛果戚風蛋糕 animator 動畫家調色盤 animator s palate rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "夢幻極致巧克力三重奏 chocolate decadence 苦甜巧克力慕斯 松露巧克力慕斯與榛果戚風蛋糕 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 108
     },
     {
@@ -4253,7 +4253,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "卡布奇諾慕斯與覆盆子果泥",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4279,7 +4279,7 @@ window.MENU_LOOKUP_DATA = {
         "無糖"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "仙女教母卡布奇諾慕斯 cappuccino mousse 卡布奇諾慕斯與覆盆子果泥 animator 動畫家調色盤 animator s palate rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
+      "searchText": "仙女教母卡布奇諾慕斯 cappuccino mousse 卡布奇諾慕斯與覆盆子果泥 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
       "sourceRecordIndex": 109
     },
     {
@@ -4290,7 +4290,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "巧酥冰淇淋、巧克力威化餅乾、巧克力糖漿與輕盈鮮奶油",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4314,7 +4314,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米奇巧酥冰淇淋聖代 cookies n cream sundae 巧酥冰淇淋 巧克力威化餅乾 巧克力糖漿與輕盈鮮奶油 animator 動畫家調色盤 animator s palate rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "米奇巧酥冰淇淋聖代 cookies n cream sundae 巧酥冰淇淋 巧克力威化餅乾 巧克力糖漿與輕盈鮮奶油 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
       "sourceRecordIndex": 110
     },
     {
@@ -4325,7 +4325,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配紅蘿蔔與芹菜",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4351,7 +4351,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "溫暖擁抱奶油馬鈴薯濃湯 creamed potato soup 搭配紅蘿蔔與芹菜 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "溫暖擁抱奶油馬鈴薯濃湯 creamed potato soup 搭配紅蘿蔔與芹菜 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 111
     },
     {
@@ -4362,7 +4362,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "新鮮綜合生菜、紅蘿蔔絲、黃瓜片",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4388,7 +4388,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇妙花園生菜沙拉 garden salad 新鮮綜合生菜 紅蘿蔔絲 黃瓜片 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "奇妙花園生菜沙拉 garden salad 新鮮綜合生菜 紅蘿蔔絲 黃瓜片 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 112
     },
     {
@@ -4399,7 +4399,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配黃瓜條、椰香飯與日式豬排醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4425,7 +4425,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "大英雄天團日式炸雞排 chicken katsu 搭配黃瓜條 椰香飯與日式豬排醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "大英雄天團日式炸雞排 chicken katsu 搭配黃瓜條 椰香飯與日式豬排醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 113
     },
     {
@@ -4436,7 +4436,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配海鮮醬沾醬",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4462,7 +4462,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木須龍金黃蔬菜春捲 crisp vegetable spring rolls 搭配海鮮醬沾醬 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "木須龍金黃蔬菜春捲 crisp vegetable spring rolls 搭配海鮮醬沾醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 114
     },
     {
@@ -4473,7 +4473,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4499,7 +4499,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "史迪奇夏威夷bbq烤雞披薩 hawaiian barbecue chicken pizza animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "史迪奇夏威夷bbq烤雞披薩 hawaiian barbecue chicken pizza animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 115
     },
     {
@@ -4510,7 +4510,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配鬆軟布里歐麵包",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4536,7 +4536,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米奇迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "米奇迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 116
     },
     {
@@ -4547,7 +4547,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配薑蔥飯、清蒸迷你青江菜與芒果西米露",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4574,7 +4574,7 @@ window.MENU_LOOKUP_DATA = {
         "迪士尼兒童餐"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "活力滿點香烤雞肉 grilled chicken 搭配薑蔥飯 清蒸迷你青江菜與芒果西米露 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
+      "searchText": "活力滿點香烤雞肉 grilled chicken 搭配薑蔥飯 清蒸迷你青江菜與芒果西米露 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
       "sourceRecordIndex": 117
     },
     {
@@ -4585,7 +4585,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "搭配巨無霸火雞肉丸、義大利海員番茄醬、花園沙拉與新鮮蘋果片",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4612,7 +4612,7 @@ window.MENU_LOOKUP_DATA = {
         "迪士尼兒童餐"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "小姐與流氓全麥義大利麵 whole wheat spaghetti pasta 搭配巨無霸火雞肉丸 義大利海員番茄醬 花園沙拉與新鮮蘋果片 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
+      "searchText": "小姐與流氓全麥義大利麵 whole wheat spaghetti pasta 搭配巨無霸火雞肉丸 義大利海員番茄醬 花園沙拉與新鮮蘋果片 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
       "sourceRecordIndex": 118
     },
     {
@@ -4623,7 +4623,7 @@ window.MENU_LOOKUP_DATA = {
       "descriptionZh": "巧克力慕斯、草莓果盤與巧克力布朗尼",
       "restaurantId": "animator",
       "restaurantLabel": "動畫家調色盤",
-      "restaurantEnglish": "Animator's Palate",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 3,
@@ -4649,7 +4649,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡樂馬戲團巧克力圓頂 chocolate dome 巧克力慕斯 草莓果盤與巧克力布朗尼 animator 動畫家調色盤 animator s palate rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
+      "searchText": "歡樂馬戲團巧克力圓頂 chocolate dome 巧克力慕斯 草莓果盤與巧克力布朗尼 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
       "sourceRecordIndex": 119
     },
     {
@@ -13060,7 +13060,7 @@ window.MENU_LOOKUP_DATA = {
       "sourceType": "menu-item",
       "zhLabel": "深海閻王聚寶盆【雙人】",
       "englishName": "Dead Man's Chest",
-      "descriptionZh": "",
+      "descriptionZh": "雙人分享的海盜主題雞尾酒。（9/8 附件補充；價格沿用菜單 snapshot，點餐前確認。）",
       "restaurantId": "bev-buccaneer",
       "restaurantLabel": "Buccaneer Bar",
       "restaurantEnglish": "Buccaneer Bar",
@@ -13089,7 +13089,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深海閻王聚寶盆 雙人 dead man s chest bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 25 00 alcoholic 酒精",
+      "searchText": "深海閻王聚寶盆 雙人 dead man s chest 雙人分享的海盜主題雞尾酒 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 25 00 alcoholic 酒精",
       "sourceRecordIndex": 366
     },
     {
@@ -15498,8 +15498,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Garden Sparkle",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15522,10 +15522,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "閃耀花園 garden sparkle bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "閃耀花園 garden sparkle bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
       "sourceRecordIndex": 432
     },
     {
@@ -15535,8 +15537,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Pixie Creamsicle",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15559,10 +15561,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "小仙子奶油冰棒 pixie creamsicle bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "小仙子奶油冰棒 pixie creamsicle bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
       "sourceRecordIndex": 433
     },
     {
@@ -15570,10 +15574,10 @@ window.MENU_LOOKUP_DATA = {
       "sourceType": "menu-item",
       "zhLabel": "瘋帽客的午茶馬丁尼",
       "englishName": "Teatime Tini",
-      "descriptionZh": "",
+      "descriptionZh": "綠茶與香蘭風味的馬丁尼。（9/8 附件補充；價格沿用菜單 snapshot，點餐前確認。）",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15596,10 +15600,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "瘋帽客的午茶馬丁尼 teatime tini bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "瘋帽客的午茶馬丁尼 teatime tini 綠茶與香蘭風味的馬丁尼 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
       "sourceRecordIndex": 434
     },
     {
@@ -15609,8 +15615,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Fruit Blossom",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15633,10 +15639,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "百果綻放 fruit blossom bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "百果綻放 fruit blossom bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 10 00 alcoholic 酒精",
       "sourceRecordIndex": 435
     },
     {
@@ -15646,8 +15654,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Smoky Flowers",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15670,10 +15678,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "迷霧花叢 smoky flowers bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "迷霧花叢 smoky flowers bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
       "sourceRecordIndex": 436
     },
     {
@@ -15683,8 +15693,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Tangled Vines",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15707,10 +15717,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔髮藤蔓 tangled vines bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "魔髮藤蔓 tangled vines bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
       "sourceRecordIndex": 437
     },
     {
@@ -15720,8 +15732,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Lily Pad Tini",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15744,10 +15756,12 @@ window.MENU_LOOKUP_DATA = {
         "cocktails",
         "drinks",
         "alcoholic",
-        "酒精"
+        "酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "蒂安娜的睡蓮馬丁尼 lily pad tini bev garden garden stage beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "蒂安娜的睡蓮馬丁尼 lily pad tini bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
       "sourceRecordIndex": 438
     },
     {
@@ -15757,8 +15771,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Aperitif Sour",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15780,10 +15794,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "開胃酸酒 aperitif sour bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
+      "searchText": "開胃酸酒 aperitif sour bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
       "sourceRecordIndex": 439
     },
     {
@@ -15793,8 +15809,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Wild Strawberry",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15816,10 +15832,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "野草莓之夢 wild strawberry bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "野草莓之夢 wild strawberry bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
       "sourceRecordIndex": 440
     },
     {
@@ -15829,8 +15847,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Elderspritz",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15852,10 +15870,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "精靈接骨木氣泡 elderspritz bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "精靈接骨木氣泡 elderspritz bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
       "sourceRecordIndex": 441
     },
     {
@@ -15865,8 +15885,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Lyre's Amalfi Spritz",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15888,10 +15908,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "lyre s amalfi spritz bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "lyre s amalfi spritz bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
       "sourceRecordIndex": 442
     },
     {
@@ -15901,8 +15923,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Heineken 0.0%",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15924,10 +15946,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "heineken 0 0 bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "heineken 0 0 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
       "sourceRecordIndex": 443
     },
     {
@@ -15937,8 +15961,8 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Warsteiner Radler 0.0%",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
@@ -15960,10 +15984,12 @@ window.MENU_LOOKUP_DATA = {
         "飲料",
         "non-alcoholic",
         "drinks",
-        "無酒精"
+        "無酒精",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "warsteiner radler 0 0 bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "warsteiner radler 0 0 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
       "sourceRecordIndex": 444
     },
     {
@@ -15973,15 +15999,15 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Enchanted Tree",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -15997,10 +16023,12 @@ window.MENU_LOOKUP_DATA = {
         "non-alcoholic",
         "kids-side",
         "kids",
-        "兒童"
+        "兒童",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法樹 enchanted tree bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "魔法樹 enchanted tree bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 445
     },
     {
@@ -16010,15 +16038,15 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Fantasia",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -16034,10 +16062,12 @@ window.MENU_LOOKUP_DATA = {
         "non-alcoholic",
         "kids-side",
         "kids",
-        "兒童"
+        "兒童",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法師的幻想曲 fantasia bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "魔法師的幻想曲 fantasia bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 446
     },
     {
@@ -16047,15 +16077,15 @@ window.MENU_LOOKUP_DATA = {
       "englishName": "Garden Refresher",
       "descriptionZh": "",
       "restaurantId": "bev-garden",
-      "restaurantLabel": "Garden Stage",
-      "restaurantEnglish": "Garden Stage",
+      "restaurantLabel": "Garden Bar 花園酒吧",
+      "restaurantEnglish": "Garden Bar",
       "restaurantGroup": "beverage",
       "restaurantGroupLabel": "酒吧飲品",
       "restaurantOrder": 17,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -16071,10 +16101,12 @@ window.MENU_LOOKUP_DATA = {
         "non-alcoholic",
         "kids-side",
         "kids",
-        "兒童"
+        "兒童",
+        "Garden Bar 花園酒吧",
+        "Garden Bar"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "花園清新泉水 garden refresher bev garden garden stage beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "花園清新泉水 garden refresher bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 447
     },
     {
@@ -16972,8 +17004,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 19,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -16991,8 +17023,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "邪惡皇后 evil queen bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "邪惡皇后 evil queen bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 472
     },
     {
@@ -17009,8 +17041,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 19,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -17028,8 +17060,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "女巫特調魔藥 witch s brew bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "女巫特調魔藥 witch s brew bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 473
     },
     {
@@ -17046,8 +17078,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 19,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -17065,8 +17097,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "永保青春花果茶 eternal beauty tea bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "永保青春花果茶 eternal beauty tea bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 474
     },
     {
@@ -17702,8 +17734,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 20,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -17721,8 +17753,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "深藍秘境 mare blu bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "深藍秘境 mare blu bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 492
     },
     {
@@ -17730,7 +17762,7 @@ window.MENU_LOOKUP_DATA = {
       "sourceType": "menu-item",
       "zhLabel": "靜靜吧！布魯諾氣泡飲",
       "englishName": "Bruno's Fizz",
-      "descriptionZh": "",
+      "descriptionZh": "蜜桃與薑風味的無酒精氣泡飲。（9/8 附件補充；價格沿用菜單 snapshot，點餐前確認。）",
       "restaurantId": "bev-taverna",
       "restaurantLabel": "Taverna Portorosso",
       "restaurantEnglish": "Taverna Portorosso",
@@ -17739,8 +17771,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 20,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -17758,8 +17790,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "靜靜吧 布魯諾氣泡飲 bruno s fizz bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "靜靜吧 布魯諾氣泡飲 bruno s fizz 蜜桃與薑風味的無酒精氣泡飲 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 493
     },
     {
@@ -17776,8 +17808,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 20,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -17795,8 +17827,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "最棒的夏天 best summer ever bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "最棒的夏天 best summer ever bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 494
     },
     {
@@ -18340,8 +18372,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 21,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -18359,8 +18391,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "狂歡節蘋果賓治 mardi gras apple punch bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "狂歡節蘋果賓治 mardi gras apple punch bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 510
     },
     {
@@ -18368,7 +18400,7 @@ window.MENU_LOOKUP_DATA = {
       "sourceType": "menu-item",
       "zhLabel": "招牌甜甜圈奶昔",
       "englishName": "Beignet Shake",
-      "descriptionZh": "",
+      "descriptionZh": "紐奧良風格的無酒精奶昔。（9/8 附件補充；價格沿用菜單 snapshot，點餐前確認。）",
       "restaurantId": "bev-tiana",
       "restaurantLabel": "Tiana's Bayou Lounge",
       "restaurantEnglish": "Tiana's Bayou Lounge",
@@ -18377,8 +18409,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 21,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$15.00",
       "tags": [
         "kids"
@@ -18396,8 +18428,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "招牌甜甜圈奶昔 beignet shake bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 15 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "招牌甜甜圈奶昔 beignet shake 紐奧良風格的無酒精奶昔 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 kids 兒童",
       "sourceRecordIndex": 511
     },
     {
@@ -18414,8 +18446,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 21,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$10.00",
       "tags": [
         "kids"
@@ -18433,8 +18465,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "沼澤氣泡飲 swamp soda bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 10 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "沼澤氣泡飲 swamp soda bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 kids 兒童",
       "sourceRecordIndex": 512
     },
     {
@@ -19421,8 +19453,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 22,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -19440,8 +19472,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "可可怪椰子爆擊 kakamora smash bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "可可怪椰子爆擊 kakamora smash bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 540
     },
     {
@@ -19458,8 +19490,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 22,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -19477,8 +19509,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "塔菲緹之茶 tea fiti bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "塔菲緹之茶 tea fiti bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 541
     },
     {
@@ -19495,8 +19527,8 @@ window.MENU_LOOKUP_DATA = {
       "restaurantOrder": 22,
       "menuCategory": "non-alcoholic",
       "menuCategoryLabel": "無酒精飲品",
-      "courseGroup": "kids-side",
-      "courseGroupLabel": "兒童/配菜",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
       "price": "$6.00",
       "tags": [
         "kids"
@@ -19514,8 +19546,8 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "兒童"
       ],
-      "crewPhrase": "Could I order this, please?",
-      "searchText": "毛伊解渴特調 maui quencher bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 kids side 兒童 配菜 6 00 kids 兒童",
+      "crewPhrase": "Could I order this drink, please?",
+      "searchText": "毛伊解渴特調 maui quencher bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
       "sourceRecordIndex": 542
     },
     {
@@ -19735,5 +19767,12 @@ window.MENU_LOOKUP_DATA = {
       "searchText": "探險世界經典鳳梨都樂冰 pineapple dole whip bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 6 50",
       "sourceRecordIndex": 549
     }
-  ]
+  ],
+  "documentCorrections": {
+    "reviewedAt": "2026-09-08",
+    "sha256": "9ac78d241510ec0e10b7d22877002d75310dfb561f10b902e84c65c495f46a37",
+    "source": "FB整理的英文版登船注意事項翻譯.docx",
+    "sourceUrl": "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712",
+    "note": "使用者指定為最新來源；未標示原文航次日期，未重新驗證菜單價格。"
+  }
 };

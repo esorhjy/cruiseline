@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import https from 'node:https';
 import vm from 'node:vm';
+import { applyDocumentCorrections } from './menu-document-corrections.mjs';
 
 const VERSION = '2026-05-25-menu-restaurant-v2';
 const SOURCE_PAGE_URL = 'https://sachiko620702.github.io/disney/#menu';
@@ -187,6 +188,7 @@ function parseRestaurantMeta(appSource) {
 function resolveCourseGroup(category, tags = []) {
   const normalizedCategory = compactText(category);
   const normalizedTags = tags.map((tag) => compactText(tag).toLowerCase());
+  if (COURSE_CATEGORY_MAP.drinks.includes(normalizedCategory)) return 'drinks';
   if (normalizedTags.some((tag) => ['kids', 'kids-disney'].includes(tag))) return 'kids-side';
   if (normalizedTags.some((tag) => ['dessert', 'dessert-vegan'].includes(tag))) return 'dessert';
 
@@ -298,29 +300,43 @@ function buildRestaurants(records, restaurantMeta) {
     .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
 }
 
-const [menuSource, appSource] = await Promise.all([
-  fetchText(SOURCE_DATA_URL),
-  fetchText(SOURCE_APP_URL)
-]);
+async function buildPayload() {
+  if (process.argv.includes('--local-corrections')) {
+    const sandbox = { window: {} };
+    vm.runInNewContext(fs.readFileSync(OUTPUT_PATH, 'utf8'), sandbox);
+    const payload = sandbox.window.MENU_LOOKUP_DATA;
+    if (payload.records.length !== payload.sourceCount) throw new Error('Incomplete local snapshot');
+    for (const record of payload.records) {
+      record.courseGroup = resolveCourseGroup(record.menuCategory, record.tags);
+      record.courseGroupLabel = getCourseLabel(record.courseGroup);
+      record.crewPhrase = isDrinkCourse(record.courseGroup)
+        ? 'Could I order this drink, please?' : 'Could I order this, please?';
+    }
+    return payload;
+  }
+  const menuSource = await fetchText(SOURCE_DATA_URL);
+  const appSource = await fetchText(SOURCE_APP_URL);
+  const rawRecords = parseMenuData(menuSource);
+  const restaurantMeta = parseRestaurantMeta(appSource);
+  const records = rawRecords.map((raw, index) => buildRecord(raw, index, restaurantMeta));
+  const restaurants = buildRestaurants(records, restaurantMeta);
 
-const rawRecords = parseMenuData(menuSource);
-const restaurantMeta = parseRestaurantMeta(appSource);
-const records = rawRecords.map((raw, index) => buildRecord(raw, index, restaurantMeta));
-const restaurants = buildRestaurants(records, restaurantMeta);
+  return {
+    version: VERSION,
+    sourcePageUrl: SOURCE_PAGE_URL,
+    sourceUrl: SOURCE_DATA_URL,
+    sourceDataUrl: SOURCE_DATA_URL,
+    generatedAt: new Date().toISOString().slice(0, 10),
+    sourceCount: rawRecords.length,
+    recordsCount: records.length,
+    restaurantGroups: Object.entries(RESTAURANT_GROUP_LABELS).map(([id, label]) => ({ id, label })),
+    courseGroups: COURSE_GROUPS,
+    restaurants,
+    records
+  };
+}
 
-const payload = {
-  version: VERSION,
-  sourcePageUrl: SOURCE_PAGE_URL,
-  sourceUrl: SOURCE_DATA_URL,
-  sourceDataUrl: SOURCE_DATA_URL,
-  generatedAt: new Date().toISOString().slice(0, 10),
-  sourceCount: rawRecords.length,
-  recordsCount: records.length,
-  restaurantGroups: Object.entries(RESTAURANT_GROUP_LABELS).map(([id, label]) => ({ id, label })),
-  courseGroups: COURSE_GROUPS,
-  restaurants,
-  records
-};
+const payload = applyDocumentCorrections(await buildPayload());
 
 fs.writeFileSync(
   OUTPUT_PATH,
@@ -328,4 +344,4 @@ fs.writeFileSync(
   'utf8'
 );
 
-console.log(`Wrote ${records.length} menu records to ${OUTPUT_PATH.pathname}`);
+console.log(`Wrote ${payload.records.length} menu records to ${OUTPUT_PATH.pathname}`);
