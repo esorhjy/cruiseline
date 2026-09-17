@@ -6,6 +6,7 @@
 - 產品方向已明確回歸純關鍵字搜尋，不再提供 AI 搜尋或 AI 生成回答。
 
 ## 目前架構
+- 最新家庭行程確認見 `docs/CONTENT_UPDATE_2026-09-17.md`：三晚 Option 6、20:15 晚餐（可能調整 15 分鐘），1/27 08:30 Royal Gathering；Moana 仍為場次待確認候選。既有內容與清單 ID 保留。
 - 靜態前端頁面：
   - `index.html`
   - `style.css`

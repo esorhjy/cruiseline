@@ -49,7 +49,7 @@
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
-                            "<strong>請一併確認：</strong>七人同桌、第一時段（First Seating）、實際輪替餐廳與桌號；保留角色晚宴與動畫互動體驗，爭取較好觀看視線。",
+                            "<strong>請一併確認：</strong>七人同桌、20:15（通知確認，可能調整 15 分鐘）、實際輪替餐廳與桌號；保留角色晚宴與動畫互動體驗，爭取較好觀看視線。",
                             "<strong>請管家協助確認：</strong>",
                             "出發前 130 天代訂的 Royal Meet & Greet（免費皇家見面會）時段",
                             "當晚 Walt Disney Theatre 分配場次與禮賓提前入場通知；先排除晚餐衝突，不把禮賓視為所有設施的快速通關。",
@@ -128,33 +128,15 @@
                         tag: "啟航儀式",
                         tagClass: "tag-highlight",
                         desc: [
-                            "啟航汽笛與甲板活動依當天安排；若與第一時段晚餐重疊，優先保留晚餐。",
+                            "啟航汽笛與甲板活動依當天安排；若與20:15 晚餐重疊，優先保留晚餐。",
                             "離汽笛太近會非常大聲，想體驗氣氛但不必硬卡最近的位置。"
                         ]
                     }
                 ]
             },
             {
-                name: "晚間｜第一輪晚餐＋首日晚秀＋宵夜收尾",
+                name: "晚間｜依場次看秀 → 20:15 晚餐 → 彈性收尾",
                 events: [
-                    {
-                        id: "search-schedule-day1-2-0",
-                        bindingKey: "day1:2:0",
-                        planKind: "fixed",
-                        time: "第一時段／依分配",
-                        title: "第一時段晚餐：依實際輪替餐廳",
-                        tag: "美食餐飲",
-                        tagClass: "tag-dining",
-                        desc: [
-                            "三晚保留三種輪替體驗，不預先指定每天餐廳；Hollywood Spotlight Club 與 Navigator’s Club 屬同類分流，不能預設都會排到。",
-                            "若輪到 Animator's Palate：準備互動驚喜（手繪草圖變動畫）",
-                            "<strong>提醒：</strong>專屬服務員開始跟隨你們",
-                            "<strong>拍照註記：</strong>晚餐前後通常是最穩的正式全家照窗口，若重視餐廳合照，記得替這段多留 5–10 分鐘。",
-                            "<strong>建議：</strong>這晚拍全家正式照片",
-                            "<strong>First Seating 提醒：</strong>若晚餐互動或餐廳秀拉長，別吃到最後一刻，否則還是會壓縮後面劇院排隊時間。",
-                            "<strong>到場：</strong>依 App 分配的餐廳與桌號，提前 5 分鐘抵達。"
-                        ]
-                    },
                     {
                         id: "search-schedule-day1-2-1",
                         bindingKey: "day1:2:1",
@@ -166,20 +148,38 @@
                         desc: [
                             "《Remember》與《Disney Seas the Adventure》按正式分配日期觀看，不預設首晚是哪一場。",
                             "先核對晚餐與主秀，再請禮賓確認集合點、提前入場截止與所需證明。",
-                            "舊航次通知的演前 40 分鐘集合／30 分鐘截止只供風險試算；19:00 秀的 18:20 集合會與 17:45 晚餐衝突，不照搬。"
+                            "從 20:15 晚餐倒推演出結束、步行與集合緩衝；舊航次演前 40／30 分鐘規則只供參考，實際依當晚通知。"
+                        ]
+                    },
+                    {
+                        id: "search-schedule-day1-2-0",
+                        bindingKey: "day1:2:0",
+                        planKind: "fixed",
+                        time: "20:15",
+                        title: "晚餐：Animator’s Table 動畫師餐桌（Deck 9）",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
+                        desc: [
+                            "晚餐通知確認 20:15，可能調整 15 分鐘，請依最終時間提前 5 分鐘到場。使用者已確認：Option 6 第一晚 Animator’s Table；七人同桌需求與實際桌號仍於 App 核對。",
+                            "準備動畫互動體驗（手繪作品化為動畫），勿與 Deck 5 Animator’s Palate 混淆。",
+                            "<strong>提醒：</strong>專屬服務員開始跟隨你們",
+                            "<strong>拍照註記：</strong>晚餐前後通常是最穩的正式全家照窗口，若重視餐廳合照，記得替這段多留 5–10 分鐘。",
+                            "<strong>建議：</strong>這晚拍全家正式照片",
+                            "<strong>晚間節奏：</strong>先依 App 場次安排主秀，倒推散場、步行與換裝緩衝，不自行指定演出時間。",
+                            "<strong>到場：</strong>暫抓 20:10 抵達餐廳；餐期若調整，改按最終時間提前 5 分鐘，核對 App 桌號與當日調整。"
                         ]
                     },
                     {
                         id: "search-schedule-day1-2-2",
                         bindingKey: "day1:2:2",
                         planKind: "flexible",
-                        time: "21:05–21:40",
+                        time: "晚餐後／有空且仍營業才去",
                         title: "Concierge Lounge (Deck 17) 宵夜收尾",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
                             "結束完美的第一天",
-                            "這段剛好可接上 Lounge 20:30–22:00 的 Dessert Treats。"
+                            "晚餐後若仍在 Lounge 20:30–22:00 甜點供應內且有空才去；不用為甜點提早離席。"
                         ]
                     }
                 ]
@@ -192,7 +192,7 @@
         dateTitle: "🦸 Day 2｜海上日（Marvel 主題＋滑水道＋舊京山街區）",
         goals: [
             "1/26 先嘗試 Ironcycle、符合資格的滑水道；禮賓甲板用餐或休息，保留重要主秀",
-            "皇家見面會依 App 確認時段插入；今天完成 1/28 再入境的 SGAC，最遲明天複核"
+            "皇家見面會已確認 Day 3 08:30；今天完成 1/28 再入境的 SGAC，最遲明天複核"
         ],
         periods: [
             {
@@ -302,7 +302,7 @@
                         tagClass: "tag-kids",
                         desc: [
                             "Edge 限 11–14 歲，小寶 11 歲符合；澤澤 9 歲、彤妹 8 歲不能當作一般參加者。",
-                            "想三人一起就改 Big Hero Arcade 或 D Lounge 家庭活動；Royal Gathering 若確認在此時段，優先調整這個彈性空檔。"
+                            "想三人一起就改 Big Hero Arcade 或 D Lounge 家庭活動；本次 Royal Gathering 已確認 Day 3 08:30，不在此重複預留。"
                         ]
                     },
                     {
@@ -337,21 +337,6 @@
                 name: "晚間",
                 events: [
                     {
-                        id: "search-schedule-day2-4-0",
-                        bindingKey: "day2:4:0",
-                        planKind: "fixed",
-                        time: "第一時段／依分配",
-                        title: "第一時段晚餐：依當日餐廳與桌號",
-                        tag: "美食餐飲",
-                        tagClass: "tag-dining",
-                        desc: [
-                            "保留角色晚宴與動畫互動餐廳體驗，不要求三晚同時排 Hollywood 與 Navigator’s。",
-                            "<strong>拍照註記：</strong>若這晚想補正式餐廳照，最好在進場或甜點前留一個短空檔，不要把拍照擠到衝秀的最後幾分鐘。",
-                            "<strong>First Seating 提醒：</strong>若晚餐互動或餐廳秀拉長，別吃到最後一刻，否則還是會壓縮後面劇院排隊時間。",
-                            "<strong>到場：</strong>依 App 分配的餐廳與桌號，提前 5 分鐘抵達。"
-                        ]
-                    },
-                    {
                         id: "search-schedule-day2-4-1",
                         bindingKey: "day2:4:1",
                         planKind: "fixed",
@@ -365,16 +350,31 @@
                         ]
                     },
                     {
+                        id: "search-schedule-day2-4-0",
+                        bindingKey: "day2:4:0",
+                        planKind: "fixed",
+                        time: "20:15",
+                        title: "晚餐：Enchanted Summer Restaurant 魔法盛夏餐廳（Deck 6）",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
+                        desc: [
+                            "晚餐通知確認 20:15，可能調整 15 分鐘，請依最終時間提前 5 分鐘到場。使用者已確認：Option 6 第二晚 Enchanted Summer Restaurant；七人同桌需求與實際桌號仍於 App 核對。",
+                            "<strong>拍照註記：</strong>若這晚想補正式餐廳照，最好在進場或甜點前留一個短空檔，不要把拍照擠到其他已確認活動的最後幾分鐘。",
+                            "<strong>晚間節奏：</strong>先依 App 場次看秀，再接 20:15 晚餐；預留散場與步行時間。",
+                            "<strong>到場：</strong>暫抓 20:10 抵達餐廳；餐期若調整，改按最終時間提前 5 分鐘，核對 App 桌號與當日調整。"
+                        ]
+                    },
+                    {
                         id: "search-schedule-day2-4-2",
                         bindingKey: "day2:4:2",
                         planKind: "flexible",
-                        time: "21:20–21:50",
+                        time: "晚餐後／有空且仍營業才去",
                         title: "Concierge Lounge 收尾",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
                         desc: [
                             "結束充實的第二天",
-                            "這段剛好可接上 Lounge 20:30–22:00 的 Dessert Treats。"
+                            "晚餐後若仍在 Lounge 20:30–22:00 甜點供應內且有空才去；不用為甜點提早離席。"
                         ]
                     }
                 ]
@@ -384,37 +384,64 @@
     {
         id: "day3",
         tabTitle: "Day 3 海上",
-        dateTitle: "💦 Day 3｜海上日（三童玩水＋Big Hero＋家庭備案＋提早收行李）",
+        dateTitle: "💦 Day 3｜海上日（公主合照 → 早餐 → 換裝／Moana 候選＋提早收行李）",
         goals: [
-            "1/27 三童共同玩水，Big Hero 遊戲與禮賓角色／D Lounge 擇一；保留補玩空間",
+            "1/27 08:30 公主見面會已由使用者確認；拍照後早餐、回房換泳裝，再依場次銜接 Moana",
             "晚餐與主秀前停止長隊；下午先收行李、複核七人 1/28 SGAC，不把煙火固定在今晚"
         ],
         periods: [
             {
-                name: "早上｜早餐",
+                name: "早上｜公主見面會 → 早餐",
                 events: [
+                    {
+                        id: "search-schedule-day3-royal-gathering",
+                        bindingKey: "day3:royal-gathering",
+                        planKind: "fixed",
+                        time: "08:30",
+                        title: "公主見面會／Royal Gathering（使用者已確認）",
+                        tag: "角色合照",
+                        tagClass: "tag-highlight",
+                        desc: [
+                            "使用者已確認第三天早上安排；最新通知確認 Royal Gathering 為 1/27 08:30；報到時間與活動長度另查預約，不把一小時視為固定活動長度。",
+                            "查預約上的報到地點、時間及實際參加名單，帶房卡、預約證明、簽名本與筆。拍照可能等待，早餐與 Moana 不緊接硬時刻。"
+                        ]
+                    },
                     {
                         id: "search-schedule-day3-0-0",
                         bindingKey: "day3:0:0",
                         planKind: "flexible",
-                        time: "07:00–08:00",
+                        time: "公主合照後",
                         title: "早餐時間",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "到正式早餐餐廳吃主食"
+                            "公主合照後再吃正式早餐；依結束時間核對餐廳供應，若已收餐改當時開放的補給點。",
+                            "吃完回房換泳裝，預留換裝與走到 Deck 10 船尾 Wayfinder Bay 的時間，再依當日場次看 Moana。"
                         ]
                     }
                 ]
             },
             {
-                name: "上午｜水域集中",
+                name: "早餐後｜換裝／Moana 候選；玩水與 Spa 彈性備案",
                 events: [
+                    {
+                        id: "search-schedule-day3-moana",
+                        bindingKey: "day3:moana",
+                        planKind: "confirm",
+                        time: "早餐、換裝後／依實際場次",
+                        title: "回房換泳裝 → Moana: Call of the Sea（候選）",
+                        tag: "精彩看秀",
+                        tagClass: "tag-show",
+                        desc: [
+                            "前往 Wayfinder Bay（Deck 10 船尾）；先查 Navigator 場次、入場與現場規定，不把泳裝準備當成可在演出中下水的保證。",
+                            "Moana 尚未確認時段，不保證上午演出。若無法接在公主合照、早餐及換裝後，改玩水；有合適場次再看，不壓縮已確認的公主活動。"
+                        ]
+                    },
                     {
                         id: "search-schedule-day3-1-0",
                         bindingKey: "day3:1:0",
                         planKind: "flexible",
-                        time: "08:00–10:00",
+                        time: "Moana 後或無合適場次時",
                         title: "Toy Story Pool / Splash Pad (Deck 17)",
                         tag: "玩水活動",
                         tagClass: "tag-water",
@@ -427,7 +454,7 @@
                         id: "search-schedule-day3-1-1",
                         bindingKey: "day3:1:1",
                         planKind: "flexible",
-                        time: "10:00–11:00",
+                        time: "有照顧人力與空檔才安排",
                         title: "Opulence Spa & Fitness Center (Deck 18)",
                         tag: "禮賓專屬",
                         tagClass: "tag-concierge",
@@ -445,7 +472,7 @@
                         id: "search-schedule-day3-2-0",
                         bindingKey: "day3:2:0",
                         planKind: "flexible",
-                        time: "11:00–12:00",
+                        time: "依早餐、演出結束與食慾彈性安排",
                         title: "午餐：Pixar Market (Deck 17)",
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
@@ -469,7 +496,7 @@
                         desc: [
                             "<strong>三童一起：</strong>Big Hero Arcade 輪流遊戲，或依 Navigator 參加 D Lounge 舞蹈／家庭活動。",
                             "<strong>禮賓備案：</strong>依 Lounge 當天時刻表見角色；D Lounge 旅客曾遇米奇不代表每場都有。",
-                            "<strong>皇家見面會：</strong>只依已確認時段插入任何一天，不固定 Day 3 下午；預約仍可能等待，後面不緊接不能遲到的主秀。"
+                            "<strong>上午已安排公主合照：</strong>下午以休息、遊戲與提早收行李為主，不重複預留皇家見面會。"
                         ]
                     },
                     {
@@ -518,20 +545,6 @@
                 name: "晚間｜保留晚餐與主秀＋可選礁區散步",
                 events: [
                     {
-                        id: "search-schedule-day3-4-0",
-                        bindingKey: "day3:4:0",
-                        planKind: "fixed",
-                        time: "第一時段／依分配",
-                        title: "第一時段晚餐：完成三晚輪替體驗",
-                        tag: "美食餐飲",
-                        tagClass: "tag-dining",
-                        desc: [
-                            "最後一晚的輪替餐廳美食",
-                            "<strong>拍照註記：</strong>最後一晚若還想補正式全家照，這是最穩的收尾窗口，晚餐前先拍會比散場後更從容。",
-                            "<strong>到場：</strong>依 App 分配的餐廳與桌號，提前 5 分鐘抵達。"
-                        ]
-                    },
-                    {
                         id: "search-schedule-day3-4-1",
                         bindingKey: "day3:4:1",
                         planKind: "confirm",
@@ -541,6 +554,20 @@
                         tagClass: "tag-show",
                         desc: [
                             "優先當天分配主秀；有空檔再查花園 Deck 10 的 Avengers Assemble!，或劇院 Deck 6–7 的 Duffy and The Friend Ship。演出不保證另有角色合照。"
+                        ]
+                    },
+                    {
+                        id: "search-schedule-day3-4-0",
+                        bindingKey: "day3:4:0",
+                        planKind: "fixed",
+                        time: "20:15",
+                        title: "晚餐：Hollywood Spotlight Club 好萊塢聚光燈俱樂部（Deck 8）",
+                        tag: "美食餐飲",
+                        tagClass: "tag-dining",
+                        desc: [
+                            "晚餐通知確認 20:15，可能調整 15 分鐘，請依最終時間提前 5 分鐘到場。使用者已確認：Option 6 第三晚 Hollywood Spotlight Club 角色晚宴；先依 App 安排主秀，保留散場與步行緩衝。",
+                            "<strong>拍照註記：</strong>最後一晚若還想補正式全家照，這是最穩的收尾窗口，晚餐前先拍會比散場後更從容。",
+                            "<strong>到場：</strong>暫抓 20:10 抵達餐廳；餐期若調整，改按最終時間提前 5 分鐘，核對七人同桌需求、App 桌號與當日調整。"
                         ]
                     },
                     {
@@ -627,7 +654,7 @@ const checklistData = [
         category: "預約與購買",
         items: [
             { id: "royal-meet-130d", text: "130 天前向禮賓提出 Royal Gathering 需求，回 App 核對七人名單與確認時段，不只看回信" },
-            { id: "dinner-table", text: "請禮賓協調七人同桌、第一時段、角色晚宴與動畫互動體驗、較好視線；以實際輪替為準" },
+            { id: "dinner-table", text: "請禮賓協調七人同桌、20:15（可能調整 15 分鐘）、Option 6（Table → Enchanted Summer → Hollywood，使用者已確認）；核對 App 桌號與當日調整" },
             { id: "photo-package", text: "付完全額後，先決定要不要預購拍照套裝；若要買，記得在出發前 3 天前完成調整" },
             { id: "wifi-buy", text: "先連 DCL-GUEST 免費文字訊息／Navigator；額外流量用 App 或 dclwifi.com，禮賓 24 小時權益另核對再啟用" },
             { id: "kids-club-booking", text: "一次全家 Open House；正式 Oceaneer 限 3–10 歲且可自行如廁，碼頭至 14:00 或船上登記，手環押金 US$25" },
@@ -766,7 +793,7 @@ const deckGuideData = [
                 "icon": "fa-solid fa-circle-info",
                 "summary": "Deck 6 船尾角色晚宴，與 Hollywood Spotlight Club 使用同組菜單；登船日提供一般旅客單點午餐。",
                 "bestTime": "晚餐提前 5 分鐘到，依 App 分配；登船午餐場地可能調整。",
-                "tripUse": "七人同桌、第一時段與角色晚宴需求交由禮賓協調，不預設三晚會同時排到兩間。",
+                "tripUse": "七人同桌需求交由禮賓協調；本次 Option 6 角色晚宴在 Hollywood，Navigator’s 保留作一般設施參考。",
                 "highlight": false,
                 "sourceNote": "附件更新（2026/9/8 整理）；原文未標示航次日期，當日供應與場地以 Navigator 確認。"
             }
@@ -1200,7 +1227,7 @@ const showGuideData = [
         id: "stage-musicals",
         title: "華特迪士尼劇院主秀",
         icon: "fa-solid fa-masks-theater",
-        intro: "最值得提早卡位的大秀都集中在劇院，通常會依晚餐時段自動分流，不一定會出現在可預約清單裡；就算已經預排到時段，晚餐節奏一拉長，還是可能壓縮排隊搶位時間。",
+        intro: "最值得提早卡位的大秀都集中在劇院，通常會依晚餐時段自動分流，不一定會出現在可預約清單裡；就算已經預排到時段，仍須核對入場安排；本次以先看適合場次、再接 20:15 晚餐規劃，預留散場與步行時間。",
         shows: [
             {
                 id: "search-show-stage-musicals-0",
@@ -1274,16 +1301,16 @@ const showGuideData = [
         id: "open-air-night",
         title: "戶外海景音樂劇 / 煙火",
         icon: "fa-solid fa-fire",
-        intro: "這一類表演最吃天氣、風勢與現場節奏，建議把它們當成海上日的晚間高潮來安排，而不是最後一刻才決定去哪裡看。",
+        intro: "戶外演出受天氣、風勢與當日場次影響；Moana 不限定日夜，煙火另依航次公告，先核對時間再安排動線。",
         shows: [
             {
                 id: "search-show-open-air-night-0",
                 bindingKey: "open-air-night:0",
                 name: "《Moana: Call of the Sea》",
-                theme: "把莫阿娜的航海故事搬進夜間露天海景環境裡，氛圍會比室內劇場更開闊。",
+                theme: "把莫阿娜的航海故事搬進露天海景舞台，氛圍比室內劇場更開闊，不預設演出只在夜間。",
                 location: "Wayfinder Bay（Deck 10 船尾戶外舞台）",
-                timingTip: "夜間戶外風較強，提早到場並順手準備薄外套。",
-                tripLink: "若 Day 2 晚上想走海景演出路線，這場最值得鎖定。",
+                timingTip: "依 Navigator 核對場次並預留步行與入場緩衝；日間注意防曬、風大時準備薄外套。",
+                tripLink: "本次希望接在 Day 3 公主合照、早餐與回房換泳裝後；尚無確認場次，無法銜接就改玩水，不保證上午演出。",
                 sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
             },
             {
@@ -1670,7 +1697,7 @@ const playbookGuideData = [
                 whenToUse: "每天核對晚餐與 App 主秀分配時，再確認當晚禮賓通知。",
                 action: "先核對 App 分配場次，再依當晚禮賓通知到指定集合點，帶金色房卡與 App 預訂證明。Walt Disney Theatre 位於 Deck 6–7（英文原圖標 Deck 6）；不再沿用 Deck 5 集合點。",
                 tripFit: "把集合點、時間與證明文件固定成 SOP，最能避免孩子累了時還要臨場找資料。",
-                caution: "使用者提供的舊航次通知為演前 40 分鐘集合、30 分鐘截止，不是本航次保證。若 19:00 演出就需 18:20 集合，會與 17:45 晚餐衝突，先請禮賓協調。設好停止排隊時間，不用壓縮晚餐換入場。",
+                caution: "使用者提供的舊航次通知為演前 40 分鐘集合、30 分鐘截止，不是本航次保證。本次晚餐 20:15（可能調整 15 分鐘），依最終餐期提前 5 分鐘到場，倒推演出結束、步行與集合緩衝；若衝突請禮賓協調。設好停止排隊時間，不用壓縮晚餐換入場。",
                 relatedSectionId: "entertainment",
                 sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
             }
@@ -1793,7 +1820,7 @@ const playbookGuideData = [
                 icon: "fa-solid fa-list-check",
                 sourceType: "community",
                 whenToUse: "9 月禮賓預約窗口前後，以及登船當天。",
-                action: "先核對兩房付款資格，再提交 Royal Gathering 與餐飲需求；逐項回 App 確認七人名單、日期時間與狀態。晚餐願望寫七人同桌、第一時段、角色晚宴與動畫體驗、較好視線，不指定三晚一定同時排 Hollywood 與 Navigator’s。",
+                action: "先核對兩房付款資格，再提交 Royal Gathering 與餐飲需求；逐項回 App 確認七人名單、日期時間與狀態。晚餐願望寫七人同桌、20:15（可能調整 15 分鐘）、Option 6：Day 1 Animator’s Table → Day 2 Enchanted Summer → Day 3 Hollywood Spotlight Club（使用者已確認）；Royal Gathering 已確認 1/27 08:30，仍核對 App 報到資料與名單。",
                 tripFit: "使用者提供「りーママ」6/24 發文、7 月補充摘要：135 天收到通知、130 天寄需求、123 天 App 看見結果。這只是預約流程經驗，不是入住後評價，也不是本航次保證。",
                 caution: "原文待補核。另有使用者整理的 Reddit 首批四晚禮賓家庭肯定 Lounge 與早餐，但午餐慢、角色延誤仍發生；《換日線》凱倫 5/28（5/4–7 三晚搭乘）推薦輪替晚餐、Remember 與夜間礁區。只採作保留晚餐和增加緩衝的參考。",
                 relatedSectionId: "timeline"

@@ -32,7 +32,7 @@ try {
     page.on('request', request => requests.push(request.url()));
     await page.addInitScript(() => {window.__SEARCH_TEST_HOOKS__ = {};});
     await page.goto(base, {waitUntil:'domcontentloaded'});
-    await page.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 36);
+    await page.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
     assert.deepEqual(errors, []);
     assert(!requests.some(url => url.includes('menu-lookup-data.js')));
     assert.equal(await page.locator('.lookup-result-card').count(), 0);
@@ -186,7 +186,7 @@ try {
     const local = await browser.newContext({serviceWorkers:'block'});
     const filePage = await local.newPage();
     await filePage.goto(pathToFileURL(path.join(root,'index.html')).href, {waitUntil:'domcontentloaded'});
-    await filePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 36);
+    await filePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
     await filePage.locator('.nav-links [data-view-link="prepare"]').click();
     assert(await filePage.locator('#prepare').isVisible(), 'file URL hash navigation');
     await filePage.locator('.nav-links a[href="#menu-search"]').click();
@@ -218,7 +218,7 @@ try {
     });
     await offline.setOffline(true);
     await offlinePage.goto(base, {waitUntil:'domcontentloaded'});
-    await offlinePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 36);
+    await offlinePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
     await offlinePage.locator('.nav-links a[href="#menu-search"]').click();
     await offlinePage.waitForSelector('.lookup-result-card');
     assert.equal(await offlinePage.evaluate(() => window.MENU_LOOKUP_DATA.records.length),550);

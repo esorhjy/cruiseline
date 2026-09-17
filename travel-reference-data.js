@@ -30,7 +30,7 @@ window.TRAVEL_REFERENCE_DATA = {
       "id": "search-static-timeline-0",
       "sectionId": "timeline",
       "title": "出發前 130 天 (禮賓特權)",
-      "bodyHtml": "<p>先核對兩房付款資格，再請禮賓協助 Royal Gathering（皇家見面會）；回信後仍須回 App 驗收七人名單、狀態與時段。</p>\n                    <p>\n                        <strong>客製需求：</strong>七人同桌、第一時段，保留角色晚宴與動畫互動體驗，爭取較好視線。Hollywood 與 Navigator’s 為同類分流，不預設三晚一定排到兩間。\n                    </p>"
+      "bodyHtml": "<p>先核對兩房付款資格，再請禮賓協助 Royal Gathering（皇家見面會）；回信後仍須回 App 驗收七人名單、狀態與時段。</p>\n                    <p>\n                        <strong>客製需求：</strong>七人同桌；晚餐通知確認 20:15（可能調整 15 分鐘）。Option 6：Day 1 Animator’s Table（Deck 9）→ Day 2 Enchanted Summer（Deck 6）→ Day 3 Hollywood Spotlight Club（Deck 8），使用者已確認。Royal Gathering 通知確認 1/27 08:30，拍照後早餐、換泳裝，Moana 仍依場次銜接；報到地點、名單與餐桌號於 App 核對。\n                    </p>"
     },
     {
       "id": "search-static-timeline-1",
