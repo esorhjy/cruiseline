@@ -354,6 +354,16 @@ assert(hasAnyTitle(lastBreakfastTitles, [/\u65e9\u9910\uff0b\u6700\u5f8c\u78ba\u
 
 assert.equal(titlesFor(hooks, 'zzzznotfound').length, 0, 'unknown queries should not fall back to unrelated generic cards');
 
+for (const [query, pattern] of [
+    ['Animator’s Table', /晚餐：Animator’s Table/],
+    ['Enchanted Summer', /晚餐：Enchanted Summer/],
+    ['Day 3 Hollywood Spotlight Club 晚餐', /晚餐：Hollywood Spotlight Club/],
+    ['Royal Gathering', /公主見面會／Royal Gathering/],
+    ['Moana', /回房換泳裝 → Moana/]
+]) {
+    assert(hasAnyTitle(titlesFor(hooks, query), [pattern]), `confirmed itinerary or candidate should remain searchable: ${query}`);
+}
+
 assert(hasAnyTitle(titlesFor(hooks, 'D Lounge'), [/D Lounge 家庭活動/]), 'D Lounge should find the family fallback guide');
 assert(hasAnyTitle(titlesFor(hooks, '吸菸區'), [/吸菸區與無菸座位/]), 'smoking query should surface the scoped safety guide');
 assert(hasAnyTitle(titlesFor(hooks, 'Sunnyside Pool'), [/Toy Story Pool/]), 'Sunnyside should find the shared water eligibility card');
