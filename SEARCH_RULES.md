@@ -1,5 +1,10 @@
 # 搜尋規則
 
+## 2026/9/25 逐層補強
+- 醫務／洗衣歸既有「服務」；新實體與設施主卡綁定，Cosmic Kebabs 沿用既有實體。taxonomy、中英對照與 Crew 自動讀 registry，不另建同義詞來源。
+- 新增 `tests/deck-guide-update.eval.mjs`：醫務中心／Health Center、洗衣／Laundry、Deck 16、Cosmic Kebabs、Hollywood 怎麼走、劇院上下層入口、畫作資料夾須能找到主卡。
+- 原 129 個 ID 全保留，新增三卡至 132；主卡位置／設備與 Playbook 操作技巧分工，不把影片全文搬進搜尋。
+
 ## 附件內容查詢回歸
 - 2026/9/8 內容以 `docs/CONTENT_UPDATE_2026-09-08.md` 為準；地點更正必須同步 registry、binding 與主卡，不改穩定 ID。
 - `provided-document` 顯示附件來源，不用「官方查核」標籤取代；來源註記放在詳情，不擠壓結果第一屏。
