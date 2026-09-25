@@ -45,9 +45,34 @@
     });
 
     window.SEARCH_ENTITY_REGISTRY = {
-        version: '2026-09-08-boarding-info-v1',
+        version: '2026-09-25-deck-guide-v1',
         lastVerifiedDate: VERIFIED_DATE,
         entities: [
+            entity({
+                entityId: 'health-center',
+                officialNameEn: 'Health Center',
+                displayNameZh: '醫務中心',
+                entityType: 'service',
+                categoryFamilies: ['服務'],
+                capabilityTags: ['service'],
+                aliases: ['醫療中心', '醫務室', '看醫生', 'medical center', 'health centre'],
+                deckHints: ['Deck 9', '9 樓'],
+                area: 'Forward 船頭',
+                lastVerifiedDate: '2026-09-25',
+                sourceUrls: ['https://disneycruise.disney.go.com/en-eu/guest-services/health-center/']
+            }),
+            entity({
+                entityId: 'self-service-laundry',
+                officialNameEn: 'Self-Service Laundry',
+                displayNameZh: '自助洗衣房',
+                entityType: 'service',
+                categoryFamilies: ['服務'],
+                capabilityTags: ['service'],
+                aliases: ['洗衣', '烘衣', '熨燙', '洗衣房', 'Laundry', 'launderette'],
+                deckHints: ['Deck 16', '16 樓', '十六樓'],
+                lastVerifiedDate: '2026-09-25',
+                sourceUrls: ['https://disneycruise.disney.go.com/en-ca/guest-services/laundry-services/']
+            }),
             entity({
                 "entityId": "animators-table",
                 "officialNameEn": "Animator’s Table",
@@ -416,7 +441,7 @@
             entity({
                 entityId: 'baymax-cinemas',
                 officialNameEn: 'Baymax Cinemas',
-                displayNameZh: 'Baymax 雙影廳',
+                displayNameZh: 'Baymax 四影廳電影院',
                 entityType: 'venue',
                 categoryFamilies: ['場館', '表演'],
                 capabilityTags: ['watch-show', 'rest'],
@@ -424,7 +449,8 @@
                 deckHints: ['Deck 7'],
                 area: 'San Fransokyo Street',
                 relatedEntityIds: ['big-hero-arcade', 'baymax-super-exercise-expo'],
-                sourceUrls: [SOURCES.entertainment, SOURCES.themedAreas]
+                sourceUrls: [SOURCES.entertainment, SOURCES.themedAreas, 'https://disneycruise.disney.go.com/en-id/onboard-activities/baymax-cinema/'],
+                lastVerifiedDate: '2026-09-25'
             }),
             entity({
                 entityId: 'alley-cat-cafe',
@@ -1307,10 +1333,13 @@
         ],
         bindings: {
             deckFacilities: {
+                'deck9:health-center': primary(['health-center']),
+                'deck16:laundry': primary(['self-service-laundry']),
+                'deck10:cosmic-kebabs': primary(['cosmic-kebabs']),
                 'deck6:navigators-club': primary(['navigators-club']),
-                'deck9:animators-table': primary(['animators-table']),
+                'deck9:animators-table': primary(['animators-table'], { keywordHints: ['畫作', '畫作資料夾', '硬式資料夾', '留念畫作'] }),
                 'deck8:nursery': primary(['its-a-small-world-nursery']),
-                'deck5:0': primary(['walt-disney-theatre'], { keywordHints: ['劇院', '主秀', 'theatre'] }),
+                'deck5:0': primary(['walt-disney-theatre'], { keywordHints: ['劇院', '主秀', 'theatre', '上下層入口', '劇院入口', 'Deck 6', 'Deck 7'] }),
                 'deck5:1': primary(['animators-palate']),
                 'deck5:2': primary(['tianas-bayou-lounge']),
                 'deck5:3': primary(['world-of-disney', 'world-of-disney-too']),
@@ -1328,7 +1357,7 @@
                 'deck8:0': primary(['disney-oceaneer-club']),
                 'deck8:1': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環', '取孩', 'kids club'] }),
                 'deck8:2': primary(['royal-society-for-friendship-and-tea', 'disney-oceaneer-club']),
-                'deck8:3': primary(['hollywood-spotlight-club', 'thor-mjolnir-photo-spot']),
+                'deck8:3': primary(['hollywood-spotlight-club', 'thor-mjolnir-photo-spot'], { keywordHints: ['Hollywood 怎麼走', '船尾電梯', '餐廳動線'] }),
                 'deck9:0': primary(['pics-photo-observatory', 'frozen-photo-spot', 'star-wars-lightsaber-photo', 'rapunzel-lantern-photo', 'lifestyle-portraits'], {
                     keywordHints: ['Deck 9', 'Pics Photo Observatory', 'Frozen photo', 'Star Wars Lightsaber', 'Rapunzel Lantern', 'Lifestyle Portraits', '光劍', '天燈', '冰雪奇緣拍照']
                 }),
@@ -1442,6 +1471,7 @@
                 'concierge-plus:5': support(['concierge-lounge'], { keywordHints: ['wifi', 'internet', '24 hours'] }),
                 'concierge-plus:6': primary(['walt-disney-theatre', 'concierge-lounge']),
                 'stateroom-family:0': primary(['disney-oceaneer-club'], { keywordHints: ['RFID', '手環'] }),
+                'stateroom-family:4': support(['self-service-laundry'], { keywordHints: ['洗衣時間', '取衣', '空機'] }),
                 'last-night:1': primary([], {
                     keywordHints: ['最後一天早餐', '下船日早餐', '撤船日早餐', 'Self-Assist', 'SGAC']
                 })

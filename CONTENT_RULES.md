@@ -5,7 +5,7 @@
 - 新來源標為 `provided-document`；整理日期不是來源發表日期，不將附件冒稱本輪官網查核。
 - 不回退 Palo 10 歲門檻、dclwifi.com、Oceaneer US$25 可退押金、劇院 Deck 6–7／Duffy 位置及一般房／禮賓不同外放期限。
 - 550 筆菜單保留，修正放在 `tools/menu-document-corrections.mjs`，產生器重跑也須套用；飲品 category 優先於 kids／dessert tag。
-- 既有卡片以原 ID 更新；2026/9/17 新增皇家見面會與 Moana 候選行程後共有 129 張主卡，原清單 ID 與使用者勾選狀態不改。
+- 既有卡片以原 ID 更新；2026/9/25 新增醫務中心、Cosmic Kebabs、Deck 16 洗衣後共 132 張主卡，原 129 個 ID 全保留。原清單鍵與勾選不改，畫作資料夾用新鍵 `artwork-folder`。對照見 `docs/CONTENT_UPDATE_2026-09-25.md`。
 
 ## 目標
 - 內容的第一責任是讓純關鍵字搜尋容易命中、容易排序、容易理解。

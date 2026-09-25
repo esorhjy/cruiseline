@@ -7,6 +7,7 @@
 
 ## 目前架構
 - 最新家庭行程確認見 `docs/CONTENT_UPDATE_2026-09-17.md`：三晚 Option 6、20:15 晚餐（可能調整 15 分鐘），1/27 08:30 Royal Gathering；Moana 仍為場次待確認候選。既有內容與清單 ID 保留。
+- 2026/9/25 逐層補強見 `docs/CONTENT_UPDATE_2026-09-25.md`：Deck 16 與三張設施卡加入後 132 主卡，行程仍 38 事件；服務沿用既有分類，不新增大型版面或外部依賴。
 - 靜態前端頁面：
   - `index.html`
   - `style.css`

@@ -13,11 +13,11 @@ const all = [...events, ...data.deckGuideData.flatMap(deck => deck.facilities),
 const byId = id => all.find(item => item.id === id);
 const text = id => JSON.stringify(byId(id));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-const newIds = ["search-deck-deck6-navigators-club","search-deck-deck9-animators-table","search-deck-deck8-nursery","search-show-mickey-color-spin","search-playbook-dining-pairs","search-playbook-drink-offers","search-playbook-rainforest-day-pass"];
-assert.equal(all.length, 129);
+const newIds = ["search-deck-deck9-health-center","search-deck-deck16-laundry","search-deck-deck10-cosmic-kebabs","search-deck-deck6-navigators-club","search-deck-deck9-animators-table","search-deck-deck8-nursery","search-show-mickey-color-spin","search-playbook-dining-pairs","search-playbook-drink-offers","search-playbook-rainforest-day-pass"];
+assert.equal(all.length, 132);
 assert.equal(hash(all.filter(item => !newIds.includes(item.id) && !["search-schedule-day3-royal-gathering", "search-schedule-day3-moana"].includes(item.id)).map(item => item.id).sort()),
   '3a69ada48fcecd1a92976a7d50af17b18ca317dad368057fc3b99b95748081dc', 'all 120 previous card IDs retained');
-assert.equal(hash(data.checklistData.flatMap(group => group.items).map(item => item.id).sort()),
+assert.equal(hash(data.checklistData.flatMap(group => group.items).filter(item => item.id !== "artwork-folder").map(item => item.id).sort()),
   '224f7d81c0b98da91980399bd239c19d46deacb5c7c1b3e906267ee6138dd191', 'existing checklist storage keys retained');
 assert.match(text('search-playbook-embark-sprint-1'), /13:30.*18:00/);
 assert.match(text('search-schedule-day1-1-3'), /每人刷卡/);
