@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { createHash } from 'node:crypto';
 import { loadSearchHooks } from './search-keyword.smoke.mjs';
 import { applyDocumentCorrections } from '../tools/menu-document-corrections.mjs';
+import { applyHandbookMenus } from '../tools/handbook-menu-supplements.mjs';
 
 const data = vm.runInNewContext(fs.readFileSync('data.js', 'utf8')
   + ';({cruiseSchedule,deckGuideData,showGuideData,playbookGuideData,checklistData})');
@@ -39,11 +40,11 @@ assert(data.showGuideData.find(group => group.id === 'stage-musicals').shows.som
 const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync('menu-lookup-data.js','utf8'), sandbox);
 const menu = JSON.parse(JSON.stringify(sandbox.window.MENU_LOOKUP_DATA));
-assert.equal(menu.records.length, 550);
+assert.equal(menu.records.filter(item => !item.supplementSourceId).length, 550);
 assert.equal(menu.sourceCount, 550);
-assert.equal(hash(menu.records.map(item => [item.id, item.sourceRecordIndex, item.englishName, item.price])),
+assert.equal(hash(menu.records.filter(item => !item.supplementSourceId).map(item => [item.id, item.sourceRecordIndex, item.englishName, item.price])),
   '2cd031d6e961407138ab86d9f7d56f3d5d0a26f38cf6b4b23cbf9bc9dab642f3', 'menu identities, order and snapshot prices retained');
-assert.equal(hash(applyDocumentCorrections(menu)), hash(menu), 'corrections are repeatable without accumulating text');
+assert.equal(hash(applyHandbookMenus(applyDocumentCorrections(menu))), hash(menu), 'document correction pipeline is repeatable without accumulating text');
 for (const english of ["Dead Man's Chest", 'Teatime Tini', "Bruno's Fizz", 'Beignet Shake']) {
   const item = menu.records.find(record => record.englishName === english);
   assert(item.descriptionZh.length > 0);

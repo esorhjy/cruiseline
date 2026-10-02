@@ -825,7 +825,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!missionsContainer || !contentContainer || typeof playbookGuideData === 'undefined') return;
 
         const sourceMeta = {
-            'provided-document': { label: '附件更新 · 9/8 整理', icon: 'fa-solid fa-file-lines' },
+            'provided-document': { label: '附件整理 · 依卡片來源', icon: 'fa-solid fa-file-lines' },
             official: { label: '規則與適用條件', icon: 'fa-solid fa-circle-info' },
             concierge: { label: '禮賓安排 · 依通知', icon: 'fa-solid fa-crown' },
             community: { label: '旅客經驗 · 非保證', icon: 'fa-solid fa-comments' }
@@ -2786,6 +2786,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const courseGroup = compactSearchText(config.courseGroup);
         const courseGroupLabel = compactSearchText(config.courseGroupLabel);
         const descriptionZh = compactSearchText(config.descriptionZh);
+        const audience = compactSearchText(config.audience);
+        const participation = compactSearchText(config.participation);
+        const participationNote = compactSearchText(config.participationNote);
+        const feeNote = compactSearchText(config.feeNote);
+        const mealPeriod = compactSearchText(config.mealPeriod);
+        const sourceRefs = sanitizeSearchTextArray(config.sourceRefs, 12, 240);
         const restaurantOrder = Number.isFinite(config.restaurantOrder) ? config.restaurantOrder : 999;
         const sourceRecordIndex = Number.isFinite(config.sourceRecordIndex) ? config.sourceRecordIndex : 0;
         const price = compactSearchText(config.price);
@@ -2808,6 +2814,7 @@ document.addEventListener('DOMContentLoaded', function () {
             courseGroupLabel,
             descriptionZh,
             price,
+            audience, participationNote, feeNote, mealPeriod,
             crewPhrase,
             config.searchText,
             getLookupCategoryLabel(category),
@@ -2837,6 +2844,7 @@ document.addEventListener('DOMContentLoaded', function () {
             courseGroupLabel,
             descriptionZh,
             restaurantOrder,
+            audience, participation, participationNote, feeNote, mealPeriod, sourceRefs,
             sourceRecordIndex,
             price,
             tags,
@@ -2894,6 +2902,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     englishName: record.englishName,
                     venueEnglish: record.venueEnglish,
                     deckHint: record.deckHint,
+                    audience: record.audience,
+                    participation: record.participation,
+                    participationNote: record.participationNote,
+                    feeNote: record.feeNote,
+                    descriptionZh: record.descriptionZh,
+                    sourceRefs: record.sourceRefs,
                     aliases: [
                         ...(Array.isArray(record.aliases) ? record.aliases : []),
                         record.sourceDayLabel,
@@ -2932,6 +2946,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 courseGroup: record.courseGroup,
                 courseGroupLabel: record.courseGroupLabel,
                 descriptionZh: record.descriptionZh,
+                mealPeriod: record.mealPeriod,
+                sourceRefs: record.sourceRefs,
                 restaurantOrder: record.restaurantOrder,
                 sourceRecordIndex: record.sourceRecordIndex,
                 price: record.price,
@@ -3010,6 +3026,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (score === 0) return 0;
+        if (record.sourceType === 'entity' && record.category === 'dining' && ['餐廳', 'restaurant', 'restaurants'].includes(normalizedQuery)) score += 180;
         if (record.sourceType === 'entity') score += 12;
         if (record.sourceType === 'menu-item') score += 10;
         if (selectedCategory && selectedCategory !== 'all') score += 10;
@@ -3021,7 +3038,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function mergeLookupResults(scoredResults = []) {
         const merged = new Map();
         scoredResults.forEach(result => {
-            const key = (result.sourceType === 'menu-item' ? 'menu:' : '') + (normalizeSearchText(result.englishName) || result.id);
+            // Same title is not the same activity when venue, age or admission differs.
+            const variantKey = result.sourceType === 'onboard-activity'
+                ? [result.venueEnglish, result.audience, result.participation, result.feeNote].map(normalizeSearchText).join('|')
+                : '';
+            const key = `${result.sourceType}:${normalizeSearchText(result.englishName) || result.id}|${variantKey}`;
             const existing = merged.get(key);
             if (!existing) {
                 merged.set(key, {
@@ -3036,6 +3057,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             existing.score = Math.max(existing.score, result.score);
             existing.occurrenceCount += 1;
+            existing.sourceRefs = uniqueItems([...(existing.sourceRefs || []), ...(result.sourceRefs || [])]);
             if (result.sourceType === 'menu-item') existing.menuVariants.push(result);
             existing.sampleVenues = uniqueItems([
                 ...(existing.sampleVenues || []),
@@ -3935,6 +3957,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const sourceNote = record.sourceType === 'onboard-activity' && (record.sourceDayLabel || record.sourceTimeHint)
             ? `<p class="lookup-crew-source"><span class="lookup-inline-label">Source note / 來源索引</span>${escapeHtml(uniqueItems([record.sourceDayLabel, record.sourceTimeHint].filter(Boolean)).join(' · '))}，不作為本航程正式時刻。</p>`
             : '';
+        const eligibility = [record.audience, record.participationNote, record.feeNote].filter(Boolean).join(' · ');
         return `
             <section class="lookup-crew-card" aria-live="polite">
                 <button type="button" class="lookup-crew-close" data-lookup-crew-close aria-label="關閉 Crew 顯示卡">
@@ -3944,8 +3967,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 <h3>${escapeHtml(record.englishName)}</h3>
                 <p class="lookup-crew-zh"><span class="lookup-inline-label">Chinese check / 中文確認</span>${escapeHtml(record.zhLabel)}</p>
                 ${location ? `<p class="lookup-crew-location"><i class="fa-solid fa-location-dot"></i><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
+                ${eligibility ? `<p class="lookup-crew-source"><span class="lookup-inline-label">Eligibility / 參與條件</span>${escapeHtml(eligibility)}</p>` : ''}
+                ${record.mealPeriod ? `<p class="lookup-crew-source"><span class="lookup-inline-label">Meal / 餐段</span>${escapeHtml(record.mealPeriod)}</p>` : ''}
+                ${record.descriptionZh ? `<p class="lookup-crew-source">${escapeHtml(record.descriptionZh)}</p>` : ''}
                 <p class="lookup-crew-phrase"><span class="lookup-inline-label">${escapeHtml(phraseLabel)}</span>${escapeHtml(record.crewPhrase)}</p>
                 ${sourceNote}
+                ${(record.sourceRefs || []).length ? `<p class="lookup-crew-source">${escapeHtml(record.sourceRefs.join('；'))}</p>` : ''}
                 <div class="lookup-crew-actions">
                     <button type="button" data-copy-text="${escapeHtml(record.englishName)}">
                         <i class="fa-regular fa-copy"></i> 複製英文名稱
@@ -4011,7 +4038,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h3>${escapeHtml(result.zhLabel)}</h3>
                         <p class="lookup-result-en">${escapeHtml(result.englishName)}</p>
                         ${location ? `<p class="lookup-result-location"><span class="lookup-inline-label">Location / 地點</span>${escapeHtml(location)}</p>` : ''}
-                        ${result.sourceType === 'menu-item' ? `<details class="menu-lookup-description" data-menu-description-id="${escapeHtml(result.id)}"><summary>餐點說明${result.menuVariants?.length > 1 ? '與各餐廳版本' : ''}</summary>${(result.menuVariants || [result]).map(variant => `<div class="menu-variant"><strong>${escapeHtml(variant.restaurantLabel)} · ${escapeHtml(variant.courseGroupLabel)}${variant.price ? ' · ' + escapeHtml(variant.price) : ''}</strong><p>${escapeHtml(variant.descriptionZh || '來源未提供其他描述。')}</p></div>`).join('')}</details>` : ''}
+                        ${result.audience || result.participationNote || result.feeNote ? `<p class="lookup-result-location"><span class="lookup-inline-label">參與條件</span>${escapeHtml([result.audience, result.participationNote, result.feeNote].filter(Boolean).join(' · '))}</p>` : ''}
+                        ${result.sourceType === 'onboard-activity' && (result.descriptionZh || result.sourceRefs?.length) ? `<details class="menu-lookup-description" data-menu-description-id="${escapeHtml(result.id)}"><summary>活動提醒與來源</summary><p>${escapeHtml(result.descriptionZh || '依 Navigator 當次說明。')}</p><p>${escapeHtml((result.sourceRefs || []).join('；'))}</p></details>` : ''}
+                        ${result.sourceType === 'menu-item' ? `<details class="menu-lookup-description" data-menu-description-id="${escapeHtml(result.id)}"><summary>餐點說明${result.menuVariants?.length > 1 ? '與各餐廳版本' : ''}</summary>${(result.menuVariants || [result]).map(variant => `<div class="menu-variant"><strong>${escapeHtml(variant.restaurantLabel)} · ${escapeHtml(variant.courseGroupLabel)}${variant.mealPeriod ? ' · ' + escapeHtml(variant.mealPeriod) : ''}${variant.price ? ' · ' + escapeHtml(variant.price) : ''}</strong><p>${escapeHtml(variant.descriptionZh || '來源未提供其他描述。')}</p>${variant.sourceRefs?.length ? `<p>${escapeHtml(variant.sourceRefs.join('；'))}</p>` : ''}</div>`).join('')}</details>` : ''}
                         <div class="lookup-result-chips">
                             ${chipLabels.map(label => `<span class="${label.startsWith('合併') ? 'lookup-count' : ''}">${escapeHtml(label)}</span>`).join('')}
                         </div>

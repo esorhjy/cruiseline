@@ -1,11 +1,11 @@
 window.MENU_LOOKUP_DATA = {
-  "version": "2026-05-25-menu-restaurant-v2",
+  "version": "2026-10-02-handbook-v1",
   "sourcePageUrl": "https://sachiko620702.github.io/disney/#menu",
   "sourceUrl": "https://sachiko620702.github.io/disney/data/menuData.js",
   "sourceDataUrl": "https://sachiko620702.github.io/disney/data/menuData.js",
   "generatedAt": "2026-05-25",
   "sourceCount": 550,
-  "recordsCount": 550,
+  "recordsCount": 734,
   "restaurantGroups": [
     {
       "id": "rotational",
@@ -22,6 +22,18 @@ window.MENU_LOOKUP_DATA = {
     {
       "id": "beverage",
       "label": "酒吧飲品"
+    },
+    {
+      "id": "quick",
+      "label": "快餐"
+    },
+    {
+      "id": "room",
+      "label": "客房送餐"
+    },
+    {
+      "id": "concierge",
+      "label": "禮賓餐飲"
     }
   ],
   "courseGroups": [
@@ -53,30 +65,30 @@ window.MENU_LOOKUP_DATA = {
   "restaurants": [
     {
       "id": "nav",
-      "label": "航海家 / 好萊塢",
-      "englishName": "Navigator / Hollywood",
+      "label": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "englishName": "Navigator’s Club / Hollywood Spotlight Club",
       "group": "rotational",
       "groupLabel": "主餐廳",
       "order": 1,
-      "count": 31
+      "count": 53
     },
     {
       "id": "pixar",
-      "label": "仲夏 / 皮克斯",
-      "englishName": "Enchanted Summer / Pixar Market",
+      "label": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "englishName": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "group": "rotational",
       "groupLabel": "主餐廳",
       "order": 2,
-      "count": 31
+      "count": 32
     },
     {
       "id": "animator",
-      "label": "動畫家調色盤",
+      "label": "動畫師調色盤／動畫師餐桌",
       "englishName": "Animator’s Palate / Animator’s Table",
       "group": "rotational",
       "groupLabel": "主餐廳",
       "order": 3,
-      "count": 33
+      "count": 35
     },
     {
       "id": "night4",
@@ -257,18 +269,117 @@ window.MENU_LOOKUP_DATA = {
       "groupLabel": "酒吧飲品",
       "order": 23,
       "count": 7
+    },
+    {
+      "id": "main-breakfast",
+      "label": "主餐廳早餐（當日開放餐廳）",
+      "englishName": "Main Restaurant Breakfast",
+      "group": "rotational",
+      "groupLabel": "主餐廳",
+      "order": 101,
+      "count": 27
+    },
+    {
+      "id": "stitch-grill",
+      "label": "史迪奇歐哈納燒烤",
+      "englishName": "Stitch’s ’Ohana Grill",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 102,
+      "count": 8
+    },
+    {
+      "id": "mowgli",
+      "label": "毛克利餐館",
+      "englishName": "Mowgli’s Eatery",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 103,
+      "count": 12
+    },
+    {
+      "id": "gramma-tala",
+      "label": "塔拉奶奶廚房",
+      "englishName": "Gramma Tala’s Kitchen",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 104,
+      "count": 14
+    },
+    {
+      "id": "wheezy-soft-serve",
+      "label": "Wheezy’s Freezies 霜淇淋",
+      "englishName": "Wheezy’s Freezies",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 105,
+      "count": 1
+    },
+    {
+      "id": "pizza-planet",
+      "label": "披薩星球",
+      "englishName": "Pizza Planet",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 106,
+      "count": 5
+    },
+    {
+      "id": "cosmic-kebabs",
+      "label": "宇宙烤肉",
+      "englishName": "Cosmic Kebabs",
+      "group": "quick",
+      "groupLabel": "快餐",
+      "order": 107,
+      "count": 12
+    },
+    {
+      "id": "room-service",
+      "label": "客房送餐 Room Service",
+      "englishName": "Room Service",
+      "group": "room",
+      "groupLabel": "客房送餐",
+      "order": 108,
+      "count": 24
+    },
+    {
+      "id": "concierge-welcome",
+      "label": "禮賓歡迎午餐（地點依通知）",
+      "englishName": "Concierge Welcome Lunch",
+      "group": "concierge",
+      "groupLabel": "禮賓餐飲",
+      "order": 110,
+      "count": 21
+    },
+    {
+      "id": "concierge-food",
+      "label": "禮賓酒廊餐點",
+      "englishName": "Concierge Lounge",
+      "group": "concierge",
+      "groupLabel": "禮賓餐飲",
+      "order": 111,
+      "count": 28
+    },
+    {
+      "id": "concierge-sundeck-food",
+      "label": "禮賓日光甲板餐點",
+      "englishName": "Concierge Sundeck",
+      "group": "concierge",
+      "groupLabel": "禮賓餐飲",
+      "order": 115,
+      "count": 7
     }
   ],
   "records": [
     {
       "id": "menu-nav-bread-mini-herb-brioche-soft-white-whole-wheat-rolls-1",
       "sourceType": "menu-item",
-      "zhLabel": "魔法烘焙綜合麵包",
+      "zhLabel": "香草布里歐、白麵包與全麥餐包",
       "englishName": "Mini Herb Brioche · Soft White · Whole Wheat Rolls",
       "descriptionZh": "",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -286,21 +397,28 @@ window.MENU_LOOKUP_DATA = {
         "麵包",
         "前菜",
         "bread",
-        "appetizer"
+        "appetizer",
+        "魔法烘焙綜合麵包",
+        "香草布里歐、白麵包與全麥餐包",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 mini herb brioche soft white whole wheat rolls nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 bread 麵包 appetizer 前菜",
-      "sourceRecordIndex": 0
+      "searchText": "香草布里歐 白麵包與全麥餐包 mini herb brioche soft white whole wheat rolls 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 麵包 前菜 bread appetizer 魔法烘焙綜合麵包 香草布里歐 白麵包與全麥餐包 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club",
+      "sourceRecordIndex": 0,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-saut-ed-maitake-mushrooms-2",
       "sourceType": "menu-item",
-      "zhLabel": "森林精靈的香煎舞菇",
+      "zhLabel": "清炒舞菇",
       "englishName": "Sautéed Maitake Mushrooms",
       "descriptionZh": "佐芝麻朝鮮薊泥、皇宮菜（落葵）、鮮菇高湯與柑橘油醋",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -323,21 +441,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "森林精靈的香煎舞菇",
+        "清炒舞菇",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "森林精靈的香煎舞菇 sautéed maitake mushrooms 佐芝麻朝鮮薊泥 皇宮菜 落葵 鮮菇高湯與柑橘油醋 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 1
+      "searchText": "清炒舞菇 sautéed maitake mushrooms 佐芝麻朝鮮薊泥 皇宮菜 落葵 鮮菇高湯與柑橘油醋 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer vegetarian 素食 森林精靈的香煎舞菇 清炒舞菇 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 素食",
+      "sourceRecordIndex": 1,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-fennel-bartlett-pear-tatsoi-salad-3",
       "sourceType": "menu-item",
-      "zhLabel": "仙女谷的清脆西洋梨沙拉",
+      "zhLabel": "茴香西洋梨塔菜沙拉",
       "englishName": "Fennel, Bartlett Pear, Tatsoi Salad",
       "descriptionZh": "新鮮茴香、塔菇菜、曼徹格乾酪、蜜蠟核桃與陳年雪莉酒醋",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -360,21 +485,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "仙女谷的清脆西洋梨沙拉",
+        "茴香西洋梨塔菜沙拉",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "仙女谷的清脆西洋梨沙拉 fennel bartlett pear tatsoi salad 新鮮茴香 塔菇菜 曼徹格乾酪 蜜蠟核桃與陳年雪莉酒醋 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 2
+      "searchText": "茴香西洋梨塔菜沙拉 fennel bartlett pear tatsoi salad 新鮮茴香 塔菇菜 曼徹格乾酪 蜜蠟核桃與陳年雪莉酒醋 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer vegetarian 素食 仙女谷的清脆西洋梨沙拉 茴香西洋梨塔菜沙拉 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 素食",
+      "sourceRecordIndex": 2,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-porcini-spiced-ahi-tuna-sashimi-4",
       "sourceType": "menu-item",
-      "zhLabel": "航海家的寶藏黃鰭鮪魚刺身",
+      "zhLabel": "牛肝菌香料黃鰭鮪魚生魚片",
       "englishName": "Porcini-spiced Ahi Tuna Sashimi",
       "descriptionZh": "牛肝菌風味鮪魚、醃漬蓮藕、蠔菇、黑芝麻脆片佐芥末柚子美乃滋",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -397,21 +529,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "航海家的寶藏黃鰭鮪魚刺身",
+        "牛肝菌香料黃鰭鮪魚生魚片",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "航海家的寶藏黃鰭鮪魚刺身 porcini spiced ahi tuna sashimi 牛肝菌風味鮪魚 醃漬蓮藕 蠔菇 黑芝麻脆片佐芥末柚子美乃滋 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
-      "sourceRecordIndex": 3
+      "searchText": "牛肝菌香料黃鰭鮪魚生魚片 porcini spiced ahi tuna sashimi 牛肝菌風味鮪魚 醃漬蓮藕 蠔菇 黑芝麻脆片佐芥末柚子美乃滋 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer seafood 海鮮 航海家的寶藏黃鰭鮪魚刺身 牛肝菌香料黃鰭鮪魚生魚片 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮",
+      "sourceRecordIndex": 3,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-duck-confit-pastilla-5",
       "sourceType": "menu-item",
-      "zhLabel": "皇室御用油封鴨肉派",
+      "zhLabel": "法式油封鴨肉派",
       "englishName": "Duck Confit Pastilla",
       "descriptionZh": "融合椰棗、杏桃、生薑、紅甜椒、番紅花與黑覆盆子果醬",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -434,21 +573,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "meat",
-        "肉類"
+        "肉類",
+        "皇室御用油封鴨肉派",
+        "法式油封鴨肉派",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "皇室御用油封鴨肉派 duck confit pastilla 融合椰棗 杏桃 生薑 紅甜椒 番紅花與黑覆盆子果醬 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
-      "sourceRecordIndex": 4
+      "searchText": "法式油封鴨肉派 duck confit pastilla 融合椰棗 杏桃 生薑 紅甜椒 番紅花與黑覆盆子果醬 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer meat 肉類 皇室御用油封鴨肉派 法式油封鴨肉派 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 肉類",
+      "sourceRecordIndex": 4,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-thai-shrimp-pumpkin-soup-6",
       "sourceType": "menu-item",
-      "zhLabel": "奇幻國度泰式鮮蝦南瓜濃湯",
+      "zhLabel": "泰式鮮蝦南瓜湯",
       "englishName": "Thai Shrimp Pumpkin Soup",
       "descriptionZh": "搭配溫潤椰奶、香菜與清新香茅",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -471,21 +617,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "奇幻國度泰式鮮蝦南瓜濃湯",
+        "泰式鮮蝦南瓜湯",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇幻國度泰式鮮蝦南瓜濃湯 thai shrimp pumpkin soup 搭配溫潤椰奶 香菜與清新香茅 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
-      "sourceRecordIndex": 5
+      "searchText": "泰式鮮蝦南瓜湯 thai shrimp pumpkin soup 搭配溫潤椰奶 香菜與清新香茅 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer seafood 海鮮 奇幻國度泰式鮮蝦南瓜濃湯 泰式鮮蝦南瓜湯 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮",
+      "sourceRecordIndex": 5,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-appetizers-roasted-roma-tomato-soup-7",
       "sourceType": "menu-item",
-      "zhLabel": "魔法花園爐烤番茄濃湯",
+      "zhLabel": "爐烤羅馬番茄湯",
       "englishName": "Roasted Roma Tomato Soup",
       "descriptionZh": "爐烤羅馬番茄濃湯佐酸種紫羅勒麵包脆片",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -508,21 +661,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "魔法花園爐烤番茄濃湯",
+        "爐烤羅馬番茄湯",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法花園爐烤番茄濃湯 roasted roma tomato soup 爐烤羅馬番茄濃湯佐酸種紫羅勒麵包脆片 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 6
+      "searchText": "爐烤羅馬番茄湯 roasted roma tomato soup 爐烤羅馬番茄濃湯佐酸種紫羅勒麵包脆片 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 航海家 好萊塢 navigator hollywood 主餐廳 前菜 appetizers appetizer vegetarian 素食 魔法花園爐烤番茄濃湯 爐烤羅馬番茄湯 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 素食",
+      "sourceRecordIndex": 6,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-thai-boat-noodles-8",
       "sourceType": "menu-item",
-      "zhLabel": "探險家泰式水上船麵",
+      "zhLabel": "泰式船麵",
       "englishName": "Thai Boat Noodles",
       "descriptionZh": "米線、鮮蝦、嫩雞肉、羅望子紅辣椒醬、醃紅蔥頭、雞蛋、烤花生與新鮮萊姆",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -545,21 +705,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood-meat",
-        "海鮮與肉類"
+        "海鮮與肉類",
+        "探險家泰式水上船麵",
+        "泰式船麵",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "探險家泰式水上船麵 thai boat noodles 米線 鮮蝦 嫩雞肉 羅望子紅辣椒醬 醃紅蔥頭 雞蛋 烤花生與新鮮萊姆 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree seafood meat 海鮮與肉類",
-      "sourceRecordIndex": 7
+      "searchText": "泰式船麵 thai boat noodles 米線 鮮蝦 嫩雞肉 羅望子紅辣椒醬 醃紅蔥頭 雞蛋 烤花生與新鮮萊姆 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree seafood meat 海鮮與肉類 探險家泰式水上船麵 泰式船麵 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮與肉類",
+      "sourceRecordIndex": 7,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-roasted-butternut-squash-risotto-9",
       "sourceType": "menu-item",
-      "zhLabel": "秋日童話奶油南瓜燉飯",
+      "zhLabel": "烤奶油南瓜燉飯",
       "englishName": "Roasted Butternut Squash Risotto",
       "descriptionZh": "爐烤南瓜、鼠尾草、迷你韭蔥、新鮮菠菜與烤榛果",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -582,21 +749,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegetarian",
-        "素食"
+        "素食",
+        "秋日童話奶油南瓜燉飯",
+        "烤奶油南瓜燉飯",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "秋日童話奶油南瓜燉飯 roasted butternut squash risotto 爐烤南瓜 鼠尾草 迷你韭蔥 新鮮菠菜與烤榛果 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
-      "sourceRecordIndex": 8
+      "searchText": "烤奶油南瓜燉飯 roasted butternut squash risotto 爐烤南瓜 鼠尾草 迷你韭蔥 新鮮菠菜與烤榛果 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree vegetarian 素食 秋日童話奶油南瓜燉飯 烤奶油南瓜燉飯 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 素食",
+      "sourceRecordIndex": 8,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-chicken-tikka-masala-10",
       "sourceType": "menu-item",
-      "zhLabel": "阿格拉巴香料烤雞咖哩",
+      "zhLabel": "香料烤雞咖哩",
       "englishName": "Chicken Tikka Masala",
       "descriptionZh": "印度坦都里烤雞、孜然飯、印度小黃瓜番茄沙拉、薄荷優格醬與印度煎餅",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -619,21 +793,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "阿格拉巴香料烤雞咖哩",
+        "香料烤雞咖哩",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "阿格拉巴香料烤雞咖哩 chicken tikka masala 印度坦都里烤雞 孜然飯 印度小黃瓜番茄沙拉 薄荷優格醬與印度煎餅 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 9
+      "searchText": "香料烤雞咖哩 chicken tikka masala 印度坦都里烤雞 孜然飯 印度小黃瓜番茄沙拉 薄荷優格醬與印度煎餅 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree meat 肉類 阿格拉巴香料烤雞咖哩 香料烤雞咖哩 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 肉類",
+      "sourceRecordIndex": 9,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-miso-glazed-chilean-sea-bass-11",
       "sourceType": "menu-item",
-      "zhLabel": "龍宮秘製味噌海鱸魚",
+      "zhLabel": "味噌智利海鱸魚",
       "englishName": "Miso-glazed Chilean Sea Bass",
       "descriptionZh": "味噌釉燒智利海鱸魚、青江菜、壽司米與韓式大白菜泡菜",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -656,21 +837,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "龍宮秘製味噌海鱸魚",
+        "味噌智利海鱸魚",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "龍宮秘製味噌海鱸魚 miso glazed chilean sea bass 味噌釉燒智利海鱸魚 青江菜 壽司米與韓式大白菜泡菜 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 10
+      "searchText": "味噌智利海鱸魚 miso glazed chilean sea bass 味噌釉燒智利海鱸魚 青江菜 壽司米與韓式大白菜泡菜 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree seafood 海鮮 龍宮秘製味噌海鱸魚 味噌智利海鱸魚 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮",
+      "sourceRecordIndex": 10,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-moroccan-spiced-roasted-kabocha-12",
       "sourceType": "menu-item",
-      "zhLabel": "綠洲幻影摩洛哥香料烤南瓜",
+      "zhLabel": "摩洛哥香料烤南瓜",
       "englishName": "Moroccan-spiced Roasted Kabocha",
       "descriptionZh": "摩洛哥茄子番茄沙拉、鷹嘴豆、肉桂糙米、北非小米、香菜、口袋餅與哈里薩辣味優格",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -693,21 +881,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegan",
-        "純素"
+        "純素",
+        "綠洲幻影摩洛哥香料烤南瓜",
+        "摩洛哥香料烤南瓜",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "綠洲幻影摩洛哥香料烤南瓜 moroccan spiced roasted kabocha 摩洛哥茄子番茄沙拉 鷹嘴豆 肉桂糙米 北非小米 香菜 口袋餅與哈里薩辣味優格 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree vegan 純素",
-      "sourceRecordIndex": 11
+      "searchText": "摩洛哥香料烤南瓜 moroccan spiced roasted kabocha 摩洛哥茄子番茄沙拉 鷹嘴豆 肉桂糙米 北非小米 香菜 口袋餅與哈里薩辣味優格 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree vegan 純素 綠洲幻影摩洛哥香料烤南瓜 摩洛哥香料烤南瓜 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 純素",
+      "sourceRecordIndex": 11,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-peppered-filet-mignon-13",
       "sourceType": "menu-item",
-      "zhLabel": "好萊塢紅毯極品黑胡椒菲力",
+      "zhLabel": "黑胡椒菲力牛排",
       "englishName": "Peppered Filet Mignon",
       "descriptionZh": "黑胡椒菲力牛排、奶油長四季豆、培根、手壓馬鈴薯餅佐粉紅胡椒咖啡歐蕾醬汁",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -730,21 +925,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat-beef",
-        "牛肉"
+        "牛肉",
+        "好萊塢紅毯極品黑胡椒菲力",
+        "黑胡椒菲力牛排",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "好萊塢紅毯極品黑胡椒菲力 peppered filet mignon 黑胡椒菲力牛排 奶油長四季豆 培根 手壓馬鈴薯餅佐粉紅胡椒咖啡歐蕾醬汁 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
-      "sourceRecordIndex": 12
+      "searchText": "黑胡椒菲力牛排 peppered filet mignon 黑胡椒菲力牛排 奶油長四季豆 培根 手壓馬鈴薯餅佐粉紅胡椒咖啡歐蕾醬汁 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree meat beef 牛肉 好萊塢紅毯極品黑胡椒菲力 黑胡椒菲力牛排 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 牛肉",
+      "sourceRecordIndex": 12,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-pav-bhaji-slow-cooked-vegetable-curry-14",
       "sourceType": "menu-item",
-      "zhLabel": "魔法異國慢燉蔬菜咖哩",
+      "zhLabel": "慢燉印度蔬菜泥咖哩",
       "englishName": "Pav Bhaji Slow-cooked Vegetable Curry",
       "descriptionZh": "薑黃、生薑、孜然、香菜、檸檬燉煮蔬菜，佐孜然飯、薄荷優格醬與帕夫小麵包",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -767,21 +969,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegetarian",
-        "素食"
+        "素食",
+        "魔法異國慢燉蔬菜咖哩",
+        "慢燉印度蔬菜泥咖哩",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法異國慢燉蔬菜咖哩 pav bhaji slow cooked vegetable curry 薑黃 生薑 孜然 香菜 檸檬燉煮蔬菜 佐孜然飯 薄荷優格醬與帕夫小麵包 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
-      "sourceRecordIndex": 13
+      "searchText": "慢燉印度蔬菜泥咖哩 pav bhaji slow cooked vegetable curry 薑黃 生薑 孜然 香菜 檸檬燉煮蔬菜 佐孜然飯 薄荷優格醬與帕夫小麵包 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree vegetarian 素食 魔法異國慢燉蔬菜咖哩 慢燉印度蔬菜泥咖哩 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 素食",
+      "sourceRecordIndex": 13,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-lobster-salad-15",
       "sourceType": "menu-item",
-      "zhLabel": "小美人魚的深海龍蝦沙拉",
+      "zhLabel": "龍蝦沙拉",
       "englishName": "Lobster Salad",
       "descriptionZh": "奶油萵苣、苦苣、酪梨、豆薯、芹菜、紫馬鈴薯、酥炸青香蕉片、黑豆、小番茄、香菜與萊姆",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -804,21 +1013,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "小美人魚的深海龍蝦沙拉",
+        "龍蝦沙拉",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "小美人魚的深海龍蝦沙拉 lobster salad 奶油萵苣 苦苣 酪梨 豆薯 芹菜 紫馬鈴薯 酥炸青香蕉片 黑豆 小番茄 香菜與萊姆 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 14
+      "searchText": "龍蝦沙拉 lobster salad 奶油萵苣 苦苣 酪梨 豆薯 芹菜 紫馬鈴薯 酥炸青香蕉片 黑豆 小番茄 香菜與萊姆 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree seafood 海鮮 小美人魚的深海龍蝦沙拉 龍蝦沙拉 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮",
+      "sourceRecordIndex": 14,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-hainanese-chicken-rice-16",
       "sourceType": "menu-item",
-      "zhLabel": "神鳥秘製海南雞飯",
+      "zhLabel": "海南雞飯",
       "englishName": "Hainanese Chicken, Rice",
       "descriptionZh": "經典海南雞佐甜黑醬油、薑蒜醬與秘製辣椒醬",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -841,21 +1057,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "神鳥秘製海南雞飯",
+        "海南雞飯",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 15
+      "searchText": "海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree meat 肉類 神鳥秘製海南雞飯 海南雞飯 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 肉類",
+      "sourceRecordIndex": 15,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-entrees-banana-leaf-steamed-filet-of-salmon-17",
       "sourceType": "menu-item",
-      "zhLabel": "叢林奇航香蕉葉蒸鮭魚",
+      "zhLabel": "芭蕉葉蒸鮭魚",
       "englishName": "Banana Leaf Steamed Filet of Salmon",
       "descriptionZh": "清蒸鮭魚菲力佐白飯與青江菜",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -878,21 +1101,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "叢林奇航香蕉葉蒸鮭魚",
+        "芭蕉葉蒸鮭魚",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 16
+      "searchText": "芭蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 航海家 好萊塢 navigator hollywood 主餐廳 主餐 entrees entree seafood 海鮮 叢林奇航香蕉葉蒸鮭魚 芭蕉葉蒸鮭魚 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 海鮮",
+      "sourceRecordIndex": 16,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-desserts-chocolate-molten-cake-18",
       "sourceType": "menu-item",
-      "zhLabel": "奇幻黑森林熔岩巧克力蛋糕",
+      "zhLabel": "熔岩巧克力蛋糕",
       "englishName": "Chocolate Molten Cake",
       "descriptionZh": "雙重巧克力醬、牛奶巧克力脆土、抹茶冰淇淋",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -913,21 +1143,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "奇幻黑森林熔岩巧克力蛋糕",
+        "熔岩巧克力蛋糕",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇幻黑森林熔岩巧克力蛋糕 chocolate molten cake 雙重巧克力醬 牛奶巧克力脆土 抹茶冰淇淋 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 desserts 甜點 dessert 15 00",
-      "sourceRecordIndex": 17
+      "searchText": "熔岩巧克力蛋糕 chocolate molten cake 雙重巧克力醬 牛奶巧克力脆土 抹茶冰淇淋 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 航海家 好萊塢 navigator hollywood 主餐廳 甜點 desserts dessert 奇幻黑森林熔岩巧克力蛋糕 熔岩巧克力蛋糕 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 甜點",
+      "sourceRecordIndex": 17,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-desserts-ube-creme-brulee-19",
       "sourceType": "menu-item",
-      "zhLabel": "夢幻紫薯焦糖烤布蕾",
+      "zhLabel": "紫薯烤布蕾",
       "englishName": "Ube Creme Brulee",
       "descriptionZh": "搭配香脆椰香義大利脆餅",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -948,21 +1185,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "夢幻紫薯焦糖烤布蕾",
+        "紫薯烤布蕾",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夢幻紫薯焦糖烤布蕾 ube creme brulee 搭配香脆椰香義大利脆餅 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 18
+      "searchText": "紫薯烤布蕾 ube creme brulee 搭配香脆椰香義大利脆餅 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 航海家 好萊塢 navigator hollywood 主餐廳 甜點 desserts dessert 夢幻紫薯焦糖烤布蕾 紫薯烤布蕾 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 甜點",
+      "sourceRecordIndex": 18,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-desserts-blueberry-lemon-bavarian-cream-20",
       "sourceType": "menu-item",
-      "zhLabel": "仙女教母的藍莓檸檬巴伐利亞",
+      "zhLabel": "藍莓檸檬巴伐利亞奶凍",
       "englishName": "Blueberry-Lemon Bavarian Cream",
       "descriptionZh": "藍莓果盤、檸檬糖塊、新鮮莓果與覆盆子蛋白霜脆餅",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -983,21 +1227,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "仙女教母的藍莓檸檬巴伐利亞",
+        "藍莓檸檬巴伐利亞奶凍",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "仙女教母的藍莓檸檬巴伐利亞 blueberry lemon bavarian cream 藍莓果盤 檸檬糖塊 新鮮莓果與覆盆子蛋白霜脆餅 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 19
+      "searchText": "藍莓檸檬巴伐利亞奶凍 blueberry lemon bavarian cream 藍莓果盤 檸檬糖塊 新鮮莓果與覆盆子蛋白霜脆餅 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 航海家 好萊塢 navigator hollywood 主餐廳 甜點 desserts dessert 仙女教母的藍莓檸檬巴伐利亞 藍莓檸檬巴伐利亞奶凍 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 甜點",
+      "sourceRecordIndex": 19,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-desserts-coconut-tapioca-pudding-21",
       "sourceType": "menu-item",
-      "zhLabel": "熱帶島嶼椰香西米露",
+      "zhLabel": "椰香西米露布丁",
       "englishName": "Coconut-Tapioca Pudding",
       "descriptionZh": "搭配芒果草莓薄荷莎莎醬",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1020,21 +1271,28 @@ window.MENU_LOOKUP_DATA = {
         "desserts",
         "dessert",
         "dessert-vegan",
-        "純素甜點"
+        "純素甜點",
+        "熱帶島嶼椰香西米露",
+        "椰香西米露布丁",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熱帶島嶼椰香西米露 coconut tapioca pudding 搭配芒果草莓薄荷莎莎醬 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 desserts 甜點 dessert dessert vegan 純素甜點",
-      "sourceRecordIndex": 20
+      "searchText": "椰香西米露布丁 coconut tapioca pudding 搭配芒果草莓薄荷莎莎醬 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 航海家 好萊塢 navigator hollywood 主餐廳 甜點 desserts dessert dessert vegan 純素甜點 熱帶島嶼椰香西米露 椰香西米露布丁 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 純素甜點",
+      "sourceRecordIndex": 20,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-desserts-strawberry-shortcake-sundae-22",
       "sourceType": "menu-item",
-      "zhLabel": "米妮的最愛：草莓蛋糕聖代",
+      "zhLabel": "草莓脆餅聖代",
       "englishName": "Strawberry Shortcake Sundae",
       "descriptionZh": "香草冰淇淋、草莓果盤與輕盈鮮奶油",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1055,21 +1313,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "米妮的最愛：草莓蛋糕聖代",
+        "草莓脆餅聖代",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米妮的最愛 草莓蛋糕聖代 strawberry shortcake sundae 香草冰淇淋 草莓果盤與輕盈鮮奶油 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 21
+      "searchText": "草莓脆餅聖代 strawberry shortcake sundae 香草冰淇淋 草莓果盤與輕盈鮮奶油 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 航海家 好萊塢 navigator hollywood 主餐廳 甜點 desserts dessert 米妮的最愛 草莓蛋糕聖代 草莓脆餅聖代 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 甜點",
+      "sourceRecordIndex": 21,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-roasted-creamy-tomato-soup-23",
       "sourceType": "menu-item",
-      "zhLabel": "溫暖擁抱番茄濃湯",
+      "zhLabel": "烤番茄濃湯",
       "englishName": "Roasted Creamy Tomato Soup",
       "descriptionZh": "濃郁爐烤番茄湯搭香脆起司扭結麵包",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1092,21 +1357,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "溫暖擁抱番茄濃湯",
+        "烤番茄濃湯",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "溫暖擁抱番茄濃湯 roasted creamy tomato soup 濃郁爐烤番茄湯搭香脆起司扭結麵包 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 22
+      "searchText": "烤番茄濃湯 roasted creamy tomato soup 濃郁爐烤番茄湯搭香脆起司扭結麵包 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 溫暖擁抱番茄濃湯 烤番茄濃湯 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 22,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-sweet-corn-and-edamame-salad-24",
       "sourceType": "menu-item",
-      "zhLabel": "歡樂農場玉米毛豆沙拉",
+      "zhLabel": "甜玉米毛豆沙拉",
       "englishName": "Sweet Corn and Edamame Salad",
       "descriptionZh": "新鮮綜合生菜、菠菜、甜玉米粒、毛豆，搭配您喜愛的沙拉醬",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1129,21 +1401,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "歡樂農場玉米毛豆沙拉",
+        "甜玉米毛豆沙拉",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡樂農場玉米毛豆沙拉 sweet corn and edamame salad 新鮮綜合生菜 菠菜 甜玉米粒 毛豆 搭配您喜愛的沙拉醬 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 23
+      "searchText": "甜玉米毛豆沙拉 sweet corn and edamame salad 新鮮綜合生菜 菠菜 甜玉米粒 毛豆 搭配您喜愛的沙拉醬 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 歡樂農場玉米毛豆沙拉 甜玉米毛豆沙拉 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 23,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-chicken-pot-pie-25",
       "sourceType": "menu-item",
-      "zhLabel": "媽媽的溫馨雞肉派",
+      "zhLabel": "雞肉派",
       "englishName": "Chicken Pot Pie",
       "descriptionZh": "內含紅蘿蔔、馬鈴薯、芹菜與青豆",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1166,21 +1445,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "媽媽的溫馨雞肉派",
+        "雞肉派",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "媽媽的溫馨雞肉派 chicken pot pie 內含紅蘿蔔 馬鈴薯 芹菜與青豆 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 24
+      "searchText": "雞肉派 chicken pot pie 內含紅蘿蔔 馬鈴薯 芹菜與青豆 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 媽媽的溫馨雞肉派 雞肉派 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 24,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-panko-crusted-cod-26",
       "sourceType": "menu-item",
-      "zhLabel": "小飛俠金黃酥脆鱈魚",
+      "zhLabel": "日式麵包粉酥炸鱈魚",
       "englishName": "Panko Crusted Cod",
       "descriptionZh": "日式麵包粉烤鱈魚搭配美乃滋塔塔醬",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1203,21 +1489,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "小飛俠金黃酥脆鱈魚",
+        "日式麵包粉酥炸鱈魚",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "小飛俠金黃酥脆鱈魚 panko crusted cod 日式麵包粉烤鱈魚搭配美乃滋塔塔醬 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 25
+      "searchText": "日式麵包粉酥炸鱈魚 panko crusted cod 日式麵包粉烤鱈魚搭配美乃滋塔塔醬 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 小飛俠金黃酥脆鱈魚 日式麵包粉酥炸鱈魚 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 25,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-barbecue-chicken-pizza-27",
       "sourceType": "menu-item",
-      "zhLabel": "玩具總動員BBQ烤雞披薩",
+      "zhLabel": "燒烤雞肉披薩",
       "englishName": "Barbecue Chicken Pizza",
       "descriptionZh": "",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1240,21 +1533,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "玩具總動員BBQ烤雞披薩",
+        "燒烤雞肉披薩",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "玩具總動員bbq烤雞披薩 barbecue chicken pizza nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 26
+      "searchText": "燒烤雞肉披薩 barbecue chicken pizza 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 玩具總動員bbq烤雞披薩 燒烤雞肉披薩 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 26,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-mini-cheeseburger-28",
       "sourceType": "menu-item",
-      "zhLabel": "米奇迷你起司漢堡",
+      "zhLabel": "迷你起司漢堡",
       "englishName": "Mini Cheeseburger",
       "descriptionZh": "搭配鬆軟布里歐麵包",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1277,21 +1577,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "米奇迷你起司漢堡",
+        "迷你起司漢堡",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米奇迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 27
+      "searchText": "迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 米奇迷你起司漢堡 迷你起司漢堡 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 27,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-roasted-turkey-breast-29",
       "sourceType": "menu-item",
-      "zhLabel": "勇士爐烤火雞胸肉",
+      "zhLabel": "烤火雞胸肉",
       "englishName": "Roasted Turkey Breast",
       "descriptionZh": "搭配藜麥、地瓜、爐烤紅蘿蔔條與新鮮蘋果片",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1315,21 +1622,28 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "勇士爐烤火雞胸肉",
+        "烤火雞胸肉",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "勇士爐烤火雞胸肉 roasted turkey breast 搭配藜麥 地瓜 爐烤紅蘿蔔條與新鮮蘋果片 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 28
+      "searchText": "烤火雞胸肉 roasted turkey breast 搭配藜麥 地瓜 爐烤紅蘿蔔條與新鮮蘋果片 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 勇士爐烤火雞胸肉 烤火雞胸肉 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 迪士尼兒童餐",
+      "sourceRecordIndex": 28,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-whole-wheat-spiral-pasta-30",
       "sourceType": "menu-item",
-      "zhLabel": "旋轉木馬全麥螺旋麵",
+      "zhLabel": "全麥螺旋義大利麵",
       "englishName": "Whole Wheat Spiral Pasta",
       "descriptionZh": "搭配番茄醬汁、奶油南瓜、櫛瓜與水果沙拉",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1353,21 +1667,28 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "旋轉木馬全麥螺旋麵",
+        "全麥螺旋義大利麵",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "旋轉木馬全麥螺旋麵 whole wheat spiral pasta 搭配番茄醬汁 奶油南瓜 櫛瓜與水果沙拉 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 29
+      "searchText": "全麥螺旋義大利麵 whole wheat spiral pasta 搭配番茄醬汁 奶油南瓜 櫛瓜與水果沙拉 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 旋轉木馬全麥螺旋麵 全麥螺旋義大利麵 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 迪士尼兒童餐",
+      "sourceRecordIndex": 29,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-nav-kids-showtime-cupcake-31",
       "sourceType": "menu-item",
-      "zhLabel": "好萊塢大秀杯子蛋糕",
+      "zhLabel": "杯子蛋糕",
       "englishName": "Showtime Cupcake",
       "descriptionZh": "香草杯子蛋糕、焦糖奶油霜與糖霜爆米花",
       "restaurantId": "nav",
-      "restaurantLabel": "航海家 / 好萊塢",
-      "restaurantEnglish": "Navigator / Hollywood",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 1,
@@ -1390,21 +1711,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "好萊塢大秀杯子蛋糕",
+        "杯子蛋糕",
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "好萊塢大秀杯子蛋糕 showtime cupcake 香草杯子蛋糕 焦糖奶油霜與糖霜爆米花 nav 航海家 好萊塢 navigator hollywood rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 30
+      "searchText": "杯子蛋糕 showtime cupcake 香草杯子蛋糕 焦糖奶油霜與糖霜爆米花 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 航海家 好萊塢 navigator hollywood 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 好萊塢大秀杯子蛋糕 杯子蛋糕 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 兒童",
+      "sourceRecordIndex": 30,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-bread-matcha-marble-soft-white-whole-wheat-rolls-32",
       "sourceType": "menu-item",
-      "zhLabel": "魔法烘焙綜合麵包",
+      "zhLabel": "抹茶大理石、白麵包與全麥餐包",
       "englishName": "Matcha Marble · Soft White · Whole Wheat Rolls",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1422,21 +1750,28 @@ window.MENU_LOOKUP_DATA = {
         "麵包",
         "前菜",
         "bread",
-        "appetizer"
+        "appetizer",
+        "魔法烘焙綜合麵包",
+        "抹茶大理石、白麵包與全麥餐包",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 matcha marble soft white whole wheat rolls pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 bread 麵包 appetizer 前菜",
-      "sourceRecordIndex": 31
+      "searchText": "抹茶大理石 白麵包與全麥餐包 matcha marble soft white whole wheat rolls 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 麵包 前菜 bread appetizer 魔法烘焙綜合麵包 抹茶大理石 白麵包與全麥餐包 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant",
+      "sourceRecordIndex": 31,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-green-papaya-salad-33",
       "sourceType": "menu-item",
-      "zhLabel": "盛夏微風青木瓜沙拉",
+      "zhLabel": "青木瓜沙拉",
       "englishName": "Green Papaya Salad",
       "descriptionZh": "長豆、辣椒、小番茄，佐棕櫚糖萊姆醬",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1459,21 +1794,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "盛夏微風青木瓜沙拉",
+        "青木瓜沙拉",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "盛夏微風青木瓜沙拉 green papaya salad 長豆 辣椒 小番茄 佐棕櫚糖萊姆醬 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 32
+      "searchText": "青木瓜沙拉 green papaya salad 長豆 辣椒 小番茄 佐棕櫚糖萊姆醬 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer vegetarian 素食 盛夏微風青木瓜沙拉 青木瓜沙拉 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 32,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-summer-roll-34",
       "sourceType": "menu-item",
-      "zhLabel": "熱帶島嶼夏日生春捲",
+      "zhLabel": "夏日鮮蝦生春捲",
       "englishName": "Summer Roll",
       "descriptionZh": "鮮蝦、冬粉、香菜、黃瓜、羅勒、奶油萵苣、烤芝麻，佐特製海鮮醬",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1496,21 +1838,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "熱帶島嶼夏日生春捲",
+        "夏日鮮蝦生春捲",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熱帶島嶼夏日生春捲 summer roll 鮮蝦 冬粉 香菜 黃瓜 羅勒 奶油萵苣 烤芝麻 佐特製海鮮醬 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
-      "sourceRecordIndex": 33
+      "searchText": "夏日鮮蝦生春捲 summer roll 鮮蝦 冬粉 香菜 黃瓜 羅勒 奶油萵苣 烤芝麻 佐特製海鮮醬 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer seafood 海鮮 熱帶島嶼夏日生春捲 夏日鮮蝦生春捲 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 海鮮",
+      "sourceRecordIndex": 33,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-porcini-sacchetti-35",
       "sourceType": "menu-item",
-      "zhLabel": "小米主廚的松露牛肝菌福袋麵",
+      "zhLabel": "牛肝菌起司福袋麵",
       "englishName": "Porcini Sacchetti",
       "descriptionZh": "牛肝菌義大利餃、瑞士與芳提娜乾酪、大蒜、百里香，佐普羅賽克氣泡酒醬汁",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1533,21 +1882,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "小米主廚的松露牛肝菌福袋麵",
+        "牛肝菌起司福袋麵",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "小米主廚的松露牛肝菌福袋麵 porcini sacchetti 牛肝菌義大利餃 瑞士與芳提娜乾酪 大蒜 百里香 佐普羅賽克氣泡酒醬汁 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 34
+      "searchText": "牛肝菌起司福袋麵 porcini sacchetti 牛肝菌義大利餃 瑞士與芳提娜乾酪 大蒜 百里香 佐普羅賽克氣泡酒醬汁 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer vegetarian 素食 小米主廚的松露牛肝菌福袋麵 牛肝菌起司福袋麵 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 34,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-sliced-bresaola-36",
       "sourceType": "menu-item",
-      "zhLabel": "義大利風情風乾牛肉薄片",
+      "zhLabel": "義式風乾牛肉薄片",
       "englishName": "Sliced Bresaola",
       "descriptionZh": "搭配傳家寶番茄與花椒風味羊奶起司",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1570,21 +1926,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "meat",
-        "肉類"
+        "肉類",
+        "義大利風情風乾牛肉薄片",
+        "義式風乾牛肉薄片",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義大利風情風乾牛肉薄片 sliced bresaola 搭配傳家寶番茄與花椒風味羊奶起司 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
-      "sourceRecordIndex": 35
+      "searchText": "義式風乾牛肉薄片 sliced bresaola 搭配傳家寶番茄與花椒風味羊奶起司 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer meat 肉類 義大利風情風乾牛肉薄片 義式風乾牛肉薄片 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 肉類",
+      "sourceRecordIndex": 35,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-baby-gem-salad-37",
       "sourceType": "menu-item",
-      "zhLabel": "綠野仙蹤寶石生菜沙拉",
+      "zhLabel": "寶石生菜沙拉",
       "englishName": "Baby Gem Salad",
       "descriptionZh": "小寶石萵苣、櫻桃番茄、烤玉米、萊姆、科提加起司，佐孜然酪梨奶油醬",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1607,21 +1970,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "綠野仙蹤寶石生菜沙拉",
+        "寶石生菜沙拉",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "綠野仙蹤寶石生菜沙拉 baby gem salad 小寶石萵苣 櫻桃番茄 烤玉米 萊姆 科提加起司 佐孜然酪梨奶油醬 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 36
+      "searchText": "寶石生菜沙拉 baby gem salad 小寶石萵苣 櫻桃番茄 烤玉米 萊姆 科提加起司 佐孜然酪梨奶油醬 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer vegetarian 素食 綠野仙蹤寶石生菜沙拉 寶石生菜沙拉 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 36,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-hot-sour-soup-38",
       "sourceType": "menu-item",
-      "zhLabel": "東方神龍酸辣湯",
+      "zhLabel": "酸辣湯",
       "englishName": "Hot Sour Soup",
       "descriptionZh": "豆腐、紅蘿蔔、香菇、竹筍，點綴鎮江香醋",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1644,21 +2014,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "東方神龍酸辣湯",
+        "酸辣湯",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "東方神龍酸辣湯 hot sour soup 豆腐 紅蘿蔔 香菇 竹筍 點綴鎮江香醋 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 37
+      "searchText": "酸辣湯 hot sour soup 豆腐 紅蘿蔔 香菇 竹筍 點綴鎮江香醋 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer vegetarian 素食 東方神龍酸辣湯 酸辣湯 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 37,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-appetizers-french-onion-soup-39",
       "sourceType": "menu-item",
-      "zhLabel": "巴黎街頭法式洋蔥湯",
+      "zhLabel": "法式洋蔥湯",
       "englishName": "French Onion Soup",
       "descriptionZh": "搭配香濃格呂耶爾起司烤麵包塊",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1681,21 +2058,28 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "巴黎街頭法式洋蔥湯",
+        "法式洋蔥湯",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "巴黎街頭法式洋蔥湯 french onion soup 搭配香濃格呂耶爾起司烤麵包塊 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 38
+      "searchText": "法式洋蔥湯 french onion soup 搭配香濃格呂耶爾起司烤麵包塊 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 前菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 前菜 appetizers appetizer vegetarian 素食 巴黎街頭法式洋蔥湯 法式洋蔥湯 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 38,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-chicken-shahi-korma-40",
       "sourceType": "menu-item",
-      "zhLabel": "蘇丹御用沙希庫瑪雞肉咖哩",
+      "zhLabel": "奶油雞肉咖哩",
       "englishName": "Chicken Shahi Korma",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1718,21 +2102,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "蘇丹御用沙希庫瑪雞肉咖哩",
+        "奶油雞肉咖哩",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "蘇丹御用沙希庫瑪雞肉咖哩 chicken shahi korma pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 39
+      "searchText": "奶油雞肉咖哩 chicken shahi korma 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat 肉類 蘇丹御用沙希庫瑪雞肉咖哩 奶油雞肉咖哩 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 肉類",
+      "sourceRecordIndex": 39,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-gemelli-bolognese-41",
       "sourceType": "menu-item",
-      "zhLabel": "羅馬假期雙子星肉醬麵",
+      "zhLabel": "肉醬雙子麵",
       "englishName": "Gemelli Bolognese",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1755,21 +2146,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "羅馬假期雙子星肉醬麵",
+        "肉醬雙子麵",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "羅馬假期雙子星肉醬麵 gemelli bolognese pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 40
+      "searchText": "肉醬雙子麵 gemelli bolognese 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat 肉類 羅馬假期雙子星肉醬麵 肉醬雙子麵 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 肉類",
+      "sourceRecordIndex": 40,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-sesame-halloumi-filo-parcels-42",
       "sourceType": "menu-item",
-      "zhLabel": "魔法金絲哈魯米起司派",
+      "zhLabel": "芝麻哈魯米起司酥皮派",
       "englishName": "Sesame Halloumi Filo Parcels",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1792,21 +2190,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegetarian",
-        "素食"
+        "素食",
+        "魔法金絲哈魯米起司派",
+        "芝麻哈魯米起司酥皮派",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法金絲哈魯米起司派 sesame halloumi filo parcels pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
-      "sourceRecordIndex": 41
+      "searchText": "芝麻哈魯米起司酥皮派 sesame halloumi filo parcels 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree vegetarian 素食 魔法金絲哈魯米起司派 芝麻哈魯米起司酥皮派 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 素食",
+      "sourceRecordIndex": 41,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-seared-verlasso-salmon-fillet-43",
       "sourceType": "menu-item",
-      "zhLabel": "海底總動員嫩煎鮭魚菲力",
+      "zhLabel": "香煎 Verlasso 鮭魚排",
       "englishName": "Seared Verlasso Salmon Fillet",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1829,21 +2234,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "海底總動員嫩煎鮭魚菲力",
+        "香煎 Verlasso 鮭魚排",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海底總動員嫩煎鮭魚菲力 seared verlasso salmon fillet pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 42
+      "searchText": "香煎 verlasso 鮭魚排 seared verlasso salmon fillet 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree seafood 海鮮 海底總動員嫩煎鮭魚菲力 香煎 verlasso 鮭魚排 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 海鮮",
+      "sourceRecordIndex": 42,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-roasted-prime-rib-of-beef-44",
       "sourceType": "menu-item",
-      "zhLabel": "超人特攻隊爐烤肋眼牛排",
+      "zhLabel": "爐烤頂級牛肋排",
       "englishName": "Roasted Prime Rib of Beef",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1866,21 +2278,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat-beef",
-        "牛肉"
+        "牛肉",
+        "超人特攻隊爐烤肋眼牛排",
+        "爐烤頂級牛肋排",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "超人特攻隊爐烤肋眼牛排 roasted prime rib of beef pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
-      "sourceRecordIndex": 43
+      "searchText": "爐烤頂級牛肋排 roasted prime rib of beef 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat beef 牛肉 超人特攻隊爐烤肋眼牛排 爐烤頂級牛肋排 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 牛肉",
+      "sourceRecordIndex": 43,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-baingan-bharta-45",
       "sourceType": "menu-item",
-      "zhLabel": "茉莉公主的泥爐烤茄子泥",
+      "zhLabel": "印度香料烤茄泥",
       "englishName": "Baingan Bharta",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1903,21 +2322,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegan",
-        "純素"
+        "純素",
+        "茉莉公主的泥爐烤茄子泥",
+        "印度香料烤茄泥",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "茉莉公主的泥爐烤茄子泥 baingan bharta pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree vegan 純素",
-      "sourceRecordIndex": 44
+      "searchText": "印度香料烤茄泥 baingan bharta 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree vegan 純素 茉莉公主的泥爐烤茄子泥 印度香料烤茄泥 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 純素",
+      "sourceRecordIndex": 44,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-mango-chicken-salad-46",
       "sourceType": "menu-item",
-      "zhLabel": "探險家熱帶芒果雞肉沙拉",
+      "zhLabel": "芒果雞肉沙拉",
       "englishName": "Mango-Chicken Salad",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1940,21 +2366,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "探險家熱帶芒果雞肉沙拉",
+        "芒果雞肉沙拉",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "探險家熱帶芒果雞肉沙拉 mango chicken salad pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 45
+      "searchText": "芒果雞肉沙拉 mango chicken salad 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat 肉類 探險家熱帶芒果雞肉沙拉 芒果雞肉沙拉 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 肉類",
+      "sourceRecordIndex": 45,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-hainanese-chicken-rice-47",
       "sourceType": "menu-item",
-      "zhLabel": "神鳥秘製海南雞飯",
+      "zhLabel": "海南雞飯",
       "englishName": "Hainanese Chicken Rice",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -1977,21 +2410,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "神鳥秘製海南雞飯",
+        "海南雞飯",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 46
+      "searchText": "海南雞飯 hainanese chicken rice 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat 肉類 神鳥秘製海南雞飯 海南雞飯 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 肉類",
+      "sourceRecordIndex": 46,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-banana-leaf-steamed-fillet-of-salmon-48",
       "sourceType": "menu-item",
-      "zhLabel": "叢林奇航香蕉葉蒸鮭魚",
+      "zhLabel": "芭蕉葉蒸鮭魚",
       "englishName": "Banana Leaf Steamed Fillet of Salmon",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2014,21 +2454,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "叢林奇航香蕉葉蒸鮭魚",
+        "芭蕉葉蒸鮭魚",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed fillet of salmon pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 47
+      "searchText": "芭蕉葉蒸鮭魚 banana leaf steamed fillet of salmon 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree seafood 海鮮 叢林奇航香蕉葉蒸鮭魚 芭蕉葉蒸鮭魚 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 海鮮",
+      "sourceRecordIndex": 47,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-entrees-grilled-grain-fed-sirloin-steak-49",
       "sourceType": "menu-item",
-      "zhLabel": "胡迪警長的炭烤穀飼沙朗牛排",
+      "zhLabel": "炭烤穀飼沙朗牛排",
       "englishName": "Grilled Grain-fed Sirloin Steak",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2051,21 +2498,28 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat-beef",
-        "牛肉"
+        "牛肉",
+        "胡迪警長的炭烤穀飼沙朗牛排",
+        "炭烤穀飼沙朗牛排",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "胡迪警長的炭烤穀飼沙朗牛排 grilled grain fed sirloin steak pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
-      "sourceRecordIndex": 48
+      "searchText": "炭烤穀飼沙朗牛排 grilled grain fed sirloin steak 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 主餐 仲夏 皮克斯 enchanted summer pixar market 主餐廳 主餐 entrees entree meat beef 牛肉 胡迪警長的炭烤穀飼沙朗牛排 炭烤穀飼沙朗牛排 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 牛肉",
+      "sourceRecordIndex": 48,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-desserts-white-chocolate-bread-pudding-50",
       "sourceType": "menu-item",
-      "zhLabel": "夢幻白巧克力麵包布丁",
+      "zhLabel": "白巧克力麵包布丁",
       "englishName": "White Chocolate Bread Pudding",
       "descriptionZh": "奶油糖醬、杏仁佛羅倫汀脆餅、香草冰淇淋",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2086,21 +2540,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "夢幻白巧克力麵包布丁",
+        "白巧克力麵包布丁",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夢幻白巧克力麵包布丁 white chocolate bread pudding 奶油糖醬 杏仁佛羅倫汀脆餅 香草冰淇淋 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 49
+      "searchText": "白巧克力麵包布丁 white chocolate bread pudding 奶油糖醬 杏仁佛羅倫汀脆餅 香草冰淇淋 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 仲夏 皮克斯 enchanted summer pixar market 主餐廳 甜點 desserts dessert 夢幻白巧克力麵包布丁 白巧克力麵包布丁 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 甜點",
+      "sourceRecordIndex": 49,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-desserts-orange-almond-cake-51",
       "sourceType": "menu-item",
-      "zhLabel": "陽光柑橘杏仁蛋糕",
+      "zhLabel": "香橙杏仁蛋糕",
       "englishName": "Orange Almond Cake",
       "descriptionZh": "搭配芭樂果膠與荔枝優格奶霜",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2121,21 +2582,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "陽光柑橘杏仁蛋糕",
+        "香橙杏仁蛋糕",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "陽光柑橘杏仁蛋糕 orange almond cake 搭配芭樂果膠與荔枝優格奶霜 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 50
+      "searchText": "香橙杏仁蛋糕 orange almond cake 搭配芭樂果膠與荔枝優格奶霜 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 仲夏 皮克斯 enchanted summer pixar market 主餐廳 甜點 desserts dessert 陽光柑橘杏仁蛋糕 香橙杏仁蛋糕 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 甜點",
+      "sourceRecordIndex": 50,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-desserts-lemon-thai-basil-tart-52",
       "sourceType": "menu-item",
-      "zhLabel": "夏日微風檸檬泰式羅勒塔",
+      "zhLabel": "檸檬泰式羅勒塔",
       "englishName": "Lemon Thai Basil Tart",
       "descriptionZh": "檸檬凝乳、泰式羅勒鮮奶油甘納許與覆盆子醬",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2156,21 +2624,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "夏日微風檸檬泰式羅勒塔",
+        "檸檬泰式羅勒塔",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夏日微風檸檬泰式羅勒塔 lemon thai basil tart 檸檬凝乳 泰式羅勒鮮奶油甘納許與覆盆子醬 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 51
+      "searchText": "檸檬泰式羅勒塔 lemon thai basil tart 檸檬凝乳 泰式羅勒鮮奶油甘納許與覆盆子醬 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 仲夏 皮克斯 enchanted summer pixar market 主餐廳 甜點 desserts dessert 夏日微風檸檬泰式羅勒塔 檸檬泰式羅勒塔 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 甜點",
+      "sourceRecordIndex": 51,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-desserts-coconut-rice-pudding-53",
       "sourceType": "menu-item",
-      "zhLabel": "海洋奇緣椰香米布丁",
+      "zhLabel": "椰香米布丁",
       "englishName": "Coconut Rice Pudding",
       "descriptionZh": "",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2193,21 +2668,28 @@ window.MENU_LOOKUP_DATA = {
         "desserts",
         "dessert",
         "no-sugar",
-        "無糖"
+        "無糖",
+        "海洋奇緣椰香米布丁",
+        "椰香米布丁",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海洋奇緣椰香米布丁 coconut rice pudding pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
-      "sourceRecordIndex": 52
+      "searchText": "椰香米布丁 coconut rice pudding 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 仲夏 皮克斯 enchanted summer pixar market 主餐廳 甜點 desserts dessert no sugar 無糖 海洋奇緣椰香米布丁 椰香米布丁 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 無糖",
+      "sourceRecordIndex": 52,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-desserts-chocolate-fudge-sundae-54",
       "sourceType": "menu-item",
-      "zhLabel": "卡爾爺爺的歡樂巧克力聖代",
+      "zhLabel": "巧克力聖代",
       "englishName": "Chocolate Fudge Sundae",
       "descriptionZh": "香草冰淇淋、胡桃布朗尼碎塊、濃郁巧克力醬與新鮮鮮奶油",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2228,21 +2710,28 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "卡爾爺爺的歡樂巧克力聖代",
+        "巧克力聖代",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "卡爾爺爺的歡樂巧克力聖代 chocolate fudge sundae 香草冰淇淋 胡桃布朗尼碎塊 濃郁巧克力醬與新鮮鮮奶油 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 53
+      "searchText": "巧克力聖代 chocolate fudge sundae 香草冰淇淋 胡桃布朗尼碎塊 濃郁巧克力醬與新鮮鮮奶油 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 仲夏 皮克斯 enchanted summer pixar market 主餐廳 甜點 desserts dessert 卡爾爺爺的歡樂巧克力聖代 巧克力聖代 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 甜點",
+      "sourceRecordIndex": 53,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-sweet-carrot-soup-55",
       "sourceType": "menu-item",
-      "zhLabel": "哈茱蒂的香甜胡蘿蔔湯",
+      "zhLabel": "甜胡蘿蔔濃湯",
       "englishName": "Sweet Carrot Soup",
       "descriptionZh": "搭配香酥奶油烤麵包塊",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2265,21 +2754,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "哈茱蒂的香甜胡蘿蔔湯",
+        "甜胡蘿蔔濃湯",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "哈茱蒂的香甜胡蘿蔔湯 sweet carrot soup 搭配香酥奶油烤麵包塊 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 54
+      "searchText": "甜胡蘿蔔濃湯 sweet carrot soup 搭配香酥奶油烤麵包塊 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 哈茱蒂的香甜胡蘿蔔湯 甜胡蘿蔔濃湯 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 54,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-garden-salad-56",
       "sourceType": "menu-item",
-      "zhLabel": "蟲蟲危機田園沙拉",
+      "zhLabel": "田園沙拉",
       "englishName": "Garden Salad",
       "descriptionZh": "新鮮綜合生菜、胡蘿蔔絲、黃瓜片",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2302,21 +2798,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "蟲蟲危機田園沙拉",
+        "田園沙拉",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "蟲蟲危機田園沙拉 garden salad 新鮮綜合生菜 胡蘿蔔絲 黃瓜片 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 55
+      "searchText": "田園沙拉 garden salad 新鮮綜合生菜 胡蘿蔔絲 黃瓜片 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 蟲蟲危機田園沙拉 田園沙拉 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 55,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-surf-and-turf-57",
       "sourceType": "menu-item",
-      "zhLabel": "海陸大進擊",
+      "zhLabel": "海陸主餐",
       "englishName": "Surf and Turf",
       "descriptionZh": "沙朗牛排與炭烤鮮蝦",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2339,21 +2842,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "海陸大進擊",
+        "海陸主餐",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海陸大進擊 surf and turf 沙朗牛排與炭烤鮮蝦 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 56
+      "searchText": "海陸主餐 surf and turf 沙朗牛排與炭烤鮮蝦 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 海陸大進擊 海陸主餐 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 56,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-chicken-potstickers-58",
       "sourceType": "menu-item",
-      "zhLabel": "青春養成記日式雞肉煎餃",
+      "zhLabel": "雞肉煎餃",
       "englishName": "Chicken Potstickers",
       "descriptionZh": "搭配照燒芝麻醬",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2376,21 +2886,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "青春養成記日式雞肉煎餃",
+        "雞肉煎餃",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "青春養成記日式雞肉煎餃 chicken potstickers 搭配照燒芝麻醬 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 57
+      "searchText": "雞肉煎餃 chicken potstickers 搭配照燒芝麻醬 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 青春養成記日式雞肉煎餃 雞肉煎餃 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 57,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-mini-cheeseburger-59",
       "sourceType": "menu-item",
-      "zhLabel": "彈簧狗迷你起司漢堡",
+      "zhLabel": "迷你起司漢堡",
       "englishName": "Mini Cheeseburger",
       "descriptionZh": "搭配鬆軟布里歐麵包",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2413,21 +2930,28 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "彈簧狗迷你起司漢堡",
+        "迷你起司漢堡",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "彈簧狗迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 58
+      "searchText": "迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 彈簧狗迷你起司漢堡 迷你起司漢堡 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 58,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-turkey-bolognese-60",
       "sourceType": "menu-item",
-      "zhLabel": "羅賓漢火雞肉醬麵",
+      "zhLabel": "火雞肉醬義大利麵",
       "englishName": "Turkey Bolognese",
       "descriptionZh": "搭配義大利寬麵、蒸胡蘿蔔與新鮮蘋果片",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2451,21 +2975,28 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "羅賓漢火雞肉醬麵",
+        "火雞肉醬義大利麵",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "羅賓漢火雞肉醬麵 turkey bolognese 搭配義大利寬麵 蒸胡蘿蔔與新鮮蘋果片 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 59
+      "searchText": "火雞肉醬義大利麵 turkey bolognese 搭配義大利寬麵 蒸胡蘿蔔與新鮮蘋果片 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 羅賓漢火雞肉醬麵 火雞肉醬義大利麵 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 迪士尼兒童餐",
+      "sourceRecordIndex": 59,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-whole-wheat-penne-pasta-61",
       "sourceType": "menu-item",
-      "zhLabel": "魔法滿屋全麥筆管麵",
+      "zhLabel": "全麥筆管麵",
       "englishName": "Whole Wheat Penne Pasta",
       "descriptionZh": "搭配番茄醬汁、莫札瑞拉起司、青花菜",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2489,21 +3020,28 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "魔法滿屋全麥筆管麵",
+        "全麥筆管麵",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法滿屋全麥筆管麵 whole wheat penne pasta 搭配番茄醬汁 莫札瑞拉起司 青花菜 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 60
+      "searchText": "全麥筆管麵 whole wheat penne pasta 搭配番茄醬汁 莫札瑞拉起司 青花菜 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 魔法滿屋全麥筆管麵 全麥筆管麵 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 迪士尼兒童餐",
+      "sourceRecordIndex": 60,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-pixar-kids-strawberry-cheesecake-62",
       "sourceType": "menu-item",
-      "zhLabel": "翠絲的草莓起司蛋糕",
+      "zhLabel": "草莓起司蛋糕",
       "englishName": "Strawberry Cheesecake",
       "descriptionZh": "香草起司蛋糕、草莓果盤與輕盈鮮奶油",
       "restaurantId": "pixar",
-      "restaurantLabel": "仲夏 / 皮克斯",
-      "restaurantEnglish": "Enchanted Summer / Pixar Market",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
       "restaurantOrder": 2,
@@ -2526,11 +3064,18 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "翠絲的草莓起司蛋糕",
+        "草莓起司蛋糕",
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "翠絲的草莓起司蛋糕 strawberry cheesecake 香草起司蛋糕 草莓果盤與輕盈鮮奶油 pixar 仲夏 皮克斯 enchanted summer pixar market rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 61
+      "searchText": "草莓起司蛋糕 strawberry cheesecake 香草起司蛋糕 草莓果盤與輕盈鮮奶油 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 兒童 配菜 仲夏 皮克斯 enchanted summer pixar market 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 翠絲的草莓起司蛋糕 草莓起司蛋糕 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 兒童",
+      "sourceRecordIndex": 61,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-night4-bread-garlic-soft-white-whole-wheat-rolls-63",
@@ -2561,7 +3106,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 garlic soft white whole wheat rolls night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 bread 麵包 appetizer 前菜",
+      "searchText": "魔法烘焙綜合麵包 garlic soft white whole wheat rolls 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 麵包 前菜 bread appetizer",
       "sourceRecordIndex": 62
     },
     {
@@ -2598,7 +3143,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "翠玉精靈香煎蔬菜餃 seared vegetable dumplings 搭配青江菜絲 毛豆與特調黑醋醬油 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "翠玉精靈香煎蔬菜餃 seared vegetable dumplings 搭配青江菜絲 毛豆與特調黑醋醬油 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 63
     },
     {
@@ -2635,7 +3180,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "亞特蘭提斯秘製海灣蝦 pickled gulf shrimp 佐薩摩蜜橘沙拉 油封紅洋蔥 鮮嫩菠菜葉與皺葉萵苣 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
+      "searchText": "亞特蘭提斯秘製海灣蝦 pickled gulf shrimp 佐薩摩蜜橘沙拉 油封紅洋蔥 鮮嫩菠菜葉與皺葉萵苣 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 64
     },
     {
@@ -2672,7 +3217,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "愛麗絲的秘密花園黃瓜捲 cucumber garden roll 鮮脆紅蘿蔔 甜椒 櫛瓜 香菜佐白醬油檸檬醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "愛麗絲的秘密花園黃瓜捲 cucumber garden roll 鮮脆紅蘿蔔 甜椒 櫛瓜 香菜佐白醬油檸檬醬汁 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 65
     },
     {
@@ -2709,7 +3254,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "辛巴達的黃金蔬菜咖哩餃 vegetable samosa 融合馬鈴薯 青豆 大蒜 孜然 生薑 羅望子與薄荷酸辣醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "辛巴達的黃金蔬菜咖哩餃 vegetable samosa 融合馬鈴薯 青豆 大蒜 孜然 生薑 羅望子與薄荷酸辣醬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 66
     },
     {
@@ -2746,7 +3291,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海洋奇緣蒔蘿梅爾檸檬醃鮮蝦 dill and meyer lemon marinated shrimp 明尼奧拉橘 英國黃瓜 法式酸奶油與鮭魚子 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
+      "searchText": "海洋奇緣蒔蘿梅爾檸檬醃鮮蝦 dill and meyer lemon marinated shrimp 明尼奧拉橘 英國黃瓜 法式酸奶油與鮭魚子 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 67
     },
     {
@@ -2783,7 +3328,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夏日綠洲西瓜蜜橘白蘿蔔沙拉 watermelon orange daikon radish salad 苦苣 酪梨佐萊姆德麥拉拉蔗糖醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "夏日綠洲西瓜蜜橘白蘿蔔沙拉 watermelon orange daikon radish salad 苦苣 酪梨佐萊姆德麥拉拉蔗糖醬汁 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 68
     },
     {
@@ -2820,7 +3365,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熱帶叢林冰鎮芒果濃湯 chilled mango soup 點綴百香果 生薑與椰奶 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "熱帶叢林冰鎮芒果濃湯 chilled mango soup 點綴百香果 生薑與椰奶 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 69
     },
     {
@@ -2857,7 +3402,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "兔子雷哥的最愛 胡蘿蔔香菜濃湯 carrot and cilantro soup 搭配香甜香蕉麵包脆丁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
+      "searchText": "兔子雷哥的最愛 胡蘿蔔香菜濃湯 carrot and cilantro soup 搭配香甜香蕉麵包脆丁 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 前菜 第四晚限定 night 4 specials 主餐廳 前菜 appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 70
     },
     {
@@ -2894,7 +3439,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木蘭家鄉味港式雲吞麵 hong kong wonton 雞肉雲吞 濃郁雞骨高湯 蜜汁叉燒 雞蛋麵與季節時蔬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree pork 豬肉",
+      "searchText": "木蘭家鄉味港式雲吞麵 hong kong wonton 雞肉雲吞 濃郁雞骨高湯 蜜汁叉燒 雞蛋麵與季節時蔬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree pork 豬肉 豬肉",
       "sourceRecordIndex": 71
     },
     {
@@ -2931,7 +3476,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "幸運貓滿腹酥炸雞胸肉 chicken breast katsu 搭配白飯 日式咖哩與日式豬排醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "幸運貓滿腹酥炸雞胸肉 chicken breast katsu 搭配白飯 日式咖哩與日式豬排醬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 72
     },
     {
@@ -2968,7 +3513,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "阿格拉巴宮廷瑪萊鮮蝦咖哩 chungdi malai shrimp curry 薑黃 椰香葛拉姆馬薩拉香料 佐印度煎餅 印度香米與萊姆 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "阿格拉巴宮廷瑪萊鮮蝦咖哩 chungdi malai shrimp curry 薑黃 椰香葛拉姆馬薩拉香料 佐印度煎餅 印度香米與萊姆 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 73
     },
     {
@@ -3005,7 +3550,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "禪意花園香菇豆腐烏龍麵 shittake and tofu udon 烏龍麵 迷你青江菜 青蔥 昆布 蠔菇與味噌香菇高湯 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
+      "searchText": "禪意花園香菇豆腐烏龍麵 shittake and tofu udon 烏龍麵 迷你青江菜 青蔥 昆布 蠔菇與味噌香菇高湯 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree vegetarian 素食 素食",
       "sourceRecordIndex": 74
     },
     {
@@ -3042,7 +3587,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "尋夢環遊記碳烤鮪魚排 grilled tuna steak 黑豆泥 新鮮乾酪 酥脆木薯與烤玉米墨西哥辣椒莎莎醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "尋夢環遊記碳烤鮪魚排 grilled tuna steak 黑豆泥 新鮮乾酪 酥脆木薯與烤玉米墨西哥辣椒莎莎醬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 75
     },
     {
@@ -3079,7 +3624,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "龍之焰薑汁照燒安格斯牛菲力 ginger teriyaki dusted angus beef tenderloin 芥末馬鈴薯泥 青江菜與羅望子燒烤濃縮醬汁 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
+      "searchText": "龍之焰薑汁照燒安格斯牛菲力 ginger teriyaki dusted angus beef tenderloin 芥末馬鈴薯泥 青江菜與羅望子燒烤濃縮醬汁 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree meat beef 牛肉 牛肉",
       "sourceRecordIndex": 76
     },
     {
@@ -3116,7 +3661,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "寶萊塢狂歡乳酪蔬菜咖哩 paneer jalfrezi 印度茅屋起司 甜椒 番茄 綠辣椒 萊姆葉 香菜 佐印度香米 印度煎餅與薄荷優格醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree vegetarian 素食",
+      "searchText": "寶萊塢狂歡乳酪蔬菜咖哩 paneer jalfrezi 印度茅屋起司 甜椒 番茄 綠辣椒 萊姆葉 香菜 佐印度香米 印度煎餅與薄荷優格醬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree vegetarian 素食 素食",
       "sourceRecordIndex": 77
     },
     {
@@ -3153,7 +3698,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神燈精靈的羊肉沙威瑪沙拉 lamb shawarma salad 慢烤孜然手撕羊腿肉 洋蔥 美生菜 藤蔓番茄 醃紫高麗菜 烤鷹嘴豆 檸檬優格醬與口袋餅 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "神燈精靈的羊肉沙威瑪沙拉 lamb shawarma salad 慢烤孜然手撕羊腿肉 洋蔥 美生菜 藤蔓番茄 醃紫高麗菜 烤鷹嘴豆 檸檬優格醬與口袋餅 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 78
     },
     {
@@ -3190,7 +3735,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree meat 肉類",
+      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 79
     },
     {
@@ -3227,7 +3772,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed fillet of salmon 清蒸鮭魚菲力佐白飯與青江菜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
+      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed fillet of salmon 清蒸鮭魚菲力佐白飯與青江菜 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 主餐 第四晚限定 night 4 specials 主餐廳 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 80
     },
     {
@@ -3262,7 +3807,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "盛夏陽光芒果百香果慕斯 mango passion fruit creme 芒果果盤 椰香馬卡龍底與芭樂法式水果軟糖 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "盛夏陽光芒果百香果慕斯 mango passion fruit creme 芒果果盤 椰香馬卡龍底與芭樂法式水果軟糖 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 81
     },
     {
@@ -3297,7 +3842,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "泰山的叢林香蕉太妃糖暖布丁 warm banana sticky toffee pudding 佐海鹽焦糖醬與香草冰淇淋 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "泰山的叢林香蕉太妃糖暖布丁 warm banana sticky toffee pudding 佐海鹽焦糖醬與香草冰淇淋 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 82
     },
     {
@@ -3332,7 +3877,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇奇蒂蒂的焦糖夏威夷豆起司塔 caramel macadamia nut cheesecake tart 牛奶巧克力慕斯與焦糖甘納許 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "奇奇蒂蒂的焦糖夏威夷豆起司塔 caramel macadamia nut cheesecake tart 牛奶巧克力慕斯與焦糖甘納許 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 83
     },
     {
@@ -3367,7 +3912,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "船長專屬星空聖代 the captain s table sundae 薄荷巧克力碎片冰淇淋 濃郁巧克力醬 鮮奶油與酥脆蛋白霜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "船長專屬星空聖代 the captain s table sundae 薄荷巧克力碎片冰淇淋 濃郁巧克力醬 鮮奶油與酥脆蛋白霜 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 84
     },
     {
@@ -3404,7 +3949,7 @@ window.MENU_LOOKUP_DATA = {
         "無糖"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "睡美人覆盆子烤布蕾 raspberry creme brulee night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
+      "searchText": "睡美人覆盆子烤布蕾 raspberry creme brulee 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert no sugar 無糖 無糖",
       "sourceRecordIndex": 85
     },
     {
@@ -3439,17 +3984,17 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑魔女的魔鏡巧克力起司蛋糕 chocolate cheesecake 巧克力戚風蛋糕與巧克力鏡面糖霜 night4 第四晚特別菜單 四晚航程適用 night 4 specials rotational 主餐廳 desserts 甜點 dessert",
+      "searchText": "黑魔女的魔鏡巧克力起司蛋糕 chocolate cheesecake 巧克力戚風蛋糕與巧克力鏡面糖霜 第四晚特別菜單 四晚航程適用 night 4 specials 主餐廳 甜點 第四晚限定 night 4 specials 主餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 86
     },
     {
       "id": "menu-animator-bread-spring-onion-cheese-soft-white-whole-wheat-rolls-88",
       "sourceType": "menu-item",
-      "zhLabel": "魔法烘焙綜合麵包",
+      "zhLabel": "蔥起司、白麵包與全麥餐包",
       "englishName": "Spring Onion Cheese · Soft White · Whole Wheat Rolls",
       "descriptionZh": "",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3468,20 +4013,27 @@ window.MENU_LOOKUP_DATA = {
         "麵包",
         "前菜",
         "bread",
-        "appetizer"
+        "appetizer",
+        "魔法烘焙綜合麵包",
+        "Animator’s Palate / Animator’s Table",
+        "蔥起司、白麵包與全麥餐包",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法烘焙綜合麵包 spring onion cheese soft white whole wheat rolls animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 bread 麵包 appetizer 前菜",
-      "sourceRecordIndex": 87
+      "searchText": "蔥起司 白麵包與全麥餐包 spring onion cheese soft white whole wheat rolls 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 麵包 前菜 bread appetizer 魔法烘焙綜合麵包 animator s palate animator s table 蔥起司 白麵包與全麥餐包 動畫師調色盤 動畫師餐桌",
+      "sourceRecordIndex": 87,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-korean-barbecue-beef-steamed-bao-89",
       "sourceType": "menu-item",
-      "zhLabel": "尋龍使者韓式烤牛肉刈包",
+      "zhLabel": "韓式烤牛肉刈包",
       "englishName": "Korean Barbecue Beef Steamed Bao",
       "descriptionZh": "搭配醃黃瓜與韓式苦椒海鮮醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3505,20 +4057,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "meat",
-        "肉類"
+        "肉類",
+        "尋龍使者韓式烤牛肉刈包",
+        "Animator’s Palate / Animator’s Table",
+        "韓式烤牛肉刈包",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "尋龍使者韓式烤牛肉刈包 korean barbecue beef steamed bao 搭配醃黃瓜與韓式苦椒海鮮醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
-      "sourceRecordIndex": 88
+      "searchText": "韓式烤牛肉刈包 korean barbecue beef steamed bao 搭配醃黃瓜與韓式苦椒海鮮醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer meat 肉類 尋龍使者韓式烤牛肉刈包 animator s palate animator s table 韓式烤牛肉刈包 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 88,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-rice-noodle-salad-90",
       "sourceType": "menu-item",
-      "zhLabel": "熊貓村清爽米線沙拉",
+      "zhLabel": "米線沙拉",
       "englishName": "Rice Noodle Salad",
       "descriptionZh": "白蘿蔔、黃瓜、紅蘿蔔、荷蘭豆、辣椒、香菜、甜洋蔥，佐米醋與龍舌蘭萊姆醬汁",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3542,20 +4101,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "熊貓村清爽米線沙拉",
+        "Animator’s Palate / Animator’s Table",
+        "米線沙拉",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "熊貓村清爽米線沙拉 rice noodle salad 白蘿蔔 黃瓜 紅蘿蔔 荷蘭豆 辣椒 香菜 甜洋蔥 佐米醋與龍舌蘭萊姆醬汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 89
+      "searchText": "米線沙拉 rice noodle salad 白蘿蔔 黃瓜 紅蘿蔔 荷蘭豆 辣椒 香菜 甜洋蔥 佐米醋與龍舌蘭萊姆醬汁 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer vegetarian 素食 熊貓村清爽米線沙拉 animator s palate animator s table 米線沙拉 動畫師調色盤 動畫師餐桌 素食",
+      "sourceRecordIndex": 89,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-dragon-roll-91",
       "sourceType": "menu-item",
-      "zhLabel": "神龍秘製壽司捲",
+      "zhLabel": "龍捲壽司",
       "englishName": "Dragon Roll",
       "descriptionZh": "辣味鮪魚捲、蒲燒淡水鰻魚、酪梨與特製鰻魚醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3579,20 +4145,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "神龍秘製壽司捲",
+        "Animator’s Palate / Animator’s Table",
+        "龍捲壽司",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神龍秘製壽司捲 dragon roll 辣味鮪魚捲 蒲燒淡水鰻魚 酪梨與特製鰻魚醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer seafood 海鮮",
-      "sourceRecordIndex": 90
+      "searchText": "龍捲壽司 dragon roll 辣味鮪魚捲 蒲燒淡水鰻魚 酪梨與特製鰻魚醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer seafood 海鮮 神龍秘製壽司捲 animator s palate animator s table 龍捲壽司 動畫師調色盤 動畫師餐桌 海鮮",
+      "sourceRecordIndex": 90,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-chicken-satay-92",
       "sourceType": "menu-item",
-      "zhLabel": "叢林探險沙嗲烤雞串",
+      "zhLabel": "沙嗲雞肉串",
       "englishName": "Chicken Satay",
       "descriptionZh": "搭配椰香飯、黃瓜、印尼甜醬油與烤花生沾醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3616,20 +4189,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "meat",
-        "肉類"
+        "肉類",
+        "叢林探險沙嗲烤雞串",
+        "Animator’s Palate / Animator’s Table",
+        "沙嗲雞肉串",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林探險沙嗲烤雞串 chicken satay 搭配椰香飯 黃瓜 印尼甜醬油與烤花生沾醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
-      "sourceRecordIndex": 91
+      "searchText": "沙嗲雞肉串 chicken satay 搭配椰香飯 黃瓜 印尼甜醬油與烤花生沾醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer meat 肉類 叢林探險沙嗲烤雞串 animator s palate animator s table 沙嗲雞肉串 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 91,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-hearts-of-palm-93",
       "sourceType": "menu-item",
-      "zhLabel": "奇幻綠洲棕櫚心沙拉",
+      "zhLabel": "棕櫚心沙拉",
       "englishName": "Hearts of Palm",
       "descriptionZh": "香菜與萊姆、黃瓜、紫洋蔥、甜椒、地瓜、香料黃甜椒、柑橘醬汁，並點綴歡樂爆米花",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3653,20 +4233,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "奇幻綠洲棕櫚心沙拉",
+        "Animator’s Palate / Animator’s Table",
+        "棕櫚心沙拉",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇幻綠洲棕櫚心沙拉 hearts of palm 香菜與萊姆 黃瓜 紫洋蔥 甜椒 地瓜 香料黃甜椒 柑橘醬汁 並點綴歡樂爆米花 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 92
+      "searchText": "棕櫚心沙拉 hearts of palm 香菜與萊姆 黃瓜 紫洋蔥 甜椒 地瓜 香料黃甜椒 柑橘醬汁 並點綴歡樂爆米花 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer vegetarian 素食 奇幻綠洲棕櫚心沙拉 animator s palate animator s table 棕櫚心沙拉 動畫師調色盤 動畫師餐桌 素食",
+      "sourceRecordIndex": 92,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-romaine-heart-caesar-salad-94",
       "sourceType": "menu-item",
-      "zhLabel": "奧林帕斯經典凱薩沙拉",
+      "zhLabel": "蘿蔓凱薩沙拉",
       "englishName": "Romaine Heart Caesar Salad",
       "descriptionZh": "蘿蔓之心、櫻桃番茄、帕馬森乾酪、烤巧巴達麵包丁與凱薩醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3690,20 +4277,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "奧林帕斯經典凱薩沙拉",
+        "Animator’s Palate / Animator’s Table",
+        "蘿蔓凱薩沙拉",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奧林帕斯經典凱薩沙拉 romaine heart caesar salad 蘿蔓之心 櫻桃番茄 帕馬森乾酪 烤巧巴達麵包丁與凱薩醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 93
+      "searchText": "蘿蔓凱薩沙拉 romaine heart caesar salad 蘿蔓之心 櫻桃番茄 帕馬森乾酪 烤巧巴達麵包丁與凱薩醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer vegetarian 素食 奧林帕斯經典凱薩沙拉 animator s palate animator s table 蘿蔓凱薩沙拉 動畫師調色盤 動畫師餐桌 素食",
+      "sourceRecordIndex": 93,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-wonton-soup-95",
       "sourceType": "menu-item",
-      "zhLabel": "木蘭家傳鮮雞雲吞湯",
+      "zhLabel": "雞肉雲吞湯",
       "englishName": "Wonton Soup",
       "descriptionZh": "軟嫩雞肉雲吞、濃郁雞高湯、生薑、大白菜與青蔥",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3727,20 +4321,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "meat",
-        "肉類"
+        "肉類",
+        "木蘭家傳鮮雞雲吞湯",
+        "Animator’s Palate / Animator’s Table",
+        "雞肉雲吞湯",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木蘭家傳鮮雞雲吞湯 wonton soup 軟嫩雞肉雲吞 濃郁雞高湯 生薑 大白菜與青蔥 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer meat 肉類",
-      "sourceRecordIndex": 94
+      "searchText": "雞肉雲吞湯 wonton soup 軟嫩雞肉雲吞 濃郁雞高湯 生薑 大白菜與青蔥 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer meat 肉類 木蘭家傳鮮雞雲吞湯 animator s palate animator s table 雞肉雲吞湯 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 94,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-appetizers-molokai-corn-and-taro-chowder-96",
       "sourceType": "menu-item",
-      "zhLabel": "史迪奇的夏威夷玉米芋頭濃湯",
+      "zhLabel": "摩洛凱玉米芋頭濃湯",
       "englishName": "Molokai Corn and Taro Chowder",
       "descriptionZh": "鮮甜黃玉米粒與青蔥段",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3764,20 +4365,27 @@ window.MENU_LOOKUP_DATA = {
         "appetizers",
         "appetizer",
         "vegetarian",
-        "素食"
+        "素食",
+        "史迪奇的夏威夷玉米芋頭濃湯",
+        "Animator’s Palate / Animator’s Table",
+        "摩洛凱玉米芋頭濃湯",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "史迪奇的夏威夷玉米芋頭濃湯 molokai corn and taro chowder 鮮甜黃玉米粒與青蔥段 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 appetizers 前菜 appetizer vegetarian 素食",
-      "sourceRecordIndex": 95
+      "searchText": "摩洛凱玉米芋頭濃湯 molokai corn and taro chowder 鮮甜黃玉米粒與青蔥段 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 前菜 動畫家調色盤 animator s palate 主餐廳 前菜 appetizers appetizer vegetarian 素食 史迪奇的夏威夷玉米芋頭濃湯 animator s palate animator s table 摩洛凱玉米芋頭濃湯 動畫師調色盤 動畫師餐桌 素食",
+      "sourceRecordIndex": 95,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-laksa-lemak-97",
       "sourceType": "menu-item",
-      "zhLabel": "獅城尋寶椰香叻沙",
+      "zhLabel": "椰奶叻沙",
       "englishName": "Laksa Lemak",
       "descriptionZh": "鮮蝦、豆卜（油豆腐）、叻沙葉與些許辣椒",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3801,20 +4409,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "獅城尋寶椰香叻沙",
+        "Animator’s Palate / Animator’s Table",
+        "椰奶叻沙",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "獅城尋寶椰香叻沙 laksa lemak 鮮蝦 豆卜 油豆腐 叻沙葉與些許辣椒 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 96
+      "searchText": "椰奶叻沙 laksa lemak 鮮蝦 豆卜 油豆腐 叻沙葉與些許辣椒 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree seafood 海鮮 獅城尋寶椰香叻沙 animator s palate animator s table 椰奶叻沙 動畫師調色盤 動畫師餐桌 海鮮",
+      "sourceRecordIndex": 96,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-murgh-makhani-butter-chicken-98",
       "sourceType": "menu-item",
-      "zhLabel": "茉莉公主的奶油燉雞",
+      "zhLabel": "瑪卡尼奶油咖哩雞",
       "englishName": "Murgh Makhani Butter Chicken",
       "descriptionZh": "葛拉姆馬薩拉香料、香菜，佐茉莉香米、薄荷優格醬與印度煎餅",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3838,20 +4453,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "茉莉公主的奶油燉雞",
+        "Animator’s Palate / Animator’s Table",
+        "瑪卡尼奶油咖哩雞",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "茉莉公主的奶油燉雞 murgh makhani butter chicken 葛拉姆馬薩拉香料 香菜 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 97
+      "searchText": "瑪卡尼奶油咖哩雞 murgh makhani butter chicken 葛拉姆馬薩拉香料 香菜 佐茉莉香米 薄荷優格醬與印度煎餅 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree meat 肉類 茉莉公主的奶油燉雞 animator s palate animator s table 瑪卡尼奶油咖哩雞 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 97,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-pan-seared-pacific-scallops-99",
       "sourceType": "menu-item",
-      "zhLabel": "川頓國王的香煎太平洋干貝",
+      "zhLabel": "香煎太平洋干貝",
       "englishName": "Pan-seared Pacific Scallops",
       "descriptionZh": "搭配松露洋菇燉飯、烤榛果與芝麻葉檸檬油點綴",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3875,20 +4497,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "川頓國王的香煎太平洋干貝",
+        "Animator’s Palate / Animator’s Table",
+        "香煎太平洋干貝",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "川頓國王的香煎太平洋干貝 pan seared pacific scallops 搭配松露洋菇燉飯 烤榛果與芝麻葉檸檬油點綴 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 98
+      "searchText": "香煎太平洋干貝 pan seared pacific scallops 搭配松露洋菇燉飯 烤榛果與芝麻葉檸檬油點綴 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree seafood 海鮮 川頓國王的香煎太平洋干貝 animator s palate animator s table 香煎太平洋干貝 動畫師調色盤 動畫師餐桌 海鮮",
+      "sourceRecordIndex": 98,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-tofu-poke-100",
       "sourceType": "menu-item",
-      "zhLabel": "莫娜的島嶼風味豆腐波奇碗",
+      "zhLabel": "豆腐波奇碗",
       "englishName": "Tofu Poke",
       "descriptionZh": "豆腐、無麩質醬油、黃瓜、紫高麗菜、糙米、芝麻、酪梨、香菜佐芥末檸檬醬汁",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3912,20 +4541,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegan",
-        "純素"
+        "純素",
+        "莫娜的島嶼風味豆腐波奇碗",
+        "Animator’s Palate / Animator’s Table",
+        "豆腐波奇碗",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "莫娜的島嶼風味豆腐波奇碗 tofu poke 豆腐 無麩質醬油 黃瓜 紫高麗菜 糙米 芝麻 酪梨 香菜佐芥末檸檬醬汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree vegan 純素",
-      "sourceRecordIndex": 99
+      "searchText": "豆腐波奇碗 tofu poke 豆腐 無麩質醬油 黃瓜 紫高麗菜 糙米 芝麻 酪梨 香菜佐芥末檸檬醬汁 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree vegan 純素 莫娜的島嶼風味豆腐波奇碗 animator s palate animator s table 豆腐波奇碗 動畫師調色盤 動畫師餐桌 純素",
+      "sourceRecordIndex": 99,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-pan-seared-branzino-fillet-101",
       "sourceType": "menu-item",
-      "zhLabel": "水手香煎地中海鱸魚排",
+      "zhLabel": "香煎歐洲海鱸魚排",
       "englishName": "Pan-seared Branzino Fillet",
       "descriptionZh": "茴香、白腰豆、切里尼奧拉油橄欖、甜椒、育空馬鈴薯與拉曼查番紅花高湯",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3949,20 +4585,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "水手香煎地中海鱸魚排",
+        "Animator’s Palate / Animator’s Table",
+        "香煎歐洲海鱸魚排",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "水手香煎地中海鱸魚排 pan seared branzino fillet 茴香 白腰豆 切里尼奧拉油橄欖 甜椒 育空馬鈴薯與拉曼查番紅花高湯 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 100
+      "searchText": "香煎歐洲海鱸魚排 pan seared branzino fillet 茴香 白腰豆 切里尼奧拉油橄欖 甜椒 育空馬鈴薯與拉曼查番紅花高湯 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree seafood 海鮮 水手香煎地中海鱸魚排 animator s palate animator s table 香煎歐洲海鱸魚排 動畫師調色盤 動畫師餐桌 海鮮",
+      "sourceRecordIndex": 100,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-carved-slow-roasted-rosemary-beef-tenderloin-102",
       "sourceType": "menu-item",
-      "zhLabel": "野獸莊園慢烤迷迭香牛菲力",
+      "zhLabel": "慢烤迷迭香牛菲力",
       "englishName": "Carved Slow-roasted Rosemary Beef Tenderloin",
       "descriptionZh": "搭配第戎蜂蜜烤防風草泥、奶油四季豆與卡本內百里香肉汁",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -3986,20 +4629,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat-beef",
-        "牛肉"
+        "牛肉",
+        "野獸莊園慢烤迷迭香牛菲力",
+        "Animator’s Palate / Animator’s Table",
+        "慢烤迷迭香牛菲力",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "野獸莊園慢烤迷迭香牛菲力 carved slow roasted rosemary beef tenderloin 搭配第戎蜂蜜烤防風草泥 奶油四季豆與卡本內百里香肉汁 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat beef 牛肉",
-      "sourceRecordIndex": 101
+      "searchText": "慢烤迷迭香牛菲力 carved slow roasted rosemary beef tenderloin 搭配第戎蜂蜜烤防風草泥 奶油四季豆與卡本內百里香肉汁 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree meat beef 牛肉 野獸莊園慢烤迷迭香牛菲力 animator s palate animator s table 慢烤迷迭香牛菲力 動畫師調色盤 動畫師餐桌 牛肉",
+      "sourceRecordIndex": 101,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-chettinad-vegetable-korma-103",
       "sourceType": "menu-item",
-      "zhLabel": "森林王子香料蔬菜庫瑪咖哩",
+      "zhLabel": "雀提納蔬菜咖哩",
       "englishName": "Chettinad Vegetable Korma",
       "descriptionZh": "小豆蔻、肉桂、辣椒、腰果、椰漿，佐茉莉香米、薄荷優格醬與印度煎餅",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4023,20 +4673,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "vegan",
-        "純素"
+        "純素",
+        "森林王子香料蔬菜庫瑪咖哩",
+        "Animator’s Palate / Animator’s Table",
+        "雀提納蔬菜咖哩",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "森林王子香料蔬菜庫瑪咖哩 chettinad vegetable korma 小豆蔻 肉桂 辣椒 腰果 椰漿 佐茉莉香米 薄荷優格醬與印度煎餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree vegan 純素",
-      "sourceRecordIndex": 102
+      "searchText": "雀提納蔬菜咖哩 chettinad vegetable korma 小豆蔻 肉桂 辣椒 腰果 椰漿 佐茉莉香米 薄荷優格醬與印度煎餅 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree vegan 純素 森林王子香料蔬菜庫瑪咖哩 animator s palate animator s table 雀提納蔬菜咖哩 動畫師調色盤 動畫師餐桌 純素",
+      "sourceRecordIndex": 102,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-honey-soy-roasted-duck-and-papaya-salad-104",
       "sourceType": "menu-item",
-      "zhLabel": "唐老鴨也瘋狂：蜜汁醬烤鴨肉木瓜沙拉",
+      "zhLabel": "蜜汁醬烤鴨木瓜沙拉",
       "englishName": "Honey Soy-roasted Duck and Papaya Salad",
       "descriptionZh": "白蘿蔔、白菜、甜椒、紫紅洋蔥、青蔥、石榴籽、烤芝麻佐味噌薑汁醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4060,20 +4717,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "唐老鴨也瘋狂：蜜汁醬烤鴨肉木瓜沙拉",
+        "Animator’s Palate / Animator’s Table",
+        "蜜汁醬烤鴨木瓜沙拉",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "唐老鴨也瘋狂 蜜汁醬烤鴨肉木瓜沙拉 honey soy roasted duck and papaya salad 白蘿蔔 白菜 甜椒 紫紅洋蔥 青蔥 石榴籽 烤芝麻佐味噌薑汁醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 103
+      "searchText": "蜜汁醬烤鴨木瓜沙拉 honey soy roasted duck and papaya salad 白蘿蔔 白菜 甜椒 紫紅洋蔥 青蔥 石榴籽 烤芝麻佐味噌薑汁醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree meat 肉類 唐老鴨也瘋狂 蜜汁醬烤鴨肉木瓜沙拉 animator s palate animator s table 蜜汁醬烤鴨木瓜沙拉 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 103,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-hainanese-chicken-rice-105",
       "sourceType": "menu-item",
-      "zhLabel": "神鳥秘製海南雞飯",
+      "zhLabel": "海南雞飯",
       "englishName": "Hainanese Chicken, Rice",
       "descriptionZh": "經典海南雞佐甜黑醬油、薑蒜醬與秘製辣椒醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4097,20 +4761,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "meat",
-        "肉類"
+        "肉類",
+        "神鳥秘製海南雞飯",
+        "Animator’s Palate / Animator’s Table",
+        "海南雞飯",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "神鳥秘製海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree meat 肉類",
-      "sourceRecordIndex": 104
+      "searchText": "海南雞飯 hainanese chicken rice 經典海南雞佐甜黑醬油 薑蒜醬與秘製辣椒醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree meat 肉類 神鳥秘製海南雞飯 animator s palate animator s table 海南雞飯 動畫師調色盤 動畫師餐桌 肉類",
+      "sourceRecordIndex": 104,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-entrees-banana-leaf-steamed-filet-of-salmon-106",
       "sourceType": "menu-item",
-      "zhLabel": "叢林奇航香蕉葉蒸鮭魚",
+      "zhLabel": "芭蕉葉蒸鮭魚",
       "englishName": "Banana Leaf Steamed Filet of Salmon",
       "descriptionZh": "清蒸鮭魚菲力佐白飯與青江菜",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4134,20 +4805,27 @@ window.MENU_LOOKUP_DATA = {
         "entrees",
         "entree",
         "seafood",
-        "海鮮"
+        "海鮮",
+        "叢林奇航香蕉葉蒸鮭魚",
+        "Animator’s Palate / Animator’s Table",
+        "芭蕉葉蒸鮭魚",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "叢林奇航香蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 entrees 主餐 entree seafood 海鮮",
-      "sourceRecordIndex": 105
+      "searchText": "芭蕉葉蒸鮭魚 banana leaf steamed filet of salmon 清蒸鮭魚菲力佐白飯與青江菜 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 動畫家調色盤 animator s palate 主餐廳 主餐 entrees entree seafood 海鮮 叢林奇航香蕉葉蒸鮭魚 animator s palate animator s table 芭蕉葉蒸鮭魚 動畫師調色盤 動畫師餐桌 海鮮",
+      "sourceRecordIndex": 105,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-desserts-almond-pear-tart-107",
       "sourceType": "menu-item",
-      "zhLabel": "魔法森林杏仁洋梨塔",
+      "zhLabel": "杏仁洋梨塔",
       "englishName": "Almond-Pear Tart",
       "descriptionZh": "糖水燉洋梨、杏仁奶油餡、抹茶脆土與香草冰淇淋",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4169,20 +4847,27 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "魔法森林杏仁洋梨塔",
+        "Animator’s Palate / Animator’s Table",
+        "杏仁洋梨塔",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法森林杏仁洋梨塔 almond pear tart 糖水燉洋梨 杏仁奶油餡 抹茶脆土與香草冰淇淋 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 106
+      "searchText": "杏仁洋梨塔 almond pear tart 糖水燉洋梨 杏仁奶油餡 抹茶脆土與香草冰淇淋 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 動畫家調色盤 animator s palate 主餐廳 甜點 desserts dessert 魔法森林杏仁洋梨塔 animator s palate animator s table 杏仁洋梨塔 動畫師調色盤 動畫師餐桌 甜點",
+      "sourceRecordIndex": 106,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-desserts-salted-caramel-cheesecake-108",
       "sourceType": "menu-item",
-      "zhLabel": "料理鼠王的焦糖海鹽起司蛋糕",
+      "zhLabel": "海鹽焦糖起司蛋糕",
       "englishName": "Salted Caramel Cheesecake",
       "descriptionZh": "香草起司蛋糕、焦糖牛奶糖霜與花生醬米香脆餅",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4204,20 +4889,27 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "料理鼠王的焦糖海鹽起司蛋糕",
+        "Animator’s Palate / Animator’s Table",
+        "海鹽焦糖起司蛋糕",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "料理鼠王的焦糖海鹽起司蛋糕 salted caramel cheesecake 香草起司蛋糕 焦糖牛奶糖霜與花生醬米香脆餅 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 107
+      "searchText": "海鹽焦糖起司蛋糕 salted caramel cheesecake 香草起司蛋糕 焦糖牛奶糖霜與花生醬米香脆餅 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 動畫家調色盤 animator s palate 主餐廳 甜點 desserts dessert 料理鼠王的焦糖海鹽起司蛋糕 animator s palate animator s table 海鹽焦糖起司蛋糕 動畫師調色盤 動畫師餐桌 甜點",
+      "sourceRecordIndex": 107,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-desserts-chocolate-decadence-109",
       "sourceType": "menu-item",
-      "zhLabel": "夢幻極致巧克力三重奏",
+      "zhLabel": "濃郁巧克力甜點",
       "englishName": "Chocolate Decadence",
       "descriptionZh": "苦甜巧克力慕斯、松露巧克力慕斯與榛果戚風蛋糕",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4239,20 +4931,27 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "夢幻極致巧克力三重奏",
+        "Animator’s Palate / Animator’s Table",
+        "濃郁巧克力甜點",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夢幻極致巧克力三重奏 chocolate decadence 苦甜巧克力慕斯 松露巧克力慕斯與榛果戚風蛋糕 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 108
+      "searchText": "濃郁巧克力甜點 chocolate decadence 苦甜巧克力慕斯 松露巧克力慕斯與榛果戚風蛋糕 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 動畫家調色盤 animator s palate 主餐廳 甜點 desserts dessert 夢幻極致巧克力三重奏 animator s palate animator s table 濃郁巧克力甜點 動畫師調色盤 動畫師餐桌 甜點",
+      "sourceRecordIndex": 108,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-desserts-cappuccino-mousse-110",
       "sourceType": "menu-item",
-      "zhLabel": "仙女教母卡布奇諾慕斯",
+      "zhLabel": "卡布奇諾慕斯",
       "englishName": "Cappuccino Mousse",
       "descriptionZh": "卡布奇諾慕斯與覆盆子果泥",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4276,20 +4975,27 @@ window.MENU_LOOKUP_DATA = {
         "desserts",
         "dessert",
         "no-sugar",
-        "無糖"
+        "無糖",
+        "仙女教母卡布奇諾慕斯",
+        "Animator’s Palate / Animator’s Table",
+        "卡布奇諾慕斯",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "仙女教母卡布奇諾慕斯 cappuccino mousse 卡布奇諾慕斯與覆盆子果泥 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert no sugar 無糖",
-      "sourceRecordIndex": 109
+      "searchText": "卡布奇諾慕斯 cappuccino mousse 卡布奇諾慕斯與覆盆子果泥 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 動畫家調色盤 animator s palate 主餐廳 甜點 desserts dessert no sugar 無糖 仙女教母卡布奇諾慕斯 animator s palate animator s table 卡布奇諾慕斯 動畫師調色盤 動畫師餐桌 無糖",
+      "sourceRecordIndex": 109,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-desserts-cookies-n-cream-sundae-111",
       "sourceType": "menu-item",
-      "zhLabel": "米奇巧酥冰淇淋聖代",
+      "zhLabel": "巧酥冰淇淋聖代",
       "englishName": "Cookies 'n Cream Sundae",
       "descriptionZh": "巧酥冰淇淋、巧克力威化餅乾、巧克力糖漿與輕盈鮮奶油",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4311,20 +5017,27 @@ window.MENU_LOOKUP_DATA = {
         "主餐廳",
         "甜點",
         "desserts",
-        "dessert"
+        "dessert",
+        "米奇巧酥冰淇淋聖代",
+        "Animator’s Palate / Animator’s Table",
+        "巧酥冰淇淋聖代",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米奇巧酥冰淇淋聖代 cookies n cream sundae 巧酥冰淇淋 巧克力威化餅乾 巧克力糖漿與輕盈鮮奶油 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 desserts 甜點 dessert",
-      "sourceRecordIndex": 110
+      "searchText": "巧酥冰淇淋聖代 cookies n cream sundae 巧酥冰淇淋 巧克力威化餅乾 巧克力糖漿與輕盈鮮奶油 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 動畫家調色盤 animator s palate 主餐廳 甜點 desserts dessert 米奇巧酥冰淇淋聖代 animator s palate animator s table 巧酥冰淇淋聖代 動畫師調色盤 動畫師餐桌 甜點",
+      "sourceRecordIndex": 110,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-creamed-potato-soup-112",
       "sourceType": "menu-item",
-      "zhLabel": "溫暖擁抱奶油馬鈴薯濃湯",
+      "zhLabel": "奶油馬鈴薯濃湯",
       "englishName": "Creamed Potato Soup",
       "descriptionZh": "搭配紅蘿蔔與芹菜",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4348,20 +5061,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "溫暖擁抱奶油馬鈴薯濃湯",
+        "Animator’s Palate / Animator’s Table",
+        "奶油馬鈴薯濃湯",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "溫暖擁抱奶油馬鈴薯濃湯 creamed potato soup 搭配紅蘿蔔與芹菜 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 111
+      "searchText": "奶油馬鈴薯濃湯 creamed potato soup 搭配紅蘿蔔與芹菜 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 溫暖擁抱奶油馬鈴薯濃湯 animator s palate animator s table 奶油馬鈴薯濃湯 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 111,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-garden-salad-113",
       "sourceType": "menu-item",
-      "zhLabel": "奇妙花園生菜沙拉",
+      "zhLabel": "田園沙拉",
       "englishName": "Garden Salad",
       "descriptionZh": "新鮮綜合生菜、紅蘿蔔絲、黃瓜片",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4385,20 +5105,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "奇妙花園生菜沙拉",
+        "Animator’s Palate / Animator’s Table",
+        "田園沙拉",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇妙花園生菜沙拉 garden salad 新鮮綜合生菜 紅蘿蔔絲 黃瓜片 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 112
+      "searchText": "田園沙拉 garden salad 新鮮綜合生菜 紅蘿蔔絲 黃瓜片 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 奇妙花園生菜沙拉 animator s palate animator s table 田園沙拉 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 112,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-chicken-katsu-114",
       "sourceType": "menu-item",
-      "zhLabel": "大英雄天團日式炸雞排",
+      "zhLabel": "日式炸雞排",
       "englishName": "Chicken Katsu",
       "descriptionZh": "搭配黃瓜條、椰香飯與日式豬排醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4422,20 +5149,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "大英雄天團日式炸雞排",
+        "Animator’s Palate / Animator’s Table",
+        "日式炸雞排",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "大英雄天團日式炸雞排 chicken katsu 搭配黃瓜條 椰香飯與日式豬排醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 113
+      "searchText": "日式炸雞排 chicken katsu 搭配黃瓜條 椰香飯與日式豬排醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 大英雄天團日式炸雞排 animator s palate animator s table 日式炸雞排 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 113,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-crisp-vegetable-spring-rolls-115",
       "sourceType": "menu-item",
-      "zhLabel": "木須龍金黃蔬菜春捲",
+      "zhLabel": "酥脆蔬菜春捲",
       "englishName": "Crisp Vegetable Spring Rolls",
       "descriptionZh": "搭配海鮮醬沾醬",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4459,20 +5193,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "木須龍金黃蔬菜春捲",
+        "Animator’s Palate / Animator’s Table",
+        "酥脆蔬菜春捲",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "木須龍金黃蔬菜春捲 crisp vegetable spring rolls 搭配海鮮醬沾醬 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 114
+      "searchText": "酥脆蔬菜春捲 crisp vegetable spring rolls 搭配海鮮醬沾醬 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 木須龍金黃蔬菜春捲 animator s palate animator s table 酥脆蔬菜春捲 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 114,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-hawaiian-barbecue-chicken-pizza-116",
       "sourceType": "menu-item",
-      "zhLabel": "史迪奇夏威夷BBQ烤雞披薩",
+      "zhLabel": "夏威夷燒烤雞肉披薩",
       "englishName": "Hawaiian Barbecue Chicken Pizza",
       "descriptionZh": "",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4496,20 +5237,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "史迪奇夏威夷BBQ烤雞披薩",
+        "Animator’s Palate / Animator’s Table",
+        "夏威夷燒烤雞肉披薩",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "史迪奇夏威夷bbq烤雞披薩 hawaiian barbecue chicken pizza animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 115
+      "searchText": "夏威夷燒烤雞肉披薩 hawaiian barbecue chicken pizza 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 史迪奇夏威夷bbq烤雞披薩 animator s palate animator s table 夏威夷燒烤雞肉披薩 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 115,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-mini-cheeseburger-117",
       "sourceType": "menu-item",
-      "zhLabel": "米奇迷你起司漢堡",
+      "zhLabel": "迷你起司漢堡",
       "englishName": "Mini Cheeseburger",
       "descriptionZh": "搭配鬆軟布里歐麵包",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4533,20 +5281,27 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "米奇迷你起司漢堡",
+        "Animator’s Palate / Animator’s Table",
+        "迷你起司漢堡",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米奇迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 116
+      "searchText": "迷你起司漢堡 mini cheeseburger 搭配鬆軟布里歐麵包 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 米奇迷你起司漢堡 animator s palate animator s table 迷你起司漢堡 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 116,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-grilled-chicken-118",
       "sourceType": "menu-item",
-      "zhLabel": "活力滿點香烤雞肉",
+      "zhLabel": "烤雞",
       "englishName": "Grilled Chicken",
       "descriptionZh": "搭配薑蔥飯、清蒸迷你青江菜與芒果西米露",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4571,20 +5326,27 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "活力滿點香烤雞肉",
+        "Animator’s Palate / Animator’s Table",
+        "烤雞",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "活力滿點香烤雞肉 grilled chicken 搭配薑蔥飯 清蒸迷你青江菜與芒果西米露 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 117
+      "searchText": "烤雞 grilled chicken 搭配薑蔥飯 清蒸迷你青江菜與芒果西米露 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 活力滿點香烤雞肉 animator s palate animator s table 烤雞 動畫師調色盤 動畫師餐桌 迪士尼兒童餐",
+      "sourceRecordIndex": 117,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-whole-wheat-spaghetti-pasta-119",
       "sourceType": "menu-item",
-      "zhLabel": "小姐與流氓全麥義大利麵",
+      "zhLabel": "全麥義大利直麵",
       "englishName": "Whole Wheat Spaghetti Pasta",
       "descriptionZh": "搭配巨無霸火雞肉丸、義大利海員番茄醬、花園沙拉與新鮮蘋果片",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4609,20 +5371,27 @@ window.MENU_LOOKUP_DATA = {
         "kids",
         "kids-side",
         "kids-disney",
-        "迪士尼兒童餐"
+        "迪士尼兒童餐",
+        "小姐與流氓全麥義大利麵",
+        "Animator’s Palate / Animator’s Table",
+        "全麥義大利直麵",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "小姐與流氓全麥義大利麵 whole wheat spaghetti pasta 搭配巨無霸火雞肉丸 義大利海員番茄醬 花園沙拉與新鮮蘋果片 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 kids disney 迪士尼兒童餐",
-      "sourceRecordIndex": 118
+      "searchText": "全麥義大利直麵 whole wheat spaghetti pasta 搭配巨無霸火雞肉丸 義大利海員番茄醬 花園沙拉與新鮮蘋果片 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side kids disney 迪士尼兒童餐 小姐與流氓全麥義大利麵 animator s palate animator s table 全麥義大利直麵 動畫師調色盤 動畫師餐桌 迪士尼兒童餐",
+      "sourceRecordIndex": 118,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-animator-kids-chocolate-dome-120",
       "sourceType": "menu-item",
-      "zhLabel": "歡樂馬戲團巧克力圓頂",
+      "zhLabel": "巧克力圓頂蛋糕",
       "englishName": "Chocolate Dome",
       "descriptionZh": "巧克力慕斯、草莓果盤與巧克力布朗尼",
       "restaurantId": "animator",
-      "restaurantLabel": "動畫家調色盤",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
       "restaurantEnglish": "Animator’s Palate / Animator’s Table",
       "restaurantGroup": "rotational",
       "restaurantGroupLabel": "主餐廳",
@@ -4646,11 +5415,18 @@ window.MENU_LOOKUP_DATA = {
         "兒童/配菜",
         "kids",
         "kids-side",
-        "兒童"
+        "兒童",
+        "歡樂馬戲團巧克力圓頂",
+        "Animator’s Palate / Animator’s Table",
+        "巧克力圓頂蛋糕",
+        "動畫師調色盤／動畫師餐桌"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡樂馬戲團巧克力圓頂 chocolate dome 巧克力慕斯 草莓果盤與巧克力布朗尼 animator 動畫家調色盤 animator s palate animator s table rotational 主餐廳 kids 兒童餐 kids side 兒童 配菜 兒童",
-      "sourceRecordIndex": 119
+      "searchText": "巧克力圓頂蛋糕 chocolate dome 巧克力慕斯 草莓果盤與巧克力布朗尼 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 兒童 配菜 動畫家調色盤 animator s palate 主餐廳 兒童餐 兒童 配菜 kids kids side 兒童 歡樂馬戲團巧克力圓頂 animator s palate animator s table 巧克力圓頂蛋糕 動畫師調色盤 動畫師餐桌 兒童",
+      "sourceRecordIndex": 119,
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（中譯／配對餐廳核對；原描述與價格保留）"
+      ]
     },
     {
       "id": "menu-sulley-steak-appetizers-karuma-ebi-121",
@@ -4686,7 +5462,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "大眼仔的驚喜車海老 karuma ebi 酥炸南瓜 頂級老虎蝦佐松露蒜味美乃滋 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 appetizers 前菜 appetizer 25 00 seafood 海鮮",
+      "searchText": "大眼仔的驚喜車海老 karuma ebi 酥炸南瓜 頂級老虎蝦佐松露蒜味美乃滋 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 120
     },
     {
@@ -4723,7 +5499,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "怪獸大學頂級和牛韃靼 wagyu tartare 生和牛韃靼搭配日式最中餅 煙燻蛋與青蘋果 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 appetizers 前菜 appetizer 35 00 meat beef 牛肉",
+      "searchText": "怪獸大學頂級和牛韃靼 wagyu tartare 生和牛韃靼搭配日式最中餅 煙燻蛋與青蘋果 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 appetizers appetizer meat beef 牛肉 牛肉",
       "sourceRecordIndex": 121
     },
     {
@@ -4760,7 +5536,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "深海極品黑鮪魚大腹 o toro 黑鮪魚大腹肉 新鮮海膽 蔥花與日式烤飯糰 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 appetizers 前菜 appetizer 39 00 seafood 海鮮",
+      "searchText": "深海極品黑鮪魚大腹 o toro 黑鮪魚大腹肉 新鮮海膽 蔥花與日式烤飯糰 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 122
     },
     {
@@ -4797,7 +5573,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "雪怪的極地鱈場蟹塔 tarabagani 帝王蟹風味塔 哈密瓜 柚子寒天與魚子醬 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 appetizers 前菜 appetizer 30 00 seafood 海鮮",
+      "searchText": "雪怪的極地鱈場蟹塔 tarabagani 帝王蟹風味塔 哈密瓜 柚子寒天與魚子醬 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 123
     },
     {
@@ -4834,7 +5610,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "驚嚇專員伊勢龍蝦土瓶蒸 ise ebi dobin mushi 錦繡龍蝦 香菇與濃郁鰹魚高湯 以傳統日式土瓶精心呈現 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 appetizers 前菜 appetizer 35 00 seafood 海鮮",
+      "searchText": "驚嚇專員伊勢龍蝦土瓶蒸 ise ebi dobin mushi 錦繡龍蝦 香菇與濃郁鰹魚高湯 以傳統日式土瓶精心呈現 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 appetizers appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 124
     },
     {
@@ -4872,7 +5648,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "毛怪的翠綠羽衣甘藍 kale 羽衣甘藍 豌豆泥 松子佐爆米花柚子奇亞籽油醋 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sharing 分享餐點 appetizer 前菜 15 00 vegetarian 素食",
+      "searchText": "毛怪的翠綠羽衣甘藍 kale 羽衣甘藍 豌豆泥 松子佐爆米花柚子奇亞籽油醋 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 分享餐點 前菜 sharing appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 125
     },
     {
@@ -4910,7 +5686,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "兵工廠碳烤兵庫縣生蠔 kaki 碳烤兵庫縣生蠔佐蒲燒奶油釉燒與香脆蒜片 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sharing 分享餐點 appetizer 前菜 35 00 seafood 海鮮",
+      "searchText": "兵工廠碳烤兵庫縣生蠔 kaki 碳烤兵庫縣生蠔佐蒲燒奶油釉燒與香脆蒜片 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 分享餐點 前菜 sharing appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 126
     },
     {
@@ -4948,7 +5724,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "任意門秘境真鯛刺身 tai kuro toryufu 新鮮真鯛生魚片 鹽昆布佐香草松露油醋 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sharing 分享餐點 appetizer 前菜 35 00 seafood 海鮮",
+      "searchText": "任意門秘境真鯛刺身 tai kuro toryufu 新鮮真鯛生魚片 鹽昆布佐香草松露油醋 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 前菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 分享餐點 前菜 sharing appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 127
     },
     {
@@ -4985,7 +5761,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡笑收集瓶秘製銀鱈 gindara 鮮嫩黑鱈魚 香菜醬油長蔥與菠菜豆腐 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 entrees 主餐 entree 45 00 seafood 海鮮",
+      "searchText": "歡笑收集瓶秘製銀鱈 gindara 鮮嫩黑鱈魚 香菜醬油長蔥與菠菜豆腐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 128
     },
     {
@@ -5022,7 +5798,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "怪獸城市季節鮮魚 shun no sakana 季節特選漁獲 西京味噌 芹菜根泥與清酒乳沫 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 entrees 主餐 entree 65 00 seafood 海鮮",
+      "searchText": "怪獸城市季節鮮魚 shun no sakana 季節特選漁獲 西京味噌 芹菜根泥與清酒乳沫 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 129
     },
     {
@@ -5059,7 +5835,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "絨毛雪怪綿羊豬頸肉 mangalica butaniku 壽喜燒醬燒綿羊豬頸肉 蠶豆與焦糖洋蔥泥 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 entrees 主餐 entree 45 00 pork 豬肉",
+      "searchText": "絨毛雪怪綿羊豬頸肉 mangalica butaniku 壽喜燒醬燒綿羊豬頸肉 蠶豆與焦糖洋蔥泥 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 entrees entree pork 豬肉 豬肉",
       "sourceRecordIndex": 130
     },
     {
@@ -5091,7 +5867,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "a5 鹿兒島黑毛和牛紐約客 a5 kuroge satsuma striploin 霜降油花評級 12 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 wagyu 和牛 entree 主餐 108 00",
+      "searchText": "a5 鹿兒島黑毛和牛紐約客 a5 kuroge satsuma striploin 霜降油花評級 12 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 和牛 主餐 wagyu entree",
       "sourceRecordIndex": 131
     },
     {
@@ -5123,7 +5899,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "a5 鹿兒島黑毛和牛肋眼 a5 kuroge satsuma ribeye 霜降油花評級 12 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 wagyu 和牛 entree 主餐 98 00",
+      "searchText": "a5 鹿兒島黑毛和牛肋眼 a5 kuroge satsuma ribeye 霜降油花評級 12 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 和牛 主餐 wagyu entree",
       "sourceRecordIndex": 132
     },
     {
@@ -5155,7 +5931,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "霜降純種和牛紐約客 shimo fullblood striploin 霜降油花評級 7 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 wagyu 和牛 entree 主餐 70 00",
+      "searchText": "霜降純種和牛紐約客 shimo fullblood striploin 霜降油花評級 7 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 和牛 主餐 wagyu entree",
       "sourceRecordIndex": 133
     },
     {
@@ -5187,7 +5963,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "霜降純種和牛菲力 shimo fullblood tenderloin 霜降油花評級 7 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 wagyu 和牛 entree 主餐 75 00",
+      "searchText": "霜降純種和牛菲力 shimo fullblood tenderloin 霜降油花評級 7 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 和牛 主餐 wagyu entree",
       "sourceRecordIndex": 134
     },
     {
@@ -5219,7 +5995,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "澳洲純黑安格斯紐約客 pure black australian striploin 霜降油花評級 5 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 angus angus 牛排 entree 主餐 45 00",
+      "searchText": "澳洲純黑安格斯紐約客 pure black australian striploin 霜降油花評級 5 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 angus 牛排 主餐 angus entree",
       "sourceRecordIndex": 135
     },
     {
@@ -5251,7 +6027,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "澳洲純黑安格斯肋眼 pure black australian ribeye 霜降油花評級 5 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 angus angus 牛排 entree 主餐 57 00",
+      "searchText": "澳洲純黑安格斯肋眼 pure black australian ribeye 霜降油花評級 5 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 angus 牛排 主餐 angus entree",
       "sourceRecordIndex": 136
     },
     {
@@ -5283,7 +6059,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "澳洲純黑安格斯菲力 pure black australian tenderloin 霜降油花評級 3 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 angus angus 牛排 entree 主餐 52 00",
+      "searchText": "澳洲純黑安格斯菲力 pure black australian tenderloin 霜降油花評級 3 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 主餐 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 angus 牛排 主餐 angus entree",
       "sourceRecordIndex": 137
     },
     {
@@ -5315,7 +6091,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "流浪者戰斧牛排 wanderer tomahawk 重達 1 2 公斤 霜降油花評級 4 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 large format 大瓶酒 drinks 飲料 199 00",
+      "searchText": "流浪者戰斧牛排 wanderer tomahawk 重達 1 2 公斤 霜降油花評級 4 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 飲料 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 大瓶酒 飲料 large format drinks",
       "sourceRecordIndex": 138
     },
     {
@@ -5347,7 +6123,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "流浪者頂級紅屋牛排 wanderer prime porterhouse 重達 1 2 公斤 霜降油花評級 4 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 large format 大瓶酒 drinks 飲料 185 00",
+      "searchText": "流浪者頂級紅屋牛排 wanderer prime porterhouse 重達 1 2 公斤 霜降油花評級 4 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 飲料 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 大瓶酒 飲料 large format drinks",
       "sourceRecordIndex": 139
     },
     {
@@ -5379,7 +6155,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "土鍋和牛炊飯 donabe wagyu beef rice 以傳統日式土鍋烹煮頂級日本蓬鬆米飯 搭配純種和牛紐約客 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 large format 大瓶酒 drinks 飲料 55 00",
+      "searchText": "土鍋和牛炊飯 donabe wagyu beef rice 以傳統日式土鍋烹煮頂級日本蓬鬆米飯 搭配純種和牛紐約客 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 飲料 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 大瓶酒 飲料 large format drinks",
       "sourceRecordIndex": 140
     },
     {
@@ -5411,7 +6187,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "大眼綠蘆筍 asparagus 佐紅薑荷蘭醬與柴魚片 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sides 配菜 kids side 兒童 配菜 12 00",
+      "searchText": "大眼綠蘆筍 asparagus 佐紅薑荷蘭醬與柴魚片 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 141
     },
     {
@@ -5443,7 +6219,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "綜合野菇 kinoko 佐清酒萊姆奶油 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sides 配菜 kids side 兒童 配菜 12 00",
+      "searchText": "綜合野菇 kinoko 佐清酒萊姆奶油 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 142
     },
     {
@@ -5475,7 +6251,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "綿密馬鈴薯泥 potato 佐白芝麻與青豆 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sides 配菜 kids side 兒童 配菜 12 00",
+      "searchText": "綿密馬鈴薯泥 potato 佐白芝麻與青豆 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 143
     },
     {
@@ -5507,7 +6283,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "碳烤甜玉米 tomorokoshi 佐香鬆奶油與青蔥 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 sides 配菜 kids side 兒童 配菜 12 00",
+      "searchText": "碳烤甜玉米 tomorokoshi 佐香鬆奶油與青蔥 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 144
     },
     {
@@ -5539,7 +6315,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義大利白松露 white truffle italy 時價 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 truffle 松露 kids side 兒童 配菜",
+      "searchText": "義大利白松露 white truffle italy 時價 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 松露 兒童 配菜 truffle kids side",
       "sourceRecordIndex": 145
     },
     {
@@ -5571,7 +6347,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "法國佩里戈爾黑松露 perigord black truffle france 時價 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 truffle 松露 kids side 兒童 配菜",
+      "searchText": "法國佩里戈爾黑松露 perigord black truffle france 時價 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 兒童 配菜 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 松露 兒童 配菜 truffle kids side",
       "sourceRecordIndex": 146
     },
     {
@@ -5606,7 +6382,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "電力滿滿抹茶聖代百匯 matcha sundae parfait 香草聖代 紅豆 麻糬與寒天果凍 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 desserts 甜點 dessert 12 00",
+      "searchText": "電力滿滿抹茶聖代百匯 matcha sundae parfait 香草聖代 紅豆 麻糬與寒天果凍 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 147
     },
     {
@@ -5641,7 +6417,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "毛怪專屬 巴斯克紫薯起司蛋糕 basque ube cheesecake 搭配夢幻藍色蝶豆花奶油與抹茶瓦片 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 desserts 甜點 dessert 12 00",
+      "searchText": "毛怪專屬 巴斯克紫薯起司蛋糕 basque ube cheesecake 搭配夢幻藍色蝶豆花奶油與抹茶瓦片 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 148
     },
     {
@@ -5676,7 +6452,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "巧克力榛果法式薄餅捲 chocolate hazelnut roll crepe 巧克力榛果霜 巧克力薄餅 柑橘鮮奶油甘納許與開心果瓦片 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 desserts 甜點 dessert 12 00",
+      "searchText": "巧克力榛果法式薄餅捲 chocolate hazelnut roll crepe 巧克力榛果霜 巧克力薄餅 柑橘鮮奶油甘納許與開心果瓦片 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 149
     },
     {
@@ -5711,7 +6487,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "東方麻糬大賞 study of mochi 綜合日式麻糬與新鮮火龍果 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 desserts 甜點 dessert 9 00",
+      "searchText": "東方麻糬大賞 study of mochi 綜合日式麻糬與新鮮火龍果 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 150
     },
     {
@@ -5746,7 +6522,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "阿布的最愛 精選冰淇淋 assorted ice cream 抹茶 薰衣草 椰子 柚子雪酪 sulley steak 怪獸牛排館 mike sulley s steakhouse sulley 怪獸餐廳 desserts 甜點 dessert 9 00",
+      "searchText": "阿布的最愛 精選冰淇淋 assorted ice cream 抹茶 薰衣草 椰子 柚子雪酪 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 怪獸牛排館 mike sulley s steakhouse 怪獸餐廳 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 151
     },
     {
@@ -5778,7 +6554,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "主廚無菜單料理 omakase tasting menu 每位 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase omakase entree 主餐 200 00",
+      "searchText": "主廚無菜單料理 omakase tasting menu 每位 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 主餐 omakase entree",
       "sourceRecordIndex": 152
     },
     {
@@ -5810,7 +6586,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "環遊世界品酒之旅 wines of the world pairing sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 wine pairings 葡萄酒搭配 drinks 飲料 150 00",
+      "searchText": "環遊世界品酒之旅 wines of the world pairing 怪獸 omakase mike sulley s omakase 怪獸餐廳 飲料 怪獸 omakase mike sulley s omakase 怪獸餐廳 葡萄酒搭配 飲料 wine pairings drinks",
       "sourceRecordIndex": 153
     },
     {
@@ -5842,7 +6618,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "東京奇妙之旅品酒 tour of japan pairing sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 wine pairings 葡萄酒搭配 drinks 飲料 140 00",
+      "searchText": "東京奇妙之旅品酒 tour of japan pairing 怪獸 omakase mike sulley s omakase 怪獸餐廳 飲料 怪獸 omakase mike sulley s omakase 怪獸餐廳 葡萄酒搭配 飲料 wine pairings drinks",
       "sourceRecordIndex": 154
     },
     {
@@ -5874,7 +6650,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "無酒精魔法飲品搭配 zero proof pairing sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 wine pairings 葡萄酒搭配 drinks 飲料 70 00",
+      "searchText": "無酒精魔法飲品搭配 zero proof pairing 怪獸 omakase mike sulley s omakase 怪獸餐廳 飲料 怪獸 omakase mike sulley s omakase 怪獸餐廳 葡萄酒搭配 飲料 wine pairings drinks",
       "sourceRecordIndex": 155
     },
     {
@@ -5906,7 +6682,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "怪獸城市的頂級海味 海膽蔥花鮪魚泥 uni negitoro 頂級海膽 藍鰭鮪魚腹肉 青蔥與海苔脆餅 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "怪獸城市的頂級海味 海膽蔥花鮪魚泥 uni negitoro 頂級海膽 藍鰭鮪魚腹肉 青蔥與海苔脆餅 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 156
     },
     {
@@ -5938,7 +6714,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "毛怪的私房點心 西京味噌鴨肝醬 saikyo miso duck pate 搭配薩摩橘子果凍與日式最中餅 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "毛怪的私房點心 西京味噌鴨肝醬 saikyo miso duck pate 搭配薩摩橘子果凍與日式最中餅 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 157
     },
     {
@@ -5970,7 +6746,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "迷霧之門煙燻干貝 smoked hotategai 北海道干貝 花椰菜泥與酥脆米片 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "迷霧之門煙燻干貝 smoked hotategai 北海道干貝 花椰菜泥與酥脆米片 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 158
     },
     {
@@ -6002,7 +6778,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "驚嚇專員的活力泉源 伊勢龍蝦土瓶蒸 ise ebi dobin mushi 伊勢龍蝦 鮮香菇與柴魚高湯 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "驚嚇專員的活力泉源 伊勢龍蝦土瓶蒸 ise ebi dobin mushi 伊勢龍蝦 鮮香菇與柴魚高湯 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 159
     },
     {
@@ -6034,7 +6810,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "能量滿分 山椒起司炸雞排 sansho chicken katsu 酥炸山椒雞排 紫薯 牽絲莫札瑞拉起司與日式咖哩 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "能量滿分 山椒起司炸雞排 sansho chicken katsu 酥炸山椒雞排 紫薯 牽絲莫札瑞拉起司與日式咖哩 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 160
     },
     {
@@ -6066,7 +6842,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "雪人首領的溫暖問候 鱈場蟹茶碗蒸 taraba kani chawanmushi 天婦羅阿拉斯加鱈場蟹 日式蒸蛋與松茸 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "雪人首領的溫暖問候 鱈場蟹茶碗蒸 taraba kani chawanmushi 天婦羅阿拉斯加鱈場蟹 日式蒸蛋與松茸 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 161
     },
     {
@@ -6098,7 +6874,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "頂級怪獸之王 a5 薩摩和牛紐約客 a5 satsuma striploin 炙烤青花筍佐蒜味醬油濃縮醬汁 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "頂級怪獸之王 a5 薩摩和牛紐約客 a5 satsuma striploin 炙烤青花筍佐蒜味醬油濃縮醬汁 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 162
     },
     {
@@ -6130,7 +6906,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡笑收集瓶 香甜玉米布丁 tomorokoshi 濃郁玉米布丁搭配香脆焦糖爆米花 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "歡笑收集瓶 香甜玉米布丁 tomorokoshi 濃郁玉米布丁搭配香脆焦糖爆米花 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 163
     },
     {
@@ -6162,7 +6938,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "大眼仔的清涼魔法 巨峰葡萄雪酪 kyoho sorbet 巨峰葡萄冰沙佐黑芝麻帕林內 sulley omakase 怪獸 omakase mike sulley s omakase sulley 怪獸餐廳 omakase course omakase 套餐 entree 主餐",
+      "searchText": "大眼仔的清涼魔法 巨峰葡萄雪酪 kyoho sorbet 巨峰葡萄冰沙佐黑芝麻帕林內 怪獸 omakase mike sulley s omakase 怪獸餐廳 主餐 怪獸 omakase mike sulley s omakase 怪獸餐廳 omakase 套餐 主餐 omakase course entree",
       "sourceRecordIndex": 164
     },
     {
@@ -6194,7 +6970,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "主廚精緻小缽 kobachi sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "主廚精緻小缽 kobachi 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 165
     },
     {
@@ -6226,7 +7002,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "怪獸海域嚴選三品刺身 trio of sashimi sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "怪獸海域嚴選三品刺身 trio of sashimi 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 166
     },
     {
@@ -6258,7 +7034,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鮮甜北海道生食級干貝 hokkaido scallop sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "鮮甜北海道生食級干貝 hokkaido scallop 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 167
     },
     {
@@ -6290,7 +7066,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "暖心赤味噌湯 aka miso soup sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "暖心赤味噌湯 aka miso soup 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 168
     },
     {
@@ -6322,7 +7098,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "深海秘製黑鱈魚 black cod sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "深海秘製黑鱈魚 black cod 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 169
     },
     {
@@ -6354,7 +7130,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "櫻花牧場鮮嫩雞腿肉 sakura chicken thigh sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "櫻花牧場鮮嫩雞腿肉 sakura chicken thigh 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 170
     },
     {
@@ -6386,7 +7162,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "澳洲全血和牛霜降紐約客 mbs2 australian fullblood wagyu shimo striploin sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "澳洲全血和牛霜降紐約客 mbs2 australian fullblood wagyu shimo striploin 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 171
     },
     {
@@ -6418,7 +7194,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "季節鮮蔬鐵板綜合盛合 yasai moriwase sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "季節鮮蔬鐵板綜合盛合 yasai moriwase 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 172
     },
     {
@@ -6450,7 +7226,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "歡笑能量黑胡椒蟹肉鐵板炒飯 black pepper crab fried rice sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "歡笑能量黑胡椒蟹肉鐵板炒飯 black pepper crab fried rice 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 173
     },
     {
@@ -6482,7 +7258,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鐵板焦糖香蕉 teppan caramelized bananas sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan zen 鐵板燒 zen entree 主餐 115 00",
+      "searchText": "鐵板焦糖香蕉 teppan caramelized bananas 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 zen 主餐 teppan zen entree",
       "sourceRecordIndex": 174
     },
     {
@@ -6514,7 +7290,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "主廚精緻小缽 kobachi sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00",
+      "searchText": "主廚精緻小缽 kobachi 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree",
       "sourceRecordIndex": 175
     },
     {
@@ -6552,7 +7328,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑鮪魚腹肉韃靼佐青蔥 海膽與香脆米餅 toro tartare negi uni rice cake sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 seafood 海鮮",
+      "searchText": "黑鮪魚腹肉韃靼佐青蔥 海膽與香脆米餅 toro tartare negi uni rice cake 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 176
     },
     {
@@ -6590,7 +7366,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "日本兵庫縣特級生蠔 japanese hyogo oysters sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 seafood 海鮮",
+      "searchText": "日本兵庫縣特級生蠔 japanese hyogo oysters 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 177
     },
     {
@@ -6622,7 +7398,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "暖心赤味噌湯 aka miso soup sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00",
+      "searchText": "暖心赤味噌湯 aka miso soup 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree",
       "sourceRecordIndex": 178
     },
     {
@@ -6660,7 +7436,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "頂級錦繡龍蝦 spiny lobster sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 seafood 海鮮",
+      "searchText": "頂級錦繡龍蝦 spiny lobster 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 179
     },
     {
@@ -6698,7 +7474,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "匈牙利綿羊豬松阪肉 mangalitsa pork jowl sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 pork 豬肉",
+      "searchText": "匈牙利綿羊豬松阪肉 mangalitsa pork jowl 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree pork 豬肉 豬肉",
       "sourceRecordIndex": 180
     },
     {
@@ -6736,7 +7512,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "a5 薩摩極上和牛紐約客 mbs 12 a5 satsuma striploin sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 meat beef 牛肉",
+      "searchText": "a5 薩摩極上和牛紐約客 mbs 12 a5 satsuma striploin 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree meat beef 牛肉 牛肉",
       "sourceRecordIndex": 181
     },
     {
@@ -6774,7 +7550,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "季節鮮蔬鐵板綜合盛合 yasai moriwase sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00 vegetarian 素食",
+      "searchText": "季節鮮蔬鐵板綜合盛合 yasai moriwase 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree vegetarian 素食 素食",
       "sourceRecordIndex": 182
     },
     {
@@ -6806,7 +7582,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "極致牛油蒜香鐵板炒飯 tallow garlic fried rice sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00",
+      "searchText": "極致牛油蒜香鐵板炒飯 tallow garlic fried rice 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree",
       "sourceRecordIndex": 183
     },
     {
@@ -6838,7 +7614,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鐵板焦糖香蕉 teppan caramelized bananas sulley teppan 怪獸鐵板燒 mike sulley s teppanyaki sulley 怪獸餐廳 teppan premium 鐵板燒 premium entree 主餐 175 00",
+      "searchText": "鐵板焦糖香蕉 teppan caramelized bananas 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 主餐 怪獸鐵板燒 mike sulley s teppanyaki 怪獸餐廳 鐵板燒 premium 主餐 teppan premium entree",
       "sourceRecordIndex": 184
     },
     {
@@ -6870,7 +7646,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "怪獸特選綜合生魚片 8種 16片 sashimi moriwase sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐 100 00",
+      "searchText": "怪獸特選綜合生魚片 8種 16片 sashimi moriwase 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 185
     },
     {
@@ -6902,7 +7678,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "毛怪的豪華綜合握壽司 8種 16貫 sushi moriwase sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐 85 00",
+      "searchText": "毛怪的豪華綜合握壽司 8種 16貫 sushi moriwase 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 186
     },
     {
@@ -6934,7 +7710,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "頂級黑鮪魚大腹 o toro bluefin tuna belly 刺身5片 45 握壽司2貫 24 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "頂級黑鮪魚大腹 o toro bluefin tuna belly 刺身5片 45 握壽司2貫 24 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 187
     },
     {
@@ -6966,7 +7742,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑鮪魚赤身 maguro akami bluefin tuna 刺身5片 18 握壽司2貫 8 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "黑鮪魚赤身 maguro akami bluefin tuna 刺身5片 18 握壽司2貫 8 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 188
     },
     {
@@ -6998,7 +7774,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "紅魽 kampachi amberjack 刺身5片 16 握壽司2貫 9 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "紅魽 kampachi amberjack 刺身5片 16 握壽司2貫 9 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 189
     },
     {
@@ -7030,7 +7806,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "青魽 鰤魚 hamachi yellowtail 刺身5片 24 握壽司2貫 12 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "青魽 鰤魚 hamachi yellowtail 刺身5片 24 握壽司2貫 12 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 190
     },
     {
@@ -7062,7 +7838,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "真鯛 tai sea bream 刺身5片 24 握壽司2貫 12 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "真鯛 tai sea bream 刺身5片 24 握壽司2貫 12 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 191
     },
     {
@@ -7094,7 +7870,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鮭魚 shake salmon 刺身5片 15 握壽司2貫 7 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "鮭魚 shake salmon 刺身5片 15 握壽司2貫 7 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 192
     },
     {
@@ -7126,7 +7902,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "帆立貝 hototegai scallop 刺身5片 18 握壽司2貫 8 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "帆立貝 hototegai scallop 刺身5片 18 握壽司2貫 8 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 193
     },
     {
@@ -7158,7 +7934,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "章魚 tako octopus 刺身5片 12 握壽司2貫 6 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "章魚 tako octopus 刺身5片 12 握壽司2貫 6 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 194
     },
     {
@@ -7190,7 +7966,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海膽 uni sea urchin 刺身5片 40 握壽司2貫 24 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "海膽 uni sea urchin 刺身5片 40 握壽司2貫 24 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 195
     },
     {
@@ -7222,7 +7998,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "甜蝦 amaebi sweet shrimp 刺身5片 24 握壽司2貫 9 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "甜蝦 amaebi sweet shrimp 刺身5片 24 握壽司2貫 9 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 196
     },
     {
@@ -7254,7 +8030,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鮭魚卵 ikura salmon roe 刺身5片 25 握壽司2貫 12 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 sushi 壽司 entree 主餐",
+      "searchText": "鮭魚卵 ikura salmon roe 刺身5片 25 握壽司2貫 12 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 壽司 主餐 sushi entree",
       "sourceRecordIndex": 197
     },
     {
@@ -7292,7 +8068,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鮭魚明太子手卷 salmon mentai 佐天婦羅麵衣碎與日式香鬆 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 handrolls 手捲 entree 主餐 15 00 seafood 海鮮",
+      "searchText": "鮭魚明太子手卷 salmon mentai 佐天婦羅麵衣碎與日式香鬆 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 手捲 主餐 handrolls entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 198
     },
     {
@@ -7330,7 +8106,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑鮪魚大腹手卷 o toro 佐蔥花 辛香韭蔥與魚子醬 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 handrolls 手捲 entree 主餐 27 00 seafood 海鮮",
+      "searchText": "黑鮪魚大腹手卷 o toro 佐蔥花 辛香韭蔥與魚子醬 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 手捲 主餐 handrolls entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 199
     },
     {
@@ -7368,7 +8144,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "蟹肉手卷 kani 佐柚子胡椒與七味粉美乃滋 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 handrolls 手捲 entree 主餐 10 00 seafood 海鮮",
+      "searchText": "蟹肉手卷 kani 佐柚子胡椒與七味粉美乃滋 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 手捲 主餐 handrolls entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 200
     },
     {
@@ -7406,7 +8182,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "干貝手卷 hototegai 佐酪梨與香草松露蒜味美乃滋 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 handrolls 手捲 entree 主餐 15 00 seafood 海鮮",
+      "searchText": "干貝手卷 hototegai 佐酪梨與香草松露蒜味美乃滋 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 手捲 主餐 handrolls entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 201
     },
     {
@@ -7444,7 +8220,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "和牛韃靼壽喜燒 wagyu tartare sukiyaki 搭配頂級海膽與煙燻蛋黃 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 15 00 meat beef 牛肉",
+      "searchText": "和牛韃靼壽喜燒 wagyu tartare sukiyaki 搭配頂級海膽與煙燻蛋黃 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree meat beef 牛肉 牛肉",
       "sourceRecordIndex": 202
     },
     {
@@ -7482,7 +8258,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "醬烤香菇 shoyu shiitake 佐韭蔥與酥脆蒜片 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 6 00 vegetarian 素食",
+      "searchText": "醬烤香菇 shoyu shiitake 佐韭蔥與酥脆蒜片 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree vegetarian 素食 素食",
       "sourceRecordIndex": 203
     },
     {
@@ -7520,7 +8296,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "秘製蒲燒鰻魚煲仔飯 unagi claypot rice 蒲燒鰻魚 玉子燒 青蔥與xo醬臘腸 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 25 00 seafood 海鮮",
+      "searchText": "秘製蒲燒鰻魚煲仔飯 unagi claypot rice 蒲燒鰻魚 玉子燒 青蔥與xo醬臘腸 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 204
     },
     {
@@ -7558,7 +8334,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "南洋風情馬來椰漿飯 nasi lemak 香料炸雞腿 雞蛋 江魚仔 參巴洋蔥與椰香飯 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 18 00 meat 肉類",
+      "searchText": "南洋風情馬來椰漿飯 nasi lemak 香料炸雞腿 雞蛋 江魚仔 參巴洋蔥與椰香飯 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree meat 肉類 肉類",
       "sourceRecordIndex": 205
     },
     {
@@ -7596,7 +8372,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "獅城鮮味新加坡叻沙 singapore laksa 龍蝦肉 干貝 魚板 豆芽與雞蛋 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 20 00 seafood 海鮮",
+      "searchText": "獅城鮮味新加坡叻沙 singapore laksa 龍蝦肉 干貝 魚板 豆芽與雞蛋 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 206
     },
     {
@@ -7634,7 +8410,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "馬來滷麵佐沙嗲雞 mee rebus with chicken satay 炸豆包 青辣椒 雞蛋與炸紅蔥頭 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 15 00 meat 肉類",
+      "searchText": "馬來滷麵佐沙嗲雞 mee rebus with chicken satay 炸豆包 青辣椒 雞蛋與炸紅蔥頭 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree meat 肉類 肉類",
       "sourceRecordIndex": 207
     },
     {
@@ -7672,7 +8448,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "東方經典擔擔麵 dan dan noodles 發酵豆醬肉燥 雞蛋 烤花生與紅油 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 12 00 pork 豬肉",
+      "searchText": "東方經典擔擔麵 dan dan noodles 發酵豆醬肉燥 雞蛋 烤花生與紅油 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree pork 豬肉 豬肉",
       "sourceRecordIndex": 208
     },
     {
@@ -7710,7 +8486,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "濃郁冬蔭功牛肉船麵 creamy tom yum beef boat noodles 牛肉片 牛肉丸 香脆雲吞 九層塔與米線 sulley sushi 怪獸壽司 mike sulley s sushi sulley 怪獸餐廳 asian 亞洲料理 entree 主餐 12 00 meat beef 牛肉",
+      "searchText": "濃郁冬蔭功牛肉船麵 creamy tom yum beef boat noodles 牛肉片 牛肉丸 香脆雲吞 九層塔與米線 怪獸壽司 mike sulley s sushi 怪獸餐廳 主餐 怪獸壽司 mike sulley s sushi 怪獸餐廳 亞洲料理 主餐 asian entree meat beef 牛肉 牛肉",
       "sourceRecordIndex": 209
     },
     {
@@ -7741,7 +8517,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "palo brunch 套餐 palo brunch set palo brunch palo brunch palo palo set 套餐 entree 主餐 55 00",
+      "searchText": "palo brunch 套餐 palo brunch set palo brunch palo brunch palo 主餐 palo brunch palo 套餐 主餐 set entree",
       "sourceRecordIndex": 210
     },
     {
@@ -7778,7 +8554,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "亞特蘭提斯海鮮秘寶 seafood selection 石蟹鉗 檸檬醃鮮蝦 特調醃製綠唇貽貝 香料黃鰭鮪魚 北歐蒔蘿醃鮭魚 palo brunch palo brunch palo palo seafood cold 冷海鮮 appetizer 前菜 seafood 海鮮",
+      "searchText": "亞特蘭提斯海鮮秘寶 seafood selection 石蟹鉗 檸檬醃鮮蝦 特調醃製綠唇貽貝 香料黃鰭鮪魚 北歐蒔蘿醃鮭魚 palo brunch palo brunch palo 前菜 palo brunch palo 冷海鮮 前菜 seafood cold appetizer seafood 海鮮 海鮮",
       "sourceRecordIndex": 211
     },
     {
@@ -7815,7 +8591,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義大利工匠精選冷肉與起司拼盤 artisan salumi cheese 義式生火腿片 義式風乾豬頸肉片 風乾牛肉片 經典義大利臘腸 醃製橄欖 爐烤大蒜與各式起司 palo brunch palo brunch palo palo seafood cold 冷海鮮 appetizer 前菜 pork 豬肉",
+      "searchText": "義大利工匠精選冷肉與起司拼盤 artisan salumi cheese 義式生火腿片 義式風乾豬頸肉片 風乾牛肉片 經典義大利臘腸 醃製橄欖 爐烤大蒜與各式起司 palo brunch palo brunch palo 前菜 palo brunch palo 冷海鮮 前菜 seafood cold appetizer pork 豬肉 豬肉",
       "sourceRecordIndex": 212
     },
     {
@@ -7846,7 +8622,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "米妮的最愛 草莓魔法鬆餅 strawberry waffles 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo palo pastries 糕點 dessert 甜點",
+      "searchText": "米妮的最愛 草莓魔法鬆餅 strawberry waffles 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo 甜點 palo brunch palo 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 213
     },
     {
@@ -7877,7 +8653,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "白雪公主的蘋果肉桂鬆餅 apple cinnamon waffles 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo palo pastries 糕點 dessert 甜點",
+      "searchText": "白雪公主的蘋果肉桂鬆餅 apple cinnamon waffles 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo 甜點 palo brunch palo 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 214
     },
     {
@@ -7908,7 +8684,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "經典白脫牛奶煎餅 buttermilk pancakes 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo palo pastries 糕點 dessert 甜點",
+      "searchText": "經典白脫牛奶煎餅 buttermilk pancakes 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo 甜點 palo brunch palo 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 215
     },
     {
@@ -7939,7 +8715,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "藍莓奇蹟煎餅 blueberry pancakes 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo palo pastries 糕點 dessert 甜點",
+      "searchText": "藍莓奇蹟煎餅 blueberry pancakes 搭配楓糖漿 鮮奶油與新鮮莓果 palo brunch palo brunch palo 甜點 palo brunch palo 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 216
     },
     {
@@ -7976,7 +8752,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鄉村晨光起司火腿義式烘蛋 cheese and ham frittata palo brunch palo brunch palo palo eggs 蛋料理 entree 主餐 pork 豬肉",
+      "searchText": "鄉村晨光起司火腿義式烘蛋 cheese and ham frittata palo brunch palo brunch palo 主餐 palo brunch palo 蛋料理 主餐 eggs entree pork 豬肉 豬肉",
       "sourceRecordIndex": 217
     },
     {
@@ -8013,7 +8789,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "田園綠意櫛瓜義式烘蛋 zucchini frittata palo brunch palo brunch palo palo eggs 蛋料理 entree 主餐 vegetarian 素食",
+      "searchText": "田園綠意櫛瓜義式烘蛋 zucchini frittata palo brunch palo brunch palo 主餐 palo brunch palo 蛋料理 主餐 eggs entree vegetarian 素食 素食",
       "sourceRecordIndex": 218
     },
     {
@@ -8050,7 +8826,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "托斯卡尼番茄洋蔥歐姆蛋 tomato and onion omelet palo brunch palo brunch palo palo eggs 蛋料理 entree 主餐 vegetarian 素食",
+      "searchText": "托斯卡尼番茄洋蔥歐姆蛋 tomato and onion omelet palo brunch palo brunch palo 主餐 palo brunch palo 蛋料理 主餐 eggs entree vegetarian 素食 素食",
       "sourceRecordIndex": 219
     },
     {
@@ -8087,7 +8863,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "經典瑪格麗特 margherita palo brunch palo brunch palo palo pizza 披薩 entree 主餐 vegetarian 素食",
+      "searchText": "經典瑪格麗特 margherita palo brunch palo brunch palo 主餐 palo brunch palo 披薩 主餐 pizza entree vegetarian 素食 素食",
       "sourceRecordIndex": 220
     },
     {
@@ -8124,7 +8900,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式生火腿披薩 prosciutto palo brunch palo brunch palo palo pizza 披薩 entree 主餐 pork 豬肉",
+      "searchText": "義式生火腿披薩 prosciutto palo brunch palo brunch palo 主餐 palo brunch palo 披薩 主餐 pizza entree pork 豬肉 豬肉",
       "sourceRecordIndex": 221
     },
     {
@@ -8161,7 +8937,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "魔法森林野菇披薩 funghi palo brunch palo brunch palo palo pizza 披薩 entree 主餐 vegetarian 素食",
+      "searchText": "魔法森林野菇披薩 funghi palo brunch palo brunch palo 主餐 palo brunch palo 披薩 主餐 pizza entree vegetarian 素食 素食",
       "sourceRecordIndex": 222
     },
     {
@@ -8198,7 +8974,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式半月烤餅 calzone palo brunch palo brunch palo palo pizza 披薩 entree 主餐 pork 豬肉",
+      "searchText": "義式半月烤餅 calzone palo brunch palo brunch palo 主餐 palo brunch palo 披薩 主餐 pizza entree pork 豬肉 豬肉",
       "sourceRecordIndex": 223
     },
     {
@@ -8234,7 +9010,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "托斯卡尼陽光焗烤茄子捲 rollatini melanzane 烤茄子包裹義式生火腿 陳年巴薩米克里考塔起司與莫札瑞拉起司 palo brunch palo brunch palo palo entrees 主餐 entree pork 豬肉",
+      "searchText": "托斯卡尼陽光焗烤茄子捲 rollatini melanzane 烤茄子包裹義式生火腿 陳年巴薩米克里考塔起司與莫札瑞拉起司 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree pork 豬肉 豬肉",
       "sourceRecordIndex": 224
     },
     {
@@ -8270,7 +9046,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "羅馬假期生火腿煎小牛肉 veal saltimbocca 搭配黑蒜炒義大利野芥藍 佐巴羅洛紅酒肉汁 palo brunch palo brunch palo palo entrees 主餐 entree meat 肉類",
+      "searchText": "羅馬假期生火腿煎小牛肉 veal saltimbocca 搭配黑蒜炒義大利野芥藍 佐巴羅洛紅酒肉汁 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 225
     },
     {
@@ -8306,7 +9082,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "帕瑪森魔法酥烤雞胸 parmesan crusted chicken breast 鋪滿莫札瑞拉起司 搭配番茄羅勒醬汁 palo brunch palo brunch palo palo entrees 主餐 entree meat 肉類",
+      "searchText": "帕瑪森魔法酥烤雞胸 parmesan crusted chicken breast 鋪滿莫札瑞拉起司 搭配番茄羅勒醬汁 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 226
     },
     {
@@ -8342,7 +9118,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義大利媽媽的經典肉醬千層麵 lasagna bolognese 搭配濃郁羅馬番茄醬汁 palo brunch palo brunch palo palo entrees 主餐 entree meat 肉類",
+      "searchText": "義大利媽媽的經典肉醬千層麵 lasagna bolognese 搭配濃郁羅馬番茄醬汁 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree meat 肉類 肉類",
       "sourceRecordIndex": 227
     },
     {
@@ -8378,7 +9154,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇幻森林野菇義大利餃 wild mushroom ravioli 佐梅爾檸檬 焦化榛果奶油與烤松子 palo brunch palo brunch palo palo entrees 主餐 entree vegetarian 素食",
+      "searchText": "奇幻森林野菇義大利餃 wild mushroom ravioli 佐梅爾檸檬 焦化榛果奶油與烤松子 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree vegetarian 素食 素食",
       "sourceRecordIndex": 228
     },
     {
@@ -8414,7 +9190,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海洋之心爐烤紅鯛魚菲力 roasted red snapper filet 搭配綠蘆筍 義式西西里燉菜與番紅花馬鈴薯翻糖 palo brunch palo brunch palo palo entrees 主餐 entree seafood 海鮮",
+      "searchText": "海洋之心爐烤紅鯛魚菲力 roasted red snapper filet 搭配綠蘆筍 義式西西里燉菜與番紅花馬鈴薯翻糖 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 229
     },
     {
@@ -8450,7 +9226,7 @@ window.MENU_LOOKUP_DATA = {
         "牛肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奧林帕斯爐烤厚切沙朗牛排 grilled cut sirloin steak 搭配百里香香草奶油 四季豆與巴羅洛紅酒馬鈴薯 palo brunch palo brunch palo palo entrees 主餐 entree meat beef 牛肉",
+      "searchText": "奧林帕斯爐烤厚切沙朗牛排 grilled cut sirloin steak 搭配百里香香草奶油 四季豆與巴羅洛紅酒馬鈴薯 palo brunch palo brunch palo 主餐 palo brunch palo 主餐 entrees entree meat beef 牛肉 牛肉",
       "sourceRecordIndex": 230
     },
     {
@@ -8484,7 +9260,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "溫暖杏仁酒巧克力熔岩蛋糕 warm amaretto chocolate fondant 雙重巧克力醬 榛果義式冰淇淋與摩卡巧克力脆土 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "溫暖杏仁酒巧克力熔岩蛋糕 warm amaretto chocolate fondant 雙重巧克力醬 榛果義式冰淇淋與摩卡巧克力脆土 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 231
     },
     {
@@ -8518,7 +9294,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "經典義式沙巴雍 italian zabaglione 新鮮莓果 瑪莎拉酒與義大利脆餅 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "經典義式沙巴雍 italian zabaglione 新鮮莓果 瑪莎拉酒與義大利脆餅 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 232
     },
     {
@@ -8552,7 +9328,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "南義陽光檸檬酒蛋糕 limoncello torte 柑橘蛋糕 奶油乳酪 檸檬凝乳與柑橘沙拉 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "南義陽光檸檬酒蛋糕 limoncello torte 柑橘蛋糕 奶油乳酪 檸檬凝乳與柑橘沙拉 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 233
     },
     {
@@ -8586,7 +9362,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "白脫牛奶義式奶酪罐 buttermilk panna cotta pot 草莓爆爆珠與開心果碎餅 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "白脫牛奶義式奶酪罐 buttermilk panna cotta pot 草莓爆爆珠與開心果碎餅 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 234
     },
     {
@@ -8620,7 +9396,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑魔女的巧克力覆盆子塔 chocolate raspberry tart 苦甜巧克力慕斯 覆盆子甘納許與香草莢義式冰淇淋 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "黑魔女的巧克力覆盆子塔 chocolate raspberry tart 苦甜巧克力慕斯 覆盆子甘納許與香草莢義式冰淇淋 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 235
     },
     {
@@ -8654,7 +9430,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "暖心蘋果肉桂黏黏包 warm apple cinnamon sticky cinnamon 搭配楓糖奶油霜與焦糖胡桃 palo brunch palo brunch palo palo desserts 甜點 dessert",
+      "searchText": "暖心蘋果肉桂黏黏包 warm apple cinnamon sticky cinnamon 搭配楓糖奶油霜與焦糖胡桃 palo brunch palo brunch palo 甜點 palo brunch palo 甜點 desserts dessert 甜點",
       "sourceRecordIndex": 236
     },
     {
@@ -8684,7 +9460,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "帕洛專屬氣泡特調 palo spritz palo brunch palo brunch palo palo drinks 飲品 飲料 10 00",
+      "searchText": "帕洛專屬氣泡特調 palo spritz palo brunch palo brunch palo 飲料 palo brunch palo 飲品 飲料 drinks",
       "sourceRecordIndex": 237
     },
     {
@@ -8714,7 +9490,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "經典貝里尼 bellini palo brunch palo brunch palo palo drinks 飲品 飲料 8 75",
+      "searchText": "經典貝里尼 bellini palo brunch palo brunch palo 飲料 palo brunch palo 飲品 飲料 drinks",
       "sourceRecordIndex": 238
     },
     {
@@ -8744,7 +9520,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "熱情百香果米摩薩 passion mimosa palo brunch palo brunch palo palo drinks 飲品 飲料 10 00",
+      "searchText": "熱情百香果米摩薩 passion mimosa palo brunch palo brunch palo 飲料 palo brunch palo 飲品 飲料 drinks",
       "sourceRecordIndex": 239
     },
     {
@@ -8780,7 +9556,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "零酒精貝里尼 bellini zero proof palo brunch palo brunch palo palo drinks 飲品 飲料 8 00 non alcoholic 無酒精",
+      "searchText": "零酒精貝里尼 bellini zero proof palo brunch palo brunch palo 飲料 palo brunch palo 飲品 飲料 drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 240
     },
     {
@@ -8811,7 +9587,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式酥炸魷魚與巨無霸大蝦天婦羅 fritto di calamari 佐蒜味美乃滋與普羅旺斯沾醬 palo dinner palo dinner palo palo set appetizers 套餐前菜 appetizer 前菜",
+      "searchText": "義式酥炸魷魚與巨無霸大蝦天婦羅 fritto di calamari 佐蒜味美乃滋與普羅旺斯沾醬 palo dinner palo dinner palo 前菜 palo dinner palo 套餐前菜 前菜 set appetizers appetizer",
       "sourceRecordIndex": 241
     },
     {
@@ -8842,7 +9618,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "布拉塔起司卡布里沙拉 burrata mozzarella caprese 傳家寶番茄 羅勒青醬與10年陳釀巴薩米克醋 palo dinner palo dinner palo palo set appetizers 套餐前菜 appetizer 前菜",
+      "searchText": "布拉塔起司卡布里沙拉 burrata mozzarella caprese 傳家寶番茄 羅勒青醬與10年陳釀巴薩米克醋 palo dinner palo dinner palo 前菜 palo dinner palo 套餐前菜 前菜 set appetizers appetizer",
       "sourceRecordIndex": 242
     },
     {
@@ -8873,7 +9649,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "野生芝麻葉沙拉 arugula salad 烤葵花籽 帕瑪森乾酪 爐烤藤蔓番茄 palo dinner palo dinner palo palo set appetizers 套餐前菜 appetizer 前菜",
+      "searchText": "野生芝麻葉沙拉 arugula salad 烤葵花籽 帕瑪森乾酪 爐烤藤蔓番茄 palo dinner palo dinner palo 前菜 palo dinner palo 套餐前菜 前菜 set appetizers appetizer",
       "sourceRecordIndex": 243
     },
     {
@@ -8904,7 +9680,7 @@ window.MENU_LOOKUP_DATA = {
         "appetizer"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "夏日茴香柑橘沙拉 fennel and citrus salad 血橙 葡萄柚 烤松子佐檸檬酒油醋醬 palo dinner palo dinner palo palo set appetizers 套餐前菜 appetizer 前菜",
+      "searchText": "夏日茴香柑橘沙拉 fennel and citrus salad 血橙 葡萄柚 烤松子佐檸檬酒油醋醬 palo dinner palo dinner palo 前菜 palo dinner palo 套餐前菜 前菜 set appetizers appetizer",
       "sourceRecordIndex": 244
     },
     {
@@ -8935,7 +9711,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "放山檸檬鼠尾草烤雞 free range lemon and sage chicken 搭配迷你蔬菜 義式烤馬鈴薯與奇揚地紅酒百里香肉汁 palo dinner palo dinner palo palo set entrees 套餐主餐 entree 主餐",
+      "searchText": "放山檸檬鼠尾草烤雞 free range lemon and sage chicken 搭配迷你蔬菜 義式烤馬鈴薯與奇揚地紅酒百里香肉汁 palo dinner palo dinner palo 主餐 palo dinner palo 套餐主餐 主餐 set entrees entree",
       "sourceRecordIndex": 245
     },
     {
@@ -8966,7 +9742,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "嫩煎黃鰭鮪魚 ahi tuna 朝鮮薊 鵪鶉蛋 橄欖 翻糖新馬鈴薯佐檸檬馬鞭草白巴薩米克油醋醬 palo dinner palo dinner palo palo set entrees 套餐主餐 entree 主餐",
+      "searchText": "嫩煎黃鰭鮪魚 ahi tuna 朝鮮薊 鵪鶉蛋 橄欖 翻糖新馬鈴薯佐檸檬馬鞭草白巴薩米克油醋醬 palo dinner palo dinner palo 主餐 palo dinner palo 套餐主餐 主餐 set entrees entree",
       "sourceRecordIndex": 246
     },
     {
@@ -8997,7 +9773,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "巴羅洛紅酒綜合野菇燉飯 barolo mushroom risotto 波特菇 羊肚菌 褐菇與牛肝菌 palo dinner palo dinner palo palo set entrees 套餐主餐 entree 主餐",
+      "searchText": "巴羅洛紅酒綜合野菇燉飯 barolo mushroom risotto 波特菇 羊肚菌 褐菇與牛肝菌 palo dinner palo dinner palo 主餐 palo dinner palo 套餐主餐 主餐 set entrees entree",
       "sourceRecordIndex": 247
     },
     {
@@ -9028,7 +9804,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "180克黑安格斯牛菲力 180g black angus beef tenderloin 搭配松露馬鈴薯與新鮮菠菜 palo dinner palo dinner palo palo set entrees 套餐主餐 entree 主餐",
+      "searchText": "180克黑安格斯牛菲力 180g black angus beef tenderloin 搭配松露馬鈴薯與新鮮菠菜 palo dinner palo dinner palo 主餐 palo dinner palo 套餐主餐 主餐 set entrees entree",
       "sourceRecordIndex": 248
     },
     {
@@ -9059,7 +9835,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "招牌巧克力舒芙蕾 chocolate souffle 馬達加斯加香草莢冰淇淋 濃郁巧克力醬與香草安格斯醬 palo dinner palo dinner palo palo set desserts 套餐甜點 dessert 甜點",
+      "searchText": "招牌巧克力舒芙蕾 chocolate souffle 馬達加斯加香草莢冰淇淋 濃郁巧克力醬與香草安格斯醬 palo dinner palo dinner palo 甜點 palo dinner palo 套餐甜點 甜點 set desserts dessert",
       "sourceRecordIndex": 249
     },
     {
@@ -9090,7 +9866,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "palo 經典提拉米蘇 palo s tiramisu 咖啡浸潤手指餅乾 層層馬斯卡彭起司與覆盆子橄欖油脆土 palo dinner palo dinner palo palo set desserts 套餐甜點 dessert 甜點",
+      "searchText": "palo 經典提拉米蘇 palo s tiramisu 咖啡浸潤手指餅乾 層層馬斯卡彭起司與覆盆子橄欖油脆土 palo dinner palo dinner palo 甜點 palo dinner palo 套餐甜點 甜點 set desserts dessert",
       "sourceRecordIndex": 250
     },
     {
@@ -9121,7 +9897,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利佳釀佐餐 esperienza del vino palo dinner palo dinner palo palo wine pairings 葡萄酒搭配 drinks 飲料 90 00",
+      "searchText": "義大利佳釀佐餐 esperienza del vino palo dinner palo dinner palo 飲料 palo dinner palo 葡萄酒搭配 飲料 wine pairings drinks",
       "sourceRecordIndex": 251
     },
     {
@@ -9158,7 +9934,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "無酒精特調佐餐 bella vita zero proof palo dinner palo dinner palo palo wine pairings 葡萄酒搭配 drinks 飲料 45 00 non alcoholic 無酒精",
+      "searchText": "無酒精特調佐餐 bella vita zero proof palo dinner palo dinner palo 飲料 palo dinner palo 葡萄酒搭配 飲料 wine pairings drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 252
     },
     {
@@ -9195,7 +9971,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "拿坡里瑪格麗特披薩 neapolitan margherita palo dinner palo dinner palo palo dinner appetizers 晚餐前菜 appetizer 前菜 16 00 vegetarian 素食",
+      "searchText": "拿坡里瑪格麗特披薩 neapolitan margherita palo dinner palo dinner palo 前菜 palo dinner palo 晚餐前菜 前菜 dinner appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 253
     },
     {
@@ -9232,7 +10008,7 @@ window.MENU_LOOKUP_DATA = {
         "素食"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "綜合野菇披薩 funghi pizza palo dinner palo dinner palo palo dinner appetizers 晚餐前菜 appetizer 前菜 16 00 vegetarian 素食",
+      "searchText": "綜合野菇披薩 funghi pizza palo dinner palo dinner palo 前菜 palo dinner palo 晚餐前菜 前菜 dinner appetizers appetizer vegetarian 素食 素食",
       "sourceRecordIndex": 254
     },
     {
@@ -9269,7 +10045,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "帕瑪生火腿披薩 prosciutto di parma pizza palo dinner palo dinner palo palo dinner appetizers 晚餐前菜 appetizer 前菜 17 00 pork 豬肉",
+      "searchText": "帕瑪生火腿披薩 prosciutto di parma pizza palo dinner palo dinner palo 前菜 palo dinner palo 晚餐前菜 前菜 dinner appetizers appetizer pork 豬肉 豬肉",
       "sourceRecordIndex": 255
     },
     {
@@ -9306,7 +10082,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式綜合冷肉拼盤 antipasto 帕瑪生火腿 風乾牛肉 臘腸 各式起司與迷迭香脆餅 palo dinner palo dinner palo palo sharing 分享餐點 appetizer 前菜 25 00 pork 豬肉",
+      "searchText": "義式綜合冷肉拼盤 antipasto 帕瑪生火腿 風乾牛肉 臘腸 各式起司與迷迭香脆餅 palo dinner palo dinner palo 前菜 palo dinner palo 分享餐點 前菜 sharing appetizer pork 豬肉 豬肉",
       "sourceRecordIndex": 256
     },
     {
@@ -9343,7 +10119,7 @@ window.MENU_LOOKUP_DATA = {
         "豬肉"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "恩杜亞辣肉醬粗管麵 rigatoni nduja 聖馬札諾番茄與絲綢起司 palo dinner palo dinner palo palo sharing 分享餐點 appetizer 前菜 25 00 pork 豬肉",
+      "searchText": "恩杜亞辣肉醬粗管麵 rigatoni nduja 聖馬札諾番茄與絲綢起司 palo dinner palo dinner palo 前菜 palo dinner palo 分享餐點 前菜 sharing appetizer pork 豬肉 豬肉",
       "sourceRecordIndex": 257
     },
     {
@@ -9374,7 +10150,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式奶油南瓜方形餃 agnolotti 搭配杏仁脆餅 鼠尾草與微型羅勒 palo dinner palo dinner palo palo pasta 義大利麵 entree 主餐 8 00",
+      "searchText": "義式奶油南瓜方形餃 agnolotti 搭配杏仁脆餅 鼠尾草與微型羅勒 palo dinner palo dinner palo 主餐 palo dinner palo 義大利麵 主餐 pasta entree",
       "sourceRecordIndex": 258
     },
     {
@@ -9405,7 +10181,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "番紅花馬鈴薯麵疙瘩 potato gnocchi 佐經典番茄肉醬 palo dinner palo dinner palo palo pasta 義大利麵 entree 主餐 8 00",
+      "searchText": "番紅花馬鈴薯麵疙瘩 potato gnocchi 佐經典番茄肉醬 palo dinner palo dinner palo 主餐 palo dinner palo 義大利麵 主餐 pasta entree",
       "sourceRecordIndex": 259
     },
     {
@@ -9436,7 +10212,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "卡拉布里亞辣味筆管麵 penne 辣椒番茄羅勒醬 帕瑪森乾酪 palo dinner palo dinner palo palo pasta 義大利麵 entree 主餐 8 00",
+      "searchText": "卡拉布里亞辣味筆管麵 penne 辣椒番茄羅勒醬 帕瑪森乾酪 palo dinner palo dinner palo 主餐 palo dinner palo 義大利麵 主餐 pasta entree",
       "sourceRecordIndex": 260
     },
     {
@@ -9467,7 +10243,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "羊肉肉醬粗短管麵 paccheri 搭配百里香與鹽醃瑞可塔起司 palo dinner palo dinner palo palo pasta 義大利麵 entree 主餐 8 00",
+      "searchText": "羊肉肉醬粗短管麵 paccheri 搭配百里香與鹽醃瑞可塔起司 palo dinner palo dinner palo 主餐 palo dinner palo 義大利麵 主餐 pasta entree",
       "sourceRecordIndex": 261
     },
     {
@@ -9498,7 +10274,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "帕瑪森起司脆皮羊小排 rack of rhug estate lamb palo dinner palo dinner palo palo meats 肉類 entree 主餐 44 00",
+      "searchText": "帕瑪森起司脆皮羊小排 rack of rhug estate lamb palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 262
     },
     {
@@ -9529,7 +10305,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "340克帶骨小牛排 340g veal chop palo dinner palo dinner palo palo meats 肉類 entree 主餐 42 00",
+      "searchText": "340克帶骨小牛排 340g veal chop palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 263
     },
     {
@@ -9560,7 +10336,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑安格斯 180克菲力 mbs 2 black angus tenderloin palo dinner palo dinner palo palo meats 肉類 entree 主餐 25 00",
+      "searchText": "黑安格斯 180克菲力 mbs 2 black angus tenderloin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 264
     },
     {
@@ -9591,7 +10367,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑安格斯 290克紐約客 mbs 2 black angus striploin palo dinner palo dinner palo palo meats 肉類 entree 主餐 30 00",
+      "searchText": "黑安格斯 290克紐約客 mbs 2 black angus striploin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 265
     },
     {
@@ -9622,7 +10398,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "f1混血和牛 180克菲力 mbs 6 f1 wagyu tenderloin palo dinner palo dinner palo palo meats 肉類 entree 主餐 45 00",
+      "searchText": "f1混血和牛 180克菲力 mbs 6 f1 wagyu tenderloin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 266
     },
     {
@@ -9653,7 +10429,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "f1混血和牛 230克紐約客 mbs 6 f1 wagyu striploin palo dinner palo dinner palo palo meats 肉類 entree 主餐 55 00",
+      "searchText": "f1混血和牛 230克紐約客 mbs 6 f1 wagyu striploin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 267
     },
     {
@@ -9684,7 +10460,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "f1混血和牛 800克紅屋 mbs 4 f1 wagyu porterhouse palo dinner palo dinner palo palo meats 肉類 entree 主餐 110 00",
+      "searchText": "f1混血和牛 800克紅屋 mbs 4 f1 wagyu porterhouse palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 268
     },
     {
@@ -9715,7 +10491,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "純血和牛 180克菲力 mbs 8 sanchoku wagyu tenderloin palo dinner palo dinner palo palo meats 肉類 entree 主餐 65 00",
+      "searchText": "純血和牛 180克菲力 mbs 8 sanchoku wagyu tenderloin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 269
     },
     {
@@ -9746,7 +10522,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "純血和牛 230克紐約客 mbs 8 sanchoku wagyu striploin palo dinner palo dinner palo palo meats 肉類 entree 主餐 60 00",
+      "searchText": "純血和牛 230克紐約客 mbs 8 sanchoku wagyu striploin palo dinner palo dinner palo 主餐 palo dinner palo 肉類 主餐 meats entree",
       "sourceRecordIndex": 270
     },
     {
@@ -9777,7 +10553,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "酥炸育空馬鈴薯 fried yukon potato 迷迭香 帕瑪森乾酪 火山鹽 palo dinner palo dinner palo palo sides 配菜 kids side 兒童 配菜 6 00",
+      "searchText": "酥炸育空馬鈴薯 fried yukon potato 迷迭香 帕瑪森乾酪 火山鹽 palo dinner palo dinner palo 兒童 配菜 palo dinner palo 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 271
     },
     {
@@ -9808,7 +10584,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "螺旋起司麵 cavatappi pasta and cheese palo dinner palo dinner palo palo sides 配菜 kids side 兒童 配菜 8 00",
+      "searchText": "螺旋起司麵 cavatappi pasta and cheese palo dinner palo dinner palo 兒童 配菜 palo dinner palo 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 272
     },
     {
@@ -9839,7 +10615,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "鐵鍋慢烤野菇 pan roasted wild mushrooms palo dinner palo dinner palo palo sides 配菜 kids side 兒童 配菜 8 00",
+      "searchText": "鐵鍋慢烤野菇 pan roasted wild mushrooms palo dinner palo dinner palo 兒童 配菜 palo dinner palo 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 273
     },
     {
@@ -9870,7 +10646,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "碳烤蘆筍 grilled asparagus palo dinner palo dinner palo palo sides 配菜 kids side 兒童 配菜 8 00",
+      "searchText": "碳烤蘆筍 grilled asparagus palo dinner palo dinner palo 兒童 配菜 palo dinner palo 配菜 兒童 配菜 sides kids side",
       "sourceRecordIndex": 274
     },
     {
@@ -9905,7 +10681,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式檸檬酒舒芙蕾 limoncello souffle 香草莢冰淇淋與覆盆子果泥 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 15 00",
+      "searchText": "義式檸檬酒舒芙蕾 limoncello souffle 香草莢冰淇淋與覆盆子果泥 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert 甜點",
       "sourceRecordIndex": 275
     },
     {
@@ -9940,7 +10716,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "柳橙杏仁蛋糕 orange almond cake 柳橙茴香沙拉 大黃果泥與檸檬奶油 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 10 00",
+      "searchText": "柳橙杏仁蛋糕 orange almond cake 柳橙茴香沙拉 大黃果泥與檸檬奶油 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert 甜點",
       "sourceRecordIndex": 276
     },
     {
@@ -9975,7 +10751,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "荔枝義式奶酪 lychee panna cotta 開心果空氣海綿蛋糕與覆盆子雪酪 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 10 00",
+      "searchText": "荔枝義式奶酪 lychee panna cotta 開心果空氣海綿蛋糕與覆盆子雪酪 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert 甜點",
       "sourceRecordIndex": 277
     },
     {
@@ -10010,7 +10786,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "巧克力果仁糖塔 cioccolato praline tart 榛果巴瑞脆片 巧克力甘納許與果仁糖脆餅 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 10 00",
+      "searchText": "巧克力果仁糖塔 cioccolato praline tart 榛果巴瑞脆片 巧克力甘納許與果仁糖脆餅 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert 甜點",
       "sourceRecordIndex": 278
     },
     {
@@ -10045,7 +10821,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式冰淇淋工坊 任選三球 gelato choice of three 雙重巧克力 開心果 榛果 綜合莓果 焦糖夏威夷豆 芒果薄荷 濃縮咖啡白巧克力 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 8 00",
+      "searchText": "義式冰淇淋工坊 任選三球 gelato choice of three 雙重巧克力 開心果 榛果 綜合莓果 焦糖夏威夷豆 芒果薄荷 濃縮咖啡白巧克力 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert 甜點",
       "sourceRecordIndex": 279
     },
     {
@@ -10082,7 +10858,7 @@ window.MENU_LOOKUP_DATA = {
         "無糖"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "義式瑞可塔起司蛋糕 italian ricotta cheesecake 冷製瑞可塔起司蛋糕 生薑沙布列餅乾與覆盆子果泥 palo dinner palo dinner palo palo dinner desserts 晚餐甜點 dessert 甜點 10 00 no sugar 無糖",
+      "searchText": "義式瑞可塔起司蛋糕 italian ricotta cheesecake 冷製瑞可塔起司蛋糕 生薑沙布列餅乾與覆盆子果泥 palo dinner palo dinner palo 甜點 palo dinner palo 晚餐甜點 甜點 dinner desserts dessert no sugar 無糖 無糖",
       "sourceRecordIndex": 280
     },
     {
@@ -10119,7 +10895,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "我有個小顧慮 特調 i have some concerns bayab棕櫚鳳梨琴酒 法勒南糖漿 清酒 萊姆 鳳梨 葡萄柚 bev alleycat alley cat lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "我有個小顧慮 特調 i have some concerns bayab棕櫚鳳梨琴酒 法勒南糖漿 清酒 萊姆 鳳梨 葡萄柚 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 281
     },
     {
@@ -10156,7 +10932,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "阿庫馬島冰茶 akuma island iced tea 絕對伏特加 必富達琴酒 百加得蘭姆酒 歐巴燒酒 柚子 龍舌蘭糖漿 原萃烏龍茶 bev alleycat alley cat lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "阿庫馬島冰茶 akuma island iced tea 絕對伏特加 必富達琴酒 百加得蘭姆酒 歐巴燒酒 柚子 龍舌蘭糖漿 原萃烏龍茶 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 282
     },
     {
@@ -10192,7 +10968,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "消失的荊棘 美國無酒精紅白氣泡飲 missing thorn usa sparkling white red bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
+      "searchText": "消失的荊棘 美國無酒精紅白氣泡飲 missing thorn usa sparkling white red alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 283
     },
     {
@@ -10228,7 +11004,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "non1 鹽味覆盆子與洋甘菊 non1 salted raspberry chamomile bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 無酒精",
+      "searchText": "non1 鹽味覆盆子與洋甘菊 non1 salted raspberry chamomile alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 284
     },
     {
@@ -10264,7 +11040,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "non2 焦糖洋梨與昆布 non2 caramelized pear kombu bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 無酒精",
+      "searchText": "non2 焦糖洋梨與昆布 non2 caramelized pear kombu alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 285
     },
     {
@@ -10300,7 +11076,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "萊亞無酒精莫西多 lyre s mojito bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "萊亞無酒精莫西多 lyre s mojito alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 286
     },
     {
@@ -10336,7 +11112,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海尼根 0 0 heineken 0 0 bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "海尼根 0 0 heineken 0 0 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 287
     },
     {
@@ -10372,7 +11148,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "華士坦 0 0 檸檬 warsteiner radler 0 0 bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "華士坦 0 0 檸檬 warsteiner radler 0 0 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 288
     },
     {
@@ -10408,7 +11184,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "櫻花元氣飲 sakura refresher 櫻花 白葡萄 原萃綾鷹綠茶 bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 00 無酒精",
+      "searchText": "櫻花元氣飲 sakura refresher 櫻花 白葡萄 原萃綾鷹綠茶 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 289
     },
     {
@@ -10444,7 +11220,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "吧啦吧啦吧啦奶昔 ba la la la la shake 烤棉花糖 香草冰淇淋 焦糖 bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 無酒精",
+      "searchText": "吧啦吧啦吧啦奶昔 ba la la la la shake 烤棉花糖 香草冰淇淋 焦糖 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 290
     },
     {
@@ -10480,7 +11256,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "霓虹海灣微風 neon bay breeze 洋梨 萊姆 葡萄 發燒樹墨西哥萊姆汽水 蝶豆花 bev alleycat alley cat lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 00 無酒精",
+      "searchText": "霓虹海灣微風 neon bay breeze 洋梨 萊姆 葡萄 發燒樹墨西哥萊姆汽水 蝶豆花 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 291
     },
     {
@@ -10517,7 +11293,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "虎牌冰釀啤酒 tiger lager 5 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "虎牌冰釀啤酒 tiger lager 5 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 292
     },
     {
@@ -10554,7 +11330,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "京a 工人淡色艾爾 jing a worker s pale ale 5 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "京a 工人淡色艾爾 jing a worker s pale ale 5 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 293
     },
     {
@@ -10591,7 +11367,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "京a 柑橘小麥 jing a mandarin wheat 4 2 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "京a 柑橘小麥 jing a mandarin wheat 4 2 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 294
     },
     {
@@ -10628,7 +11404,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "布魯克林捍衛者 ipa brooklyn defender ipa 5 5 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "布魯克林捍衛者 ipa brooklyn defender ipa 5 5 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 295
     },
     {
@@ -10665,7 +11441,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "豪格登 hoegaarden 4 9 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "豪格登 hoegaarden 4 9 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 296
     },
     {
@@ -10702,7 +11478,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "時代 stella artois 5 2 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "時代 stella artois 5 2 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 297
     },
     {
@@ -10739,7 +11515,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "健力士 guinness 7 5 bev alleycat alley cat lounge beverage 酒吧飲品 beer 啤酒 drinks 飲料 7 75 alcoholic 酒精",
+      "searchText": "健力士 guinness 7 5 alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 298
     },
     {
@@ -10776,7 +11552,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利波哥帝國普羅賽克 borgo imperiale prosecco bev alleycat alley cat lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "義大利波哥帝國普羅賽克 borgo imperiale prosecco alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 299
     },
     {
@@ -10813,7 +11589,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "間諜谷白蘇維翁 spy valley sauvignon blanc bev alleycat alley cat lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "間諜谷白蘇維翁 spy valley sauvignon blanc alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 300
     },
     {
@@ -10850,7 +11626,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "瑪萊伯爵夫人紅酒 comtesse de malet bordeaux bev alleycat alley cat lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "瑪萊伯爵夫人紅酒 comtesse de malet bordeaux alley cat lounge alley cat lounge 酒吧飲品 飲料 alley cat lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 301
     },
     {
@@ -10885,7 +11661,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "西達摩高山咖啡 衣索比亞 sidamo mountain coffee ethiopia bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "西達摩高山咖啡 衣索比亞 sidamo mountain coffee ethiopia bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 302
     },
     {
@@ -10920,7 +11696,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "肯亞山咖啡 肯亞 mount kenya coffee kenya bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "肯亞山咖啡 肯亞 mount kenya coffee kenya bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 303
     },
     {
@@ -10955,7 +11731,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馬格達萊納咖啡 哥倫比亞 magdalena coffee colombia bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "馬格達萊納咖啡 哥倫比亞 magdalena coffee colombia bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 304
     },
     {
@@ -10990,7 +11766,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "1910 咖啡 1910 coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "1910 咖啡 1910 coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 305
     },
     {
@@ -11025,7 +11801,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "拉戈亞咖啡 巴西 lagoa coffee brazil bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "拉戈亞咖啡 巴西 lagoa coffee brazil bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 306
     },
     {
@@ -11060,7 +11836,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馬德雷山脈咖啡 瓜地馬拉 sierra madre coffee guatemala bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "馬德雷山脈咖啡 瓜地馬拉 sierra madre coffee guatemala bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 307
     },
     {
@@ -11095,7 +11871,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "納蘭霍高山咖啡 哥斯大黎加 naranjo mountain coffee costa rica bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "納蘭霍高山咖啡 哥斯大黎加 naranjo mountain coffee costa rica bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 308
     },
     {
@@ -11130,7 +11906,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "圖爾基諾咖啡 古巴 turquino coffee cuba bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "圖爾基諾咖啡 古巴 turquino coffee cuba bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 309
     },
     {
@@ -11165,7 +11941,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "季風的秘密咖啡 印度 monsoon secret coffee india bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "季風的秘密咖啡 印度 monsoon secret coffee india bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 310
     },
     {
@@ -11200,7 +11976,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "西格里寶石咖啡 巴布亞紐幾內亞 sigri jewel coffee papua new guinea bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "西格里寶石咖啡 巴布亞紐幾內亞 sigri jewel coffee papua new guinea bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 311
     },
     {
@@ -11235,7 +12011,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "耶加雪菲低咖啡因咖啡 yirgacheffe decaffeinated coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "耶加雪菲低咖啡因咖啡 yirgacheffe decaffeinated coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 312
     },
     {
@@ -11270,7 +12046,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馬格達萊納低咖啡因 magdalena decaffeinated coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "馬格達萊納低咖啡因 magdalena decaffeinated coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 313
     },
     {
@@ -11305,7 +12081,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "托爾特克巧克力咖啡 tolteca chocolate coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "托爾特克巧克力咖啡 tolteca chocolate coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 314
     },
     {
@@ -11340,7 +12116,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "焦糖晨光咖啡 caramelo morning coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "焦糖晨光咖啡 caramelo morning coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 315
     },
     {
@@ -11375,7 +12151,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "歡樂吉安杜佳咖啡 happy gianduja coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "歡樂吉安杜佳咖啡 happy gianduja coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 316
     },
     {
@@ -11410,7 +12186,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "塞維利亞柑橘咖啡 seville orange coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "塞維利亞柑橘咖啡 seville orange coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 317
     },
     {
@@ -11445,7 +12221,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "飛毯奇遇魔幻伊斯坦堡咖啡 magic istanbul coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "飛毯奇遇魔幻伊斯坦堡咖啡 magic istanbul coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 318
     },
     {
@@ -11480,7 +12256,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "甜蜜墨西哥咖啡 sweet mexico coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "甜蜜墨西哥咖啡 sweet mexico coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 319
     },
     {
@@ -11515,7 +12291,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "幻想曲藍色多瑙河咖啡 blue danube coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "幻想曲藍色多瑙河咖啡 blue danube coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 320
     },
     {
@@ -11550,7 +12326,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "皮諾丘的米蘭之晨咖啡 milano morning coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "皮諾丘的米蘭之晨咖啡 milano morning coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 321
     },
     {
@@ -11585,7 +12361,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "神仙教母的生日願望咖啡 birthday wish coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "神仙教母的生日願望咖啡 birthday wish coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 322
     },
     {
@@ -11620,7 +12396,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "料理鼠王我愛巴黎咖啡 i love paris coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "料理鼠王我愛巴黎咖啡 i love paris coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 323
     },
     {
@@ -11655,7 +12431,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡之晨咖啡 singapore morning coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "新加坡之晨咖啡 singapore morning coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 324
     },
     {
@@ -11690,7 +12466,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馬拉喀什之晨咖啡 marrakech morning coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "馬拉喀什之晨咖啡 marrakech morning coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 325
     },
     {
@@ -11725,7 +12501,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "摩洛哥撒哈拉咖啡 moroccan sahara coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "摩洛哥撒哈拉咖啡 moroccan sahara coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 326
     },
     {
@@ -11760,7 +12536,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "非洲之王咖啡 king of africa coffee bev bacha bacha coffee beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 00",
+      "searchText": "非洲之王咖啡 king of africa coffee bacha coffee bacha coffee 酒吧飲品 飲料 bacha coffee 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 327
     },
     {
@@ -11791,7 +12567,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "經典奶油可頌 butter croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 00",
+      "searchText": "經典奶油可頌 butter croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 328
     },
     {
@@ -11822,7 +12598,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇妙開心果可頌 pistachio croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 00",
+      "searchText": "奇妙開心果可頌 pistachio croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 329
     },
     {
@@ -11853,7 +12629,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "1910 咖啡巧克力可頌 1910 coffee chocolate croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 00",
+      "searchText": "1910 咖啡巧克力可頌 1910 coffee chocolate croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 330
     },
     {
@@ -11884,7 +12660,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "睡美人藍莓薰衣草可頌 blueberry lavender croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 00",
+      "searchText": "睡美人藍莓薰衣草可頌 blueberry lavender croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 331
     },
     {
@@ -11915,7 +12691,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "愛麗絲覆盆子肉桂可頌 raspberry cinnamon croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 00",
+      "searchText": "愛麗絲覆盆子肉桂可頌 raspberry cinnamon croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 332
     },
     {
@@ -11946,7 +12722,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "康堤乾酪可頌 comte cheese croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 50",
+      "searchText": "康堤乾酪可頌 comte cheese croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 333
     },
     {
@@ -11977,7 +12753,7 @@ window.MENU_LOOKUP_DATA = {
         "dessert"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑森林蘑菇松露可頌 mushroom truffle croissant bev bacha bacha coffee beverage 酒吧飲品 pastries 糕點 dessert 甜點 3 50",
+      "searchText": "黑森林蘑菇松露可頌 mushroom truffle croissant bacha coffee bacha coffee 酒吧飲品 甜點 bacha coffee 酒吧飲品 糕點 甜點 pastries dessert",
       "sourceRecordIndex": 334
     },
     {
@@ -12014,7 +12790,7 @@ window.MENU_LOOKUP_DATA = {
         "海鮮"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "挪威煙燻鮭魚法式吐司三明治 norwegian smoked salmon french toast sandwich bev bacha bacha coffee beverage 酒吧飲品 food 餐點 entree 主餐 23 50 seafood 海鮮",
+      "searchText": "挪威煙燻鮭魚法式吐司三明治 norwegian smoked salmon french toast sandwich bacha coffee bacha coffee 酒吧飲品 主餐 bacha coffee 酒吧飲品 餐點 主餐 food entree seafood 海鮮 海鮮",
       "sourceRecordIndex": 335
     },
     {
@@ -12051,7 +12827,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "慢燉鮮雞法式吐司三明治 slow cooked chicken french toast sandwich bev bacha bacha coffee beverage 酒吧飲品 food 餐點 entree 主餐 25 00 meat 肉類",
+      "searchText": "慢燉鮮雞法式吐司三明治 slow cooked chicken french toast sandwich bacha coffee bacha coffee 酒吧飲品 主餐 bacha coffee 酒吧飲品 餐點 主餐 food entree meat 肉類 肉類",
       "sourceRecordIndex": 336
     },
     {
@@ -12088,7 +12864,7 @@ window.MENU_LOOKUP_DATA = {
         "肉類"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "巴查皇家總匯三明治 bacha club sandwich bev bacha bacha coffee beverage 酒吧飲品 food 餐點 entree 主餐 25 00 meat 肉類",
+      "searchText": "巴查皇家總匯三明治 bacha club sandwich bacha coffee bacha coffee 酒吧飲品 主餐 bacha coffee 酒吧飲品 餐點 主餐 food entree meat 肉類 肉類",
       "sourceRecordIndex": 337
     },
     {
@@ -12119,7 +12895,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深海秘境葡萄特調 deep sea grape concoction 清香茉莉花茶 bev boba bewitching boba beverage 酒吧飲品 tea 茶 drinks 飲料 7 75",
+      "searchText": "深海秘境葡萄特調 deep sea grape concoction 清香茉莉花茶 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 茶 飲料 tea drinks",
       "sourceRecordIndex": 338
     },
     {
@@ -12150,7 +12926,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "小美人魚的莓果之吻 mermaid s berry kiss 草莓 藍莓 覆盆子 茉莉花茶 bev boba bewitching boba beverage 酒吧飲品 tea 茶 drinks 飲料 7 75",
+      "searchText": "小美人魚的莓果之吻 mermaid s berry kiss 草莓 藍莓 覆盆子 茉莉花茶 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 茶 飲料 tea drinks",
       "sourceRecordIndex": 339
     },
     {
@@ -12181,7 +12957,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海妖賽倫的風暴柑橘飲 siren citrus storm 柳橙 檸檬 萊姆 茉莉花茶 bev boba bewitching boba beverage 酒吧飲品 tea 茶 drinks 飲料 7 75",
+      "searchText": "海妖賽倫的風暴柑橘飲 siren citrus storm 柳橙 檸檬 萊姆 茉莉花茶 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 茶 飲料 tea drinks",
       "sourceRecordIndex": 340
     },
     {
@@ -12212,7 +12988,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "秘境洋流抹茶特調 mystic tide matcha 香醇鮮奶 手熬黑糖珍珠 bev boba bewitching boba beverage 酒吧飲品 milk tea 奶茶 drinks 飲料 7 75",
+      "searchText": "秘境洋流抹茶特調 mystic tide matcha 香醇鮮奶 手熬黑糖珍珠 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 奶茶 飲料 milk tea drinks",
       "sourceRecordIndex": 341
     },
     {
@@ -12243,7 +13019,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "仙女教母的魔法茉莉奶茶 enchanted jasmine milk bev boba bewitching boba beverage 酒吧飲品 milk tea 奶茶 drinks 飲料 7 75",
+      "searchText": "仙女教母的魔法茉莉奶茶 enchanted jasmine milk bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 奶茶 飲料 milk tea drinks",
       "sourceRecordIndex": 342
     },
     {
@@ -12274,7 +13050,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "黑珍珠魔咒黑糖波霸 black pearl brown sugar boba bev boba bewitching boba beverage 酒吧飲品 add ons 加點 kids side 兒童 配菜 1 25",
+      "searchText": "黑珍珠魔咒黑糖波霸 black pearl brown sugar boba bewitching boba bewitching boba 酒吧飲品 兒童 配菜 bewitching boba 酒吧飲品 加點 兒童 配菜 add ons kids side",
       "sourceRecordIndex": 343
     },
     {
@@ -12305,7 +13081,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "海洋咒語奇亞籽 sea spell chia seeds bev boba bewitching boba beverage 酒吧飲品 add ons 加點 kids side 兒童 配菜 1 25",
+      "searchText": "海洋咒語奇亞籽 sea spell chia seeds bewitching boba bewitching boba 酒吧飲品 兒童 配菜 bewitching boba 酒吧飲品 加點 兒童 配菜 add ons kids side",
       "sourceRecordIndex": 344
     },
     {
@@ -12336,7 +13112,7 @@ window.MENU_LOOKUP_DATA = {
         "kids-side"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "驚喜燕麥爆爆珠 bursting oat popping boba bev boba bewitching boba beverage 酒吧飲品 add ons 加點 kids side 兒童 配菜 1 25",
+      "searchText": "驚喜燕麥爆爆珠 bursting oat popping boba bewitching boba bewitching boba 酒吧飲品 兒童 配菜 bewitching boba 酒吧飲品 加點 兒童 配菜 add ons kids side",
       "sourceRecordIndex": 345
     },
     {
@@ -12367,7 +13143,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海之巫婆的綠寶石精華 sea witch emerald essence 羽衣甘藍 新鮮蘋果 檸檬 bev boba bewitching boba beverage 酒吧飲品 juice 果汁 drinks 飲料 7 00",
+      "searchText": "海之巫婆的綠寶石精華 sea witch emerald essence 羽衣甘藍 新鮮蘋果 檸檬 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 果汁 飲料 juice drinks",
       "sourceRecordIndex": 346
     },
     {
@@ -12398,7 +13174,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "烏蘇拉的暗黑魔法冰沙 ursula magic smoothie 藍莓 葡萄 優格 bev boba bewitching boba beverage 酒吧飲品 smoothie 果昔 drinks 飲料 8 50",
+      "searchText": "烏蘇拉的暗黑魔法冰沙 ursula magic smoothie 藍莓 葡萄 優格 bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 果昔 飲料 smoothie drinks",
       "sourceRecordIndex": 347
     },
     {
@@ -12429,7 +13205,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深海八爪魔藥酪梨冰沙 tentacle avocado potion bev boba bewitching boba beverage 酒吧飲品 smoothie 果昔 drinks 飲料 8 50",
+      "searchText": "深海八爪魔藥酪梨冰沙 tentacle avocado potion bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 果昔 飲料 smoothie drinks",
       "sourceRecordIndex": 348
     },
     {
@@ -12460,7 +13236,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "沉船寶藏芒果特調 sunken treasure mango brew bev boba bewitching boba beverage 酒吧飲品 smoothie 果昔 drinks 飲料 7 75",
+      "searchText": "沉船寶藏芒果特調 sunken treasure mango brew bewitching boba bewitching boba 酒吧飲品 飲料 bewitching boba 酒吧飲品 果昔 飲料 smoothie drinks",
       "sourceRecordIndex": 349
     },
     {
@@ -12497,7 +13273,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "法國可倫堡1664拉格 kronenbourg 1664 lager bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "法國可倫堡1664拉格 kronenbourg 1664 lager buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 350
     },
     {
@@ -12534,7 +13310,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "日本常陸野貓頭鷹白啤酒 hitachino nest white ale bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "日本常陸野貓頭鷹白啤酒 hitachino nest white ale buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 351
     },
     {
@@ -12571,7 +13347,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡夕陽律動拉格 sunset groove lager bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "新加坡夕陽律動拉格 sunset groove lager buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 352
     },
     {
@@ -12608,7 +13384,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡桂花雪梨奶油艾爾 osmanthus pear cream ale bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 10 75 alcoholic 酒精",
+      "searchText": "新加坡桂花雪梨奶油艾爾 osmanthus pear cream ale buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 353
     },
     {
@@ -12645,7 +13421,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡owa owa桑葚酸艾爾 owa owa mulberry sour ale bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 75 alcoholic 酒精",
+      "searchText": "新加坡owa owa桑葚酸艾爾 owa owa mulberry sour ale buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 354
     },
     {
@@ -12682,7 +13458,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "丹麥嘉士伯皮爾森 carlsberg pilsner bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 75 alcoholic 酒精",
+      "searchText": "丹麥嘉士伯皮爾森 carlsberg pilsner buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 355
     },
     {
@@ -12719,7 +13495,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美國布魯克林捍衛者ipa brooklyn defender ipa bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 75 alcoholic 酒精",
+      "searchText": "美國布魯克林捍衛者ipa brooklyn defender ipa buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 356
     },
     {
@@ -12756,7 +13532,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美國布魯克林石牆客棧ipa brooklyn stonewall inn ipa bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "美國布魯克林石牆客棧ipa brooklyn stonewall inn ipa buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 357
     },
     {
@@ -12793,7 +13569,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡銀河熱帶司陶特黑啤酒 galactic tropical stout bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 10 75 alcoholic 酒精",
+      "searchText": "新加坡銀河熱帶司陶特黑啤酒 galactic tropical stout buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 358
     },
     {
@@ -12830,7 +13606,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "中國工人淡色艾爾 worker s pale ale bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 75 alcoholic 酒精",
+      "searchText": "中國工人淡色艾爾 worker s pale ale buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 359
     },
     {
@@ -12867,7 +13643,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "中國京a蜜桔小麥 jing a mandarin wheat bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 75 alcoholic 酒精",
+      "searchText": "中國京a蜜桔小麥 jing a mandarin wheat buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 360
     },
     {
@@ -12904,7 +13680,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "新加坡星空小荳蔻玫瑰賽松 celestial cardamom rose saison bev buccaneer buccaneer bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 10 75 alcoholic 酒精",
+      "searchText": "新加坡星空小荳蔻玫瑰賽松 celestial cardamom rose saison buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 361
     },
     {
@@ -12941,7 +13717,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利波戈帝國甜司卡托氣泡酒 borgo imperiale moscato bev buccaneer buccaneer bar beverage 酒吧飲品 sparkling 氣泡酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "義大利波戈帝國甜司卡托氣泡酒 borgo imperiale moscato buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 氣泡酒 飲料 sparkling drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 362
     },
     {
@@ -12978,7 +13754,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利波戈帝國普羅塞克 borgo imperiale prosecco bev buccaneer buccaneer bar beverage 酒吧飲品 sparkling 氣泡酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "義大利波戈帝國普羅塞克 borgo imperiale prosecco buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 氣泡酒 飲料 sparkling drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 363
     },
     {
@@ -13015,7 +13791,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "法國伯瑞香檳 pommery brut bev buccaneer buccaneer bar beverage 酒吧飲品 sparkling 氣泡酒 drinks 飲料 25 00 alcoholic 酒精",
+      "searchText": "法國伯瑞香檳 pommery brut buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 氣泡酒 飲料 sparkling drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 364
     },
     {
@@ -13052,7 +13828,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魂飛魄散木桶陳釀特調 shiver me timbers bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 20 00 alcoholic 酒精",
+      "searchText": "魂飛魄散木桶陳釀特調 shiver me timbers buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 365
     },
     {
@@ -13089,7 +13865,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深海閻王聚寶盆 雙人 dead man s chest 雙人分享的海盜主題雞尾酒 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 25 00 alcoholic 酒精",
+      "searchText": "深海閻王聚寶盆 雙人 dead man s chest 雙人分享的海盜主題雞尾酒 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 366
     },
     {
@@ -13126,7 +13902,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深海巨妖克拉肯 the kraken bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "深海巨妖克拉肯 the kraken buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 367
     },
     {
@@ -13163,7 +13939,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "星國水手雪拉達 s pore chelada bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "星國水手雪拉達 s pore chelada buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 368
     },
     {
@@ -13200,7 +13976,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馮船長秘製潘趣酒 captain feng punch bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "馮船長秘製潘趣酒 captain feng punch buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 369
     },
     {
@@ -13237,7 +14013,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美人魚的祖母綠之海 emerald sea bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "美人魚的祖母綠之海 emerald sea buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 370
     },
     {
@@ -13274,7 +14050,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "狂野巨砲蘭姆品鑑組 loose cannons bev buccaneer buccaneer bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 40 00 alcoholic 酒精",
+      "searchText": "狂野巨砲蘭姆品鑑組 loose cannons buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 371
     },
     {
@@ -13310,7 +14086,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海盜骷髏旗 skull crossbones bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "海盜骷髏旗 skull crossbones buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 372
     },
     {
@@ -13346,7 +14122,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "迷霧幽靈船 ghost ship bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
+      "searchText": "迷霧幽靈船 ghost ship buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 373
     },
     {
@@ -13382,7 +14158,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海妖礁湖特調 siren s lagoon cooler bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "海妖礁湖特調 siren s lagoon cooler buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 374
     },
     {
@@ -13418,7 +14194,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "missing thorn無酒精 missing thorn bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
+      "searchText": "missing thorn無酒精 missing thorn buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 375
     },
     {
@@ -13454,7 +14230,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "non1 bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 無酒精",
+      "searchText": "non1 non1 buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 376
     },
     {
@@ -13490,7 +14266,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "non2 bev buccaneer buccaneer bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 無酒精",
+      "searchText": "non2 non2 buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 377
     },
     {
@@ -13527,7 +14303,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "紐西蘭間諜谷白蘇維濃 spy valley sauvignon blanc bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "紐西蘭間諜谷白蘇維濃 spy valley sauvignon blanc buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 378
     },
     {
@@ -13564,7 +14340,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "澳洲卡拉布里亞灰皮諾 calabria family pinot grigio bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "澳洲卡拉布里亞灰皮諾 calabria family pinot grigio buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 379
     },
     {
@@ -13601,7 +14377,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "法國月亮粉紅酒 moon rose bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "法國月亮粉紅酒 moon rose buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 380
     },
     {
@@ -13638,7 +14414,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美國極樂葡萄園夏多內 bliss vineyard chardonnay bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "美國極樂葡萄園夏多內 bliss vineyard chardonnay buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 381
     },
     {
@@ -13675,7 +14451,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "西班牙阿爾巴拉爾阿爾巴利諾 bodegas albarar albarino bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "西班牙阿爾巴拉爾阿爾巴利諾 bodegas albarar albarino buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 382
     },
     {
@@ -13712,7 +14488,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "阿根廷小小世界馬爾貝克 un mundo chiquitito malbec bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "阿根廷小小世界馬爾貝克 un mundo chiquitito malbec buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 383
     },
     {
@@ -13749,7 +14525,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "紐西蘭間諜谷黑皮諾 spy valley pinot noir bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "紐西蘭間諜谷黑皮諾 spy valley pinot noir buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 384
     },
     {
@@ -13786,7 +14562,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "紐西蘭女伯爵黑皮諾 comtesse pinot noir bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "紐西蘭女伯爵黑皮諾 comtesse pinot noir buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 385
     },
     {
@@ -13823,7 +14599,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "澳洲巴羅莎索恩克拉克希哈 thorn clark shiraz bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "澳洲巴羅莎索恩克拉克希哈 thorn clark shiraz buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 386
     },
     {
@@ -13860,7 +14636,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利蒙塔奇諾布魯奈羅 brunello di montalcino bev buccaneer buccaneer bar beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 25 00 alcoholic 酒精",
+      "searchText": "義大利蒙塔奇諾布魯奈羅 brunello di montalcino buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 387
     },
     {
@@ -13897,7 +14673,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "高斯林百慕達黑海豹 goslings black seal bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "高斯林百慕達黑海豹 goslings black seal buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 388
     },
     {
@@ -13934,7 +14710,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "克拉肯黑金香料蘭姆 kraken black spiced bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "克拉肯黑金香料蘭姆 kraken black spiced buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 389
     },
     {
@@ -13971,7 +14747,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "薩卡帕23年 zacapa 23 bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 14 75 alcoholic 酒精",
+      "searchText": "薩卡帕23年 zacapa 23 buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 390
     },
     {
@@ -14008,7 +14784,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "百加得8年 bacardi gran reserva ocho bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "百加得8年 bacardi gran reserva ocho buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 391
     },
     {
@@ -14045,7 +14821,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "薩卡帕xo zacapa xo bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 30 00 alcoholic 酒精",
+      "searchText": "薩卡帕xo zacapa xo buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 392
     },
     {
@@ -14082,7 +14858,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "龐巴達長管砲5年 bombarda culverin 5 year bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 7 25 alcoholic 酒精",
+      "searchText": "龐巴達長管砲5年 bombarda culverin 5 year buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 393
     },
     {
@@ -14119,7 +14895,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "龐巴達獵鷹砲8年 bombarda falconet 8 year bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "龐巴達獵鷹砲8年 bombarda falconet 8 year buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 394
     },
     {
@@ -14156,7 +14932,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "龐巴達君王xo22年 bombarda sovereign xo 22 year bev buccaneer buccaneer bar beverage 酒吧飲品 rum 蘭姆酒 drinks 飲料 30 00 alcoholic 酒精",
+      "searchText": "龐巴達君王xo22年 bombarda sovereign xo 22 year buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 蘭姆酒 飲料 rum drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 395
     },
     {
@@ -14193,7 +14969,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "夕陽律動拉格 sunset groove lager bev buccaneer buccaneer bar beverage 酒吧飲品 craft beer 精釀啤酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "夕陽律動拉格 sunset groove lager buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 精釀啤酒 飲料 craft beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 396
     },
     {
@@ -14230,7 +15006,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "迎光飛翔淡色艾爾 fly in light pale ale bev buccaneer buccaneer bar beverage 酒吧飲品 craft beer 精釀啤酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "迎光飛翔淡色艾爾 fly in light pale ale buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 精釀啤酒 飲料 craft beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 397
     },
     {
@@ -14267,7 +15043,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "銀河熱帶司陶特黑啤 galactic tropical stout bev buccaneer buccaneer bar beverage 酒吧飲品 craft beer 精釀啤酒 drinks 飲料 14 75 alcoholic 酒精",
+      "searchText": "銀河熱帶司陶特黑啤 galactic tropical stout buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 精釀啤酒 飲料 craft beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 398
     },
     {
@@ -14304,7 +15080,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "經典啤酒桶 classic beers bev buccaneer buccaneer bar beverage 酒吧飲品 beer bucket 啤酒桶 drinks 飲料 36 25 alcoholic 酒精",
+      "searchText": "經典啤酒桶 classic beers buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒桶 飲料 beer bucket drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 399
     },
     {
@@ -14341,7 +15117,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "招牌啤酒桶 signature beers bev buccaneer buccaneer bar beverage 酒吧飲品 beer bucket 啤酒桶 drinks 飲料 38 75 alcoholic 酒精",
+      "searchText": "招牌啤酒桶 signature beers buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 啤酒桶 飲料 beer bucket drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 400
     },
     {
@@ -14378,7 +15154,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "菊水純米吟釀 kikusui junmai ginjo bev buccaneer buccaneer bar beverage 酒吧飲品 sake 清酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "菊水純米吟釀 kikusui junmai ginjo buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 401
     },
     {
@@ -14415,7 +15191,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "月桂冠梅酒 gekkeikan plum wine bev buccaneer buccaneer bar beverage 酒吧飲品 sake 清酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "月桂冠梅酒 gekkeikan plum wine buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 402
     },
     {
@@ -14452,7 +15228,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "月桂冠完熟梅酒原酒 gekkeikan kanjuku umeshu genshu bev buccaneer buccaneer bar beverage 酒吧飲品 sake 清酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "月桂冠完熟梅酒原酒 gekkeikan kanjuku umeshu genshu buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 403
     },
     {
@@ -14489,7 +15265,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美國獺祭blue50純米大吟釀 dassai blue 50 junmai daiginjo bev buccaneer buccaneer bar beverage 酒吧飲品 sake 清酒 drinks 飲料 16 00 alcoholic 酒精",
+      "searchText": "美國獺祭blue50純米大吟釀 dassai blue 50 junmai daiginjo buccaneer bar buccaneer bar 酒吧飲品 飲料 buccaneer bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 404
     },
     {
@@ -14526,7 +15302,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "泰亭哲香檳 taittinger brut bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "泰亭哲香檳 taittinger brut concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 405
     },
     {
@@ -14563,7 +15339,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "法拉利氣泡酒 ferrari brut bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "法拉利氣泡酒 ferrari brut concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 406
     },
     {
@@ -14600,7 +15376,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "范德龐粉紅酒 vanderpump rose bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "范德龐粉紅酒 vanderpump rose concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 407
     },
     {
@@ -14637,7 +15413,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "gogi 金髮女孩 夏多內 gogi goldie chardonnay bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "gogi 金髮女孩 夏多內 gogi goldie chardonnay concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 408
     },
     {
@@ -14674,7 +15450,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雲霧之灣白蘇維濃 cloudy bay sauvignon blanc bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "雲霧之灣白蘇維濃 cloudy bay sauvignon blanc concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 409
     },
     {
@@ -14711,7 +15487,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "巴杜雷特城堡特級園 chateau bardoulet grand cru bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "巴杜雷特城堡特級園 chateau bardoulet grand cru concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 410
     },
     {
@@ -14748,7 +15524,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "思美酒莊卡本內蘇維濃 simi landslide cabernet sauvignon bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "思美酒莊卡本內蘇維濃 simi landslide cabernet sauvignon concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 411
     },
     {
@@ -14785,7 +15561,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "gogi 小鳥 黑皮諾 gogi birdie pinot noir bev concierge concierge lounge beverage 酒吧飲品 wine 葡萄酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "gogi 小鳥 黑皮諾 gogi birdie pinot noir concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 葡萄酒 飲料 wine drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 412
     },
     {
@@ -14822,7 +15598,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "美格波本 maker s mark bev concierge concierge lounge beverage 酒吧飲品 whiskey 威士忌 drinks 飲料 alcoholic 酒精",
+      "searchText": "美格波本 maker s mark concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 威士忌 飲料 whiskey drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 413
     },
     {
@@ -14859,7 +15635,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "格蘭利威12年 glenlivet 12 years bev concierge concierge lounge beverage 酒吧飲品 whiskey 威士忌 drinks 飲料 alcoholic 酒精",
+      "searchText": "格蘭利威12年 glenlivet 12 years concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 威士忌 飲料 whiskey drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 414
     },
     {
@@ -14896,7 +15672,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "麥卡倫探索 macallan quest bev concierge concierge lounge beverage 酒吧飲品 whiskey 威士忌 drinks 飲料 alcoholic 酒精",
+      "searchText": "麥卡倫探索 macallan quest concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 威士忌 飲料 whiskey drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 415
     },
     {
@@ -14933,7 +15709,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "貝里特裸麥 bulleit rye bev concierge concierge lounge beverage 酒吧飲品 whiskey 威士忌 drinks 飲料 alcoholic 酒精",
+      "searchText": "貝里特裸麥 bulleit rye concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 威士忌 飲料 whiskey drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 416
     },
     {
@@ -14970,7 +15746,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "普羅珀12年愛爾蘭 proper 12 irish whiskey bev concierge concierge lounge beverage 酒吧飲品 whiskey 威士忌 drinks 飲料 alcoholic 酒精",
+      "searchText": "普羅珀12年愛爾蘭 proper 12 irish whiskey concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 威士忌 飲料 whiskey drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 417
     },
     {
@@ -15007,7 +15783,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "古典雞尾酒 old fashioned bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "古典雞尾酒 old fashioned concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 418
     },
     {
@@ -15044,7 +15820,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "側車 sidecar bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "側車 sidecar concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 419
     },
     {
@@ -15081,7 +15857,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "香檳雞尾酒 champagne cocktail bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "香檳雞尾酒 champagne cocktail concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 420
     },
     {
@@ -15118,7 +15894,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "內格羅尼 negroni bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "內格羅尼 negroni concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 421
     },
     {
@@ -15155,7 +15931,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "柯夢波丹 cosmopolitan bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "柯夢波丹 cosmopolitan concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 422
     },
     {
@@ -15192,7 +15968,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "莫西多 mojito bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "莫西多 mojito concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 423
     },
     {
@@ -15229,7 +16005,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "邁泰 mai tai bev concierge concierge lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 alcoholic 酒精",
+      "searchText": "邁泰 mai tai concierge lounge concierge lounge 酒吧飲品 飲料 concierge lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 424
     },
     {
@@ -15266,7 +16042,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "唐老鴨的歡樂特調 donald s delight bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "唐老鴨的歡樂特調 donald s delight d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 425
     },
     {
@@ -15303,7 +16079,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "布雷爾熊大叔的莓果櫻桃狂歡 brer bear s berries n cherries bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "布雷爾熊大叔的莓果櫻桃狂歡 brer bear s berries n cherries d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 426
     },
     {
@@ -15340,7 +16116,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "大衛瓊斯的深海特調 the davy jones bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "大衛瓊斯的深海特調 the davy jones d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 427
     },
     {
@@ -15377,7 +16153,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "阿布的猴子把戲果汁 abu juice bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "阿布的猴子把戲果汁 abu juice d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 428
     },
     {
@@ -15414,7 +16190,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "焦糖海灣的秘寶 the caramel cove bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "焦糖海灣的秘寶 the caramel cove d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 429
     },
     {
@@ -15451,7 +16227,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "米妮的熱情芒果探戈 minnie s mango pango bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "米妮的熱情芒果探戈 minnie s mango pango d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 430
     },
     {
@@ -15488,7 +16264,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "高飛的黏踢踢巧克力派對 goofy s ooey gooey bev dlounge d lounge beverage 酒吧飲品 mocktails mocktails drinks 飲料 3 95 non alcoholic 無酒精",
+      "searchText": "高飛的黏踢踢巧克力派對 goofy s ooey gooey d lounge d lounge 酒吧飲品 飲料 d lounge 酒吧飲品 mocktails 飲料 mocktails drinks non alcoholic 無酒精 無酒精",
       "sourceRecordIndex": 431
     },
     {
@@ -15527,7 +16303,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "閃耀花園 garden sparkle bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "閃耀花園 garden sparkle garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 432
     },
     {
@@ -15566,7 +16342,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "小仙子奶油冰棒 pixie creamsicle bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "小仙子奶油冰棒 pixie creamsicle garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 433
     },
     {
@@ -15605,7 +16381,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "瘋帽客的午茶馬丁尼 teatime tini 綠茶與香蘭風味的馬丁尼 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "瘋帽客的午茶馬丁尼 teatime tini 綠茶與香蘭風味的馬丁尼 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 434
     },
     {
@@ -15644,7 +16420,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "百果綻放 fruit blossom bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "百果綻放 fruit blossom garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 435
     },
     {
@@ -15683,7 +16459,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "迷霧花叢 smoky flowers bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "迷霧花叢 smoky flowers garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 436
     },
     {
@@ -15722,7 +16498,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔髮藤蔓 tangled vines bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "魔髮藤蔓 tangled vines garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 437
     },
     {
@@ -15761,7 +16537,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "蒂安娜的睡蓮馬丁尼 lily pad tini bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "蒂安娜的睡蓮馬丁尼 lily pad tini garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 garden bar 花園酒吧 garden bar 酒精",
       "sourceRecordIndex": 438
     },
     {
@@ -15799,7 +16575,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "開胃酸酒 aperitif sour bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 14 00 無酒精",
+      "searchText": "開胃酸酒 aperitif sour garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 439
     },
     {
@@ -15837,7 +16613,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "野草莓之夢 wild strawberry bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "野草莓之夢 wild strawberry garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 440
     },
     {
@@ -15875,7 +16651,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "精靈接骨木氣泡 elderspritz bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "精靈接骨木氣泡 elderspritz garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 441
     },
     {
@@ -15913,7 +16689,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "lyre s amalfi spritz bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "lyre s amalfi spritz lyre s amalfi spritz garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 442
     },
     {
@@ -15951,7 +16727,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "heineken 0 0 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "heineken 0 0 heineken 0 0 garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 443
     },
     {
@@ -15989,7 +16765,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "warsteiner radler 0 0 bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 7 75 無酒精",
+      "searchText": "warsteiner radler 0 0 warsteiner radler 0 0 garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 garden bar 花園酒吧 garden bar 無酒精",
       "sourceRecordIndex": 444
     },
     {
@@ -16028,7 +16804,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔法樹 enchanted tree bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "魔法樹 enchanted tree garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 garden bar 花園酒吧 garden bar 兒童",
       "sourceRecordIndex": 445
     },
     {
@@ -16067,7 +16843,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔法師的幻想曲 fantasia bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "魔法師的幻想曲 fantasia garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 garden bar 花園酒吧 garden bar 兒童",
       "sourceRecordIndex": 446
     },
     {
@@ -16106,7 +16882,7 @@ window.MENU_LOOKUP_DATA = {
         "Garden Bar"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "花園清新泉水 garden refresher bev garden garden bar 花園酒吧 garden bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "花園清新泉水 garden refresher garden bar 花園酒吧 garden bar 酒吧飲品 飲料 garden stage 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 garden bar 花園酒吧 garden bar 兒童",
       "sourceRecordIndex": 447
     },
     {
@@ -16143,7 +16919,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "時間寶石 time stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 7 00 alcoholic 酒精",
+      "searchText": "時間寶石 time stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 448
     },
     {
@@ -16180,7 +16956,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "空間寶石 space stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "空間寶石 space stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 449
     },
     {
@@ -16217,7 +16993,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "靈魂寶石 soul stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "靈魂寶石 soul stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 450
     },
     {
@@ -16254,7 +17030,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "現實寶石 reality stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "現實寶石 reality stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 451
     },
     {
@@ -16291,7 +17067,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "力量寶石 power stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "力量寶石 power stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 452
     },
     {
@@ -16328,7 +17104,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "心靈寶石 mind stone bev infinity infinity pool bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "心靈寶石 mind stone infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 453
     },
     {
@@ -16364,7 +17140,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "緋紅扭曲 scarlet distortion bev infinity infinity pool bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "緋紅扭曲 scarlet distortion infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 454
     },
     {
@@ -16400,7 +17176,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "靈魂之火花蜜 soulfire nectar bev infinity infinity pool bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 11 00 無酒精",
+      "searchText": "靈魂之火花蜜 soulfire nectar infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 455
     },
     {
@@ -16436,7 +17212,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "心靈綻放 mind bloom bev infinity infinity pool bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "心靈綻放 mind bloom infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 456
     },
     {
@@ -16472,7 +17248,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "永恆之刻 eternal hour bev infinity infinity pool bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "永恆之刻 eternal hour infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 457
     },
     {
@@ -16509,7 +17285,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "桂花洋梨奶油愛爾 osmanthus pear cream ale bev infinity infinity pool bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "桂花洋梨奶油愛爾 osmanthus pear cream ale infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 458
     },
     {
@@ -16546,7 +17322,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "嘉士伯皮爾森 draft carlsberg pilsner draft bev infinity infinity pool bar beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "嘉士伯皮爾森 draft carlsberg pilsner draft infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 459
     },
     {
@@ -16583,7 +17359,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "izeko清酒果凍杯 izeko sake jelly cup bev infinity infinity pool bar beverage 酒吧飲品 sake 清酒 drinks 飲料 7 00 alcoholic 酒精",
+      "searchText": "izeko清酒果凍杯 izeko sake jelly cup infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 460
     },
     {
@@ -16620,7 +17396,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "月桂冠梅酒 gekkeikan plum wine bev infinity infinity pool bar beverage 酒吧飲品 sake 清酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "月桂冠梅酒 gekkeikan plum wine infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 461
     },
     {
@@ -16657,7 +17433,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "菊水純米吟釀 kikusui junmai ginjo bev infinity infinity pool bar beverage 酒吧飲品 sake 清酒 drinks 飲料 15 00 alcoholic 酒精",
+      "searchText": "菊水純米吟釀 kikusui junmai ginjo infinity pool bar infinity pool bar 酒吧飲品 飲料 infinity pool bar 酒吧飲品 清酒 飲料 sake drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 462
     },
     {
@@ -16694,7 +17470,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "邪惡之咬 wicked bite bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 20 00 alcoholic 酒精",
+      "searchText": "邪惡之咬 wicked bite spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 463
     },
     {
@@ -16731,7 +17507,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "高傲皇后 the queen bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 16 00 alcoholic 酒精",
+      "searchText": "高傲皇后 the queen spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 464
     },
     {
@@ -16768,7 +17544,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "致命毒蘋果 poison apple bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 70 00 alcoholic 酒精",
+      "searchText": "致命毒蘋果 poison apple spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 465
     },
     {
@@ -16805,7 +17581,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "獵人本色 the huntsman bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 16 00 alcoholic 酒精",
+      "searchText": "獵人本色 the huntsman spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 466
     },
     {
@@ -16842,7 +17618,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔鏡絕色 the fairest of them all bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "魔鏡絕色 the fairest of them all spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 467
     },
     {
@@ -16879,7 +17655,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "真愛初飲 true love s first sip bev spellbound spellbound beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 16 00 alcoholic 酒精",
+      "searchText": "真愛初飲 true love s first sip spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 468
     },
     {
@@ -16915,7 +17691,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔鏡魔鏡 mirror mirror bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "魔鏡魔鏡 mirror mirror spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 469
     },
     {
@@ -16951,7 +17727,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "許願池氣泡飲 wishing well fizz bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "許願池氣泡飲 wishing well fizz spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 470
     },
     {
@@ -16987,7 +17763,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "皇家冰霜特調 royal frostbite cream bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "皇家冰霜特調 royal frostbite cream spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 471
     },
     {
@@ -17024,7 +17800,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "邪惡皇后 evil queen bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "邪惡皇后 evil queen spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 472
     },
     {
@@ -17061,7 +17837,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "女巫特調魔藥 witch s brew bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "女巫特調魔藥 witch s brew spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 473
     },
     {
@@ -17098,7 +17874,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "永保青春花果茶 eternal beauty tea bev spellbound spellbound beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "永保青春花果茶 eternal beauty tea spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 474
     },
     {
@@ -17133,7 +17909,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "禁忌森林 forbidden forest bev spellbound spellbound beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 50",
+      "searchText": "禁忌森林 forbidden forest spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 475
     },
     {
@@ -17168,7 +17944,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "魔鏡魔法摩卡 mirror magic mocha bev spellbound spellbound beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 50",
+      "searchText": "魔鏡魔法摩卡 mirror magic mocha spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 476
     },
     {
@@ -17203,7 +17979,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雲朵斑蘭葉 pandan cloud bev spellbound spellbound beverage 酒吧飲品 coffee 咖啡 drinks 飲料 7 50",
+      "searchText": "雲朵斑蘭葉 pandan cloud spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 477
     },
     {
@@ -17240,7 +18016,7 @@ window.MENU_LOOKUP_DATA = {
         "咖啡"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "濃縮咖啡 單份 espresso single bev spellbound spellbound beverage 酒吧飲品 espresso 義式咖啡 drinks 飲料 2 50 coffee 咖啡",
+      "searchText": "濃縮咖啡 單份 espresso single spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 義式咖啡 飲料 espresso drinks coffee 咖啡 咖啡",
       "sourceRecordIndex": 478
     },
     {
@@ -17277,7 +18053,7 @@ window.MENU_LOOKUP_DATA = {
         "咖啡"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "濃縮咖啡 雙份 espresso double bev spellbound spellbound beverage 酒吧飲品 espresso 義式咖啡 drinks 飲料 3 50 coffee 咖啡",
+      "searchText": "濃縮咖啡 雙份 espresso double spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 義式咖啡 飲料 espresso drinks coffee 咖啡 咖啡",
       "sourceRecordIndex": 479
     },
     {
@@ -17314,7 +18090,7 @@ window.MENU_LOOKUP_DATA = {
         "咖啡"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "抹茶拿鐵 green tea matcha bev spellbound spellbound beverage 酒吧飲品 espresso 義式咖啡 drinks 飲料 5 50 coffee 咖啡",
+      "searchText": "抹茶拿鐵 green tea matcha spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 義式咖啡 飲料 espresso drinks coffee 咖啡 咖啡",
       "sourceRecordIndex": 480
     },
     {
@@ -17351,7 +18127,7 @@ window.MENU_LOOKUP_DATA = {
         "咖啡"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "薑黃拿鐵 turmeric latte bev spellbound spellbound beverage 酒吧飲品 espresso 義式咖啡 drinks 飲料 5 50 coffee 咖啡",
+      "searchText": "薑黃拿鐵 turmeric latte spellbound spellbound 酒吧飲品 飲料 spellbound 酒吧飲品 義式咖啡 飲料 espresso drinks coffee 咖啡 咖啡",
       "sourceRecordIndex": 481
     },
     {
@@ -17388,7 +18164,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "春日微風 primavera bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "春日微風 primavera taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 482
     },
     {
@@ -17425,7 +18201,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "偉士牌150夢幻特調 150 special bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "偉士牌150夢幻特調 150 special taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 483
     },
     {
@@ -17462,7 +18238,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海怪的衝刺 sprint bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "海怪的衝刺 sprint taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 484
     },
     {
@@ -17499,7 +18275,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "達利的奇想 dali bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "達利的奇想 dali taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 485
     },
     {
@@ -17536,7 +18312,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "946號星空 946 bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 16 00 alcoholic 酒精",
+      "searchText": "946號星空 946 taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 486
     },
     {
@@ -17573,7 +18349,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "海島邊車 side car bev taverna taverna portorosso beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "海島邊車 side car taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 487
     },
     {
@@ -17609,7 +18385,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "波托羅索之夏 portorosso cup bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "波托羅索之夏 portorosso cup taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 488
     },
     {
@@ -17645,7 +18421,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "小不點氣泡飲 piccolina spritz bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "小不點氣泡飲 piccolina spritz taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 489
     },
     {
@@ -17681,7 +18457,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義式甜心提拉米蘇 tiramisu bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "義式甜心提拉米蘇 tiramisu taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 490
     },
     {
@@ -17717,7 +18493,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "馬西莫的摩卡奇諾 mocaccino bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "馬西莫的摩卡奇諾 mocaccino taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 491
     },
     {
@@ -17754,7 +18530,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "深藍秘境 mare blu bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "深藍秘境 mare blu taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 492
     },
     {
@@ -17791,7 +18567,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "靜靜吧 布魯諾氣泡飲 bruno s fizz 蜜桃與薑風味的無酒精氣泡飲 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "靜靜吧 布魯諾氣泡飲 bruno s fizz 蜜桃與薑風味的無酒精氣泡飲 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 493
     },
     {
@@ -17828,7 +18604,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "最棒的夏天 best summer ever bev taverna taverna portorosso beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "最棒的夏天 best summer ever taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 494
     },
     {
@@ -17865,7 +18641,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "義大利米娜布雷亞拉格 draft menabrea lager draft bev taverna taverna portorosso beverage 酒吧飲品 beer 啤酒 drinks 飲料 8 25 alcoholic 酒精",
+      "searchText": "義大利米娜布雷亞拉格 draft menabrea lager draft taverna portorosso taverna portorosso 酒吧飲品 飲料 taverna portorosso 酒吧飲品 啤酒 飲料 beer drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 495
     },
     {
@@ -17896,7 +18672,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "單份法式甜甜圈 one beignet bev tiana tiana s bayou lounge beverage 酒吧飲品 food 餐點 entree 主餐 2 00",
+      "searchText": "單份法式甜甜圈 one beignet tiana s bayou lounge tiana s bayou lounge 酒吧飲品 主餐 tiana s bayou lounge 酒吧飲品 餐點 主餐 food entree",
       "sourceRecordIndex": 496
     },
     {
@@ -17927,7 +18703,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "雙份法式甜甜圈 two beignets bev tiana tiana s bayou lounge beverage 酒吧飲品 food 餐點 entree 主餐 3 00",
+      "searchText": "雙份法式甜甜圈 two beignets tiana s bayou lounge tiana s bayou lounge 酒吧飲品 主餐 tiana s bayou lounge 酒吧飲品 餐點 主餐 food entree",
       "sourceRecordIndex": 497
     },
     {
@@ -17958,7 +18734,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "法式歐蕾咖啡佐甜甜圈 cafe au lait with beignet bev tiana tiana s bayou lounge beverage 酒吧飲品 food 餐點 entree 主餐 4 75",
+      "searchText": "法式歐蕾咖啡佐甜甜圈 cafe au lait with beignet tiana s bayou lounge tiana s bayou lounge 酒吧飲品 主餐 tiana s bayou lounge 酒吧飲品 餐點 主餐 food entree",
       "sourceRecordIndex": 498
     },
     {
@@ -17989,7 +18765,7 @@ window.MENU_LOOKUP_DATA = {
         "entree"
       ],
       "crewPhrase": "Could I order this, please?",
-      "searchText": "奇妙睡蓮葉陶瓷紀念套組 ceramic lily pad set bev tiana tiana s bayou lounge beverage 酒吧飲品 food 餐點 entree 主餐 25 00",
+      "searchText": "奇妙睡蓮葉陶瓷紀念套組 ceramic lily pad set tiana s bayou lounge tiana s bayou lounge 酒吧飲品 主餐 tiana s bayou lounge 酒吧飲品 餐點 主餐 food entree",
       "sourceRecordIndex": 499
     },
     {
@@ -18026,7 +18802,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "煙燻古典 smoked fashioned bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 25 00 alcoholic 酒精",
+      "searchText": "煙燻古典 smoked fashioned tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 500
     },
     {
@@ -18063,7 +18839,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "肯瓊風味米切拉達 cajun michelada bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "肯瓊風味米切拉達 cajun michelada tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 501
     },
     {
@@ -18100,7 +18876,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "紐奧良結霜酒 orleans crusta bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "紐奧良結霜酒 orleans crusta tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 502
     },
     {
@@ -18137,7 +18913,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "狂歡颶風 hurricane bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 14 00 alcoholic 酒精",
+      "searchText": "狂歡颶風 hurricane tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 503
     },
     {
@@ -18174,7 +18950,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "冰鎮苦艾酒 absinthe frappe bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "冰鎮苦艾酒 absinthe frappe tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 504
     },
     {
@@ -18211,7 +18987,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "薩澤拉克 sazerac bev tiana tiana s bayou lounge beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 13 00 alcoholic 酒精",
+      "searchText": "薩澤拉克 sazerac tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 505
     },
     {
@@ -18247,7 +19023,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "花園區之風 garden district bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "花園區之風 garden district tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 506
     },
     {
@@ -18283,7 +19059,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "河口微風 bayou breeze bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "河口微風 bayou breeze tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 507
     },
     {
@@ -18319,7 +19095,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "波本街碎冰飲 bourbon street smash bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "波本街碎冰飲 bourbon street smash tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 508
     },
     {
@@ -18355,7 +19131,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "老城區沁涼特調 vieux carre cooler bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "老城區沁涼特調 vieux carre cooler tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 509
     },
     {
@@ -18392,7 +19168,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "狂歡節蘋果賓治 mardi gras apple punch bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "狂歡節蘋果賓治 mardi gras apple punch tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 510
     },
     {
@@ -18429,7 +19205,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "招牌甜甜圈奶昔 beignet shake 紐奧良風格的無酒精奶昔 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 15 00 kids 兒童",
+      "searchText": "招牌甜甜圈奶昔 beignet shake 紐奧良風格的無酒精奶昔 9 8 附件補充 價格沿用菜單 snapshot 點餐前確認 tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 511
     },
     {
@@ -18466,7 +19242,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "沼澤氣泡飲 swamp soda bev tiana tiana s bayou lounge beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 kids 兒童",
+      "searchText": "沼澤氣泡飲 swamp soda tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 512
     },
     {
@@ -18501,7 +19277,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "單份濃縮咖啡 espresso single bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 2 75",
+      "searchText": "單份濃縮咖啡 espresso single tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 513
     },
     {
@@ -18536,7 +19312,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雙份濃縮咖啡 espresso double bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 3 75",
+      "searchText": "雙份濃縮咖啡 espresso double tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 514
     },
     {
@@ -18571,7 +19347,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "單份瑪奇朵 macchiato single bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 2 75",
+      "searchText": "單份瑪奇朵 macchiato single tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 515
     },
     {
@@ -18606,7 +19382,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雙份瑪奇朵 macchiato double bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 3 75",
+      "searchText": "雙份瑪奇朵 macchiato double tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 516
     },
     {
@@ -18641,7 +19417,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "單份拿鐵 latte single bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 3 75",
+      "searchText": "單份拿鐵 latte single tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 517
     },
     {
@@ -18676,7 +19452,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雙份拿鐵 latte double bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 4 75",
+      "searchText": "雙份拿鐵 latte double tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 518
     },
     {
@@ -18711,7 +19487,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "單份摩卡 mocha single bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 3 50",
+      "searchText": "單份摩卡 mocha single tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 519
     },
     {
@@ -18746,7 +19522,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雙份摩卡 mocha double bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 4 75",
+      "searchText": "雙份摩卡 mocha double tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 520
     },
     {
@@ -18781,7 +19557,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "單份卡布奇諾 cappuccino single bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 3 50",
+      "searchText": "單份卡布奇諾 cappuccino single tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 521
     },
     {
@@ -18816,7 +19592,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "雙份卡布奇諾 cappuccino double bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 4 75",
+      "searchText": "雙份卡布奇諾 cappuccino double tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 522
     },
     {
@@ -18851,7 +19627,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "添加風味糖漿 flavor syrup add on bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 1 00",
+      "searchText": "添加風味糖漿 flavor syrup add on tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 523
     },
     {
@@ -18886,7 +19662,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "綠茶抹茶拿鐵 green tea matcha latte bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 5 75",
+      "searchText": "綠茶抹茶拿鐵 green tea matcha latte tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 524
     },
     {
@@ -18921,7 +19697,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "薑黃拿鐵 turmeric latte bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee 咖啡 drinks 飲料 5 75",
+      "searchText": "薑黃拿鐵 turmeric latte tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡 飲料 coffee drinks 咖啡",
       "sourceRecordIndex": 525
     },
     {
@@ -18958,7 +19734,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "法式歐蕾馬丁尼 cafe au lait martini bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee cocktails 咖啡雞尾酒 drinks 飲料 11 00 alcoholic 酒精",
+      "searchText": "法式歐蕾馬丁尼 cafe au lait martini tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡雞尾酒 飲料 coffee cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 526
     },
     {
@@ -18995,7 +19771,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "河口賓治 bayou punch bev tiana tiana s bayou lounge beverage 酒吧飲品 coffee cocktails 咖啡雞尾酒 drinks 飲料 9 50 alcoholic 酒精",
+      "searchText": "河口賓治 bayou punch tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 咖啡雞尾酒 飲料 coffee cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 527
     },
     {
@@ -19032,7 +19808,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "冷萃可樂達 brew colada bev tiana tiana s bayou lounge beverage 酒吧飲品 cold brew 冷萃咖啡 drinks 飲料 13 50 alcoholic 酒精",
+      "searchText": "冷萃可樂達 brew colada tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 冷萃咖啡 飲料 cold brew drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 528
     },
     {
@@ -19069,7 +19845,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "冷萃古典 brew fashion bev tiana tiana s bayou lounge beverage 酒吧飲品 cold brew 冷萃咖啡 drinks 飲料 13 50 alcoholic 酒精",
+      "searchText": "冷萃古典 brew fashion tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 冷萃咖啡 飲料 cold brew drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 529
     },
     {
@@ -19106,7 +19882,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "冷萃通寧 brew tonic bev tiana tiana s bayou lounge beverage 酒吧飲品 cold brew 冷萃咖啡 drinks 飲料 13 50 alcoholic 酒精",
+      "searchText": "冷萃通寧 brew tonic tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 冷萃咖啡 飲料 cold brew drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 530
     },
     {
@@ -19143,7 +19919,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "冷萃與沙 brew sand bev tiana tiana s bayou lounge beverage 酒吧飲品 cold brew 冷萃咖啡 drinks 飲料 13 50 alcoholic 酒精",
+      "searchText": "冷萃與沙 brew sand tiana s bayou lounge tiana s bayou lounge 酒吧飲品 飲料 tiana s bayou lounge 酒吧飲品 冷萃咖啡 飲料 cold brew drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 531
     },
     {
@@ -19180,7 +19956,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "航海家果汁酒 voyagers punch bev wayfinder wayfinder bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "航海家果汁酒 voyagers punch wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 532
     },
     {
@@ -19217,7 +19993,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "莫圖努伊青檸水 motonui limeade bev wayfinder wayfinder bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 9 00 alcoholic 酒精",
+      "searchText": "莫圖努伊青檸水 motonui limeade wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 533
     },
     {
@@ -19254,7 +20030,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "尋路者的熱情 wayfinders passion bev wayfinder wayfinder bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 10 00 alcoholic 酒精",
+      "searchText": "尋路者的熱情 wayfinders passion wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 534
     },
     {
@@ -19291,7 +20067,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "跨越礁岩桑格利亞果酒 beyond the reef sangria bev wayfinder wayfinder bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "跨越礁岩桑格利亞果酒 beyond the reef sangria wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 535
     },
     {
@@ -19328,7 +20104,7 @@ window.MENU_LOOKUP_DATA = {
         "酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "莫圖島邁泰 motu mai tai bev wayfinder wayfinder bar beverage 酒吧飲品 cocktails 雞尾酒 drinks 飲料 12 00 alcoholic 酒精",
+      "searchText": "莫圖島邁泰 motu mai tai wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 雞尾酒 飲料 cocktails drinks alcoholic 酒精 酒精",
       "sourceRecordIndex": 536
     },
     {
@@ -19364,7 +20140,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "島嶼氣泡飲 islander fizz bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 9 00 無酒精",
+      "searchText": "島嶼氣泡飲 islander fizz wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 537
     },
     {
@@ -19400,7 +20176,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "莫亞娜之海 mojana bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 10 00 無酒精",
+      "searchText": "莫亞娜之海 mojana wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 538
     },
     {
@@ -19436,7 +20212,7 @@ window.MENU_LOOKUP_DATA = {
         "無酒精"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "塔卡熔岩可樂達 te ka colada bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 12 00 無酒精",
+      "searchText": "塔卡熔岩可樂達 te ka colada wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 飲料 non alcoholic drinks 無酒精 無酒精",
       "sourceRecordIndex": 539
     },
     {
@@ -19473,7 +20249,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "可可怪椰子爆擊 kakamora smash bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "可可怪椰子爆擊 kakamora smash wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 540
     },
     {
@@ -19510,7 +20286,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "塔菲緹之茶 tea fiti bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "塔菲緹之茶 tea fiti wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 541
     },
     {
@@ -19547,7 +20323,7 @@ window.MENU_LOOKUP_DATA = {
         "兒童"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "毛伊解渴特調 maui quencher bev wayfinder wayfinder bar beverage 酒吧飲品 non alcoholic 無酒精飲品 drinks 飲料 6 00 kids 兒童",
+      "searchText": "毛伊解渴特調 maui quencher wayfinder bar wayfinder bar 酒吧飲品 飲料 wayfinder bar 酒吧飲品 無酒精飲品 兒童 配菜 non alcoholic kids side kids 兒童 兒童",
       "sourceRecordIndex": 542
     },
     {
@@ -19578,7 +20354,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "造型紀念吸管 souvenir sippers bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 0 25",
+      "searchText": "造型紀念吸管 souvenir sippers wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 543
     },
     {
@@ -19609,7 +20385,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "吱吱發聲器 squeaker 芒果 藍莓 杏仁糖漿 香草冰淇淋 bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 8 25",
+      "searchText": "吱吱發聲器 squeaker 芒果 藍莓 杏仁糖漿 香草冰淇淋 wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 544
     },
     {
@@ -19640,7 +20416,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "胡迪警長的牛仔奶昔 cowboy shake 香草冰淇淋 新鮮香蕉 海鹽焦糖 白巧克力 bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 8 25",
+      "searchText": "胡迪警長的牛仔奶昔 cowboy shake 香草冰淇淋 新鮮香蕉 海鹽焦糖 白巧克力 wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 545
     },
     {
@@ -19671,7 +20447,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "飛向宇宙浩瀚無垠 to infinity 新鮮芒果 新鮮胡蘿蔔 純淨檸檬水 椰子水 bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 8 75",
+      "searchText": "飛向宇宙浩瀚無垠 to infinity 新鮮芒果 新鮮胡蘿蔔 純淨檸檬水 椰子水 wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 546
     },
     {
@@ -19702,7 +20478,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "抱抱龍的小咆哮 small roar 青蘋果 生薑 雪碧 bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 8 25",
+      "searchText": "抱抱龍的小咆哮 small roar 青蘋果 生薑 雪碧 wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 547
     },
     {
@@ -19733,7 +20509,7 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "熊抱哥的甜美莓果香 smell like berries 椰子 鳳梨 草莓 覆盆子 bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 8 25",
+      "searchText": "熊抱哥的甜美莓果香 smell like berries 椰子 鳳梨 草莓 覆盆子 wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 548
     },
     {
@@ -19764,8 +20540,6307 @@ window.MENU_LOOKUP_DATA = {
         "drinks"
       ],
       "crewPhrase": "Could I order this drink, please?",
-      "searchText": "探險世界經典鳳梨都樂冰 pineapple dole whip bev wheezy wheezy s freezies beverage 酒吧飲品 freezies 冰沙 drinks 飲料 6 50",
+      "searchText": "探險世界經典鳳梨都樂冰 pineapple dole whip wheezy s freezies wheezy s freezies 酒吧飲品 飲料 wheezy s freezies 酒吧飲品 冰沙 飲料 freezies drinks",
       "sourceRecordIndex": 549
+    },
+    {
+      "id": "menu-handbook-animator-p12-truffle-cremini-mushroom-risotto",
+      "sourceType": "menu-item",
+      "zhLabel": "松露褐蘑菇燉飯",
+      "englishName": "Truffle Cremini Mushroom Risotto",
+      "descriptionZh": "烤榛果與芝麻葉檸檬油。",
+      "restaurantId": "animator",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 3,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "晚餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "動畫師調色盤／動畫師餐桌",
+        "Animator’s Palate / Animator’s Table",
+        "晚餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 550,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "松露褐蘑菇燉飯 truffle cremini mushroom risotto 烤榛果與芝麻葉檸檬油 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 主餐 晚餐 動畫師調色盤 動畫師餐桌 animator s palate animator s table 晚餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p11-selection-of-assorted-ice-cream",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合冰淇淋選擇",
+      "englishName": "Selection of Assorted Ice Cream",
+      "descriptionZh": "口味依當餐供應。",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "晚餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "晚餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 551,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.11（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合冰淇淋選擇 selection of assorted ice cream 口味依當餐供應 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 晚餐 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 晚餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-animator-p12-selection-of-assorted-ice-cream",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合冰淇淋選擇",
+      "englishName": "Selection of Assorted Ice Cream",
+      "descriptionZh": "口味依當餐供應。",
+      "restaurantId": "animator",
+      "restaurantLabel": "動畫師調色盤／動畫師餐桌",
+      "restaurantEnglish": "Animator’s Palate / Animator’s Table",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 3,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "晚餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "動畫師調色盤／動畫師餐桌",
+        "Animator’s Palate / Animator’s Table",
+        "晚餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 552,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.12（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合冰淇淋選擇 selection of assorted ice cream 口味依當餐供應 動畫師調色盤 動畫師餐桌 animator s palate animator s table 主餐廳 甜點 晚餐 動畫師調色盤 動畫師餐桌 animator s palate animator s table 晚餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pixar-p13-selection-of-assorted-ice-cream",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合冰淇淋選擇",
+      "englishName": "Selection of Assorted Ice Cream",
+      "descriptionZh": "口味依當餐供應。",
+      "restaurantId": "pixar",
+      "restaurantLabel": "魔法盛夏餐廳／皮克斯市集餐廳",
+      "restaurantEnglish": "Enchanted Summer Restaurant / Pixar Market Restaurant",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 2,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "晚餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "魔法盛夏餐廳／皮克斯市集餐廳",
+        "Enchanted Summer Restaurant / Pixar Market Restaurant",
+        "晚餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 553,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.13（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合冰淇淋選擇 selection of assorted ice cream 口味依當餐供應 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 主餐廳 甜點 晚餐 魔法盛夏餐廳 皮克斯市集餐廳 enchanted summer restaurant pixar market restaurant 晚餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-dill-marinated-shrimp",
+      "sourceType": "menu-item",
+      "zhLabel": "蒔蘿醃蝦",
+      "englishName": "Dill-marinated Shrimp",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 554,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蒔蘿醃蝦 dill marinated shrimp 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-beef-teriyaki-bao",
+      "sourceType": "menu-item",
+      "zhLabel": "照燒牛肉包",
+      "englishName": "Beef Teriyaki Bao",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 555,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "照燒牛肉包 beef teriyaki bao 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-mixed-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合沙拉",
+      "englishName": "Mixed Salad",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 556,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合沙拉 mixed salad 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-tom-kha-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "冬蔭椰香雞湯",
+      "englishName": "Tom Kha Soup",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 557,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "冬蔭椰香雞湯 tom kha soup 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-cream-of-tomato-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "番茄濃湯",
+      "englishName": "Cream of Tomato Soup",
+      "descriptionZh": "奶油布里歐麵包丁。",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 558,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "番茄濃湯 cream of tomato soup 奶油布里歐麵包丁 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 前菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-pennette-pasta",
+      "sourceType": "menu-item",
+      "zhLabel": "斜管麵",
+      "englishName": "Pennette Pasta",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 559,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "斜管麵 pennette pasta 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-chicken-caesar-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉凱薩沙拉",
+      "englishName": "Chicken Caesar Salad",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 560,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉凱薩沙拉 chicken caesar salad 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-plant-based-soba-noodle-bowl",
+      "sourceType": "menu-item",
+      "zhLabel": "植物性蕎麥麵碗",
+      "englishName": "Plant-based Soba Noodle Bowl",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 561,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "植物性蕎麥麵碗 plant based soba noodle bowl 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-brinjal-bhaji-aubergine-curry",
+      "sourceType": "menu-item",
+      "zhLabel": "茄子咖哩",
+      "englishName": "Brinjal Bhaji Aubergine Curry",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 562,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "茄子咖哩 brinjal bhaji aubergine curry 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-grilled-salmon-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "炙烤鮭魚沙拉",
+      "englishName": "Grilled Salmon Salad",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 563,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "炙烤鮭魚沙拉 grilled salmon salad 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-carved-roast-beef-sirloin",
+      "sourceType": "menu-item",
+      "zhLabel": "烤沙朗牛肉",
+      "englishName": "Carved Roast Beef Sirloin",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 564,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "烤沙朗牛肉 carved roast beef sirloin 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 主餐 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-mango-cheesecake",
+      "sourceType": "menu-item",
+      "zhLabel": "芒果起司蛋糕",
+      "englishName": "Mango Cheesecake",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 565,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "芒果起司蛋糕 mango cheesecake 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-carrot-cake",
+      "sourceType": "menu-item",
+      "zhLabel": "紅蘿蔔蛋糕",
+      "englishName": "Carrot Cake",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 566,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "紅蘿蔔蛋糕 carrot cake 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-welcome-aboard-sundae",
+      "sourceType": "menu-item",
+      "zhLabel": "迎賓聖代",
+      "englishName": "Welcome Aboard Sundae",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 567,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "迎賓聖代 welcome aboard sundae 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-coconut-ice-cream",
+      "sourceType": "menu-item",
+      "zhLabel": "椰子冰淇淋",
+      "englishName": "Coconut Ice Cream",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 568,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "椰子冰淇淋 coconut ice cream 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-coffee-cr-me-dome",
+      "sourceType": "menu-item",
+      "zhLabel": "咖啡奶霜圓頂",
+      "englishName": "Coffee Crème Dome",
+      "descriptionZh": "文件列於無加糖甜點；仍須確認個別飲食需求。",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 569,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "咖啡奶霜圓頂 coffee crème dome 文件列於無加糖甜點 仍須確認個別飲食需求 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-macaroni-cheese",
+      "sourceType": "menu-item",
+      "zhLabel": "起司通心粉",
+      "englishName": "Macaroni & Cheese",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 570,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "起司通心粉 macaroni cheese 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-golden-chicken-strips-with-barbecue-sauce",
+      "sourceType": "menu-item",
+      "zhLabel": "黃金雞柳佐燒烤醬",
+      "englishName": "Golden Chicken Strips with Barbecue Sauce",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 571,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黃金雞柳佐燒烤醬 golden chicken strips with barbecue sauce 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-mini-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "迷你漢堡",
+      "englishName": "Mini Burger",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 572,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "迷你漢堡 mini burger 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-apple-cinnamon-pie",
+      "sourceType": "menu-item",
+      "zhLabel": "蘋果肉桂派",
+      "englishName": "Apple-Cinnamon Pie",
+      "descriptionZh": "",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 573,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蘋果肉桂派 apple cinnamon pie 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 甜點 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-nav-p9-grilled-chicken-breast-with-roasted-red-skin-potatoes-and-steamed-carrots",
+      "sourceType": "menu-item",
+      "zhLabel": "烤雞胸肉佐烤馬鈴薯與蒸紅蘿蔔",
+      "englishName": "Grilled Chicken Breast with Roasted Red Skin Potatoes and Steamed Carrots",
+      "descriptionZh": "文件列於 Disney Check 兒童餐；甜點為新鮮西瓜。",
+      "restaurantId": "nav",
+      "restaurantLabel": "航海家俱樂部／好萊塢聚光燈俱樂部",
+      "restaurantEnglish": "Navigator’s Club / Hollywood Spotlight Club",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 1,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐（開放餐廳依通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "航海家俱樂部／好萊塢聚光燈俱樂部",
+        "Navigator’s Club / Hollywood Spotlight Club",
+        "登船午餐（開放餐廳依通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 574,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.9（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "烤雞胸肉佐烤馬鈴薯與蒸紅蘿蔔 grilled chicken breast with roasted red skin potatoes and steamed carrots 文件列於 disney check 兒童餐 甜點為新鮮西瓜 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 主餐廳 兒童 配菜 登船午餐 開放餐廳依通知 航海家俱樂部 好萊塢聚光燈俱樂部 navigator s club hollywood spotlight club 登船午餐 開放餐廳依通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-chilled-grapefruit",
+      "sourceType": "menu-item",
+      "zhLabel": "冰鎮葡萄柚",
+      "englishName": "Chilled Grapefruit",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 575,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "冰鎮葡萄柚 chilled grapefruit 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 前菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-freshly-cut-fruit-bowl",
+      "sourceType": "menu-item",
+      "zhLabel": "新鮮水果拼盤",
+      "englishName": "Freshly Cut Fruit Bowl",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 576,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "新鮮水果拼盤 freshly cut fruit bowl 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 前菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-sliced-smoked-salmon",
+      "sourceType": "menu-item",
+      "zhLabel": "煙燻鮭魚拼盤",
+      "englishName": "Sliced Smoked Salmon",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 577,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "煙燻鮭魚拼盤 sliced smoked salmon 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 前菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-nature-s-muesli",
+      "sourceType": "menu-item",
+      "zhLabel": "天然什錦穀片",
+      "englishName": "Nature's Muesli",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 578,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "天然什錦穀片 nature s muesli 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-choice-of-assorted-fruit-yogurts-or-lowfat-plain-yogurt",
+      "sourceType": "menu-item",
+      "zhLabel": "水果優格或低脂原味優格",
+      "englishName": "Choice of Assorted Fruit Yogurts or Lowfat Plain Yogurt",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 579,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "水果優格或低脂原味優格 choice of assorted fruit yogurts or lowfat plain yogurt 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-oatmeal",
+      "sourceType": "menu-item",
+      "zhLabel": "燕麥粥",
+      "englishName": "Oatmeal",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 580,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "燕麥粥 oatmeal 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-plain-congee",
+      "sourceType": "menu-item",
+      "zhLabel": "白粥",
+      "englishName": "Plain Congee",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 581,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "白粥 plain congee 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-chicken-congee",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉粥",
+      "englishName": "Chicken Congee",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 582,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉粥 chicken congee 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-kimchi-fried-rice-with-sunny-side-up-fried-egg",
+      "sourceType": "menu-item",
+      "zhLabel": "泡菜炒飯佐太陽蛋",
+      "englishName": "Kimchi Fried Rice with Sunny Side Up Fried Egg",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 583,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "泡菜炒飯佐太陽蛋 kimchi fried rice with sunny side up fried egg 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-chicken-fried-rice-with-sunny-side-up-fried-egg",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉炒飯佐太陽蛋",
+      "englishName": "Chicken Fried Rice with Sunny Side Up Fried Egg",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 584,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉炒飯佐太陽蛋 chicken fried rice with sunny side up fried egg 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-danish-pastries",
+      "sourceType": "menu-item",
+      "zhLabel": "丹麥酥",
+      "englishName": "Danish Pastries",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 585,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "丹麥酥 danish pastries 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 甜點 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-assorted-muffins",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合瑪芬",
+      "englishName": "Assorted Muffins",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 586,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合瑪芬 assorted muffins 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 甜點 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-croissants",
+      "sourceType": "menu-item",
+      "zhLabel": "可頌",
+      "englishName": "Croissants",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 587,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "可頌 croissants 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-bagels",
+      "sourceType": "menu-item",
+      "zhLabel": "貝果",
+      "englishName": "Bagels",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 588,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "貝果 bagels 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-doughnuts",
+      "sourceType": "menu-item",
+      "zhLabel": "甜甜圈",
+      "englishName": "Doughnuts",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 589,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "甜甜圈 doughnuts 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 甜點 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-english-muffins",
+      "sourceType": "menu-item",
+      "zhLabel": "英式瑪芬",
+      "englishName": "English Muffins",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 590,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "英式瑪芬 english muffins 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-white-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "白吐司",
+      "englishName": "White Toast",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 591,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "白吐司 white toast 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-wheat-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "全麥吐司",
+      "englishName": "Wheat Toast",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 592,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "全麥吐司 wheat toast 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-rye-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "黑麥吐司",
+      "englishName": "Rye Toast",
+      "descriptionZh": "",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 593,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黑麥吐司 rye toast 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-buttermilk-pancakes",
+      "sourceType": "menu-item",
+      "zhLabel": "美式鬆餅",
+      "englishName": "Buttermilk Pancakes",
+      "descriptionZh": "原味或巧克力口味；搭配楓糖漿與奶油。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 594,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "美式鬆餅 buttermilk pancakes 原味或巧克力口味 搭配楓糖漿與奶油 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-eggs-for-the-road",
+      "sourceType": "menu-item",
+      "zhLabel": "經典蛋料理拼盤",
+      "englishName": "Eggs for the Road",
+      "descriptionZh": "可詢問炒蛋、煎蛋或水煮蛋，搭配薯餅；肉類選項為雞肉香腸、火腿或培根。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 595,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "經典蛋料理拼盤 eggs for the road 可詢問炒蛋 煎蛋或水煮蛋 搭配薯餅 肉類選項為雞肉香腸 火腿或培根 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-omelets",
+      "sourceType": "menu-item",
+      "zhLabel": "歐姆蛋",
+      "englishName": "Omelets",
+      "descriptionZh": "火腿起司、原味或切達起司，附薯餅。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 596,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "歐姆蛋 omelets 火腿起司 原味或切達起司 附薯餅 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-chicken-sausage-hash",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉香腸薯餅拼盤",
+      "englishName": "Chicken Sausage Hash",
+      "descriptionZh": "雞肉香腸、煎蛋、蔥、香菜、甜椒、傑克起司。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 597,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉香腸薯餅拼盤 chicken sausage hash 雞肉香腸 煎蛋 蔥 香菜 甜椒 傑克起司 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-french-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "法式吐司",
+      "englishName": "French Toast",
+      "descriptionZh": "浸蛋液煎至金黃，搭配奶油與肉桂糖。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 598,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "法式吐司 french toast 浸蛋液煎至金黃 搭配奶油與肉桂糖 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-masala-dosa",
+      "sourceType": "menu-item",
+      "zhLabel": "印度瑪薩拉薄餅",
+      "englishName": "Masala Dosa",
+      "descriptionZh": "搭配扁豆蔬菜湯、番茄醬、馬鈴薯咖哩與薄荷香菜醬。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 599,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度瑪薩拉薄餅 masala dosa 搭配扁豆蔬菜湯 番茄醬 馬鈴薯咖哩與薄荷香菜醬 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 主餐 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-goofy-s-get-up-and-go",
+      "sourceType": "menu-item",
+      "zhLabel": "高飛活力早餐",
+      "englishName": "Goofy's Get Up and Go",
+      "descriptionZh": "炒蛋、水果丁、烤雞肉香腸。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 600,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "高飛活力早餐 goofy s get up and go 炒蛋 水果丁 烤雞肉香腸 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-main-breakfast-p10-captain-jack-s-melon-boat",
+      "sourceType": "menu-item",
+      "zhLabel": "傑克船長水果船",
+      "englishName": "Captain Jack's Melon Boat",
+      "descriptionZh": "草莓優格搭配綜合水果。",
+      "restaurantId": "main-breakfast",
+      "restaurantLabel": "主餐廳早餐（當日開放餐廳）",
+      "restaurantEnglish": "Main Restaurant Breakfast",
+      "restaurantGroup": "rotational",
+      "restaurantGroupLabel": "主餐廳",
+      "restaurantOrder": 101,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "主餐廳早餐（當日開放餐廳）",
+        "Main Restaurant Breakfast",
+        "早餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 601,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.10（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "傑克船長水果船 captain jack s melon boat 草莓優格搭配綜合水果 主餐廳早餐 當日開放餐廳 main restaurant breakfast 主餐廳 兒童 配菜 早餐 主餐廳早餐 當日開放餐廳 main restaurant breakfast 早餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-the-626",
+      "sourceType": "menu-item",
+      "zhLabel": "626 香辣炸雞堡",
+      "englishName": "THE 626",
+      "descriptionZh": "酪乳醃香辣炸雞、萵苣、番茄、蒔蘿牧場醬、地瓜麵包。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 602,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "626 香辣炸雞堡 the 626 酪乳醃香辣炸雞 萵苣 番茄 蒔蘿牧場醬 地瓜麵包 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-barbecue-huli-huli-pulled-pork",
+      "sourceType": "menu-item",
+      "zhLabel": "呼里呼里燒烤手撕豬肉堡",
+      "englishName": "Barbecue Huli-Huli Pulled Pork",
+      "descriptionZh": "酥脆洋蔥圈、炙烤鳳梨、夏威夷甜麵包。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 603,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "呼里呼里燒烤手撕豬肉堡 barbecue huli huli pulled pork 酥脆洋蔥圈 炙烤鳳梨 夏威夷甜麵包 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-all-beef-hot-dog",
+      "sourceType": "menu-item",
+      "zhLabel": "全牛熱狗堡",
+      "englishName": "All Beef Hot Dog",
+      "descriptionZh": "椒鹽長麵包、芥末美乃滋、韓式泡菜。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 604,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "全牛熱狗堡 all beef hot dog 椒鹽長麵包 芥末美乃滋 韓式泡菜 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-bratwurst",
+      "sourceType": "menu-item",
+      "zhLabel": "德式香腸堡",
+      "englishName": "Bratwurst",
+      "descriptionZh": "椒鹽長麵包、芥末美乃滋、韓式泡菜。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 605,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "德式香腸堡 bratwurst 椒鹽長麵包 芥末美乃滋 韓式泡菜 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-gochujang-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "韓式辣醬牛肉堡",
+      "englishName": "Gochujang Burger",
+      "descriptionZh": "安格斯牛肉、烤波特菇、泡菜、紅薑、酥脆洋蔥。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 606,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "韓式辣醬牛肉堡 gochujang burger 安格斯牛肉 烤波特菇 泡菜 紅薑 酥脆洋蔥 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-the-classic",
+      "sourceType": "menu-item",
+      "zhLabel": "經典起司牛肉堡",
+      "englishName": "The Classic",
+      "descriptionZh": "安格斯牛肉、切達起司、萵苣、番茄、酸黃瓜、芝麻麵包。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 607,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "經典起司牛肉堡 the classic 安格斯牛肉 切達起司 萵苣 番茄 酸黃瓜 芝麻麵包 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-impossible-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "植物肉漢堡",
+      "englishName": "Impossible Burger",
+      "descriptionZh": "龍蒿蒜味美乃滋、紅蔥頭果醬、小麥麵包；飲食需求仍先詢問。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 608,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "植物肉漢堡 impossible burger 龍蒿蒜味美乃滋 紅蔥頭果醬 小麥麵包 飲食需求仍先詢問 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-stitch-grill-p14-black-and-blue-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "黑藍起司牛肉堡",
+      "englishName": "Black and Blue Burger",
+      "descriptionZh": "卡真風味牛肉、藍紋起司、細香蔥蒜味醬、酸紅洋蔥。",
+      "restaurantId": "stitch-grill",
+      "restaurantLabel": "史迪奇歐哈納燒烤",
+      "restaurantEnglish": "Stitch’s ’Ohana Grill",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 102,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "史迪奇歐哈納燒烤",
+        "Stitch’s ’Ohana Grill",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 609,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.14（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黑藍起司牛肉堡 black and blue burger 卡真風味牛肉 藍紋起司 細香蔥蒜味醬 酸紅洋蔥 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 主餐 快餐 史迪奇歐哈納燒烤 stitch s ohana grill 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-tandoori-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "坦都里烤雞",
+      "englishName": "Tandoori Chicken",
+      "descriptionZh": "印度烤雞，可搭配餐碗或拼盤。",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 610,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "坦都里烤雞 tandoori chicken 印度烤雞 可搭配餐碗或拼盤 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-tandoori-lamb-hariyali",
+      "sourceType": "menu-item",
+      "zhLabel": "香草青醬坦都里羊肉",
+      "englishName": "Tandoori Lamb Hariyali",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 611,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "香草青醬坦都里羊肉 tandoori lamb hariyali 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-butter-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "奶油咖哩雞",
+      "englishName": "Butter Chicken",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 612,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "奶油咖哩雞 butter chicken 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-kerala-fish-curry",
+      "sourceType": "menu-item",
+      "zhLabel": "喀拉拉魚咖哩",
+      "englishName": "Kerala Fish Curry",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 613,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "喀拉拉魚咖哩 kerala fish curry 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-tandoori-vegetable-momos",
+      "sourceType": "menu-item",
+      "zhLabel": "坦都里蔬菜餃",
+      "englishName": "Tandoori Vegetable Momos",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 614,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "坦都里蔬菜餃 tandoori vegetable momos 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-variety-of-richly-spiced-slow-cooked-vegetarian-dishes",
+      "sourceType": "menu-item",
+      "zhLabel": "香料慢燉蔬食料理",
+      "englishName": "Variety of Richly Spiced Slow-cooked Vegetarian Dishes",
+      "descriptionZh": "具體菜色與素食需求請現場確認。",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 615,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "香料慢燉蔬食料理 variety of richly spiced slow cooked vegetarian dishes 具體菜色與素食需求請現場確認 毛克利餐館 mowgli s eatery 快餐 主餐 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-crisp-naans",
+      "sourceType": "menu-item",
+      "zhLabel": "脆烤印度烤餅",
+      "englishName": "Crisp Naans",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 616,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "脆烤印度烤餅 crisp naans 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-soft-paratha",
+      "sourceType": "menu-item",
+      "zhLabel": "軟式印度煎餅",
+      "englishName": "Soft Paratha",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 617,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "軟式印度煎餅 soft paratha 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-pulao",
+      "sourceType": "menu-item",
+      "zhLabel": "印度香料飯",
+      "englishName": "Pulao",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 618,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度香料飯 pulao 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-fragrant-rice",
+      "sourceType": "menu-item",
+      "zhLabel": "香米飯",
+      "englishName": "Fragrant Rice",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 619,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "香米飯 fragrant rice 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-chutneys",
+      "sourceType": "menu-item",
+      "zhLabel": "印度酸辣醬",
+      "englishName": "Chutneys",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 620,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度酸辣醬 chutneys 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-mowgli-p15-raitas",
+      "sourceType": "menu-item",
+      "zhLabel": "優格醬",
+      "englishName": "Raitas",
+      "descriptionZh": "",
+      "restaurantId": "mowgli",
+      "restaurantLabel": "毛克利餐館",
+      "restaurantEnglish": "Mowgli’s Eatery",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 103,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "毛克利餐館",
+        "Mowgli’s Eatery",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 621,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "優格醬 raitas 毛克利餐館 mowgli s eatery 快餐 兒童 配菜 快餐 毛克利餐館 mowgli s eatery 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-hainanese-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "海南雞",
+      "englishName": "Hainanese Chicken",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 622,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "海南雞 hainanese chicken 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-huli-huli-bbq-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "呼里呼里烤雞",
+      "englishName": "Huli-Huli BBQ Chicken",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 623,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "呼里呼里烤雞 huli huli bbq chicken 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-black-pepper-beef",
+      "sourceType": "menu-item",
+      "zhLabel": "黑胡椒牛肉",
+      "englishName": "Black Pepper Beef",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 624,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黑胡椒牛肉 black pepper beef 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-sichuan-braised-tofu",
+      "sourceType": "menu-item",
+      "zhLabel": "四川風味燉豆腐",
+      "englishName": "Sichuan Braised Tofu",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 625,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "四川風味燉豆腐 sichuan braised tofu 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-broccoli-with-garlic",
+      "sourceType": "menu-item",
+      "zhLabel": "蒜香花椰菜",
+      "englishName": "Broccoli with Garlic",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 626,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蒜香花椰菜 broccoli with garlic 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-soy-glazed-yams",
+      "sourceType": "menu-item",
+      "zhLabel": "醬燒地瓜",
+      "englishName": "Soy Glazed Yams",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 627,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "醬燒地瓜 soy glazed yams 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-fragrant-chicken-rice",
+      "sourceType": "menu-item",
+      "zhLabel": "香雞飯",
+      "englishName": "Fragrant Chicken Rice",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 628,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "香雞飯 fragrant chicken rice 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-malaysian-coconut-rice",
+      "sourceType": "menu-item",
+      "zhLabel": "馬來西亞椰香飯",
+      "englishName": "Malaysian Coconut Rice",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 629,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "馬來西亞椰香飯 malaysian coconut rice 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-buttermilk-fried-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "酪乳炸雞",
+      "englishName": "Buttermilk Fried Chicken",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 630,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "酪乳炸雞 buttermilk fried chicken 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-chicken-tenders",
+      "sourceType": "menu-item",
+      "zhLabel": "雞柳條",
+      "englishName": "Chicken Tenders",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 631,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞柳條 chicken tenders 塔拉奶奶廚房 gramma tala s kitchen 快餐 主餐 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-french-fries",
+      "sourceType": "menu-item",
+      "zhLabel": "薯條",
+      "englishName": "French Fries",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 632,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "薯條 french fries 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-chili-garlic-paste-ginger-scallion-paste",
+      "sourceType": "menu-item",
+      "zhLabel": "辣椒蒜蓉醬／薑蔥醬",
+      "englishName": "Chili-Garlic Paste / Ginger-Scallion Paste",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 633,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "辣椒蒜蓉醬 薑蔥醬 chili garlic paste ginger scallion paste 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-kimchi-macaroni-salad-pickled-radish",
+      "sourceType": "menu-item",
+      "zhLabel": "泡菜／通心粉沙拉／醃蘿蔔",
+      "englishName": "Kimchi / Macaroni Salad / Pickled Radish",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 634,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "泡菜 通心粉沙拉 醃蘿蔔 kimchi macaroni salad pickled radish 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-gramma-tala-p15-red-ginger-shredded-cabbage-sliced-cucumber",
+      "sourceType": "menu-item",
+      "zhLabel": "紅薑／高麗菜絲／小黃瓜片",
+      "englishName": "Red Ginger / Shredded Cabbage / Sliced Cucumber",
+      "descriptionZh": "",
+      "restaurantId": "gramma-tala",
+      "restaurantLabel": "塔拉奶奶廚房",
+      "restaurantEnglish": "Gramma Tala’s Kitchen",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 104,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "塔拉奶奶廚房",
+        "Gramma Tala’s Kitchen",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 635,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.15（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "紅薑 高麗菜絲 小黃瓜片 red ginger shredded cabbage sliced cucumber 塔拉奶奶廚房 gramma tala s kitchen 快餐 兒童 配菜 快餐 塔拉奶奶廚房 gramma tala s kitchen 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-wheezy-soft-serve-p16-complimentary-soft-serve",
+      "sourceType": "menu-item",
+      "zhLabel": "霜淇淋",
+      "englishName": "Complimentary Soft Serve",
+      "descriptionZh": "文件列免費霜淇淋：香草、巧克力、草莓或雙口味。與付費特飲／冰沙不同，口味依現場。位置維持 Deck 17。",
+      "restaurantId": "wheezy-soft-serve",
+      "restaurantLabel": "Wheezy’s Freezies 霜淇淋",
+      "restaurantEnglish": "Wheezy’s Freezies",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 105,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "霜淇淋（另有付費飲品）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "Wheezy’s Freezies 霜淇淋",
+        "Wheezy’s Freezies",
+        "霜淇淋（另有付費飲品）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 636,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "霜淇淋 complimentary soft serve 文件列免費霜淇淋 香草 巧克力 草莓或雙口味 與付費特飲 冰沙不同 口味依現場 位置維持 deck 17 wheezy s freezies 霜淇淋 wheezy s freezies 快餐 甜點 霜淇淋 另有付費飲品 wheezy s freezies 霜淇淋 wheezy s freezies 霜淇淋 另有付費飲品 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pizza-planet-p16-barbecue-chicken-pizza",
+      "sourceType": "menu-item",
+      "zhLabel": "燒烤雞肉披薩",
+      "englishName": "Barbecue Chicken Pizza",
+      "descriptionZh": "莫札瑞拉、紅洋蔥、烤甜椒、香菜。",
+      "restaurantId": "pizza-planet",
+      "restaurantLabel": "披薩星球",
+      "restaurantEnglish": "Pizza Planet",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 106,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "披薩星球",
+        "Pizza Planet",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 637,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "燒烤雞肉披薩 barbecue chicken pizza 莫札瑞拉 紅洋蔥 烤甜椒 香菜 披薩星球 pizza planet 快餐 主餐 快餐 披薩星球 pizza planet 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pizza-planet-p16-four-cheese-pizza",
+      "sourceType": "menu-item",
+      "zhLabel": "四種起司披薩",
+      "englishName": "Four Cheese Pizza",
+      "descriptionZh": "番茄醬、戈貢佐拉、莫札瑞拉、帕瑪森、塔雷吉歐起司。",
+      "restaurantId": "pizza-planet",
+      "restaurantLabel": "披薩星球",
+      "restaurantEnglish": "Pizza Planet",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 106,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "披薩星球",
+        "Pizza Planet",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 638,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "四種起司披薩 four cheese pizza 番茄醬 戈貢佐拉 莫札瑞拉 帕瑪森 塔雷吉歐起司 披薩星球 pizza planet 快餐 主餐 快餐 披薩星球 pizza planet 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pizza-planet-p16-pepperoni-pizza",
+      "sourceType": "menu-item",
+      "zhLabel": "義式臘腸披薩",
+      "englishName": "Pepperoni Pizza",
+      "descriptionZh": "文件註明含豬肉；番茄醬、臘腸、莫札瑞拉、羅勒。",
+      "restaurantId": "pizza-planet",
+      "restaurantLabel": "披薩星球",
+      "restaurantEnglish": "Pizza Planet",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 106,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "披薩星球",
+        "Pizza Planet",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 639,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "義式臘腸披薩 pepperoni pizza 文件註明含豬肉 番茄醬 臘腸 莫札瑞拉 羅勒 披薩星球 pizza planet 快餐 主餐 快餐 披薩星球 pizza planet 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pizza-planet-p16-margherita-pizza",
+      "sourceType": "menu-item",
+      "zhLabel": "瑪格麗特披薩",
+      "englishName": "Margherita Pizza",
+      "descriptionZh": "番茄醬、新鮮番茄、莫札瑞拉、羅勒。",
+      "restaurantId": "pizza-planet",
+      "restaurantLabel": "披薩星球",
+      "restaurantEnglish": "Pizza Planet",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 106,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "披薩星球",
+        "Pizza Planet",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 640,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "瑪格麗特披薩 margherita pizza 番茄醬 新鮮番茄 莫札瑞拉 羅勒 披薩星球 pizza planet 快餐 主餐 快餐 披薩星球 pizza planet 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-pizza-planet-p16-plant-based-sausage-pizza",
+      "sourceType": "menu-item",
+      "zhLabel": "植物性香腸披薩",
+      "englishName": "Plant-based Sausage Pizza",
+      "descriptionZh": "菠菜、菇類、百里香、植物性起司；特殊飲食與交叉接觸風險請詢問。",
+      "restaurantId": "pizza-planet",
+      "restaurantLabel": "披薩星球",
+      "restaurantEnglish": "Pizza Planet",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 106,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "披薩星球",
+        "Pizza Planet",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 641,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.16（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "植物性香腸披薩 plant based sausage pizza 菠菜 菇類 百里香 植物性起司 特殊飲食與交叉接觸風險請詢問 披薩星球 pizza planet 快餐 主餐 快餐 披薩星球 pizza planet 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-grilled-kebabs",
+      "sourceType": "menu-item",
+      "zhLabel": "烤肉串",
+      "englishName": "Grilled Kebabs",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 642,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "烤肉串 grilled kebabs 宇宙烤肉 cosmic kebabs 快餐 主餐 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-shawarma",
+      "sourceType": "menu-item",
+      "zhLabel": "沙威瑪",
+      "englishName": "Shawarma",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 643,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "沙威瑪 shawarma 宇宙烤肉 cosmic kebabs 快餐 主餐 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-vegetable-shish",
+      "sourceType": "menu-item",
+      "zhLabel": "蔬菜烤串",
+      "englishName": "Vegetable Shish",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 644,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蔬菜烤串 vegetable shish 宇宙烤肉 cosmic kebabs 快餐 主餐 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-char-grilled-spiced-sausage",
+      "sourceType": "menu-item",
+      "zhLabel": "炭烤香料香腸",
+      "englishName": "Char-grilled Spiced Sausage",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 645,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "炭烤香料香腸 char grilled spiced sausage 宇宙烤肉 cosmic kebabs 快餐 主餐 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-falafel",
+      "sourceType": "menu-item",
+      "zhLabel": "鷹嘴豆炸丸子",
+      "englishName": "Falafel",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 646,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "鷹嘴豆炸丸子 falafel 宇宙烤肉 cosmic kebabs 快餐 主餐 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-hummus",
+      "sourceType": "menu-item",
+      "zhLabel": "鷹嘴豆泥",
+      "englishName": "Hummus",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 647,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "鷹嘴豆泥 hummus 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-pickled-red-cabbage",
+      "sourceType": "menu-item",
+      "zhLabel": "醃紫高麗菜",
+      "englishName": "Pickled Red Cabbage",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 648,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "醃紫高麗菜 pickled red cabbage 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-tabbouleh-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "塔布勒沙拉",
+      "englishName": "Tabbouleh Salad",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 649,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "塔布勒沙拉 tabbouleh salad 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-baba-ghanoush",
+      "sourceType": "menu-item",
+      "zhLabel": "巴巴甘納許茄泥",
+      "englishName": "Baba Ghanoush",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 650,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "巴巴甘納許茄泥 baba ghanoush 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-sumac-red-onion",
+      "sourceType": "menu-item",
+      "zhLabel": "蘇馬克香料紅洋蔥",
+      "englishName": "Sumac Red Onion",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 651,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蘇馬克香料紅洋蔥 sumac red onion 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-soft-pita",
+      "sourceType": "menu-item",
+      "zhLabel": "軟皮塔餅",
+      "englishName": "Soft Pita",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 652,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "軟皮塔餅 soft pita 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-cosmic-kebabs-p17-seasoned-french-fries",
+      "sourceType": "menu-item",
+      "zhLabel": "調味薯條",
+      "englishName": "Seasoned French Fries",
+      "descriptionZh": "",
+      "restaurantId": "cosmic-kebabs",
+      "restaurantLabel": "宇宙烤肉",
+      "restaurantEnglish": "Cosmic Kebabs",
+      "restaurantGroup": "quick",
+      "restaurantGroupLabel": "快餐",
+      "restaurantOrder": 107,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "快餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "宇宙烤肉",
+        "Cosmic Kebabs",
+        "快餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 653,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.17（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "調味薯條 seasoned french fries 宇宙烤肉 cosmic kebabs 快餐 兒童 配菜 快餐 宇宙烤肉 cosmic kebabs 快餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-orange-apple-grapefruit-juice",
+      "sourceType": "menu-item",
+      "zhLabel": "柳橙／蘋果／葡萄柚汁",
+      "englishName": "Orange / Apple / Grapefruit Juice",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "drinks",
+      "menuCategoryLabel": "飲料",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this drink, please?",
+      "sourceRecordIndex": 654,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "柳橙 蘋果 葡萄柚汁 orange apple grapefruit juice 客房送餐 room service room service 客房送餐 飲料 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-fresh-fruit-bowl",
+      "sourceType": "menu-item",
+      "zhLabel": "新鮮水果碗",
+      "englishName": "Fresh Fruit Bowl",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 655,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "新鮮水果碗 fresh fruit bowl 客房送餐 room service room service 客房送餐 前菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-danish-pastries",
+      "sourceType": "menu-item",
+      "zhLabel": "丹麥酥",
+      "englishName": "Danish Pastries",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 656,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "丹麥酥 danish pastries 客房送餐 room service room service 客房送餐 甜點 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-assortment-of-muffins",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合瑪芬",
+      "englishName": "Assortment of Muffins",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 657,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合瑪芬 assortment of muffins 客房送餐 room service room service 客房送餐 甜點 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-croissants",
+      "sourceType": "menu-item",
+      "zhLabel": "可頌",
+      "englishName": "Croissants",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 658,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "可頌 croissants 客房送餐 room service room service 客房送餐 兒童 配菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-doughnuts",
+      "sourceType": "menu-item",
+      "zhLabel": "甜甜圈",
+      "englishName": "Doughnuts",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 659,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "甜甜圈 doughnuts 客房送餐 room service room service 客房送餐 甜點 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-white-toast-whole-wheat-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "白吐司／全麥吐司",
+      "englishName": "White Toast / Whole Wheat Toast",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 660,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "白吐司 全麥吐司 white toast whole wheat toast 客房送餐 room service room service 客房送餐 兒童 配菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-english-muffins-bagel",
+      "sourceType": "menu-item",
+      "zhLabel": "英式瑪芬／貝果",
+      "englishName": "English Muffins / Bagel",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 661,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "英式瑪芬 貝果 english muffins bagel 客房送餐 room service room service 客房送餐 兒童 配菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-cold-cereals",
+      "sourceType": "menu-item",
+      "zhLabel": "冷穀片",
+      "englishName": "Cold Cereals",
+      "descriptionZh": "Rice Krispies、Corn Flakes、Frosties、Froot Loops、Granola、Coco Crunch；依當次掛牌勾選。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 662,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "冷穀片 cold cereals rice krispies corn flakes frosties froot loops granola coco crunch 依當次掛牌勾選 客房送餐 room service room service 客房送餐 主餐 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-hot-chocolate",
+      "sourceType": "menu-item",
+      "zhLabel": "熱巧克力",
+      "englishName": "Hot Chocolate",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "drinks",
+      "menuCategoryLabel": "飲料",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this drink, please?",
+      "sourceRecordIndex": 663,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "熱巧克力 hot chocolate 客房送餐 room service room service 客房送餐 飲料 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-lowfat-milk-whole-milk-chocolate-milk",
+      "sourceType": "menu-item",
+      "zhLabel": "低脂／全脂／巧克力牛奶",
+      "englishName": "Lowfat Milk / Whole Milk / Chocolate Milk",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "drinks",
+      "menuCategoryLabel": "飲料",
+      "courseGroup": "drinks",
+      "courseGroupLabel": "飲料",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this drink, please?",
+      "sourceRecordIndex": 664,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "低脂 全脂 巧克力牛奶 lowfat milk whole milk chocolate milk 客房送餐 room service room service 客房送餐 飲料 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-selection-of-jams-and-honey",
+      "sourceType": "menu-item",
+      "zhLabel": "果醬與蜂蜜",
+      "englishName": "Selection of Jams and Honey",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 665,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "果醬與蜂蜜 selection of jams and honey 客房送餐 room service room service 客房送餐 兒童 配菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p18-margarine-butter-cream-cheese",
+      "sourceType": "menu-item",
+      "zhLabel": "人造奶油／奶油／奶油乳酪",
+      "englishName": "Margarine / Butter / Cream Cheese",
+      "descriptionZh": "",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐掛牌",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "早餐掛牌",
+        "附件菜單",
+        "客房早餐"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 666,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.18（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "人造奶油 奶油 奶油乳酪 margarine butter cream cheese 客房送餐 room service room service 客房送餐 兒童 配菜 早餐掛牌 客房送餐 room service room service 早餐掛牌 附件菜單 客房早餐"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-international-cheese-plate",
+      "sourceType": "menu-item",
+      "zhLabel": "精選國際起司盤",
+      "englishName": "International Cheese Plate",
+      "descriptionZh": "附餅乾與 Mini Babybel 起司。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 667,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "精選國際起司盤 international cheese plate 附餅乾與 mini babybel 起司 客房送餐 room service room service 客房送餐 前菜 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-chicken-wonton-noodle-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉餛飩麵湯",
+      "englishName": "Chicken Wonton Noodle Soup",
+      "descriptionZh": "蘑菇、蔥、青江菜、黃瓜蘿蔔沙拉。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 668,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉餛飩麵湯 chicken wonton noodle soup 蘑菇 蔥 青江菜 黃瓜蘿蔔沙拉 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-rasam-indian-tomato-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "印度香料番茄湯",
+      "englishName": "Rasam Indian Tomato Soup",
+      "descriptionZh": "搭配印度香米。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 669,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度香料番茄湯 rasam indian tomato soup 搭配印度香米 客房送餐 room service room service 客房送餐 前菜 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-pennette-bolognaise",
+      "sourceType": "menu-item",
+      "zhLabel": "波隆那肉醬筆管麵",
+      "englishName": "Pennette Bolognaise",
+      "descriptionZh": "肉醬、帕瑪森起司、蒜味烤麵包。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 670,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "波隆那肉醬筆管麵 pennette bolognaise 肉醬 帕瑪森起司 蒜味烤麵包 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-grilled-angus-american-cheeseburger",
+      "sourceType": "menu-item",
+      "zhLabel": "炙烤安格斯美式起司漢堡",
+      "englishName": "Grilled Angus American Cheeseburger",
+      "descriptionZh": "布里歐麵包、生菜、洋蔥、番茄、酸黃瓜、薯片。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 671,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "炙烤安格斯美式起司漢堡 grilled angus american cheeseburger 布里歐麵包 生菜 洋蔥 番茄 酸黃瓜 薯片 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-crisp-breaded-chicken-tenders",
+      "sourceType": "menu-item",
+      "zhLabel": "酥脆麵衣雞柳",
+      "englishName": "Crisp Breaded Chicken Tenders",
+      "descriptionZh": "柚子美乃滋、黃瓜與醬油薑汁沙拉。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 672,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "酥脆麵衣雞柳 crisp breaded chicken tenders 柚子美乃滋 黃瓜與醬油薑汁沙拉 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-dan-dan-noodles",
+      "sourceType": "menu-item",
+      "zhLabel": "擔擔麵",
+      "englishName": "Dan-Dan Noodles",
+      "descriptionZh": "文件註明含豬肉；小麥麵、豬絞肉、四川花椒、芥菜、蔥。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 673,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "擔擔麵 dan dan noodles 文件註明含豬肉 小麥麵 豬絞肉 四川花椒 芥菜 蔥 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-dal-makhani",
+      "sourceType": "menu-item",
+      "zhLabel": "奶油扁豆咖哩",
+      "englishName": "Dal Makhani",
+      "descriptionZh": "印度煎餅、小黃瓜優格醬。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 674,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "奶油扁豆咖哩 dal makhani 印度煎餅 小黃瓜優格醬 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-grilled-salmon-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "炙烤鮭魚沙拉",
+      "englishName": "Grilled Salmon Salad",
+      "descriptionZh": "萵苣、生菜、番茄、洋蔥、黃瓜、蘋果蔓越莓穀物與蜂蜜芥末醬。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 675,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "炙烤鮭魚沙拉 grilled salmon salad 萵苣 生菜 番茄 洋蔥 黃瓜 蘋果蔓越莓穀物與蜂蜜芥末醬 客房送餐 room service room service 客房送餐 主餐 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-new-york-cheesecake",
+      "sourceType": "menu-item",
+      "zhLabel": "紐約起司蛋糕",
+      "englishName": "New York Cheesecake",
+      "descriptionZh": "覆盆子甘納許、鮮奶油。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 676,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "紐約起司蛋糕 new york cheesecake 覆盆子甘納許 鮮奶油 客房送餐 room service room service 客房送餐 甜點 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-room-service-p19-chocolate-truffle-cake",
+      "sourceType": "menu-item",
+      "zhLabel": "巧克力松露蛋糕",
+      "englishName": "Chocolate Truffle Cake",
+      "descriptionZh": "巧克力布朗尼、松露慕斯、巧克力醬。",
+      "restaurantId": "room-service",
+      "restaurantLabel": "客房送餐 Room Service",
+      "restaurantEnglish": "Room Service",
+      "restaurantGroup": "room",
+      "restaurantGroupLabel": "客房送餐",
+      "restaurantOrder": 108,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "主餐與甜點",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "客房送餐 Room Service",
+        "Room Service",
+        "主餐與甜點",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 677,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.19（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "巧克力松露蛋糕 chocolate truffle cake 巧克力布朗尼 松露慕斯 巧克力醬 客房送餐 room service room service 客房送餐 甜點 主餐與甜點 客房送餐 room service room service 主餐與甜點 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-dill-marinated-shrimp",
+      "sourceType": "menu-item",
+      "zhLabel": "蒔蘿醃蝦",
+      "englishName": "Dill-marinated Shrimp",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 678,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蒔蘿醃蝦 dill marinated shrimp 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 前菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-beef-teriyaki-bao",
+      "sourceType": "menu-item",
+      "zhLabel": "照燒牛肉包",
+      "englishName": "Beef Teriyaki Bao",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 679,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "照燒牛肉包 beef teriyaki bao 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 前菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-mixed-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合沙拉",
+      "englishName": "Mixed Salad",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 680,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合沙拉 mixed salad 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 前菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-tom-kha-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "冬蔭椰香雞湯",
+      "englishName": "Tom Kha Soup",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 681,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "冬蔭椰香雞湯 tom kha soup 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 前菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-cream-of-tomato-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "番茄濃湯",
+      "englishName": "Cream of Tomato Soup",
+      "descriptionZh": "奶油布里歐麵包丁。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 682,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "番茄濃湯 cream of tomato soup 奶油布里歐麵包丁 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 前菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-pennette-pasta",
+      "sourceType": "menu-item",
+      "zhLabel": "斜管麵",
+      "englishName": "Pennette Pasta",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 683,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "斜管麵 pennette pasta 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-chicken-caesar-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉凱薩沙拉",
+      "englishName": "Chicken Caesar Salad",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 684,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉凱薩沙拉 chicken caesar salad 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-plant-based-soba-noodle-bowl",
+      "sourceType": "menu-item",
+      "zhLabel": "植物性蕎麥麵碗",
+      "englishName": "Plant-based Soba Noodle Bowl",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 685,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "植物性蕎麥麵碗 plant based soba noodle bowl 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-brinjal-bhaji-aubergine-curry",
+      "sourceType": "menu-item",
+      "zhLabel": "茄子咖哩",
+      "englishName": "Brinjal Bhaji Aubergine Curry",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 686,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "茄子咖哩 brinjal bhaji aubergine curry 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-mango-cheesecake",
+      "sourceType": "menu-item",
+      "zhLabel": "芒果起司蛋糕",
+      "englishName": "Mango Cheesecake",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 687,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "芒果起司蛋糕 mango cheesecake 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-carrot-cake",
+      "sourceType": "menu-item",
+      "zhLabel": "紅蘿蔔蛋糕",
+      "englishName": "Carrot Cake",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 688,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "紅蘿蔔蛋糕 carrot cake 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-welcome-aboard-sundae",
+      "sourceType": "menu-item",
+      "zhLabel": "迎賓聖代",
+      "englishName": "Welcome Aboard Sundae",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 689,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "迎賓聖代 welcome aboard sundae 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-coffee-cr-me-dome",
+      "sourceType": "menu-item",
+      "zhLabel": "咖啡奶霜圓頂",
+      "englishName": "Coffee Crème Dome",
+      "descriptionZh": "文件列於無加糖甜點；仍須確認個別飲食需求。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 690,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "咖啡奶霜圓頂 coffee crème dome 文件列於無加糖甜點 仍須確認個別飲食需求 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-macaroni-cheese",
+      "sourceType": "menu-item",
+      "zhLabel": "起司通心粉",
+      "englishName": "Macaroni & Cheese",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 691,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "起司通心粉 macaroni cheese 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 兒童 配菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-golden-chicken-strips-with-barbecue-sauce",
+      "sourceType": "menu-item",
+      "zhLabel": "黃金雞柳佐燒烤醬",
+      "englishName": "Golden Chicken Strips with Barbecue Sauce",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 692,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黃金雞柳佐燒烤醬 golden chicken strips with barbecue sauce 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 兒童 配菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-mini-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "迷你漢堡",
+      "englishName": "Mini Burger",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 693,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "迷你漢堡 mini burger 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 兒童 配菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-apple-cinnamon-pie",
+      "sourceType": "menu-item",
+      "zhLabel": "蘋果肉桂派",
+      "englishName": "Apple-Cinnamon Pie",
+      "descriptionZh": "",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 694,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "蘋果肉桂派 apple cinnamon pie 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-grilled-chicken-breast-with-roasted-red-skin-potatoes-and-steamed-carrots",
+      "sourceType": "menu-item",
+      "zhLabel": "烤雞胸肉佐烤馬鈴薯與蒸紅蘿蔔",
+      "englishName": "Grilled Chicken Breast with Roasted Red Skin Potatoes and Steamed Carrots",
+      "descriptionZh": "文件列於 Disney Check 兒童餐；甜點為新鮮西瓜。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 695,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "烤雞胸肉佐烤馬鈴薯與蒸紅蘿蔔 grilled chicken breast with roasted red skin potatoes and steamed carrots 文件列於 disney check 兒童餐 甜點為新鮮西瓜 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 兒童 配菜 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-poached-lobster-tail-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "水煮龍蝦尾沙拉",
+      "englishName": "Poached Lobster Tail Salad",
+      "descriptionZh": "菠菜、芝麻葉、馬鈴薯、蘆筍等，配檸檬與巴西里醬。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 696,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "水煮龍蝦尾沙拉 poached lobster tail salad 菠菜 芝麻葉 馬鈴薯 蘆筍等 配檸檬與巴西里醬 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-roasted-beef-tenderloin",
+      "sourceType": "menu-item",
+      "zhLabel": "烤牛里肌",
+      "englishName": "Roasted Beef Tenderloin",
+      "descriptionZh": "炒菇、地瓜泥、紅酒醬與薯片。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 697,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "烤牛里肌 roasted beef tenderloin 炒菇 地瓜泥 紅酒醬與薯片 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 主餐 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-welcome-p20-chocolate-hazelnut-molten-cake",
+      "sourceType": "menu-item",
+      "zhLabel": "巧克力榛果熔岩蛋糕",
+      "englishName": "Chocolate-Hazelnut Molten Cake",
+      "descriptionZh": "巧克力醬、榛果冰淇淋、海鹽。",
+      "restaurantId": "concierge-welcome",
+      "restaurantLabel": "禮賓歡迎午餐（地點依通知）",
+      "restaurantEnglish": "Concierge Welcome Lunch",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 110,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "登船午餐",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓歡迎午餐（地點依通知）",
+        "Concierge Welcome Lunch",
+        "登船午餐",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 698,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.20（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "巧克力榛果熔岩蛋糕 chocolate hazelnut molten cake 巧克力醬 榛果冰淇淋 海鹽 禮賓歡迎午餐 地點依通知 concierge welcome lunch 禮賓餐飲 甜點 登船午餐 禮賓歡迎午餐 地點依通知 concierge welcome lunch 登船午餐 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-raspberry-chocolate-croissant",
+      "sourceType": "menu-item",
+      "zhLabel": "覆盆子巧克力可頌",
+      "englishName": "Raspberry-Chocolate Croissant",
+      "descriptionZh": "奶油乳酪。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 699,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "覆盆子巧克力可頌 raspberry chocolate croissant 奶油乳酪 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-breakfast-sandwich",
+      "sourceType": "menu-item",
+      "zhLabel": "早餐三明治",
+      "englishName": "Breakfast Sandwich",
+      "descriptionZh": "含豬肉：焦糖波本培根、番茄、煎蛋、煙燻高達起司、全穀麵包。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 700,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "早餐三明治 breakfast sandwich 含豬肉 焦糖波本培根 番茄 煎蛋 煙燻高達起司 全穀麵包 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-siu-mai",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉燒賣",
+      "englishName": "Siu Mai",
+      "descriptionZh": "佐飛魚卵。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 701,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉燒賣 siu mai 佐飛魚卵 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-avocado-toast",
+      "sourceType": "menu-item",
+      "zhLabel": "酪梨吐司",
+      "englishName": "Avocado Toast",
+      "descriptionZh": "酪梨、草莓、山羊起司，文件列無麩質黑麥麵包；過敏需求請再確認。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 702,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "酪梨吐司 avocado toast 酪梨 草莓 山羊起司 文件列無麩質黑麥麵包 過敏需求請再確認 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-poached-cage-free-egg-on-toasted-english-muffin",
+      "sourceType": "menu-item",
+      "zhLabel": "英式瑪芬水波放養蛋",
+      "englishName": "Poached Cage-free Egg on Toasted English Muffin",
+      "descriptionZh": "可選迷迭香火腿與荷蘭醬（含豬肉），或煙燻鮭魚、荷蘭醬與魚子醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 703,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "英式瑪芬水波放養蛋 poached cage free egg on toasted english muffin 可選迷迭香火腿與荷蘭醬 含豬肉 或煙燻鮭魚 荷蘭醬與魚子醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-fish-ball-noodle-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "魚丸粿條湯",
+      "englishName": "Fish Ball Noodle Soup",
+      "descriptionZh": "",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 704,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "魚丸粿條湯 fish ball noodle soup 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-mickey-waffle",
+      "sourceType": "menu-item",
+      "zhLabel": "米奇造型鬆餅",
+      "englishName": "Mickey Waffle",
+      "descriptionZh": "鮮奶油、草莓果醬、肉桂糖。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 705,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "米奇造型鬆餅 mickey waffle 鮮奶油 草莓果醬 肉桂糖 禮賓酒廊餐點 concierge lounge 禮賓餐飲 兒童 配菜 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p21-french-toast-roll-ups",
+      "sourceType": "menu-item",
+      "zhLabel": "法式吐司捲",
+      "englishName": "French Toast Roll-Ups",
+      "descriptionZh": "覆盆子果醬與奶油霜。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "早餐（文件 07:00–10:30）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "早餐（文件 07:00–10:30）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 706,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.21（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "法式吐司捲 french toast roll ups 覆盆子果醬與奶油霜 禮賓酒廊餐點 concierge lounge 禮賓餐飲 兒童 配菜 早餐 文件 07 00 10 30 禮賓酒廊餐點 concierge lounge 早餐 文件 07 00 10 30 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-kimchi-chicken-tofu-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "泡菜雞肉豆腐湯",
+      "englishName": "Kimchi Chicken Tofu Soup",
+      "descriptionZh": "蔥、蘑菇、海苔飯糰。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 707,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "泡菜雞肉豆腐湯 kimchi chicken tofu soup 蔥 蘑菇 海苔飯糰 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-gambas-pil-pil",
+      "sourceType": "menu-item",
+      "zhLabel": "西班牙蒜香蝦",
+      "englishName": "Gambas Pil Pil",
+      "descriptionZh": "蒜頭快炒，搭配辣椒與紅椒粉。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 708,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "西班牙蒜香蝦 gambas pil pil 蒜頭快炒 搭配辣椒與紅椒粉 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-tofu-banh-mi-vegan-slider",
+      "sourceType": "menu-item",
+      "zhLabel": "越式豆腐迷你堡",
+      "englishName": "Tofu Banh Mi Vegan Slider",
+      "descriptionZh": "蘿蔔與紅蘿蔔絲、千島醬、芝麻麵包；素食需求請詢問。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 709,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "越式豆腐迷你堡 tofu banh mi vegan slider 蘿蔔與紅蘿蔔絲 千島醬 芝麻麵包 素食需求請詢問 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-buffalo-chicken-pita-bread-panini",
+      "sourceType": "menu-item",
+      "zhLabel": "水牛城雞肉皮塔帕尼尼",
+      "englishName": "Buffalo Chicken Pita Bread Panini",
+      "descriptionZh": "焦糖紅洋蔥、藍起司、水牛城辣醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 710,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "水牛城雞肉皮塔帕尼尼 buffalo chicken pita bread panini 焦糖紅洋蔥 藍起司 水牛城辣醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-all-american-sliders",
+      "sourceType": "menu-item",
+      "zhLabel": "經典美式迷你漢堡",
+      "englishName": "All American Sliders",
+      "descriptionZh": "安格斯牛肉、生菜、番茄、紅洋蔥、酸黃瓜、煙燻切達起司。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 711,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "經典美式迷你漢堡 all american sliders 安格斯牛肉 生菜 番茄 紅洋蔥 酸黃瓜 煙燻切達起司 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p22-chicken-fried-rice",
+      "sourceType": "menu-item",
+      "zhLabel": "雞肉炒飯",
+      "englishName": "Chicken Fried Rice",
+      "descriptionZh": "搭配旋風蛋與番茄醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "午後現點菜單（時段現場確認）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "午後現點菜單（時段現場確認）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 712,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.22（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "雞肉炒飯 chicken fried rice 搭配旋風蛋與番茄醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 兒童 配菜 午後現點菜單 時段現場確認 禮賓酒廊餐點 concierge lounge 午後現點菜單 時段現場確認 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p23-tagliatelle-aragosta",
+      "sourceType": "menu-item",
+      "zhLabel": "龍蝦寬帶麵",
+      "englishName": "Tagliatelle Aragosta",
+      "descriptionZh": "龍蝦、櫻桃番茄。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "晚間（文件 17:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "晚間（文件 17:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 713,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.23（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "龍蝦寬帶麵 tagliatelle aragosta 龍蝦 櫻桃番茄 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 晚間 文件 17 00 20 00 禮賓酒廊餐點 concierge lounge 晚間 文件 17 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p23-alder-smoked-seared-scallops",
+      "sourceType": "menu-item",
+      "zhLabel": "赤楊木煙燻香煎干貝",
+      "englishName": "Alder-smoked Seared Scallops",
+      "descriptionZh": "奶油南瓜泥、茴香蘋果沙拉、南瓜籽。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "晚間（文件 17:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "晚間（文件 17:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 714,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.23（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "赤楊木煙燻香煎干貝 alder smoked seared scallops 奶油南瓜泥 茴香蘋果沙拉 南瓜籽 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 晚間 文件 17 00 20 00 禮賓酒廊餐點 concierge lounge 晚間 文件 17 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p23-paneer-butter-masala",
+      "sourceType": "menu-item",
+      "zhLabel": "印度起司奶油瑪薩拉",
+      "englishName": "Paneer Butter Masala",
+      "descriptionZh": "搭配印度薄餅。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "晚間（文件 17:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "晚間（文件 17:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 715,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.23（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度起司奶油瑪薩拉 paneer butter masala 搭配印度薄餅 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 晚間 文件 17 00 20 00 禮賓酒廊餐點 concierge lounge 晚間 文件 17 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p23-buttermilk-fried-chicken",
+      "sourceType": "menu-item",
+      "zhLabel": "酪乳炸雞",
+      "englishName": "Buttermilk-fried Chicken",
+      "descriptionZh": "萵苣、甜椒起司抹醬、牧場醬、洋蔥麵包。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "晚間（文件 17:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "晚間（文件 17:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 716,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.23（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "酪乳炸雞 buttermilk fried chicken 萵苣 甜椒起司抹醬 牧場醬 洋蔥麵包 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 晚間 文件 17 00 20 00 禮賓酒廊餐點 concierge lounge 晚間 文件 17 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p23-hainanese-chicken-cutlet-rice-bowl",
+      "sourceType": "menu-item",
+      "zhLabel": "海南雞排飯",
+      "englishName": "Hainanese Chicken Cutlet Rice Bowl",
+      "descriptionZh": "炒蛋、酸甜醬汁。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "晚間（文件 17:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "晚間（文件 17:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 717,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.23（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "海南雞排飯 hainanese chicken cutlet rice bowl 炒蛋 酸甜醬汁 禮賓酒廊餐點 concierge lounge 禮賓餐飲 兒童 配菜 晚間 文件 17 00 20 00 禮賓酒廊餐點 concierge lounge 晚間 文件 17 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-seared-ahi-tuna-ni-oise-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "香煎黃鰭鮪魚尼斯沙拉",
+      "englishName": "Seared Ahi Tuna Niçoise Salad",
+      "descriptionZh": "四季豆、馬鈴薯、橄欖、鵪鶉蛋、生菜與第戎芥末油醋醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 718,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "香煎黃鰭鮪魚尼斯沙拉 seared ahi tuna niçoise salad 四季豆 馬鈴薯 橄欖 鵪鶉蛋 生菜與第戎芥末油醋醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-heirloom-tomato-soup",
+      "sourceType": "menu-item",
+      "zhLabel": "傳家寶番茄湯",
+      "englishName": "Heirloom Tomato Soup",
+      "descriptionZh": "布里歐麵包丁。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 719,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "傳家寶番茄湯 heirloom tomato soup 布里歐麵包丁 禮賓酒廊餐點 concierge lounge 禮賓餐飲 前菜 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-szechuan-noodles",
+      "sourceType": "menu-item",
+      "zhLabel": "四川風味麵",
+      "englishName": "Szechuan Noodles",
+      "descriptionZh": "含豬肉；花生醬油汁、小白菜、芥菜、四川辣油、香烤豬肉。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 720,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "四川風味麵 szechuan noodles 含豬肉 花生醬油汁 小白菜 芥菜 四川辣油 香烤豬肉 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-all-american-cheeseburger",
+      "sourceType": "menu-item",
+      "zhLabel": "經典美式起司漢堡",
+      "englishName": "All American Cheeseburger",
+      "descriptionZh": "安格斯牛肉、煙燻切達、生菜、番茄、紅洋蔥、酸黃瓜、麵包，附薯條。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 721,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "經典美式起司漢堡 all american cheeseburger 安格斯牛肉 煙燻切達 生菜 番茄 紅洋蔥 酸黃瓜 麵包 附薯條 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-paneer-butter-masala",
+      "sourceType": "menu-item",
+      "zhLabel": "印度起司奶油瑪薩拉",
+      "englishName": "Paneer Butter Masala",
+      "descriptionZh": "搭配印度薄餅；此為全日菜單版本，與晚間版本分開保留。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 722,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度起司奶油瑪薩拉 paneer butter masala 搭配印度薄餅 此為全日菜單版本 與晚間版本分開保留 禮賓酒廊餐點 concierge lounge 禮賓餐飲 主餐 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-crudit-s",
+      "sourceType": "menu-item",
+      "zhLabel": "綜合鮮蔬拼盤",
+      "englishName": "Crudités",
+      "descriptionZh": "紅蘿蔔、芹菜、小黃瓜、櫻桃番茄、牧場沙拉醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "appetizers",
+      "menuCategoryLabel": "前菜",
+      "courseGroup": "appetizer",
+      "courseGroupLabel": "前菜",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 723,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "綜合鮮蔬拼盤 crudités 紅蘿蔔 芹菜 小黃瓜 櫻桃番茄 牧場沙拉醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 前菜 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-new-york-cheesecake",
+      "sourceType": "menu-item",
+      "zhLabel": "紐約起司蛋糕",
+      "englishName": "New York Cheesecake",
+      "descriptionZh": "覆盆子甘納許、鮮奶油。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 724,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "紐約起司蛋糕 new york cheesecake 覆盆子甘納許 鮮奶油 禮賓酒廊餐點 concierge lounge 禮賓餐飲 甜點 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-chocolate-salted-caramel-tart",
+      "sourceType": "menu-item",
+      "zhLabel": "巧克力海鹽焦糖塔",
+      "englishName": "Chocolate-Salted Caramel Tart",
+      "descriptionZh": "黑巧克力甘納許、焦糖脆片。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "desserts",
+      "menuCategoryLabel": "甜點",
+      "courseGroup": "dessert",
+      "courseGroupLabel": "甜點",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 725,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "巧克力海鹽焦糖塔 chocolate salted caramel tart 黑巧克力甘納許 焦糖脆片 禮賓酒廊餐點 concierge lounge 禮賓餐飲 甜點 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-food-p24-golden-chicken-strips",
+      "sourceType": "menu-item",
+      "zhLabel": "黃金雞柳條",
+      "englishName": "Golden Chicken Strips",
+      "descriptionZh": "薯條、燒烤醬。",
+      "restaurantId": "concierge-food",
+      "restaurantLabel": "禮賓酒廊餐點",
+      "restaurantEnglish": "Concierge Lounge",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 111,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "全日菜單（文件 11:00–20:00）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓酒廊餐點",
+        "Concierge Lounge",
+        "全日菜單（文件 11:00–20:00）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 726,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.24（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "黃金雞柳條 golden chicken strips 薯條 燒烤醬 禮賓酒廊餐點 concierge lounge 禮賓餐飲 兒童 配菜 全日菜單 文件 11 00 20 00 禮賓酒廊餐點 concierge lounge 全日菜單 文件 11 00 20 00 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-tandoori-chicken-wings",
+      "sourceType": "menu-item",
+      "zhLabel": "坦都里烤雞翅",
+      "englishName": "Tandoori Chicken Wings",
+      "descriptionZh": "瑪薩拉薯條、柑橘蒜味美乃滋。",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 727,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "坦都里烤雞翅 tandoori chicken wings 瑪薩拉薯條 柑橘蒜味美乃滋 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 主餐 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-paneer-tikka-kebab",
+      "sourceType": "menu-item",
+      "zhLabel": "印度香料烤起司串",
+      "englishName": "Paneer Tikka Kebab",
+      "descriptionZh": "香菜墨西哥辣椒沾醬。",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 728,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "印度香料烤起司串 paneer tikka kebab 香菜墨西哥辣椒沾醬 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 主餐 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-all-american-classic-burger",
+      "sourceType": "menu-item",
+      "zhLabel": "美式經典漢堡",
+      "englishName": "All American Classic Burger",
+      "descriptionZh": "安格斯牛肉、生菜、番茄、紅洋蔥、酸黃瓜、煙燻切達。",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 729,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "美式經典漢堡 all american classic burger 安格斯牛肉 生菜 番茄 紅洋蔥 酸黃瓜 煙燻切達 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 主餐 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-half-pint-of-prawns",
+      "sourceType": "menu-item",
+      "zhLabel": "半品脫鮮蝦",
+      "englishName": "Half Pint of Prawns",
+      "descriptionZh": "檸檬、蒜味美乃滋、瑪麗玫瑰醬。",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 730,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "半品脫鮮蝦 half pint of prawns 檸檬 蒜味美乃滋 瑪麗玫瑰醬 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 主餐 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-sun-deck-salad",
+      "sourceType": "menu-item",
+      "zhLabel": "日光甲板沙拉",
+      "englishName": "Sun Deck Salad",
+      "descriptionZh": "生菜、紅蘿蔔、蘿蔔、小黃瓜、番茄與紅蔥頭第戎芥末醬。",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "entrees",
+      "menuCategoryLabel": "主餐",
+      "courseGroup": "entree",
+      "courseGroupLabel": "主餐",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單",
+        "禮賓熱食"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 731,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "日光甲板沙拉 sun deck salad 生菜 紅蘿蔔 蘿蔔 小黃瓜 番茄與紅蔥頭第戎芥末醬 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 主餐 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單 禮賓熱食"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-kachumber-salad-red-onion-salad-cucumber-raita-mango-chutney",
+      "sourceType": "menu-item",
+      "zhLabel": "卡春伯沙拉／紅洋蔥沙拉／黃瓜優格醬／芒果酸辣醬",
+      "englishName": "Kachumber Salad / Red Onion Salad / Cucumber Raita / Mango Chutney",
+      "descriptionZh": "",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 732,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "卡春伯沙拉 紅洋蔥沙拉 黃瓜優格醬 芒果酸辣醬 kachumber salad red onion salad cucumber raita mango chutney 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 兒童 配菜 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單"
+    },
+    {
+      "id": "menu-handbook-concierge-sundeck-food-p25-plain-naan-garlic-naan-truffle-fries",
+      "sourceType": "menu-item",
+      "zhLabel": "原味烤餅／蒜香烤餅／松露薯條",
+      "englishName": "Plain Naan / Garlic Naan / Truffle Fries",
+      "descriptionZh": "",
+      "restaurantId": "concierge-sundeck-food",
+      "restaurantLabel": "禮賓日光甲板餐點",
+      "restaurantEnglish": "Concierge Sundeck",
+      "restaurantGroup": "concierge",
+      "restaurantGroupLabel": "禮賓餐飲",
+      "restaurantOrder": 115,
+      "menuCategory": "sides",
+      "menuCategoryLabel": "兒童/配菜",
+      "courseGroup": "kids-side",
+      "courseGroupLabel": "兒童/配菜",
+      "mealPeriod": "日光甲板菜單（供應依當日通知）",
+      "price": "",
+      "tags": [],
+      "tagLabels": [],
+      "aliases": [
+        "禮賓日光甲板餐點",
+        "Concierge Sundeck",
+        "日光甲板菜單（供應依當日通知）",
+        "附件菜單"
+      ],
+      "crewPhrase": "Could I order this, please?",
+      "sourceRecordIndex": 733,
+      "supplementSourceId": "handbook-0831",
+      "sourceRefs": [
+        "DisneyAdventure手冊公版_0831.pdf p.25（歷史菜單；供應、費用與過敏需求現場確認）"
+      ],
+      "searchText": "原味烤餅 蒜香烤餅 松露薯條 plain naan garlic naan truffle fries 禮賓日光甲板餐點 concierge sundeck 禮賓餐飲 兒童 配菜 日光甲板菜單 供應依當日通知 禮賓日光甲板餐點 concierge sundeck 日光甲板菜單 供應依當日通知 附件菜單"
     }
   ],
   "documentCorrections": {
@@ -19774,5 +26849,15 @@ window.MENU_LOOKUP_DATA = {
     "source": "FB整理的英文版登船注意事項翻譯.docx",
     "sourceUrl": "https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712",
     "note": "使用者指定為最新來源；未標示原文航次日期，未重新驗證菜單價格。"
-  }
+  },
+  "documentSupplements": [
+    {
+      "id": "handbook-0831",
+      "file": "DisneyAdventure手冊公版_0831.pdf",
+      "reviewedAt": "2026-10-02",
+      "sha256": "055fa72056c7a47cb8f17ae08fad63c7851b23c1cb90b10e1652c612f5afc8db",
+      "note": "使用者提供的手冊，封面為 2026/9/24–9/28 航次；菜單不保證本航次供應。中文為查詢用翻譯。"
+    }
+  ],
+  "supplementCount": 184
 };

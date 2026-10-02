@@ -22,7 +22,8 @@ notes.records.forEach(record => {
   assert(record.bodyHtml && record.title && record.id);
   if (record.targetId) assert(known.has(record.targetId));
 });
-assert.equal(notes.records.length + Object.keys(notes.redirects).length, 21, 'all former static cards have a destination');
+assert.equal(notes.records.filter(item => item.id !== 'search-static-local-info-emergency').length + Object.keys(notes.redirects).length, 21, 'all former static cards have a destination');
+assert(notes.records.some(item => item.id === 'search-static-local-info-emergency'), 'one emergency reference, no new section');
 
 const before = loadSearchHooks();
 before.prepareSearchDocuments();

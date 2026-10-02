@@ -6,6 +6,7 @@
 - 產品方向已明確回歸純關鍵字搜尋，不再提供 AI 搜尋或 AI 生成回答。
 
 ## 目前架構
+- 2026/10/2 手冊與活動整合見 `docs/CONTENT_UPDATE_2026-10-02.md`：仍為 38 行程事件、132 主卡；活動查詢 507 原始 + 43 增補，菜單 550 snapshot + 184 增補。行前準備既有補充群組增加一張緊急聯絡卡，不增加主畫面。
 - 最新家庭行程確認見 `docs/CONTENT_UPDATE_2026-09-17.md`：三晚 Option 6、20:15 晚餐（可能調整 15 分鐘），1/27 08:30 Royal Gathering；Moana 仍為場次待確認候選。既有內容與清單 ID 保留。
 - 2026/9/25 逐層補強見 `docs/CONTENT_UPDATE_2026-09-25.md`：Deck 16 與三張設施卡加入後 132 主卡，行程仍 38 事件；服務沿用既有分類，不新增大型版面或外部依賴。
 - 靜態前端頁面：
@@ -21,7 +22,8 @@
   - `travel-reference-data.js`：共享旅程資料、補充內容與舊連結轉向
 - 菜單資料產生器：
   - `tools/generate-menu-lookup-data.mjs`
-  - 菜單資料採本地 snapshot，不在 runtime 抓外部來源
+  - 菜單資料採本地 snapshot，不在 runtime 抓外部來源；附件修正以 `tools/menu-document-corrections.mjs` + `tools/handbook-menu-supplements.mjs` 重跑。
+  - 活動附件修正以 `tools/update-activity-document.mjs` + `tools/activity-document-corrections.mjs` 重跑，保留原始名稱索引與 ID。
 - Service Worker：
   - `sw.js`
   - 只負責靜態資產快取與離線可用
@@ -78,7 +80,7 @@
 ## 菜單與中英對照
 - 首頁不可放大型菜單表、菜單瀏覽器或 `#menu-lookup` section。
 - 餐點查詢只從搜尋 overlay 的 `中英對照 > 餐點/餐廳` 進入。
-- `menu-lookup-data.js` 必須完整保留來源菜單 snapshot，目前驗收基準為 `550` 筆。
+- `menu-lookup-data.js` 必須完整保留 550 筆原 snapshot；2026/10/2 含文件增補共 734 筆。測試分別驗證原始 ID／價格與增補來源，不可只放寬總數。
 - 菜單資料只在使用者進入餐點查詢時 lazy load；首頁初始 resource list 不應包含 `menu-lookup-data.js`。
 - 餐點篩選的產品邏輯固定為「先餐廳、再點餐段落」，點餐段落為 `全部 / 前菜 / 主餐 / 飲料 / 甜點 / 兒童/配菜`。
 - Crew 溝通卡應留在搜尋 overlay 中，顯示英文菜名、中文確認、餐廳/段落與點餐句。

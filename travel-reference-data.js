@@ -100,6 +100,12 @@ window.TRAVEL_REFERENCE_DATA = {
       "sectionId": "local-info",
       "title": "樟宜機場小提醒",
       "bodyHtml": "<div>\n                        <p><strong>T2 B1</strong> 有寄放行李服務，太早到可先利用，記得帶護照。</p>\n                        <p>新加坡出境通常很快，但<strong>安檢在登機門前</strong>，不要用平常機場的節奏預估最後登機前的時間。</p>\n                    </div>"
+    },
+    {
+      "id": "search-static-local-info-emergency",
+      "sectionId": "local-info",
+      "title": "緊急電話與求助 Emergency Contacts",
+      "bodyHtml": "<p><strong>船上：</strong>先向船員或客務中心求助，需要醫療時聯絡 Deck 9 船頭 Health Center；不要把陸地電話當成船內求助分機。</p><p><strong>新加坡陸地：</strong>救護／消防 <a href=\"tel:995\">995</a>；警察 <a href=\"tel:999\">999</a>。<strong>駐新加坡代表處急難救助：</strong><a href=\"tel:+6596389436\">+65 9638 9436</a>，供國人重大急難協助，不取代當地救護或警察。</p><p>2026/10/2 核對：<a href=\"https://www.gov.sg/contact-us/\" target=\"_blank\" rel=\"noopener noreferrer\">新加坡政府</a>、<a href=\"https://www.boca.gov.tw/sp-foof-areacp-10-fa952-1.html\" target=\"_blank\" rel=\"noopener noreferrer\">領務局</a>；電話需可用通訊服務。</p>"
     }
   ],
   "redirects": {

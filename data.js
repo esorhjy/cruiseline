@@ -35,7 +35,7 @@
                         tag: "美食餐飲",
                         tagClass: "tag-dining",
                         desc: [
-                            "<strong>先看 App：</strong>午餐場地可能調整。一般單點午餐在 Navigator’s Club（Deck 6 船尾）；Hollywood Spotlight Club（Deck 8）歡迎午餐限禮賓房客。",
+                            "<strong>先看通知：</strong>禮賓歡迎午餐先核對各房資格、接待通知與場地；不同航次曾安排 Hollywood Spotlight Club 或 Navigator’s Club，不固定其中一間。其他同行者查 App 當日開放的午餐餐廳。",
                             "<strong>快速補給：</strong>Enchanted Summer（Deck 6）、Pixar Market（Deck 17 船尾）自助餐，或 Deck 10 快餐：Gramma Tala’s Kitchen 海南雞飯、Mowgli’s Eatery 印度料理、Stitch’s ’Ohana Grill 漢堡／薯條／牛肉熱狗、Cosmic Kebabs 烤肉。",
                             "<strong>隨身包：</strong>房卡最晚 13:30、托運行李最晚 18:00 送達，下午用品留手提。"
                         ]
@@ -783,10 +783,10 @@ const deckGuideData = [
                 icon: "fa-solid fa-masks-theater",
                 name: "Walt Disney Theatre",
                 summary: "《Remember》與《Disney Seas the Adventure》的主劇院，Deck 6–7，主要入口依英文原圖為 Deck 6。場次先查 App 分配。",
-                bestTime: "主秀禁止拍照、錄影與佔位；按分配時間及當晚入場通知到場。",
+                bestTime: "主秀禁止拍照、錄影與佔位；App 可能顯示已指派場次，或當航次開放自由入場的場次，先核對，不一律當成必須預約或完全不用安排。",
                 tripUse: "先按入場通知選入口：影片所述一般下層由 Deck 6、上層由 Deck 7 進，不預設場內能換層。Deck 5 禮賓集合只按當晚通知，不是一般劇院入口。保留散場與晚餐步行緩衝。",
                 highlight: true,
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 2026/10/2 補正：活動整理.docx ¶6–17；官方活動預訂說明區分已指派與自由入場場次。"
             },
             {
                 "id": "search-deck-deck6-navigators-club",
@@ -816,9 +816,9 @@ const deckGuideData = [
                 name: "Edge 隱藏入口 / Vibe 青年會所",
                 summary: "Edge 11–14 歲，小寶 11 歲符合，澤澤 9 歲與彤妹 8 歲不符合；Vibe 為 14–17 歲。入口偽裝在街區立面裡。",
                 bestTime: "先到 San Fransokyo Street 登記，取得 Key to the World 房卡貼紙；入場出示貼好貼紙的房卡。",
-                tripUse: "Day 1 熟悉位置後，後續孩子比較敢自己回來找活動。",
+                tripUse: "Day 1 熟悉位置後，再依年齡查活動；Open House 是親子參觀，不是正式兒少活動。Gotcha Registration 是事先登記，與 Gotcha! 遊戲分開；完整英文名與資格可用活動查詢核對。",
                 highlight: true,
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：活動整理.docx ¶143–168、426–526；各年齡區與 Open House 分開。"
             },
             {
                 id: "search-deck-deck7-1",
@@ -836,10 +836,10 @@ const deckGuideData = [
                 icon: "fa-solid fa-film",
                 name: "Baymax Cinemas",
                 summary: "四間影廳組成的 Baymax Cinemas，適合需要室內休息時查看片單，也可安排在 Baymax 合照前後。",
-                bestTime: "片單出來就先看，提早一點進場能挑舒服位置；若孩子或長輩依賴字幕，要先有目前多半沒有字幕的心理準備。",
-                tripUse: "Day 3 下午若想切到室內模式，這裡是很穩的備案。",
+                bestTime: "逐場核對片名、影廳、語言與字幕；文件的 OC 標記不等於保證中文字幕，不再把全館概括為沒有字幕。",
+                tripUse: "可查 Family Movie Fun Time：部分燈光保留、音量較低，適合需要柔和觀影環境的家庭；不保證每航次有相同場次。Day 3 下午可作室內備案。",
                 highlight: true,
-                sourceNote: "使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 官方搜尋索引列四廳，頁面本輪開啟逾時：https://disneycruise.disney.go.com/en-id/onboard-activities/baymax-cinema/"
+                sourceNote: "使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 官方搜尋索引列四廳，頁面本輪開啟逾時：https://disneycruise.disney.go.com/en-id/onboard-activities/baymax-cinema/ 2026/10/2 補正：活動整理.docx ¶73–76、204–207；友善觀影依官方 neurodivergent guest support，OC 不推定中文字幕。"
             },
             {
                 id: "search-deck-deck7-3",
@@ -877,10 +877,10 @@ const deckGuideData = [
                 icon: "fa-solid fa-child-reaching",
                 name: "Disney Oceaneer Club",
                 summary: "正式活動限 3–10 歲且能自行如廁；場內備飲水與洗手間，不帶個人物品。Open House 全齡可參觀，不是託管。",
-                bestTime: "依 Navigator 的 Open House 時段，全家只安排一次參觀；不預設 13:00。",
+                bestTime: "依 Navigator 的 Open House 時段，全家只安排一次參觀；不預設 13:00。同時間不同子區可能各採 Open House 或 Kids only，逐區看 App 與入口標示。",
                 tripUse: "小寶 11 歲只在全齡 Open House 與家人同遊；澤澤 9、彤妹 8 歲才符合正式 3–10 歲活動。開放參觀不能當作託管交接。",
                 highlight: true,
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：活動整理.docx ¶143–168；子區開放模式逐場確認。"
             },
             {
                 id: "search-deck-deck8-1",
@@ -908,11 +908,11 @@ const deckGuideData = [
                 bindingKey: "deck8:3",
                 icon: "fa-solid fa-camera-retro",
                 name: "Hollywood Spotlight Club",
-                summary: "米奇與米妮角色晚宴餐廳，與 Deck 6 Navigator’s Club 使用同組菜單。登船日此處的歡迎午餐限禮賓房客。",
+                summary: "米奇與米妮角色晚宴餐廳，與 Deck 6 Navigator’s Club 使用同組菜單。若當航次安排禮賓歡迎午餐於此，仍須依接待通知與各房資格參加，不是固定午餐地點。",
                 bestTime: "輪替晚餐提前 5 分鐘到；登船午餐場地可能改變，先看 App。",
                 tripUse: "前往 Deck 8 船尾餐廳，先在可通行樓層移到船尾電梯再上下樓，不把受管制兒童區當穿越走廊。歡迎午餐依各房禮賓資格，兩房連結不代表全員適用；附近可留意 Thor’s Hammer 拍照點。",
                 highlight: false,
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 2026/10/2 補正：DisneyAdventure手冊公版_0831.pdf p.4、20；歡迎午餐場地依當次通知。"
             },
             {
                 "id": "search-deck-deck8-nursery",
@@ -1140,7 +1140,7 @@ const deckGuideData = [
                 bindingKey: "deck17:0",
                 icon: "fa-solid fa-crown",
                 name: "Concierge Lounge",
-                summary: "禮賓家庭最穩的補給基地；每日供應與酒水節奏請直接看 Playbook「禮賓隱藏加值」卡片。",
+                summary: "禮賓家庭的補給基地；輕食、現點熱食與全日菜單是不同服務窗口，不代表開門就全品項供應。時段用法看「禮賓隱藏加值」，餐點可在菜單查詢選禮賓餐飲。",
                 bestTime: "Day 1 報到後先熟路線；每晚晚餐前後再回來做中轉補位。",
                 tripUse: "先索取免預約角色時刻表。Deck 17 船頭左舷有指定吸菸區，詢問無菸座位與通往日光甲板路線；不代表室內全區可吸菸，也無證據判定 17108 受影響。",
                 highlight: true
@@ -1161,11 +1161,11 @@ const deckGuideData = [
                 bindingKey: "deck17:2",
                 icon: "fa-solid fa-pizza-slice",
                 name: "Pixar Market Restaurant / Pizza Planet / Wheezy’s Freezies",
-                summary: "Pixar Market 是皮克斯主題自助／輪替餐廳，與 Enchanted Summer 使用同組晚餐菜單；Pizza Planet 披薩、Wheezy’s Freezies 冰飲則是不同補給點。",
+                summary: "Pixar Market 是皮克斯主題自助／輪替餐廳，與 Enchanted Summer 使用同組晚餐菜單；Pizza Planet 披薩與 Wheezy’s Freezies 各自供應。Wheezy 免費霜淇淋與付費冰飲要分清楚，位置保留 Deck 17。",
                 bestTime: "Pizza Planet 的旅客常見窗口約 10:30–18:00、21:00–00:00，仍查當日公告；Pixar Market 與 Wheezy’s Freezies 各查自己的時段，不共用這份時間表。",
                 tripUse: "玩水後就近補給，高峰仍可能排隊；長隊時改其他開放餐點，不把披薩當必吃，也不保證 Pixar Market 一直有漢堡。免費飲料找自助飲料機，勿與付費酒吧混淆。",
                 highlight: true,
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 2026/10/2 補正：DisneyAdventure手冊公版_0831.pdf p.16；霜淇淋與付費冰飲分開，12 樓誤植不採用。"
             },
             {
                 id: "search-deck-deck17-3",
@@ -1278,7 +1278,7 @@ const showGuideData = [
         id: "stage-musicals",
         title: "華特迪士尼劇院主秀",
         icon: "fa-solid fa-masks-theater",
-        intro: "最值得提早卡位的大秀都集中在劇院，通常會依晚餐時段自動分流，不一定會出現在可預約清單裡；就算已經預排到時段，仍須核對入場安排；本次以先看適合場次、再接 20:15 晚餐規劃，預留散場與步行時間。",
+        intro: "劇院主秀要區分 App 已指派場次與當航次開放自由入場的場次，不是所有節目都固定預排。逐場看入場通知；本次先選適合場次，再接 20:15 晚餐，保留散場與步行時間。",
         shows: [
             {
                 id: "search-show-stage-musicals-0",
@@ -1286,9 +1286,9 @@ const showGuideData = [
                 name: "《Remember》",
                 theme: "以瓦力與伊芙為主線，串起可可夜總會、小美人魚、阿拉丁等迪士尼記憶的原創音樂劇。",
                 location: "Walt Disney Theatre（Deck 6–7，原圖標 Deck 6）",
-                timingTip: "先核對 App 預先分配場次與入場通知；禁止拍照、錄影及佔位。晚餐與禮賓集合時間先排除衝突。",
+                timingTip: "先核對 App 是否已指派本場與入場方式；若另有自由入場場次，依當日公告排隊。禁止拍照、錄影及佔位，晚餐與禮賓集合先排除衝突。",
                 tripLink: "列為重要主秀，日期與場次依 App；晚餐、集合時間先核對，不固定 Day 1。",
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：活動整理.docx ¶6–17；入場以當航次 App 為準。"
             },
             {
                 id: "search-show-stage-musicals-1",
@@ -1296,19 +1296,19 @@ const showGuideData = [
                 name: "《Disney Seas the Adventure》",
                 theme: "由經典角色串起的海上百老匯式大秀，節奏熱鬧、全家都容易進入狀況。",
                 location: "Walt Disney Theatre（Deck 6–7，原圖標 Deck 6）",
-                timingTip: "先核對 App 預先分配場次與入場通知；禁止拍照、錄影及佔位。晚餐與禮賓集合時間先排除衝突。",
-                tripLink: "列為另一場重要主秀，以 App 分配場次與當晚禮賓通知為準。",
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                timingTip: "活動文件記有自由入場場次，但不保證本航次相同；依 App 核對是否指派或先到先入。禁止拍照、錄影及佔位，提早安排隊伍與晚餐緩衝。",
+                tripLink: "列為另一場重要主秀，以 App 當次入場方式與禮賓通知為準，不沿用文件中的歷史時間。",
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：活動整理.docx ¶6–17；不沿用歷史場次。"
             },
             {
                 id: "search-show-garden-shows-1",
                 bindingKey: "garden-shows:1",
                 name: "《Duffy and The Friend Ship》",
                 theme: "達菲與好友的海上派對，是偏可愛與合照氛圍的大型演出。",
-                location: "Walt Disney Theatre（Deck 6–7；附件中文補充）",
+                location: "依當次 App：文件曾列 Walt Disney Theatre（Deck 6–7）或 Disney Imagination Garden（Deck 10）",
                 timingTip: "以 App 當次節目確認場次；劇院禁止拍照、錄影與佔位，演出不等於角色合照。",
                 tripLink: "依當次節目安排；達菲或史黛拉兔有主題演出／商店，不代表一定有個別合照。",
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：活動整理.docx ¶24–62；場地可能不同，拍攝規則依當次告示。"
             }
         ]
     },
@@ -1552,10 +1552,11 @@ const playbookGuideData = [
                 icon: "fa-solid fa-cheese",
                 sourceType: "community",
                 whenToUse: "孩子洗好澡、全家回房後想吃點熱食時，或隔天早餐想先靠 room service 墊一下時。",
-                action: "先在 Navigator 查 Room Service 菜單，再用房內電話點餐，確認供應、費用與預估送達。17108 陽台可留一次早餐或休息餐點，不必每天為使用 Lounge 來回移動。",
+                action: "一般餐點先查 Navigator Room Service 菜單，再用房內電話點餐；客房早餐另可填房內掛牌，勾餐點、人數與送餐窗口，依表單截止時間掛到門外。Day 2 仍建議約 07:00 或更早，預留延誤緩衝。17108 陽台可留一次早餐，不必每天跑 Lounge。",
                 tripFit: "AsiaOne 2026/6/4 更新報導：6/4 航次起一般送餐每單 US$5，加 18% 小費；禮賓與符合規定的歐陸早餐掛卡訂單免配送費。<a href='https://www.asiaone.com/lifestyle/disney-adventure-cruise-charging-in-room-dining-fees' target='_blank' rel='noopener noreferrer'>收費變動報導</a>。",
-                caution: "這是營運報導，不是 2027 報價承諾；免配送費不等於全部餐點、飲品免費。先核對當次菜單與帳單，避免重複加給；等待會浮動，不在等餐後緊接不能遲到的活動。",
-                relatedSectionId: "tips"
+                caution: "這是營運報導，不是 2027 報價承諾；免配送費不等於全部餐點、飲品免費。手冊掛牌列 03:00 前、送餐 06:00–09:30，僅供認識表單，實際看房內當次版本。核對費用，避免重複加給；等待浮動，不在等餐後緊接預約。",
+                relatedSectionId: "tips",
+                sourceNote: "2026/10/2 核對 DisneyAdventure手冊公版_0831.pdf p.18–19；其他航次表單，不取代本次房內說明。"
             },
             {
                 id: "search-playbook-daily-ops-4",
@@ -1566,9 +1567,9 @@ const playbookGuideData = [
                 whenToUse: "海上日早上與一般 meet-and-greet 前。",
                 action: "先拿 Concierge Lounge 免預約角色表，再補孩子最想見、Lounge 沒涵蓋的角色。Baymax 杯麵在 San Fransokyo Street，需登船後預約；Royal Gathering 依確認時段，不固定下午。 在 App 的 Onboard Fun → Characters 選角色與時段，Booking Guests 要勾實際參加見面的每一位。",
                 tripFit: "使用者提供的 goma0609 9/5 遊記摘要（8/20–24 搭乘）提到已預約米妮仍等約 45 分鐘；只作緩衝提醒，非每場預估等待。",
-                caution: "未滿 8 歲兒童須成人陪同，不包含已滿 8 歲；預約仍可能等待，不緊接晚餐／主秀。未預約可查 Selfies at Sea、舞會與兒少活動；達菲／史黛拉兔合照依當次節目。Baymax 不應預期能簽名，路遇角色不追逐。神仙教母變裝與 Marvel Style Studio 是不同服務；成人撒亮粉可詢問，不保證供應或免費。",
+                caution: "未滿 8 歲兒童須成人陪同，不包含已滿 8 歲；預約仍可能等待，不緊接晚餐／主秀。Selfie at Sea 是與舞台角色自拍，不等於一對一預約合照或保證簽名。Baymax 不應預期能簽名，路遇角色不追逐。神仙教母與 Marvel 變裝不同；撒亮粉先問，不保證供應或免費。",
                 relatedSectionId: "timeline",
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 2026/10/2 補正：活動整理.docx ¶326–340；Selfie at Sea 與預約合照分開。"
             },
             {
                 id: "search-playbook-daily-ops-5",
@@ -1673,11 +1674,11 @@ const playbookGuideData = [
                 icon: "fa-solid fa-gift",
                 sourceType: "provided-document",
                 whenToUse: "Day 1 剛登船、全家還在適應節奏的那段時間。",
-                action: "附件列禮賓專屬歡迎午餐在 Hollywood Spotlight Club（Deck 8）；一般旅客的單點午餐在 Navigator’s Club（Deck 6 船尾）。先核對各房禮賓資格，再安排迎賓小禮與午餐。",
+                action: "登船先核對接待通知的歡迎午餐餐廳與各房禮賓資格。不同文件曾列 Hollywood Spotlight Club（Deck 8）或 Navigator’s Club（Deck 6 船尾），不要只憑舊攻略直接去；其他同行者查 App 當日開放午餐。",
                 tripFit: "這種被照顧到的開場感，對第一次把兩家人一起帶上船特別有幫助。",
-                caution: "Hollywood 歡迎午餐只供禮賓房客，不因兩房連結就讓所有同行者適用。午餐場地可能調整，當天以 App 與接待通知確認；預留用餐等待。",
+                caution: "禮賓歡迎午餐不因兩房連結就讓所有同行者適用。手冊 p.4、20 是另一航次的安排與菜單，不是 2027 固定地點；依當天通知並預留等待。",
                 relatedSectionId: "checkin",
-                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
+                sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。 2026/10/2 補正：DisneyAdventure手冊公版_0831.pdf p.4、20；不同航次餐廳不作固定地點。"
             },
             {
                 id: "search-playbook-concierge-plus-1",
@@ -1712,8 +1713,9 @@ const playbookGuideData = [
                 whenToUse: "午後空檔、晚餐前、看秀後與全家需要安靜休息時。",
                 action: "把 Lounge 視為整天可切換節奏的基地：07:00–10:30 晨間輕食、11:00–14:30 午間補給、15:00–16:30 下午茶、17:00–20:00 晚間輕食、20:30–22:00 甜點收尾；它最大的價值是舒服與安靜，不是取代所有餐食。",
                 tripFit: "先取得 Lounge 免預約角色時刻表，再補公共場次，減少重複排同一角色；歡迎午餐與角色活動仍可能等待，不把禮賓當零延誤保證。",
-                caution: "基本飲品幾乎全天可用，17:00–22:00 通常還有免費 beer / wine / cocktails；但早晨部分 specialty beverages 可能另外計費，不同船與時段供應內容也會有差異。",
-                relatedSectionId: "deck-guide"
+                caution: "以上是輕食窗口，與現點熱食、全日菜單分開核對；手冊全日菜單列 11:00–20:00，不是 24 小時供餐。基本飲品與 17:00–22:00 精選酒水依通知，早晨部分飲品另計。各餐段與 Sundeck 餐點用菜單查詢，不保證本航次同樣供應。",
+                relatedSectionId: "deck-guide",
+                sourceNote: "2026/10/2 核對 DisneyAdventure手冊公版_0831.pdf p.21–25；與既有禮賓通知並列，現場菜單優先。"
             },
             {
                 id: "search-playbook-concierge-plus-4",
@@ -1847,13 +1849,13 @@ const playbookGuideData = [
                 bindingKey: "family-planning:1",
                 title: "D Lounge 家庭活動：三童一起的室內備案",
                 icon: "fa-solid fa-people-group",
-                sourceType: "official",
+                sourceType: "provided-document",
                 whenToUse: "海上日想一起玩、戶外停機、太熱或不想長時間排隊時。",
-                action: "在 Navigator 搜尋 D Lounge，挑家庭舞蹈、問答或卡拉 OK 等當次活動；亦可換 Big Hero Arcade，晚間改 Discovery Reef 短散步。地點與場次以 App 確認。",
+                action: "先找家庭舞會、Family Superstar Karaoke、Trivia；雨天也可查 Family Crafts、Learn to Draw 或 Family Movie Fun Time。Silent Disco 常在花園，不把所有活動都當 D Lounge。完整英文名稱用活動查詢，逐場核對場地與年齡；亦可換 Big Hero Arcade。",
                 tripFit: "適合小寶 11、澤澤 9、彤妹 8 歲共同活動，不必為湊行程再安排一次 Oceaneer。使用者提供的 goma0609 9/5 第四天摘要曾記錄未點餐也能觀看舞蹈、當次遇米奇。",
                 caution: "<a href='https://disneycruise.disney.go.com/en-eu/onboard-activities/d-lounge-family-club/' target='_blank' rel='noopener noreferrer'>官方家庭娛樂定位</a>不代表所有晚間場次都適合兒童；逐場核對年齡、參加方式與費用。旅客曾遇米奇不代表每場有角色，遊戲室也不等於青少年托管俱樂部。",
                 relatedSectionId: "entertainment",
-                sourceNote: "使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY"
+                sourceNote: "使用者提供的影片整理：柒柒夫妻543，2026/8/8 發布，2026/9/25 整合；未逐格核對畫面，營運／資格依本航次公告。影片：https://www.youtube.com/watch?v=UNViUQjf1uY 2026/10/2 補正：活動整理.docx ¶170–303；家庭活動與 18+ 場次分開，不保證角色出現。"
             },
             {
                 id: "search-playbook-family-planning-2",

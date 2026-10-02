@@ -1,5 +1,13 @@
 # 搜尋規則
 
+## 2026/10/2 活動與菜單查詢
+- 來源標籤採「附件整理」，實際 PDF 頁碼、DOCX 段落放詳細內容；不得把所有補充標成 9/8 來源。
+- 活動去重鍵為 `sourceType + 完整英文名稱 + 場地 + audience + participation + feeNote`；同名不同年齡或參加方式要分開。跨歷史場次但同資格可合併，保留來源註記。
+- Crew 顯示完整英文名稱、年齡與參與方式；一般結果先露出必要資格，較長解釋與來源預設收合，不新增一排篩選。
+- 菜單同名可合併顯示，但 `menuVariants` 必須保留所有餐廳／餐段與來源；餐廳優先、段落第二層不變。`mealPeriod` 僅補充顯示，不改原六種點餐段落。
+- 泛查「餐廳 / restaurant」時優先設施實體，避免新增大量餐點後淹沒餐廳入口；具體菜名仍以精準菜名命中為先。
+- 新驗收：Cosmic Goo、Gotcha Registration、Family Movie Fun Time、兒童舞會、客房早餐、印度烤雞、禮賓熱食、緊急電話。詳見 `tests/handbook-update.eval.mjs`。
+
 ## 2026/9/25 逐層補強
 - 醫務／洗衣歸既有「服務」；新實體與設施主卡綁定，Cosmic Kebabs 沿用既有實體。taxonomy、中英對照與 Crew 自動讀 registry，不另建同義詞來源。
 - 新增 `tests/deck-guide-update.eval.mjs`：醫務中心／Health Center、洗衣／Laundry、Deck 16、Cosmic Kebabs、Hollywood 怎麼走、劇院上下層入口、畫作資料夾須能找到主卡。
@@ -75,7 +83,7 @@
   - 餐廳來自 `menu-lookup-data.js` 的 restaurant metadata。
   - 點餐段落固定為 `全部 / 前菜 / 主餐 / 飲料 / 甜點 / 兒童/配菜`。
   - 空白 query 在餐點分類下可顯示餐廳/餐點結果；這是中英對照模式的例外，不適用一般攻略搜尋的空白狀態。
-- `menu-lookup-data.js` 應由 `tools/generate-menu-lookup-data.mjs` 產生並保留完整來源 snapshot，目前 smoke test 基準為 `550` 筆。
+- `menu-lookup-data.js` 由 `tools/generate-menu-lookup-data.mjs` 產生；保留原 550 snapshot，加文件增補後共 734 筆，`sourceCount` 仍是 550、`recordsCount` 為總量。查詢合併後的 variants 總數必須等於總量。
 - 同一英文菜名重複出現時，結果可合併顯示常見餐廳或分類，避免洗版。
 
 ## 排序策略
@@ -203,7 +211,7 @@
   - `Bacha`
   - `珍奶`
 - `index.html` 與 `sw.js` 的 build id 必須一致，離線核心資產需包含 `data.js`、registry、taxonomy、`onboard-lookup-data.js` 與首頁 hero 圖。
-- `menu-lookup-data.js` 必須線上 200 且含完整 `550` 筆，但不可在首頁初始 resource list 出現。
+- `menu-lookup-data.js` 必須線上 200、含原 550 筆及文件增補（目前總量 734），但不可在首頁初始 resource list 出現。
 - 導覽列 `菜單` 驗收：點擊後搜尋 overlay 開啟、模式為 `lookup`、分類為 `dining`、餐點資料才開始載入。
 
 ## 航程手帳查詢基線

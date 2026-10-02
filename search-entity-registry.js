@@ -445,7 +445,7 @@
                 entityType: 'venue',
                 categoryFamilies: ['場館', '表演'],
                 capabilityTags: ['watch-show', 'rest'],
-                aliases: ['Baymax Cinema', '杯麵電影院'],
+                aliases: ['Baymax Cinema', '杯麵電影院', 'Family Movie Fun Time', '感官友善家庭觀影', '字幕'],
                 deckHints: ['Deck 7'],
                 area: 'San Fransokyo Street',
                 relatedEntityIds: ['big-hero-arcade', 'baymax-super-exercise-expo'],
@@ -722,13 +722,13 @@
                 categoryFamilies: ['表演'],
                 capabilityTags: ['watch-show'],
                 aliases: ['Duffy and the Friend Ship'],
-                deckHints: ["Deck 6","Deck 7"],
-                area: "Walt Disney Theatre（附件中文補充）",
-                relatedEntityIds: ["walt-disney-theatre"],
+                deckHints: ["Deck 6","Deck 7","Deck 10"],
+                area: "Walt Disney Theatre 或 Disney Imagination Garden，依當次 App",
+                relatedEntityIds: ["walt-disney-theatre", "disney-imagination-garden"],
                 sourceUrls: ["https://www.facebook.com/story.php?story_fbid=1594683765384401&id=100045283783712"],
                 sourceAuthority: "provided-document",
                 lastVerifiedDate: "2026-09-08",
-                sourceNote: "使用者指定的最新附件；本日期為附件核對日，不是官網查核日。"
+                sourceNote: "2026/10/2 活動整理.docx ¶24–62 補充場地差異；非官網確認固定場地。"
             }),
             entity({
                 entityId: 'lets-set-sail-show',
@@ -1004,7 +1004,7 @@
                 entityType: 'venue',
                 categoryFamilies: ['活動', '酒廊', '場館'],
                 capabilityTags: ['kids-play', 'rest'],
-                aliases: ['D-Lounge', '家庭舞蹈', '家庭活動', '卡拉 OK'],
+                aliases: ['D-Lounge', '家庭舞蹈', '家庭活動', '卡拉 OK', 'Family Superstar Karaoke', '家庭卡拉 OK', 'Trivia'],
                 area: '依 Navigator 確認地點',
                 sourceUrls: ['https://disneycruise.disney.go.com/en-eu/onboard-activities/d-lounge-family-club/']
             }),
@@ -1224,7 +1224,7 @@
                 entityType: 'service',
                 categoryFamilies: ['服務', '餐廳'],
                 capabilityTags: ['eat'],
-                aliases: ['客房服務', '房務', '客房餐點', '房務餐點', 'Room Service menu'],
+                aliases: ['客房服務', '房務', '客房餐點', '房務餐點', 'Room Service menu', '客房早餐', '早餐掛牌', 'Breakfast Door Hanger'],
                 sourceAuthority: 'trusted-secondary',
                 sourceUrls: [SOURCES.shipOverview]
             }),
@@ -1349,7 +1349,7 @@
                 'deck6:3': primary(['spellbound', 'royal-court-lounge', 'buccaneer-bar']),
                 'deck7:0': primary(['edge', 'vibe']),
                 'deck7:1': primary(['big-hero-arcade']),
-                'deck7:2': primary(['baymax-cinemas']),
+                'deck7:2': primary(['baymax-cinemas'], { keywordHints: ['Family Movie Fun Time', '友善觀影', '字幕'] }),
                 'deck7:3': primary(['alley-cat-cafe']),
                 'deck7:4': primary(['pics-photo-shop', 'disney-cruise-line-photos', 'deck7-magic-shot-portraits'], {
                     keywordHints: ['拍照', '攝影', 'photos', 'shutters', 'photo kiosk', 'magic shots', 'Duffy', 'Pixar', 'Spider-Man', 'Aladdin', 'Lion King', 'Princess Portraits', 'Marvel Portraits']
@@ -1449,7 +1449,7 @@
                 }),
                 'embark-sprint:2': primary(['concierge-lounge']),
                 'daily-ops:1': primary(['walt-disney-theatre', 'baymax-cinemas'], { keywordHints: ['爆米花', '看秀', '觀影'] }),
-                'daily-ops:3': primary(['room-service']),
+                'daily-ops:3': primary(['room-service'], { keywordHints: ['客房早餐', '早餐掛牌', 'Room Service'] }),
                 'daily-ops:4': support(['royal-meet-and-greet', 'pics-photo-shop', 'disney-cruise-line-photos'], {
                     keywordHints: ['角色拍照', '空景', '拍照早檔', 'photo opportunities']
                 }),
