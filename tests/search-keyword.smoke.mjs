@@ -163,8 +163,9 @@ function hasLookupMatch(results, patterns) {
 
 assert(hooks.getLookupRecords().length >= 1100, 'bilingual lookup should include registry entities, onboard activity records, and menu item records');
 assert.equal(menuData.sourceCount, 550, 'menu lookup snapshot should record the current source count');
-assert.equal(menuData.records.length, menuData.sourceCount, 'menu lookup snapshot should include every source menu record');
-assert.equal(hooks.getMenuLookupRecords().length, menuData.sourceCount, 'menu lookup records should match the local snapshot source count');
+assert.equal(menuData.records.filter(item => !item.supplementSourceId).length, menuData.sourceCount, 'all original snapshot rows retained');
+assert.equal(menuData.records.length, menuData.recordsCount, 'snapshot plus documented supplements');
+assert.equal(hooks.getMenuLookupRecords().length, menuData.recordsCount, 'lookup includes every source and supplement');
 assert(menuData.restaurants.length >= 20, 'menu lookup snapshot should include restaurant metadata');
 assert(menuData.courseGroups.some((group) => group.id === 'appetizer'), 'menu lookup snapshot should expose course groups');
 assert(menuData.records.some((item) => item.descriptionZh && item.descriptionZh.includes('\u9bae\u83c7')), 'menu lookup snapshot should preserve source descriptions');
@@ -183,7 +184,7 @@ hooks.getMenuLookupRecords().forEach((item) => {
 const guestServiceLookup = lookupResultsFor('\u5ba2\u52d9\u4e2d\u5fc3');
 assert.equal(lookupResultsFor('zzzznotarealcruiseitem', 'dining').length, 0, 'category boosts must not create unrelated lookup matches');
 const completeDiningLookup = lookupResultsFor('', 'dining');
-assert.equal(completeDiningLookup.reduce((count, record) => count + (record.menuVariants?.length || 0), 0), 550, 'merged results must preserve all menu variants without a result cap');
+assert.equal(completeDiningLookup.reduce((count, record) => count + (record.menuVariants?.length || 0), 0), menuData.recordsCount, 'merged results must preserve all menu variants without a result cap');
 assert.equal(guestServiceLookup[0]?.englishName, 'Guest Services', 'Chinese Guest Services lookup should surface the official English name');
 
 const diningLookup = lookupResultsFor('\u9910\u5ef3', 'dining');
@@ -254,7 +255,7 @@ assert(allDesserts.length > 20, 'all restaurants dessert filter should include c
 assert(new Set(allDesserts.map((item) => item.restaurantId)).size > 2, 'all restaurants dessert filter should span multiple restaurants');
 
 const fullMenuBrowse = hooks.getMenuQuickResults('', 'all', 'all');
-assert.equal(fullMenuBrowse.length, menuData.sourceCount, 'main menu browse should not cap all restaurants at 48 records');
+assert.equal(fullMenuBrowse.length, menuData.recordsCount, 'main menu browse should not cap all restaurants at 48 records');
 
 const conciergePayload = hooks.getRankedSearchResults('concierge');
 const conciergeTitles = conciergePayload.results.map((item) => String(item.title || ''));

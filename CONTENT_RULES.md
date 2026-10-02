@@ -1,10 +1,18 @@
 # 內容規則
 
+## 2026/10/2 手冊與活動整合
+- 最新對照見 `docs/CONTENT_UPDATE_2026-10-02.md`。PDF 其他航次時間、DOCX 跨航次場次，不取代已確認的家庭晚餐、公主預約或 Moana 待確認狀態。
+- 主秀按 App 區分已指派與自由入場；Duffy 場地可能不同；字幕逐場確認，OC 不推定中文；禮賓歡迎午餐依當次通知。
+- 原 507 活動 ID 全保留；完整英文名稱不可截成 Kids/Tweens/Teens。活動補 `audience / participation / participationNote / feeNote / sourceRefs`，中文為查詢翻譯，舊名稱留 alias。
+- 同名但不同場地、年齡、Open House／正式活動、報名／遊戲、付費／免費版本不得誤合併。Open House 不是託管，不據時間表推定資格。
+- 原 550 菜單 snapshot 不刪除、不重抓外站；本輪 184 增補有獨立 ID、餐段 `mealPeriod`、來源頁碼 `sourceRefs`。未列價格用空值，不推定免費或過敏／飲食標籤。
+- 以 `node tools/update-activity-document.mjs` 與 `node tools/generate-menu-lookup-data.mjs --local-corrections` 重產；兩套流程須可重複執行而不累積重複資料。驗收加跑 `tests/handbook-update.eval.mjs`。
+
 ## 2026/9/8 附件更新基線
 - 本輪使用者指定的 `FB整理的英文版登船注意事項翻譯.docx` 優先於相同主題舊資料；完整對照與原圖／中文補充範圍見 `docs/CONTENT_UPDATE_2026-09-08.md`。
 - 新來源標為 `provided-document`；整理日期不是來源發表日期，不將附件冒稱本輪官網查核。
-- 不回退 Palo 10 歲門檻、dclwifi.com、Oceaneer US$25 可退押金、劇院 Deck 6–7／Duffy 位置及一般房／禮賓不同外放期限。
-- 550 筆菜單保留，修正放在 `tools/menu-document-corrections.mjs`，產生器重跑也須套用；飲品 category 優先於 kids／dessert tag。
+- 不回退 Palo 10 歲門檻、dclwifi.com、Oceaneer US$25 可退押金、劇院 Deck 6–7 及一般房／禮賓不同外放期限；Duffy 場地依 10/2 文件補充與當次 App。
+- 550 筆菜單保留，9/8 修正放在 `tools/menu-document-corrections.mjs`，10/2 翻譯與增補放在 `tools/handbook-menu-supplements.mjs`，產生器重跑須依序套用；飲品 category 優先於 kids／dessert tag。
 - 既有卡片以原 ID 更新；2026/9/25 新增醫務中心、Cosmic Kebabs、Deck 16 洗衣後共 132 張主卡，原 129 個 ID 全保留。原清單鍵與勾選不改，畫作資料夾用新鍵 `artwork-folder`。對照見 `docs/CONTENT_UPDATE_2026-09-25.md`。
 
 ## 目標
@@ -67,7 +75,7 @@
 
 ## 菜單與中英對照內容
 - 菜單內容的正式來源是 `menu-lookup-data.js`，由 `tools/generate-menu-lookup-data.mjs` 從外部菜單資料產生 snapshot。
-- 菜單 snapshot 應完整保留來源菜名、英文名、餐廳、分類、價格、標籤、描述與來源 index；目前驗收基準是 `550` 筆。
+- 菜單 snapshot 應完整保留 550 筆來源記錄的 ID、英文名、價格與來源 index；中文／餐廳名稱可依附件校正，描述不得因新文件較短而刪除。文件增補另計，目前共 734 筆。
 - 菜單內容不放首頁大型 section；首頁若需要入口，只能使用導覽列或 quick chip 打開搜尋 overlay 的 `餐點/餐廳` 分類。
 - 餐點內容呈現以船上點餐為目標：中文確認、英文菜名、餐廳、點餐段落、價格/標籤與 Crew 點餐句。
 - 餐點段落歸類應維持穩定：`全部 / 前菜 / 主餐 / 飲料 / 甜點 / 兒童/配菜`。若來源 category 更新，先更新產生器 mapping，再重產 snapshot。

@@ -85,12 +85,12 @@ try {
 
     await nav.locator('a[href="#menu-search"]').click();
     await page.waitForSelector('.lookup-result-card', {timeout:20000});
-    assert(await page.evaluate(() => window.MENU_LOOKUP_DATA.records.length === 550));
+    assert(await page.evaluate(() => window.MENU_LOOKUP_DATA.records.length === window.MENU_LOOKUP_DATA.recordsCount && window.MENU_LOOKUP_DATA.records.filter(r => !r.supplementSourceId).length === 550));
     assert.notEqual(await page.locator('#search-input').evaluate(el => document.activeElement === el), true, 'menu does not focus the keyboard');
     const ratio = await page.evaluate(() => document.querySelector('.search-panel-body').getBoundingClientRect().height / document.querySelector('.search-panel').getBoundingClientRect().height);
     assert(ratio >= .65, 'results should take at least 65%: ' + ratio);
     const allMenu = await page.evaluate(() => window.__SEARCH_TEST_HOOKS__.getBilingualLookupResults('', {category:'dining',diningFilter:'all',restaurantFilter:'all'}).results);
-    assert.equal(allMenu.reduce((n,record) => n + (record.menuVariants?.length || 0),0),550,'no source menu records lost by merging');
+    assert.equal(allMenu.reduce((n,record) => n + (record.menuVariants?.length || 0),0),await page.evaluate(() => window.MENU_LOOKUP_DATA.recordsCount),'no source menu records lost by merging');
     await page.locator('#search-input').fill('海南雞飯');
     await page.waitForFunction(() => window.__SEARCH_TEST_HOOKS__.getSearchUiState().query === '海南雞飯');
     await page.locator('.lookup-crew-trigger').first().click();
@@ -157,6 +157,40 @@ try {
     await page.locator('.lookup-crew-trigger').click();
     assert((await page.locator('.lookup-crew-card').textContent()).includes('Could I order this drink, please?'));
     await page.screenshot({path:path.join(output, 'boarding-drink-crew-'+viewport.width+'.png'), animations:'disabled'});
+    await page.keyboard.press('Escape');
+    await page.locator('#lookup-menu-restaurant-select').selectOption('room-service');
+    await page.locator('#lookup-menu-course-row [data-lookup-dining-filter="all"]').click();
+    await page.locator('#search-input').fill('客房早餐');
+    await page.waitForFunction(() => document.querySelector('.lookup-result-card')?.textContent.includes('Room Service'));
+    await page.locator('.menu-lookup-description summary').first().click();
+    assert((await page.locator('.menu-variant').first().textContent()).includes('p.18'));
+    await page.locator('.lookup-crew-trigger').first().click();
+    assert((await page.locator('.lookup-crew-card').textContent()).includes('餐段'));
+    await page.keyboard.press('Escape');
+    await page.locator('#lookup-category-row [data-lookup-category="activity"]').click();
+    await page.locator('#search-input').fill('Gotcha Registration');
+    await page.waitForFunction(() => [...document.querySelectorAll('.lookup-result-en')].some(el => el.textContent === 'Gotcha Registration'));
+    const registration = page.locator('.lookup-result-card').filter({hasText:'Gotcha Registration'}).filter({hasText:'11–14'}).first();
+    await registration.locator('.lookup-crew-trigger').click();
+    assert((await page.locator('.lookup-crew-card').textContent()).includes('事先報名'));
+    assert((await page.locator('.lookup-crew-card').textContent()).includes('活動整理.docx'));
+    await page.screenshot({path:path.join(output, 'handbook-activity-crew-'+viewport.width+'.png'), animations:'disabled'});
+    await page.keyboard.press('Escape');
+    await page.locator('#search-input').fill('Disney Junior');
+    await page.waitForFunction(() => document.querySelector('#search-results').textContent.includes('全齡場'));
+    assert((await page.locator('#search-results').textContent()).includes('3–10'));
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'activity qualifiers fit without horizontal overflow');
+    await page.locator('[data-search-tool-mode="guide"]').click();
+    await page.locator('#search-input').fill('緊急電話');
+    await page.waitForSelector('.search-result-card');
+    await page.locator('.search-result-card').filter({hasText:'緊急電話'}).first().click();
+    await page.waitForSelector('#search-static-local-info-emergency');
+    await page.waitForFunction(() => {
+      const top = document.querySelector('#search-static-local-info-emergency').getBoundingClientRect().top;
+      return top >= 0 && top < innerHeight - 180;
+    });
+    assert(await page.locator('#search-static-local-info-emergency a[href="tel:995"]').count() === 1);
+    await page.screenshot({path:path.join(output, 'handbook-emergency-'+viewport.width+'.png'), animations:'disabled'});
     assert.deepEqual(errors, []);
     await context.close();
   }
@@ -174,7 +208,7 @@ try {
   await page.locator('#lookup-menu-restaurant-select').selectOption('nav');
   await page.locator('#lookup-menu-course-row [data-lookup-dining-filter="entree"]').click();
   assert((await page.locator('.lookup-result-list').textContent()).includes('Hainanese Chicken, Rice'));
-  assert((await page.locator('.lookup-result-card').allTextContents()).every(text => text.includes('航海家 / 好萊塢')));
+  assert((await page.locator('.lookup-result-card').allTextContents()).every(text => text.includes('航海家俱樂部／好萊塢聚光燈俱樂部')));
   await page.screenshot({path:path.join(output,'menu-filtered-mobile.png'),animations:'disabled'});
   await page.locator('.menu-lookup-description summary').first().click();
   assert(await page.locator('.menu-variant').first().isVisible());
@@ -211,7 +245,7 @@ try {
     assert(await filePage.locator('#prepare').isVisible(), 'file URL hash navigation');
     await filePage.locator('.nav-links a[href="#menu-search"]').click();
     await filePage.waitForSelector('.lookup-result-card');
-    assert.equal(await filePage.evaluate(() => window.MENU_LOOKUP_DATA.records.length), 550);
+    assert(await filePage.evaluate(() => window.MENU_LOOKUP_DATA.records.length === window.MENU_LOOKUP_DATA.recordsCount && window.MENU_LOOKUP_DATA.records.filter(r => !r.supplementSourceId).length === 550));
     await local.close();
 
     const offline = await browser.newContext({serviceWorkers:'allow'});
@@ -250,7 +284,7 @@ try {
     await offlinePage.locator('#search-close-btn').click();
     await offlinePage.locator('.nav-links a[href="#menu-search"]').click();
     await offlinePage.waitForSelector('.lookup-result-card');
-    assert.equal(await offlinePage.evaluate(() => window.MENU_LOOKUP_DATA.records.length),550);
+    assert(await offlinePage.evaluate(() => window.MENU_LOOKUP_DATA.records.length === window.MENU_LOOKUP_DATA.recordsCount && window.MENU_LOOKUP_DATA.records.filter(r => !r.supplementSourceId).length === 550));
     await offline.close();
     console.log('file:// and offline runtime-cached menu passed.');
   }

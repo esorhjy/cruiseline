@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import https from 'node:https';
 import vm from 'node:vm';
 import { applyDocumentCorrections } from './menu-document-corrections.mjs';
+import { applyHandbookMenus } from './handbook-menu-supplements.mjs';
 
 const VERSION = '2026-05-25-menu-restaurant-v2';
 const SOURCE_PAGE_URL = 'https://sachiko620702.github.io/disney/#menu';
@@ -305,7 +306,7 @@ async function buildPayload() {
     const sandbox = { window: {} };
     vm.runInNewContext(fs.readFileSync(OUTPUT_PATH, 'utf8'), sandbox);
     const payload = sandbox.window.MENU_LOOKUP_DATA;
-    if (payload.records.length !== payload.sourceCount) throw new Error('Incomplete local snapshot');
+    if (payload.records.filter(record => !record.supplementSourceId).length !== payload.sourceCount) throw new Error('Incomplete local snapshot');
     for (const record of payload.records) {
       record.courseGroup = resolveCourseGroup(record.menuCategory, record.tags);
       record.courseGroupLabel = getCourseLabel(record.courseGroup);
@@ -336,7 +337,7 @@ async function buildPayload() {
   };
 }
 
-const payload = applyDocumentCorrections(await buildPayload());
+const payload = applyHandbookMenus(applyDocumentCorrections(await buildPayload()));
 
 fs.writeFileSync(
   OUTPUT_PATH,
