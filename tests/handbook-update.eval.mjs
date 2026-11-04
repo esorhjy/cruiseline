@@ -50,8 +50,12 @@ hooks.prepareSearchDocuments();
 const lookup = (q, category = 'all') => hooks.getBilingualLookupResults(q, { category, diningFilter:'all', restaurantFilter:'all' }).results;
 for (const [query, name] of [
   ['Cosmic Goo', 'Cosmic Goo with Stitch'], ['Gotcha', 'Gotcha Registration'],
-  ['Family Movie Fun Time', 'Family Movie Fun Time'], ['兒童舞會', 'Disney Junior Dance Party']
+  ['Family Movie Fun Time', 'Family Movie Fun Time'], ['兒童舞會', 'Disney Junior Dance Party'],
+  ['杯麵歡樂體操', 'Baymax Super Exercise Expo'], ['公主說故事', 'Once Upon a Time']
 ]) assert(lookup(query, 'activity').some(r => r.englishName === name), query);
+assert(activity.records.some(r => r.englishName === 'Once Upon a Time' && r.venueEnglish === 'Town Square' && r.zhLabel === '公主說故事'));
+assert(activity.records.some(r => r.englishName === 'Baymax Super Exercise Expo' && r.zhLabel === '杯麵歡樂體操'));
+assert(!fs.readFileSync('data.js', 'utf8').includes('Duffy and The Friend Ship 改查劇院，不在此處等候'));
 const gotcha = lookup('Gotcha', 'activity');
 assert(gotcha.some(r => r.englishName === 'Gotcha Registration' && r.venueEnglish === 'Edge'));
 assert(gotcha.some(r => r.englishName === 'Gotcha Registration' && r.venueEnglish === 'Vibe'));

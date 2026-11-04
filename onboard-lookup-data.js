@@ -712,25 +712,32 @@ window.ONBOARD_LOOKUP_DATA = {
     {
       "id": "onboard-030",
       "category": "other",
-      "zhLabel": "Baymax Super Exercise Expo",
+      "zhLabel": "杯麵歡樂體操",
       "englishName": "Baymax Super Exercise Expo",
       "venueEnglish": "Garden Stage",
       "deckHint": "Deck 10",
-      "crewPhrase": "Could you help us find this?",
+      "crewPhrase": "Could you confirm the age requirement and how to join this activity?",
       "sourceDayLabel": "Day 1｜登船日",
       "sourceTimeHint": "5/18 19:00",
       "aliases": [
         "Baymax Super Exercise Expo",
         "其他",
         "找不到時，把英文活動名稱給 Crew Member 看即可。",
-        "activity"
+        "activity",
+        "杯麵歡樂體操"
       ],
       "originalWording": {
         "en": "Baymax Super Exercise Expo",
         "zh": "Baymax Super Exercise Expo"
       },
       "audience": "依當場年齡資格",
-      "participation": "activity"
+      "participation": "activity",
+      "participationNote": "依 Navigator 當次資格與報名規則。",
+      "feeNote": "",
+      "descriptionZh": "花園舞台互動體操；演出日期與場次依當航次 Navigator。",
+      "sourceRefs": [
+        "活動整理.docx ¶28 起（跨航次整理；時間與資格看 Navigator）"
+      ]
     },
     {
       "id": "onboard-031",
@@ -942,25 +949,32 @@ window.ONBOARD_LOOKUP_DATA = {
     {
       "id": "onboard-039",
       "category": "other",
-      "zhLabel": "Once Upon a Time",
+      "zhLabel": "公主說故事",
       "englishName": "Once Upon a Time",
       "venueEnglish": "Town Square",
       "deckHint": "Deck 6",
-      "crewPhrase": "Could you help us find this?",
+      "crewPhrase": "Could you confirm the age requirement and how to join this activity?",
       "sourceDayLabel": "Day 1｜登船日",
       "sourceTimeHint": "5/18 19:30",
       "aliases": [
         "Once Upon a Time",
         "其他",
         "找不到時，把英文活動名稱給 Crew Member 看即可。",
-        "activity"
+        "activity",
+        "公主說故事"
       ],
       "originalWording": {
         "en": "Once Upon a Time",
         "zh": "Once Upon a Time"
       },
       "audience": "依當場年齡資格",
-      "participation": "activity"
+      "participation": "activity",
+      "participationNote": "依 Navigator 當次資格與報名規則。",
+      "feeNote": "",
+      "descriptionZh": "活動場地與參加資格依當次 Navigator；兒童俱樂部版本的資格另行確認。",
+      "sourceRefs": [
+        "活動整理.docx ¶90 起（跨航次整理；時間與資格看 Navigator）"
+      ]
     },
     {
       "id": "onboard-040",
@@ -1227,25 +1241,33 @@ window.ONBOARD_LOOKUP_DATA = {
     {
       "id": "onboard-050",
       "category": "other",
-      "zhLabel": "Baymax Super Exercise Expo (第二場)",
+      "zhLabel": "杯麵歡樂體操",
       "englishName": "Baymax Super Exercise Expo",
       "venueEnglish": "Garden Stage",
       "deckHint": "Deck 10",
-      "crewPhrase": "Could you help us find this?",
+      "crewPhrase": "Could you confirm the age requirement and how to join this activity?",
       "sourceDayLabel": "Day 1｜登船日",
       "sourceTimeHint": "5/18 20:45",
       "aliases": [
         "Baymax Super Exercise Expo (第二場)",
         "其他",
         "找不到時，把英文活動名稱給 Crew Member 看即可。",
-        "activity"
+        "activity",
+        "Baymax Super Exercise Expo",
+        "杯麵歡樂體操"
       ],
       "originalWording": {
         "en": "Baymax Super Exercise Expo",
         "zh": "Baymax Super Exercise Expo (第二場)"
       },
       "audience": "依當場年齡資格",
-      "participation": "activity"
+      "participation": "activity",
+      "participationNote": "依 Navigator 當次資格與報名規則。",
+      "feeNote": "",
+      "descriptionZh": "花園舞台互動體操；演出日期與場次依當航次 Navigator。",
+      "sourceRefs": [
+        "活動整理.docx ¶28 起（跨航次整理；時間與資格看 Navigator）"
+      ]
     },
     {
       "id": "onboard-051",
@@ -1543,25 +1565,32 @@ window.ONBOARD_LOOKUP_DATA = {
     {
       "id": "onboard-062",
       "category": "other",
-      "zhLabel": "Once Upon a Time",
+      "zhLabel": "公主說故事",
       "englishName": "Once Upon a Time",
       "venueEnglish": "Town Square",
       "deckHint": "Deck 6",
-      "crewPhrase": "Could you help us find this?",
+      "crewPhrase": "Could you confirm the age requirement and how to join this activity?",
       "sourceDayLabel": "Day 1｜登船日",
       "sourceTimeHint": "5/18 21:30",
       "aliases": [
         "Once Upon a Time",
         "其他",
         "找不到時，把英文活動名稱給 Crew Member 看即可。",
-        "activity"
+        "activity",
+        "公主說故事"
       ],
       "originalWording": {
         "en": "Once Upon a Time",
         "zh": "Once Upon a Time"
       },
       "audience": "依當場年齡資格",
-      "participation": "activity"
+      "participation": "activity",
+      "participationNote": "依 Navigator 當次資格與報名規則。",
+      "feeNote": "",
+      "descriptionZh": "活動場地與參加資格依當次 Navigator；兒童俱樂部版本的資格另行確認。",
+      "sourceRefs": [
+        "活動整理.docx ¶90 起（跨航次整理；時間與資格看 Navigator）"
+      ]
     },
     {
       "id": "onboard-063",
