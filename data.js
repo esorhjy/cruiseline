@@ -328,7 +328,7 @@
                         tag: "精彩看秀",
                         tagClass: "tag-show",
                         desc: [
-                            "<strong>花園舞台：</strong>Avengers Assemble!、Baymax Super Exercise Expo 或當次啟航／派對節目；以 App 為準。Duffy and The Friend Ship 改查劇院，不在此處等候。"
+                            "<strong>花園舞台：</strong>Avengers Assemble!、Baymax Super Exercise Expo 或當次啟航／派對節目；以 App 為準。Duffy and The Friend Ship 可能在劇院或花園，先查當次場地。"
                         ]
                     }
                 ]

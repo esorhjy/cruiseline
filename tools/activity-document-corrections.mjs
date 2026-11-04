@@ -15,6 +15,8 @@ const add = (englishName, zhLabel, venueEnglish, audience, paragraph, descriptio
   catalog.push({ englishName, zhLabel, venueEnglish, deckHint, audience, paragraph, descriptionZh, participation, feeNote });
 };
 const families = [
+  ['Baymax Super Exercise Expo', '杯麵歡樂體操', 'Disney Imagination Garden', 28, '花園舞台互動體操；演出日期與場次依當航次 Navigator。'],
+  ['Once Upon a Time', '公主說故事', 'Town Square', 90, '活動場地與參加資格依當次 Navigator；兒童俱樂部版本的資格另行確認。'],
   ['Family Movie Fun Time', '感官友善家庭觀影', 'Baymax Cinemas', 204, '部分燈光保留、音量較低；電影、影廳與字幕逐場確認，OC 不等於保證中文字幕。'],
   ['Family Dance Party', '家庭跳舞派對', 'D Lounge', 177, '可能有角色驚喜，不保證每場都有；場次看 Navigator。'],
   ['Family Dance Party', '家庭跳舞派對', 'Town Square', 180, '文件也列此場地，勿只找 D Lounge；依當日 App。'],
