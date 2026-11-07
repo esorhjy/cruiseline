@@ -81,6 +81,46 @@ main { min-height: 75vh; }
 .day-priorities { display: flex; gap: 14px; align-items: center; white-space: nowrap; overflow-x: auto; scrollbar-width: thin; font-size: 0.9375rem; min-height: 42px; }
 .day-priorities > span { font-weight: 700; color: var(--red); }
 .day-priorities a { min-height: 44px; display: flex; align-items: center; flex-shrink: 0; }
+.planner-toggle { flex-shrink: 0; font-size: 1rem; min-height: 44px; padding: 4px 8px; color: var(--blue); font-weight: 700; border: 0; border-bottom: 2px solid currentColor; }
+.planner-day-tools, .planner-event-tools, .planner-management { display: flex; gap: 8px 16px; flex-wrap: wrap; align-items: center; }
+.planner-day-tools { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.planner-day-tools span { font-size: .875rem; color: var(--muted); }
+.planner-day-tools button, .planner-event-tools button, .planner-management button { min-height: 44px; font-size: 1rem; color: var(--blue); text-decoration: underline; text-underline-offset: 4px; }
+.planner-day-tools button:disabled, .planner-management button:disabled { opacity: .5; cursor: default; }
+.planner-status, .planner-official { font-size: .875rem; line-height: 1.65; border-left: 3px solid #a77b28; padding: 8px 12px; background: #fff8e9; overflow-wrap: anywhere; }
+.plan-kind.draft, .plan-kind.backup { background: #fff1d5; color: #755014; }
+.planner-dialog { width: min(780px, calc(100% - 24px)); max-width: none; max-height: calc(100dvh - 24px); border: 1px solid var(--line); border-radius: 18px; padding: 0; color: var(--ink); background: #fffdf8; box-shadow: 0 20px 65px #09264055; }
+.planner-dialog::backdrop { background: #092640aa; }
+.planner-dialog form { display: flex; flex-direction: column; max-height: calc(100dvh - 26px); margin: 0; }
+.planner-heading, .planner-footer { padding: 16px 20px; display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-shrink: 0; background: #fffdf8; }
+.planner-heading { border-bottom: 1px solid var(--line); }
+.planner-heading h2 { font-size: 1.25rem; margin: 0; }
+.planner-heading button, .planner-footer button { font-size: 1rem; min-height: 44px; padding: 8px 12px; border-radius: 8px; }
+.planner-primary, .planner-primary:hover { background: var(--ink); color: white; }
+.planner-footer { border-top: 1px solid var(--line); }
+.planner-body { padding: 4px 20px 20px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; overflow-wrap: anywhere; }
+.planner-body p, .planner-body li { font-size: 1.0625rem; line-height: 1.7; }
+.planner-body fieldset { min-width: 0; border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin: 20px 0; }
+.planner-body legend { font-weight: 700; padding: 0 8px; }
+.planner-body label { display: block; font-size: 1rem; margin: 12px 0; }
+.planner-body select, .planner-body input:not([type="checkbox"]) { display: block; width: 100%; min-width: 0; min-height: 44px; padding: 10px; margin-top: 6px; font: inherit; font-size: 1rem; border: 1px solid #9aabbd; border-radius: 8px; color: var(--ink); background: white; }
+.planner-body input[type="checkbox"] { width: 22px; height: 22px; flex: 0 0 22px; }
+.planner-body .planner-check { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; line-height: 1.6; }
+.planner-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.planner-body select[size] { max-width: 100%; }
+.planner-body .group-note { font-size: .875rem; }
+.planner-diff { padding-left: 22px; }
+#planner-error { color: #a3192c; }
+@media (max-width: 600px) {
+    .planner-fields { grid-template-columns: minmax(0,1fr); gap: 0; }
+    .planner-heading, .planner-footer { padding: 10px 12px; flex-wrap: wrap; }
+    .planner-body { padding: 0 12px 16px; }
+}
+@media (max-height: 480px) {
+    .planner-dialog { max-height: calc(100dvh - 8px); }
+    .planner-dialog form { max-height: calc(100dvh - 10px); }
+    .planner-heading, .planner-footer { padding: 4px 10px; }
+}
 .day-goals { font-size: 0.9375rem; color: var(--muted); margin-bottom: 8px; }
 .day-goals summary { min-height: 44px; padding: 8px 0; }
 .day-goals ul { margin: 6px 0 14px; }

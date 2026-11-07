@@ -100,6 +100,8 @@ try {
         assert.equal(await page.locator('[data-playbook-mission="dining"]').getAttribute('aria-pressed'),'true');
         await page.goto(base+'#search-playbook-concierge-plus-6');
         assert.equal(await page.locator('[data-playbook-mission="shows-photos"]').getAttribute('aria-pressed'),'true');
+        await page.waitForFunction(()=>document.querySelector('#search-playbook-concierge-plus-6')?.open);
+        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
         assert(await page.locator('#search-playbook-concierge-plus-6').evaluate(el=>el.open));
         await page.goto(base+'#explore/shows');
         assert.equal(await page.locator('#deck-filter').inputValue(),'all');

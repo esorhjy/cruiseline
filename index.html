@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜航程手帳</title>
-    <meta name="app-build" content="2026-11-07-explore-v2">
+    <meta name="app-build" content="2026-11-07-planner-v1">
     <script>
-        window.__DCL_GUIDE_BUILD__ = '2026-11-07-explore-v2';
+        window.__DCL_GUIDE_BUILD__ = '2026-11-07-planner-v1';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-11-07-explore-v2">
-    <link rel="manifest" href="manifest.json?v=2026-11-07-explore-v2">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-11-07-explore-v2">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-11-07-explore-v2">
+    <link rel="stylesheet" href="style.css?v=2026-11-07-planner-v1">
+    <link rel="manifest" href="manifest.json?v=2026-11-07-planner-v1">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-11-07-planner-v1">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-11-07-planner-v1">
     <meta name="theme-color" content="#086F9A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -178,6 +178,7 @@
     <button type="button" class="tab-btn" data-tab="day4" role="tab" aria-selected="false" aria-controls="day4"><span>1/28</span>下船日</button>
    </div>
    <p class="schedule-disclaimer"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 已確認依通知標示，其餘為家庭預留或待確認；最終場次與調整仍查 Navigator。</p>
+   <p id="planner-status" class="planner-status" role="status" hidden></p>
    <div id="day1" class="day-container tab-content active" role="tabpanel"></div>
    <div id="day2" class="day-container tab-content" role="tabpanel" hidden></div>
    <div id="day3" class="day-container tab-content" role="tabpanel" hidden></div>
@@ -214,6 +215,7 @@
    <div id="checklist-grid"></div>
   </section>
   <section id="travel-reference" aria-labelledby="travel-reference-title"><h2 id="travel-reference-title">文件、交通與旅程資料</h2><div id="travel-reference-content"></div></section>
+  <details class="ship-about"><summary>本機行程草案與備份</summary><p>正式行程由專案統一發布。臨時調整只存這台裝置，請匯出備份；不會改動船方預約。</p><button type="button" class="text-command" data-planner-action="manage">管理、匯出或匯入草案</button></details>
  </div>
 </main>
 <nav class="mobile-nav" aria-label="手機主要導覽"><a href="#journey" data-view-link="journey"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span>航程</span></a>
@@ -223,14 +225,16 @@
 <button type="button" id="back-to-top" title="回到頂端" aria-label="回到頂端"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
 <div id="app-announcement" role="status" class="sr-only"></div>
 <footer class="notebook-footer">Disney Adventure · 我們的 2027 海上假期</footer>
-<script src="travel-reference-data.js?v=2026-11-07-explore-v2"></script>
-<script src="data.js?v=2026-11-07-explore-v2"></script>
-<script src="journey-presentation-data.js?v=2026-11-07-explore-v2"></script>
-<script src="search-entity-registry.js?v=2026-11-07-explore-v2"></script>
-<script src="search-keyword-taxonomy.js?v=2026-11-07-explore-v2"></script>
-<script src="onboard-lookup-data.js?v=2026-11-07-explore-v2"></script>
-<script src="explore-presentation-data.js?v=2026-11-07-explore-v2"></script>
-<script src="script.js?v=2026-11-07-explore-v2"></script>
+<script src="travel-reference-data.js?v=2026-11-07-planner-v1"></script>
+<script src="data.js?v=2026-11-07-planner-v1"></script>
+<script src="journey-presentation-data.js?v=2026-11-07-planner-v1"></script>
+<script src="search-entity-registry.js?v=2026-11-07-planner-v1"></script>
+<script src="search-keyword-taxonomy.js?v=2026-11-07-planner-v1"></script>
+<script src="onboard-lookup-data.js?v=2026-11-07-planner-v1"></script>
+<script src="explore-presentation-data.js?v=2026-11-07-planner-v1"></script>
+<script src="itinerary-planner.js?v=2026-11-07-planner-v1"></script>
+<script src="planner-ui.js?v=2026-11-07-planner-v1"></script>
+<script src="script.js?v=2026-11-07-planner-v1"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
