@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let setScheduleTab = () => {};
     let setDeckGuideTab = () => {};
     let setPlaybookMission = () => {};
+    let notebookNavigationEpoch = 0;
 
     const SEARCH_MIN_LENGTH = 2;
     const SEARCH_GROUP_ICONS = {
@@ -623,7 +624,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    let planner = null;
+    try {
+        const plannerModel = window.ITINERARY_PLANNER?.create({
+            schedule: cruiseSchedule, presentation: window.JOURNEY_PRESENTATION_DATA || {events:{}},
+            options: window.ITINERARY_PLANNER.candidates({decks:deckGuideData, shows:showGuideData,
+                registry:window.SEARCH_ENTITY_REGISTRY, presentation:window.JOURNEY_PRESENTATION_DATA || {menusByCard:{}},
+                explore:window.EXPLORE_PRESENTATION, lookup:window.ONBOARD_LOOKUP_DATA})
+        });
+        planner = plannerModel && window.createItineraryPlannerUI?.({model:plannerModel, schedule:cruiseSchedule, escapeHtml,
+            onChange:({focusEventId}={})=>{
+                const openIds=Array.from(document.querySelectorAll('#schedule details[open][id]')).map(el=>el.id);
+                const y=window.scrollY;
+                renderSchedule();
+                openIds.forEach(id=>{const el=document.getElementById(id);if(el)el.open=true;});
+                const destination=focusEventId && planner.schedule().find(day=>day.periods.some(p=>p.events.some(e=>e.id===focusEventId)));
+                setScheduleTab(destination?.id || notebookState.day);
+                if(destination) document.getElementById(focusEventId)?.scrollIntoView({block:'center'});
+                else window.scrollTo({top:y,behavior:'instant'});
+            }
+        });
+    } catch (error) {
+        console.error('Local planner initialization failed', error);
+    }
+    if (!planner) {
+        const status=document.getElementById('planner-status');
+        if (status) {
+            status.hidden=false;
+            status.textContent='本機草案工具暫時無法開啟，以下仍可瀏覽正式行程；已儲存資料未清除。請重新整理後再試。';
+        }
+        document.querySelectorAll('[data-planner-action]').forEach(button=>{button.disabled=true;});
+    }
+
     function getJourneyPresentation(event) {
+        if (event.local?.changed) return event.local.display;
         return window.JOURNEY_PRESENTATION_DATA?.events?.[event.id] || {
             shortTitle: compactSearchText(event.title), location: '', status: 'pending',
             essentialNote: compactSearchText(uniqueItems([event.desc[0], ...event.desc.filter(text => /限|至少|不得|成人監督|不是託管|不能|必到/.test(text))])), targets: []
@@ -648,25 +682,27 @@ document.addEventListener('DOMContentLoaded', function () {
     // 9. Compact itinerary; full original text remains in the disclosure and search index.
     function renderSchedule() {
         if (typeof cruiseSchedule === 'undefined') return;
-        cruiseSchedule.forEach(day => {
+        (planner?.schedule() || cruiseSchedule).forEach(day => {
             const root = document.getElementById(day.id);
             if (!root) return;
             const events = day.periods.flatMap(period => period.events);
             const priorities = events.filter(event => event.planKind === 'fixed').slice(0, 3);
             root.innerHTML = `
                 <div class="day-priorities" aria-label="當日優先事項">
+                    ${planner?.dayButton(day.id) || ''}
                     <span>今日保留</span>
                     ${priorities.map(event => `<a href="#${event.id}">${escapeHtml(getJourneyPresentation(event).shortTitle)}</a>`).join('')}
                 </div>
-                <details class="day-goals"><summary>當日安排重點</summary><ul>${day.goals.map(goal => `<li>${goal}</li>`).join('')}</ul></details>
+                ${planner?.dayTools(day.id) || ''}
+                <details class="day-goals"><summary>${planner?.hasDraft() ? '正式行程原安排重點' : '當日安排重點'}</summary><ul>${day.goals.map(goal => `<li>${goal}</li>`).join('')}</ul></details>
                 <div class="schedule-list">
-                    ${day.periods.map((period, pi) => `
-                        <h3 class="period-header">${escapeHtml(period.name)}</h3>
-                        ${period.events.map((event, ei) => {
-                            const id = getScheduleEventId(day.id, pi, ei);
+                    ${day.periods.map(period => `
+                        <h3 class="period-header">${escapeHtml(planner?.hasDraft() ? period.name.split('｜')[0] : period.name)}</h3>
+                        ${period.events.map(event => {
+                            const id = event.id;
                             const display = getJourneyPresentation(event);
-                            const status = ['confirmed', 'reserved', 'pending'].includes(display.status) ? display.status : 'pending';
-                            const labels = {confirmed: '已確認', reserved: '家庭預留', pending: '待確認'};
+                            const status = ['confirmed', 'reserved', 'pending', 'draft', 'backup'].includes(display.status) ? display.status : 'pending';
+                            const labels = {confirmed: '已確認', reserved: '家庭預留', pending: '待確認',draft:'本機草案',backup:'本機備案'};
                             const binding = getAiEntityBinding('scheduleEvents', event.bindingKey);
                             return `<article class="schedule-item" id="${id}" data-search-id="${id}">
                                 <div class="schedule-time"><span>${escapeHtml(display.timeLabel || event.time)}</span><span class="plan-kind ${status}" data-confirmation-status="${status}">${labels[status]}</span></div>
@@ -675,11 +711,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                     ${display.location ? `<p class="schedule-location">${escapeHtml(display.location)}</p>` : ''}
                                     ${display.essentialNote ? `<p class="schedule-essential">${escapeHtml(display.essentialNote)}</p>` : ''}
                                     ${renderJourneyTargets(event, display)}
-                                    <details class="event-detail" id="${id}-detail"><summary>完整安排與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                                    ${event.local?.changed ? renderRestaurantMenuLinks(display.menu) : ''}
+                                    ${planner?.note(event) || ''}
+                                    ${planner?.eventTools(event,day.id) || ''}
+                                    <details class="event-detail" id="${id}-detail"><summary>${event.local?.changed ? '原正式安排與提醒' : '完整安排與提醒'} <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
                                         <p class="event-original-title">${event.title}</p>
                                         ${display.timeLabel ? `<p class="group-note">原安排：${escapeHtml(event.time)}</p>` : ''}
                                         <ul>${event.desc.map(text => `<li>${text}</li>`).join('')}</ul>
-                                        ${renderRestaurantMenuLinks(display.menu)}
+                                        ${renderRestaurantMenuLinks(window.JOURNEY_PRESENTATION_DATA?.events?.[id]?.menu || [])}
                                         ${renderEntityLinks(binding?.entityRefs)}
                                     </details>
                                 </div>
@@ -780,6 +819,12 @@ document.addEventListener('DOMContentLoaded', function () {
             <button class="text-command" type="button" data-search-query="${escapeHtml(r.englishName)}" data-search-mode-target="lookup" data-lookup-category="all">中英對照／給船員看</button>
         </details>`;
     }
+    function populateVenueActivities(detail) {
+        if (!detail || detail.dataset.loaded) return;
+        detail.querySelector('.venue-activity-list').innerHTML = getActivityGroups()
+            .filter(group=>group.venue.id===detail.dataset.venue).map(renderFloorActivity).join('');
+        detail.dataset.loaded='true';
+    }
     function renderDeckGuide() {
         const root = document.getElementById('deck-guide-content');
         const select = document.getElementById('deck-filter');
@@ -850,10 +895,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }).join('')}</section>` : '') + (!cards.length && !groups.length ? '<p class="empty-state">這一層沒有此類資料，可切換全部類型或查看地點待確認。</p>' : '')
             + `<details class="ship-about"><summary>甲板介紹與動線</summary>${deckGuideData.filter(deck=>notebookState.deck==='all' || deck.id===notebookState.deck).map(deck=>`<section id="${deck.id}" class="deck-context"><h3>${deck.label} · ${deck.title}</h3><p>${deck.theme}</p><p>${deck.tripFocus}</p><p class="group-note">${deck.badges.join(' · ')}</p></section>`).join('')}</details>`;
             root.querySelectorAll('.venue-activities').forEach(detail=>detail.addEventListener('toggle',()=>{
-                if (detail.open && !detail.dataset.loaded) {
-                    detail.querySelector('.venue-activity-list').innerHTML = groups.filter(group=>group.venue.id===detail.dataset.venue).map(renderFloorActivity).join('');
-                    detail.dataset.loaded='true';
-                }
+                if (detail.open) populateVenueActivities(detail);
             }));
         }
         filters.addEventListener('click', event=>{
@@ -4268,6 +4310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="search-result-meta">${escapeHtml(metaLine)}</div>
                             <h3 class="search-result-title">${escapeHtml(result.title)}</h3>
                             ${summaryLine ? `<div class="search-result-summary">${escapeHtml(summaryLine)}</div>` : ''}
+                            ${result.sourceType === 'schedule' && planner?.hasDraft() ? '<p class="search-result-meta">此為正式行程資料；開啟後可對照本機草案。</p>' : ''}
                         </button>`;
                     }).join('')}
                 </div>
@@ -4910,11 +4953,13 @@ document.addEventListener('DOMContentLoaded', function () {
         history.replaceState({...history.state, exploreOrigin: origin}, '', window.location.href);
     }
 
-    function restoreExploreOrigin(origin) {
+    function restoreExploreOrigin(origin, epoch) {
         // Opening a venue populates its activity list lazily; restore nested items on the next frame.
+        if (epoch !== notebookNavigationEpoch) return;
         const restore = () => document.querySelectorAll('#explore details[id]').forEach(node => {node.open=origin.openIds.includes(node.id);});
         restore();
         requestAnimationFrame(()=>requestAnimationFrame(()=>{
+            if (epoch !== notebookNavigationEpoch) return;
             restore();
             const owner=document.getElementById(origin.ownerId);
             const control=owner?.querySelectorAll('a,button,summary')[origin.controlIndex];
@@ -4925,6 +4970,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function navigateNotebook(rawHash, options = {}) {
         if (!notebookState.ready) return;
+        const epoch = ++notebookNavigationEpoch;
         let id = String(rawHash || 'journey').replace(/^#/, '');
         const references = window.TRAVEL_REFERENCE_DATA || {};
         if (searchState.closingHash === '#' + id) {
@@ -4961,6 +5007,7 @@ document.addEventListener('DOMContentLoaded', function () {
         id = references.redirects?.[id] || id;
         const supplement = references.records?.find(record => record.id === id && record.targetId);
         const routeId = supplement?.targetId || id;
+        const activityTarget = getActivityGroups().find(group=>group.id===routeId);
         const exploreOrigin = !options.push && history.state?.exploreOrigin;
         const originToRestore = options.journeyOrigin || (!options.push && history.state?.journeyOrigin);
         const returnContext = options.clearJourneyReturn ? null
@@ -4969,7 +5016,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let focusId = null;
         let tab = null;
         let matched = false;
-        for (const day of cruiseSchedule) {
+        for (const day of (planner?.schedule() || cruiseSchedule)) {
             if (id === day.id || day.periods.some(period => period.events.some(event => event.id === id))) {
                 view = 'journey'; setScheduleTab(day.id); focusId = id; matched = true;
             }
@@ -4993,6 +5040,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 view = 'explore'; tab = 'playbook'; setPlaybookMission(mission.id, {openItemId: routeId}); focusId = id; matched = true;
             }
         }
+        if (activityTarget) {
+            view='explore'; tab='shows'; focusId=routeId;
+            notebookState.deck=activityTarget.venue.deckIds[0] || 'unknown';
+        }
         if (view === 'shows' || id === 'explore/shows') {view = 'explore'; tab = 'shows'; notebookState.deck = 'all';}
         if (view === 'playbook' || id === 'explore/playbook') {view = 'explore'; tab = 'playbook';}
         if (id === 'facilities') {tab = 'facilities'; notebookState.purpose = 'all'; notebookState.deck = 'all';}
@@ -5013,12 +5064,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (exploreOrigin.topic) setPlaybookMission(exploreOrigin.topic);
             }
             setExploreTab(exploreOrigin?.tab || tab || notebookState.exploreTab);
+            if (activityTarget) {
+                const venue=document.getElementById('venue-activities-'+activityTarget.venue.id);
+                populateVenueActivities(venue);
+                if (venue) venue.open=true;
+            }
         }
         syncJourneyReturnUi();
         if (options.push) history.pushState({journeyReturn: notebookState.journeyReturn, journeyOrigin: options.journeyOrigin || null}, '', '#' + String(rawHash).replace(/^#/, ''));
-        if (view === 'journey' && originToRestore) requestAnimationFrame(() => restoreJourneyOrigin(originToRestore));
-        else if (view === 'explore' && exploreOrigin) requestAnimationFrame(()=>restoreExploreOrigin(exploreOrigin));
-        else if (focusId) requestAnimationFrame(() => revealNotebookTarget(focusId));
+        if (view === 'journey' && originToRestore) requestAnimationFrame(() => {if(epoch===notebookNavigationEpoch)restoreJourneyOrigin(originToRestore);});
+        else if (view === 'explore' && exploreOrigin) requestAnimationFrame(()=>restoreExploreOrigin(exploreOrigin,epoch));
+        else if (focusId) requestAnimationFrame(() => {if(epoch===notebookNavigationEpoch)revealNotebookTarget(focusId);});
         else if (options.scroll !== false) window.scrollTo({top: notebookState.scroll[view] || 0, behavior: 'instant'});
     }
 
