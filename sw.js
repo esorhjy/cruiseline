@@ -1,4 +1,4 @@
-const APP_BUILD_ID = '2026-11-07-journey-v1';
+const APP_BUILD_ID = '2026-11-07-explore-v2';
 const CORE_CACHE_NAME = `dcl-guide-${APP_BUILD_ID}`;
 const RUNTIME_CACHE_NAME = `${CORE_CACHE_NAME}-runtime`;
 const VERSIONED_CORE_ASSETS = [
@@ -9,6 +9,7 @@ const VERSIONED_CORE_ASSETS = [
   'onboard-lookup-data.js',
   'data.js',
   'journey-presentation-data.js',
+  'explore-presentation-data.js',
   'travel-reference-data.js',
   'manifest.json',
   'icons/icon-192.png',

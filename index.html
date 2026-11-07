@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜航程手帳</title>
-    <meta name="app-build" content="2026-11-07-journey-v1">
+    <meta name="app-build" content="2026-11-07-explore-v2">
     <script>
-        window.__DCL_GUIDE_BUILD__ = '2026-11-07-journey-v1';
+        window.__DCL_GUIDE_BUILD__ = '2026-11-07-explore-v2';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-11-07-journey-v1">
-    <link rel="manifest" href="manifest.json?v=2026-11-07-journey-v1">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-11-07-journey-v1">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-11-07-journey-v1">
+    <link rel="stylesheet" href="style.css?v=2026-11-07-explore-v2">
+    <link rel="manifest" href="manifest.json?v=2026-11-07-explore-v2">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-11-07-explore-v2">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-11-07-explore-v2">
     <meta name="theme-color" content="#086F9A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -187,15 +187,15 @@
  <div id="explore" class="notebook-view" data-view="explore" hidden>
   <header class="view-heading"><p class="eyebrow">ON BOARD / 船上</p><h1>今天想去哪裡？</h1></header>
   <div class="explore-tabs segmented" aria-label="船上內容">
-   <button type="button" data-explore-tab="facilities" aria-pressed="true">設施</button>
-   <button type="button" data-explore-tab="shows" aria-pressed="false">表演</button>
-   <button type="button" data-explore-tab="playbook" aria-pressed="false">攻略</button>
+   <button type="button" data-explore-tab="facilities" aria-pressed="true">樓層導覽</button>
+   <button type="button" data-explore-tab="playbook" aria-pressed="false">實用攻略</button>
   </div>
   <section id="deck-guide" aria-label="設施與表演">
    <div id="facility-controls" class="facility-controls">
-    <div id="facility-purpose-filters" class="horizontal-filters" aria-label="設施用途"></div>
-    <label class="deck-select-label">甲板 <select id="deck-filter" aria-label="篩選甲板"><option value="all">全部甲板</option></select></label>
+    <label class="deck-select-label">選擇樓層 <select id="deck-filter" aria-label="篩選甲板"><option value="all">全部甲板</option></select></label>
+    <div id="facility-purpose-filters" class="horizontal-filters" aria-label="內容類型"></div>
    </div>
+   <p class="group-note">依樓層找地點與活動，並非即時定位；開放與場次查當日 Navigator。</p>
    <p id="facility-result-count" class="result-count" role="status"></p>
    <div id="deck-guide-content"></div>
   </section>
@@ -223,13 +223,14 @@
 <button type="button" id="back-to-top" title="回到頂端" aria-label="回到頂端"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
 <div id="app-announcement" role="status" class="sr-only"></div>
 <footer class="notebook-footer">Disney Adventure · 我們的 2027 海上假期</footer>
-<script src="travel-reference-data.js?v=2026-11-07-journey-v1"></script>
-<script src="data.js?v=2026-11-07-journey-v1"></script>
-<script src="journey-presentation-data.js?v=2026-11-07-journey-v1"></script>
-<script src="search-entity-registry.js?v=2026-11-07-journey-v1"></script>
-<script src="search-keyword-taxonomy.js?v=2026-11-07-journey-v1"></script>
-<script src="onboard-lookup-data.js?v=2026-11-07-journey-v1"></script>
-<script src="script.js?v=2026-11-07-journey-v1"></script>
+<script src="travel-reference-data.js?v=2026-11-07-explore-v2"></script>
+<script src="data.js?v=2026-11-07-explore-v2"></script>
+<script src="journey-presentation-data.js?v=2026-11-07-explore-v2"></script>
+<script src="search-entity-registry.js?v=2026-11-07-explore-v2"></script>
+<script src="search-keyword-taxonomy.js?v=2026-11-07-explore-v2"></script>
+<script src="onboard-lookup-data.js?v=2026-11-07-explore-v2"></script>
+<script src="explore-presentation-data.js?v=2026-11-07-explore-v2"></script>
+<script src="script.js?v=2026-11-07-explore-v2"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {

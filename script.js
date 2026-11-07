@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const MENU_LOOKUP_DATA_SCRIPT_PATH = 'menu-lookup-data.js';
     const runtimeState = { scrollTicking: false };
     const notebookState = {
-        view: 'journey', exploreTab: 'facilities', purpose: 'all', deck: 'all',
+        view: 'journey', exploreTab: 'facilities', purpose: 'all', deck: 'deck17',
         checklistFilter: 'all', scroll: {}, day: 'day1', ready: false, journeyReturn: null
     };
     let openNotebookSearch = () => {};
@@ -758,96 +758,118 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderChecklist();
 
-    // 11. 甲板與表演設施導覽 (Phase 5)
+    // Shared floor browser. Stable card IDs remain the route and search destinations.
+    const exploreData = window.EXPLORE_PRESENTATION;
+    let activityGroups = null;
+    const areaNames = {forward:'船頭', mid:'船中', aft:'船尾', unknown:'分區待核對／多區域'};
+    function getActivityGroups() {
+        if (!activityGroups) activityGroups = exploreData?.groupActivities(window.ONBOARD_LOOKUP_DATA?.records || []) || [];
+        return activityGroups;
+    }
+    function getShowFloors(show) {
+        return exploreData?.shows[show.id]?.deckIds || [];
+    }
+    function renderFloorActivity(group) {
+        const r = group.record;
+        const facts = uniqueItems(group.records.flatMap(record => [record.audience, record.participationNote, record.feeNote, record.descriptionZh]).filter(Boolean));
+        return `<details class="floor-activity" id="${group.id}">
+            <summary><span>${escapeHtml(r.zhLabel)}<span class="activity-english">${escapeHtml(r.englishName)}</span></span></summary>
+            <p class="group-note">${escapeHtml(r.venueEnglish)} · ${escapeHtml(r.audience || '資格查當場公告')}</p>
+            ${facts.map(text=>`<p>${escapeHtml(text)}</p>`).join('')}
+            <p class="group-note">歷史活動參考，不是本航次預約或時刻表。${group.records.length} 筆來源記錄合併顯示。</p>
+            <button class="text-command" type="button" data-search-query="${escapeHtml(r.englishName)}" data-search-mode-target="lookup" data-lookup-category="all">中英對照／給船員看</button>
+        </details>`;
+    }
     function renderDeckGuide() {
         const root = document.getElementById('deck-guide-content');
         const select = document.getElementById('deck-filter');
         if (!root || !select || typeof deckGuideData === 'undefined') return;
-        const purposes = [
-            ['all', '全部'], ['swim', '玩水'], ['eat', '餐飲'], ['kids-play', '親子'],
-            ['watch-show', '看秀'], ['photo', '拍照'], ['rest', '休息'], ['shop', '購物'], ['service', '服務']
-        ];
-        select.innerHTML = '<option value="all">全部甲板</option>' + deckGuideData.map(deck => `<option value="${deck.id}">${deck.label}</option>`).join('');
+        try {
+            const saved = localStorage.getItem('dcl_explore_deck');
+            if (saved === 'all' || saved === 'unknown' || deckGuideData.some(d=>d.id===saved)) notebookState.deck = saved;
+        } catch { /* Browsing works without persistent storage. */ }
+        select.innerHTML = '<option value="all">全部甲板</option>' + deckGuideData.map(deck => `<option value="${deck.id}">${escapeHtml(deck.title)}</option>`).join('') + '<option value="unknown">地點待確認</option>';
         const filters = document.getElementById('facility-purpose-filters');
-        filters.innerHTML = purposes.map(([id, label]) => `<button type="button" data-purpose="${id}" aria-pressed="${id === 'all'}">${label}</button>`).join('');
-
+        filters.innerHTML = [['all','全部'],['facility','設施'],['restaurant','餐廳'],['shows','表演活動']].map(([id,label])=>`<button type="button" data-purpose="${id}" aria-pressed="false">${label}</button>`).join('');
+        function facilityMarkup(deck, facility, meta) {
+            const entity = getPrimaryEntityForBinding('deckFacilities', facility.bindingKey);
+            return `<article class="facility-card" id="${facility.id}" data-search-id="${facility.id}">
+                <div class="item-eyebrow">${escapeHtml((meta.deckIds || [deck.id]).map(id=>'Deck '+id.replace('deck','')).join('／'))} · ${areaNames[meta.area || 'unknown']}</div>
+                <h3>${escapeHtml(meta.title || facility.name)}</h3><p class="card-english">${escapeHtml(facility.name)}</p>
+                <p>${facility.summary}</p>
+                ${meta.essential ? `<p class="essential-note">${escapeHtml(meta.essential)}</p>` : ''}
+                <details id="${facility.id}-detail"><summary>安排、資格與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                    <p>${facility.bestTime}</p><p class="essential-note">${facility.tripUse}</p>
+                    ${getBilingualStripMarkup(entity, facility.name)}
+                    ${facility.sourceNote ? `<p class="group-note">${escapeHtml(facility.sourceNote)}</p>` : ''}
+                    ${entity ? `<button type="button" class="text-command" data-search-mode-target="lookup" data-lookup-category="${getEntityLookupCategory(entity)}" data-search-query="${escapeHtml(entity.officialNameEn)}">中英對照</button>` : ''}
+                </details>
+                ${renderRestaurantMenuLinks(window.JOURNEY_PRESENTATION_DATA?.menusByCard?.[facility.id])}
+            </article>`;
+        }
+        function showMarkup(show, category, meta) {
+            return `<article class="show-item" id="${show.id}">
+                <div class="item-eyebrow">${escapeHtml(show.location)}${meta.locationStatus==='possible' ? ' · 可能場地，查當航次' : ''}</div>
+                <h3>${escapeHtml(meta.title || show.name)}</h3><p class="card-english">${show.name}</p><p>${show.theme}</p>
+                <details id="${show.id}-detail"><summary>觀賞安排</summary><p class="essential-note">${show.timingTip}</p><p>${show.tripLink}</p>
+                    <p class="group-note">${category.intro}</p>
+                    ${show.sourceNote ? `<p class="group-note">${escapeHtml(show.sourceNote)}</p>` : ''}
+                    ${renderEntityLinks(getAiEntityBinding('shows',show.bindingKey)?.entityRefs,show.id)}
+                </details></article>`;
+        }
         function update(target = notebookState.deck) {
-            if (target === 'shows') notebookState.exploreTab = 'shows';
+            if (target === 'shows') notebookState.purpose = 'shows';
             else notebookState.deck = target;
-            const renderKey = [notebookState.exploreTab, notebookState.deck, notebookState.purpose].join(':');
+            const renderKey = [notebookState.deck, notebookState.purpose].join(':');
             if (root.dataset.renderKey === renderKey) return;
             root.dataset.renderKey = renderKey;
-            const shows = notebookState.exploreTab === 'shows';
-            document.getElementById('facility-controls').hidden = shows;
-            const count = document.getElementById('facility-result-count');
-            if (shows) {
-                count.textContent = `${showGuideData.reduce((total, group) => total + group.shows.length, 0)} 場表演 · 時間依本航次公告`;
-                root.innerHTML = showGuideData.map(category => `<section class="performance-category">
-                    <h2>${category.title}</h2><p class="group-note">${category.intro}</p>
-                    <div class="facility-grid">${category.shows.map((show, index) => {
-                        const binding = getAiEntityBinding('shows', show.bindingKey);
-                        return `<article class="show-item" id="${show.id}">
-                            <div class="item-eyebrow"><i class="fa-solid fa-masks-theater" aria-hidden="true"></i> ${escapeHtml(show.location)}</div>
-                            <h3>${show.name}</h3>${getBilingualStripMarkup(getPrimaryEntityForBinding('shows', show.bindingKey), show.name)}
-                            <p>${show.theme}</p>
-                            <p class="essential-note">${show.timingTip}</p>
-                            <details><summary>觀賞安排</summary><p>${show.tripLink}</p>${show.sourceNote ? `<p class="group-note">${escapeHtml(show.sourceNote)}</p>` : ''}${renderEntityLinks(binding?.entityRefs, show.id)}</details>
-                        </article>`;
-                    }).join('')}</div></section>`).join('');
-                return;
-            }
-            const facilities = deckGuideData.flatMap(deck => deck.facilities.map(facility => ({deck, facility})))
-                .filter(({deck}) => notebookState.deck === 'all' || deck.id === notebookState.deck)
-                .filter(({facility}) => facilityMatchesPurpose(facility, notebookState.purpose));
-            count.textContent = `${facilities.length} 個地點`;
             select.value = notebookState.deck;
-            filters.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.purpose === notebookState.purpose)));
-            root.innerHTML = '<div class="facility-grid">' + facilities.map(({deck, facility}) => {
-                const entity = getPrimaryEntityForBinding('deckFacilities', facility.bindingKey);
-                return `<article class="facility-card" id="${facility.id}" data-search-id="${facility.id}">
-                    <div class="item-eyebrow"><i class="${facility.icon}" aria-hidden="true"></i> ${escapeHtml(deck.label)}${entity?.area ? ' · ' + escapeHtml(entity.area) : ''}</div>
-                    <h3>${facility.name}</h3>${getBilingualStripMarkup(entity, facility.name)}
-                    <p>${facility.summary}</p>
-                    ${/不得|禁止|不允許/.test(facility.bestTime) ? `<p class="essential-note">${facility.bestTime}</p>` : ''}
-                    ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? `<p class="essential-note">${facility.tripUse}</p>` : ''}
-                    <details><summary>安排與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
-                        ${facility.sourceNote ? `<p class="group-note">${escapeHtml(facility.sourceNote)}</p>` : ''}
-                        ${/不得|禁止|不允許/.test(facility.bestTime) ? '' : `<p>${facility.bestTime}</p>`}
-                        ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? '' : `<p>${facility.tripUse}</p>`}
-                        ${entity ? `<button type="button" class="text-command" data-search-mode-target="lookup" data-lookup-category="${getEntityLookupCategory(entity)}" data-search-query="${escapeHtml(entity.officialNameEn)}"><i class="fa-solid fa-language" aria-hidden="true"></i> 中英對照</button>` : ''}
-                    </details>
-                    ${renderRestaurantMenuLinks(window.JOURNEY_PRESENTATION_DATA?.menusByCard?.[facility.id])}
-                </article>`;
-            }).join('') + '</div>' + (!facilities.length ? '<p class="empty-state">這個甲板沒有符合用途的地點，可改選全部甲板。</p>' : '')
-                + `<details class="ship-about"><summary>甲板介紹與動線 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>${deckGuideData.filter(deck => notebookState.deck === 'all' || deck.id === notebookState.deck).map(deck => `<section id="${deck.id}" class="deck-context"><h3>${deck.label} · ${deck.title}</h3><p>${deck.theme}</p><p>${deck.tripFocus}</p><p class="group-note">${deck.badges.join(' · ')}</p></section>`).join('')}</details>`;
+            filters.querySelectorAll('button').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.purpose===notebookState.purpose)));
+            const onFloor = ids => notebookState.deck==='all' || (notebookState.deck==='unknown' ? !ids.length : ids.includes(notebookState.deck));
+            const cards = [];
+            if (notebookState.purpose!=='shows') for (const deck of deckGuideData) for (const facility of deck.facilities) {
+                const meta = exploreData?.facilities[facility.id] || {};
+                const type = meta.type || 'facility';
+                if (onFloor(meta.deckIds || [deck.id]) && (notebookState.purpose==='all' || type===notebookState.purpose || type==='mixed')) {
+                    cards.push({area:meta.area || 'unknown',html:facilityMarkup(deck,facility,meta)});
+                }
+            }
+            if (['all','shows'].includes(notebookState.purpose)) for (const category of showGuideData) for (const show of category.shows) {
+                const meta = exploreData?.shows[show.id] || {};
+                if (onFloor(getShowFloors(show))) cards.push({area:meta.area || 'unknown',html:showMarkup(show,category,meta)});
+            }
+            const groups = ['all','shows'].includes(notebookState.purpose) ? getActivityGroups().filter(group=>onFloor(group.venue.deckIds)) : [];
+            document.getElementById('facility-result-count').textContent = `${cards.length} 張地點／表演卡 · ${groups.length} 組活動參考`;
+            root.innerHTML = Object.entries(areaNames).map(([area,label])=>{
+                const items=cards.filter(card=>card.area===area);
+                return items.length ? `<section class="floor-area"><h2>${label}</h2><div class="facility-grid">${items.map(card=>card.html).join('')}</div></section>` : '';
+            }).join('') + (groups.length ? `<section class="floor-activities"><h2>此處活動</h2><p class="group-note">按場館查看完整活動索引；不同年齡、參與方式與費用版本分開。歷史時間不代表本航次安排。</p>${[...new Set(groups.map(g=>g.venue.label))].map(label=>{
+                const members=groups.filter(g=>g.venue.label===label);
+                const place=members[0].venue;
+                return `<details class="venue-activities" id="venue-activities-${place.id}" data-venue="${place.id}"><summary>${escapeHtml(label)} · ${members.length} 組</summary>${place.cardId ? `<a href="#${place.cardId}" class="text-command">場館與資格</a>` : ''}<div class="venue-activity-list"></div></details>`;
+            }).join('')}</section>` : '') + (!cards.length && !groups.length ? '<p class="empty-state">這一層沒有此類資料，可切換全部類型或查看地點待確認。</p>' : '')
+            + `<details class="ship-about"><summary>甲板介紹與動線</summary>${deckGuideData.filter(deck=>notebookState.deck==='all' || deck.id===notebookState.deck).map(deck=>`<section id="${deck.id}" class="deck-context"><h3>${deck.label} · ${deck.title}</h3><p>${deck.theme}</p><p>${deck.tripFocus}</p><p class="group-note">${deck.badges.join(' · ')}</p></section>`).join('')}</details>`;
+            root.querySelectorAll('.venue-activities').forEach(detail=>detail.addEventListener('toggle',()=>{
+                if (detail.open && !detail.dataset.loaded) {
+                    detail.querySelector('.venue-activity-list').innerHTML = groups.filter(group=>group.venue.id===detail.dataset.venue).map(renderFloorActivity).join('');
+                    detail.dataset.loaded='true';
+                }
+            }));
         }
-        filters.addEventListener('click', event => {
-            const button = event.target.closest('[data-purpose]');
+        filters.addEventListener('click', event=>{
+            const button=event.target.closest('[data-purpose]');
             if (!button) return;
-            notebookState.purpose = button.dataset.purpose;
+            notebookState.purpose=button.dataset.purpose;
             update();
         });
-        select.addEventListener('change', () => update(select.value));
-        setDeckGuideTab = update;
+        select.addEventListener('change',()=>{
+            update(select.value);
+            try {localStorage.setItem('dcl_explore_deck',select.value);} catch {}
+        });
+        setDeckGuideTab=update;
         update();
     }
-
-    function facilityMatchesPurpose(facility, purpose) {
-        if (purpose === 'all') return true;
-        const binding = getAiEntityBinding('deckFacilities', facility.bindingKey);
-        const entities = (binding?.entityRefs || []).map(getAiEntityRegistryEntry).filter(Boolean);
-        const text = normalizeSearchText([facility.name, facility.summary, ...entities.flatMap(entity => [entity.entityType, ...entity.categoryFamilies, ...entity.capabilityTags])].join(' '));
-        const terms = {
-            swim: ['swim','pool','玩水','泳池','slides'], eat: ['eat','drink','餐廳','快餐','酒廊','restaurant','bar'],
-            'kids-play': ['kids','遊戲','兒童','arcade','marvel','親子'], 'watch-show': ['watch show','表演','劇院'],
-            photo: ['photo','拍照','pics'], rest: ['rest','休息','lounge','spa'], shop: ['shop','商店','購物'],
-            service: ['service','服務','rfid','手環']
-        };
-        return (terms[purpose] || []).some(term => text.includes(term));
-    }
-
     renderDeckGuide();
-
     // 12. 實戰攻略 Playbook
     function renderPlaybookGuide() {
         const missionsContainer = document.getElementById('playbook-missions');
@@ -860,12 +882,17 @@ document.addEventListener('DOMContentLoaded', function () {
             concierge: { label: '禮賓安排 · 依通知', icon: 'fa-solid fa-crown' },
             community: { label: '旅客經驗 · 非保證', icon: 'fa-solid fa-comments' }
         };
-        let activeMission = playbookGuideData[0]?.id;
+        const allItems = playbookGuideData.flatMap(mission => mission.items);
+        const topics = exploreData ? exploreData.topics.map(topic => ({...topic,
+            intro: '依問題找做法；詳情保留完整限制與來源。',
+            items: allItems.filter(item => exploreData.playbook[item.id]?.topic === topic.id)
+        })) : playbookGuideData;
+        let activeMission = topics[0]?.id;
 
-        missionsContainer.innerHTML = playbookGuideData.map(mission => `
+        missionsContainer.innerHTML = topics.map(mission => `
             <button type="button" class="playbook-mission-btn ${mission.id === activeMission ? 'active' : ''}" data-playbook-mission="${mission.id}">
                 <i class="fa-solid fa-compass" aria-hidden="true"></i>
-                <span>${mission.label}</span>
+                <span>${mission.label} · ${mission.items.length}</span>
             </button>
         `).join('');
 
@@ -873,20 +900,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function buildItemMarkup(item, missionId, itemIndex) {
             const source = sourceMeta[item.sourceType] || sourceMeta.community;
-            const id = getPlaybookItemId(missionId, itemIndex);
+            const id = item.id;
+            const display = exploreData?.playbook[id];
             const binding = getAiEntityBinding('playbookItems', item.bindingKey);
             const supplements = (window.TRAVEL_REFERENCE_DATA?.records || []).filter(record => record.targetId === id);
             return `<details class="playbook-card" id="${id}" data-search-id="${id}">
                 <summary class="playbook-summary">
                     <i class="${item.icon}" aria-hidden="true"></i>
-                    <span><span class="item-eyebrow">${source.label}</span><h3>${item.title}</h3><span class="playbook-preview">${item.whenToUse}</span></span>
+                    <span><h3>${escapeHtml(display?.title || item.title)}</h3><span class="playbook-preview">${escapeHtml(display?.preview || item.whenToUse)}</span></span>
                     <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
                 </summary>
                 <div class="playbook-body">
                     <p class="playbook-action">${item.action}</p>
                     <p class="essential-note">${item.caution}</p>
                     <p class="playbook-context">${item.tripFit}</p>
+                    <p>${item.whenToUse}</p>
+                    <p class="group-note">${source.label} · ${escapeHtml(item.title)}</p>
                     ${item.sourceNote ? `<p class="group-note">${escapeHtml(item.sourceNote)}</p>` : ''}
+                    ${(exploreData?.related[id] || []).map(target => `<a class="text-command" href="#${target}">延伸：${escapeHtml(exploreData.playbook[target].title)}</a>`).join('')}
                     ${supplements.map(record => `<div id="${record.id}" class="reference-supplement">${record.bodyHtml}</div>`).join('')}
                     ${renderEntityLinks(binding?.entityRefs, id)}
                     ${item.relatedSectionId ? `<a class="text-command" href="#${item.relatedSectionId}">相關資料 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>` : ''}
@@ -895,13 +926,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function updatePlaybook(targetId, options = {}) {
-            activeMission = targetId;
+            const itemId = options.openItemId;
+            const legacyItem = playbookGuideData.find(mission => mission.id === targetId)?.items[0];
+            activeMission = exploreData?.playbook[itemId || legacyItem?.id]?.topic || targetId;
             missionButtons.forEach(button => {
                 button.classList.toggle('active', button.dataset.playbookMission === activeMission);
+                button.setAttribute('aria-pressed', String(button.dataset.playbookMission === activeMission));
             });
 
-            const mission = playbookGuideData.find(item => item.id === activeMission) || playbookGuideData[0];
+            const mission = topics.find(item => item.id === activeMission) || topics[0];
             if (!mission) return;
+            notebookState.topic = mission.id;
 
             contentContainer.innerHTML = `
                 <div class="playbook-panel-header">
@@ -2497,7 +2532,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ['最佳時機', facility.bestTime],
                         ['這趟怎麼用', facility.tripUse]
                     ]),
-                    keywords: [deck.label, deck.title, deck.theme, deck.tripFocus, ...deck.badges],
+                    keywords: [window.EXPLORE_PRESENTATION?.facilities[facility.id]?.title || '', deck.label, deck.title, deck.theme, deck.tripFocus, ...deck.badges],
                     entityRefs: binding?.entityRefs || [],
                     supportForEntityRefs: binding?.supportForEntityRefs || [],
                     keywordHints: binding?.keywordHints || [],
@@ -2562,7 +2597,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ['時機提醒', show.timingTip],
                         ['旅程連結', show.tripLink]
                     ]),
-                    keywords: [category.title, category.intro, show.location, show.tripLink],
+                    keywords: [window.EXPLORE_PRESENTATION?.shows[show.id]?.title || '', category.title, category.intro, show.location, show.tripLink],
                     entityRefs: binding?.entityRefs || [],
                     supportForEntityRefs: binding?.supportForEntityRefs || [],
                     keywordHints: binding?.keywordHints || [],
@@ -2604,7 +2639,9 @@ document.addEventListener('DOMContentLoaded', function () {
             mission.items.map((item, itemIndex) => {
                 const itemId = getPlaybookItemId(mission.id, itemIndex);
                 const binding = getAiEntityBinding('playbookItems', item.bindingKey || `${mission.id}:${itemIndex}`);
-                const locationLabel = `攻略本 · ${mission.label}`;
+                const displayTopic = window.EXPLORE_PRESENTATION?.playbook[item.id];
+                const topicLabel = window.EXPLORE_PRESENTATION?.topics.find(topic=>topic.id===displayTopic?.topic)?.label || mission.label;
+                const locationLabel = `攻略本 · ${topicLabel}`;
                 const normalizedPlaybook = normalizeSearchText([item.title, item.whenToUse, item.action, item.tripFit, item.caution, mission.label].join(' '));
                 const isTheatrePlaybook = hasQueryHint(normalizedPlaybook, ['walt disney theatre', '劇院', 'theatre', '主秀', '優先入場', '看秀']);
                 const isLoungePlaybook = hasQueryHint(normalizedPlaybook, ['lounge', 'concierge', '禮賓', '酒廊']);
@@ -2630,7 +2667,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ['這趟為什麼適合', item.tripFit],
                         ['注意事項', item.caution]
                     ]),
-                    keywords: [mission.label, mission.intro, item.sourceType, ...deriveContextualKeywords(combinedText)],
+                    keywords: [displayTopic?.title || '', topicLabel, mission.label, mission.intro, item.sourceType, ...deriveContextualKeywords(combinedText)],
                     entityRefs: binding?.entityRefs || [],
                     supportForEntityRefs: binding?.supportForEntityRefs || [],
                     keywordHints: binding?.keywordHints || [],
@@ -4784,12 +4821,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function setExploreTab(tab) {
-        notebookState.exploreTab = ['shows','playbook'].includes(tab) ? tab : 'facilities';
+        notebookState.exploreTab = tab === 'playbook' ? tab : 'facilities';
+        if (tab === 'shows') notebookState.purpose = 'shows';
         document.querySelectorAll('[data-explore-tab]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.exploreTab === notebookState.exploreTab)));
         document.getElementById('playbook').hidden = notebookState.exploreTab !== 'playbook';
         document.getElementById('deck-guide').hidden = notebookState.exploreTab === 'playbook';
         document.getElementById('ship-stats').hidden = notebookState.exploreTab !== 'facilities';
-        if (notebookState.exploreTab !== 'playbook') setDeckGuideTab(notebookState.exploreTab === 'shows' ? 'shows' : notebookState.deck);
+        if (notebookState.exploreTab !== 'playbook') setDeckGuideTab(notebookState.deck);
     }
 
     function renderTravelReferences() {
@@ -4860,6 +4898,31 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({top: Math.max(0, origin.scrollY || 0), behavior: 'instant'});
     }
 
+    function captureExploreOrigin(trigger) {
+        if (notebookState.view !== 'explore') return;
+        const owner = trigger?.closest('#explore [id]');
+        const origin = {
+            deck: notebookState.deck, purpose: notebookState.purpose, tab: notebookState.exploreTab,
+            topic: notebookState.topic, scrollY: window.scrollY,
+            openIds: Array.from(document.querySelectorAll('#explore details[open][id]')).map(el=>el.id),
+            ownerId: owner?.id, controlIndex: owner ? Array.from(owner.querySelectorAll('a,button,summary')).indexOf(trigger) : -1
+        };
+        history.replaceState({...history.state, exploreOrigin: origin}, '', window.location.href);
+    }
+
+    function restoreExploreOrigin(origin) {
+        // Opening a venue populates its activity list lazily; restore nested items on the next frame.
+        const restore = () => document.querySelectorAll('#explore details[id]').forEach(node => {node.open=origin.openIds.includes(node.id);});
+        restore();
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{
+            restore();
+            const owner=document.getElementById(origin.ownerId);
+            const control=owner?.querySelectorAll('a,button,summary')[origin.controlIndex];
+            control?.focus({preventScroll:true});
+            window.scrollTo({top:origin.scrollY,behavior:'instant'});
+        }));
+    }
+
     function navigateNotebook(rawHash, options = {}) {
         if (!notebookState.ready) return;
         let id = String(rawHash || 'journey').replace(/^#/, '');
@@ -4898,6 +4961,7 @@ document.addEventListener('DOMContentLoaded', function () {
         id = references.redirects?.[id] || id;
         const supplement = references.records?.find(record => record.id === id && record.targetId);
         const routeId = supplement?.targetId || id;
+        const exploreOrigin = !options.push && history.state?.exploreOrigin;
         const originToRestore = options.journeyOrigin || (!options.push && history.state?.journeyOrigin);
         const returnContext = options.clearJourneyReturn ? null
             : options.journeyReturn || (options.push ? notebookState.journeyReturn : history.state?.journeyReturn) || null;
@@ -4916,14 +4980,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         for (const group of showGuideData) {
-            if (group.shows.some(item => item.id === routeId)) { view = 'explore'; tab = 'shows'; focusId = routeId; matched = true; }
+            const show = group.shows.find(item => item.id === routeId);
+            if (show) {
+                const floors = getShowFloors(show);
+                if (!floors.includes(notebookState.deck)) notebookState.deck = floors[0] || 'unknown';
+                view = 'explore'; tab = 'shows'; focusId = routeId; matched = true;
+            }
         }
         for (const mission of playbookGuideData) {
+            if (mission.id === id) {view = 'explore'; tab = 'playbook'; setPlaybookMission(mission.id); matched = true;}
             if (mission.items.some(item => item.id === routeId)) {
                 view = 'explore'; tab = 'playbook'; setPlaybookMission(mission.id, {openItemId: routeId}); focusId = id; matched = true;
             }
         }
-        if (view === 'shows' || id === 'explore/shows') {view = 'explore'; tab = 'shows';}
+        if (view === 'shows' || id === 'explore/shows') {view = 'explore'; tab = 'shows'; notebookState.deck = 'all';}
         if (view === 'playbook' || id === 'explore/playbook') {view = 'explore'; tab = 'playbook';}
         if (id === 'facilities') {tab = 'facilities'; notebookState.purpose = 'all'; notebookState.deck = 'all';}
         if (id === 'tips') setPlaybookMission('daily-ops');
@@ -4936,10 +5006,18 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-view-link]').forEach(link => {
             if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
         });
-        if (view === 'explore') setExploreTab(tab || notebookState.exploreTab);
+        if (view === 'explore') {
+            if (exploreOrigin) {
+                notebookState.deck = exploreOrigin.deck;
+                notebookState.purpose = exploreOrigin.purpose;
+                if (exploreOrigin.topic) setPlaybookMission(exploreOrigin.topic);
+            }
+            setExploreTab(exploreOrigin?.tab || tab || notebookState.exploreTab);
+        }
         syncJourneyReturnUi();
         if (options.push) history.pushState({journeyReturn: notebookState.journeyReturn, journeyOrigin: options.journeyOrigin || null}, '', '#' + String(rawHash).replace(/^#/, ''));
         if (view === 'journey' && originToRestore) requestAnimationFrame(() => restoreJourneyOrigin(originToRestore));
+        else if (view === 'explore' && exploreOrigin) requestAnimationFrame(()=>restoreExploreOrigin(exploreOrigin));
         else if (focusId) requestAnimationFrame(() => revealNotebookTarget(focusId));
         else if (options.scroll !== false) window.scrollTo({top: notebookState.scroll[view] || 0, behavior: 'instant'});
     }
@@ -4971,6 +5049,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const hash = link.getAttribute('href');
             if (hash === '#main-content') return;
             event.preventDefault();
+            captureExploreOrigin(link);
             const journeyReturn = link.closest('.schedule-item') ? captureJourneyOrigin(link) : null;
             navigateNotebook(hash, {push: true, journeyReturn, clearJourneyReturn: link.hasAttribute('data-view-link') || link.classList.contains('nav-logo')});
         });

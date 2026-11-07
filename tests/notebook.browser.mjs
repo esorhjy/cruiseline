@@ -46,12 +46,12 @@ try {
 
     const nav = page.locator(viewport.width < 761 ? '.mobile-nav' : '.nav-links');
     await nav.locator('[data-view-link="explore"]').click();
-    await page.locator('[data-purpose="swim"]').click();
+    await page.locator('[data-purpose="facility"]').click();
     assert(await page.locator('.facility-card').count() > 0);
     await page.locator('#deck-filter').selectOption('deck17');
     assert((await page.locator('.facility-card').allTextContents()).every(text => text.includes('Deck 17')));
     await page.screenshot({path:path.join(output, `explore-${viewport.width}.png`), animations:'disabled', timeout:15000});
-    await page.locator('[data-purpose="service"]').click();
+    await page.locator('[data-purpose="facility"]').click();
     await page.locator('#deck-filter').selectOption('deck16');
     assert(await page.locator('#search-deck-deck16-laundry').isVisible());
     const deckOrder = await page.locator('#deck-filter option').evaluateAll(options => options.map(option => option.value));
@@ -275,6 +275,7 @@ try {
     await offlinePage.goto(base, {waitUntil:'domcontentloaded'});
     await offlinePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
     assert.equal(await offlinePage.locator('[data-confirmation-status="confirmed"]').count(), 4, 'offline core includes journey presentation');
+    assert.equal(await offlinePage.evaluate(()=>window.EXPLORE_PRESENTATION?.topics.length),7,'offline core includes floor and topic mapping');
     await offlinePage.goto(base + '#search-deck-deck9-animators-table', {waitUntil:'domcontentloaded'});
     await offlinePage.locator('#search-deck-deck9-animators-table [data-restaurant-menu]').click();
     await offlinePage.waitForSelector('.lookup-result-card');
