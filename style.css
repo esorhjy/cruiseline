@@ -92,6 +92,9 @@ main { min-height: 75vh; }
 .plan-kind { font-size: 0.875rem; font-weight: 700; color: var(--green); }
 .plan-kind.fixed { color: var(--red); }
 .plan-kind.confirm { color: #806100; }
+.plan-kind.confirmed { color: #166747; }
+.plan-kind.reserved { color: var(--muted); }
+.plan-kind.pending { color: #806100; }
 .schedule-essential { font-size: var(--text-body); padding-left: 18px; color: var(--muted); }
 .schedule-essential li + li { margin-top: 5px; }
 .entity-links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 6px 0; }
@@ -101,6 +104,16 @@ main { min-height: 75vh; }
 .event-detail summary i { font-size: 0.875rem; margin-left: 5px; }
 .event-detail ul { padding: 4px 0 4px 18px; color: var(--muted); }
 .event-detail li { margin-bottom: 5px; }
+.schedule-content { min-width: 0; }
+.schedule-location { margin: 0 0 4px; color: var(--muted); font-size: .9375rem; overflow-wrap: anywhere; }
+p.schedule-essential { margin: 6px 0; padding: 0; }
+.event-original-title { font-weight: 700; margin-bottom: 8px; }
+.journey-actions, .restaurant-menu-links { display: flex; gap: 4px 16px; flex-wrap: wrap; }
+.journey-actions a { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-size: var(--text-control); }
+.journey-choices > summary, .restaurant-menu-choices > summary { min-height: 44px; padding: 8px 0; color: var(--blue); font-size: var(--text-control); }
+.restaurant-menu-links button { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.journey-return { position: sticky; top: var(--notebook-nav-height, 4rem); z-index: 9; max-width: 1136px; margin: 0 auto; padding: 8px 24px; background: #f2f8fb; border-bottom: 1px solid var(--line); }
+.journey-return button { border-color: transparent; background: transparent; color: var(--blue); text-align: left; font-weight: 700; }
 .segmented { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 18px; }
 .segmented button { min-height: 46px; border: 0; border-bottom: 3px solid transparent; border-radius: 0; min-width: 82px; }
 .segmented button[aria-pressed="true"] { color: var(--blue); border-color: var(--blue); font-weight: 700; }

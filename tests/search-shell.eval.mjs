@@ -41,6 +41,10 @@ const swBuildMatch = swJs.match(/APP_BUILD_ID = '([^']+)'/);
 assert(indexBuildMatch, 'index.html should expose a build id');
 assert(swBuildMatch, 'sw.js should expose the service worker build id');
 assert.equal(indexBuildMatch[1], swBuildMatch[1], 'index.html and sw.js build ids should stay in sync');
+assert.equal(indexHtml.match(/<meta name="app-build" content="([^"]+)"/)[1], indexBuildMatch[1], 'meta build must match runtime and SW');
+for (const match of indexHtml.matchAll(/(?:src|href)="[^"?]+\?v=([^"]+)"/g)) {
+  assert.equal(match[1], indexBuildMatch[1], 'every versioned resource must match the runtime build');
+}
 const versionedScriptMatches = [...indexHtml.matchAll(/<script src="([^"]+)\?v=([^"]+)"><\/script>/g)];
 assert(versionedScriptMatches.length > 0, 'index.html should version script assets');
 versionedScriptMatches.forEach((match) => {
