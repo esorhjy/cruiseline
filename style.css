@@ -120,9 +120,20 @@ p.schedule-essential { margin: 6px 0; padding: 0; }
 .horizontal-filters { display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; scrollbar-width: thin; min-width: 0; }
 .horizontal-filters button { flex: 0 0 auto; min-height: 44px; border-radius: 22px; font-size: 1rem; }
 .horizontal-filters button[aria-pressed="true"], .horizontal-filters button.active { background: var(--blue); border-color: var(--blue); color: white; }
-.facility-controls { display: flex; align-items: center; gap: 20px; }
+.facility-controls { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+.deck-select-label { display: flex; flex-direction: column; gap: 6px; width: 100%; min-width: 0; }
+.deck-select-label select { width: 100%; min-width: 0; max-width: 100%; font-size: var(--text-control); }
+.floor-area > h2, .floor-activities > h2 { margin-top: 24px; font-size: 1.125rem; }
+.card-english, .activity-english { color: var(--muted); font-size: .9375rem; overflow-wrap: anywhere; }
+.card-english { margin: 4px 0; }
+.activity-english { display: block; }
+.venue-activities { border-top: 1px solid var(--line); padding: 8px 0; }
+.venue-activities > summary, .floor-activity > summary { min-height: 44px; padding: 8px 0; }
+.floor-activity { border-bottom: 1px solid var(--line); padding: 8px 0; }
+.floor-activity summary { display: list-item; }
+.floor-activity summary > span { display: inline; }
 .facility-controls .horizontal-filters { flex: 1; }
-.deck-select-label { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; font-size: 1rem; }
+.deck-select-label { display: flex; align-items: stretch; gap: 8px; flex: 0 0 auto; font-size: 1rem; }
 .result-count { font-size: 0.9375rem; color: var(--muted); margin: 12px 0; }
 .facility-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
 .facility-card,.show-item { border: 1px solid var(--line); border-radius: 8px; padding: 20px; background: white; }
@@ -268,8 +279,8 @@ mark { background: #fff0b4; color: inherit; }
     .nav-container { gap: 12px; }
     .nav-links a { padding: 8px; font-size: 1rem; }
     .nav-links a i { display: none; }
-    .facility-controls { flex-wrap: wrap; gap: 8px; }
-    .facility-controls .horizontal-filters { flex-basis: 100%; }
+    .facility-controls { flex-wrap: nowrap; gap: 8px; }
+    .facility-controls .horizontal-filters { flex-basis: auto; width: 100%; }
     .lookup-workspace.has-crew-preview { grid-template-columns: minmax(280px,1fr) minmax(280px,340px); }
 }
 @media (max-width: 760px) {

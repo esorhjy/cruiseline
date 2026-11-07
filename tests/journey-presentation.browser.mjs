@@ -105,7 +105,7 @@ try {
         await page.locator('#search-schedule-day1-2-1-target-0').click();
         await page.waitForSelector('#search-deck-deck5-0');
         assert.equal(await page.locator('#deck-filter').inputValue(), 'deck6');
-        assert.equal(await page.locator('.show-item:visible').count(), 0);
+        assert.equal(await page.evaluate(() => document.activeElement?.id), 'search-deck-deck5-0', 'venue route focuses the theatre, not a specific show');
         await page.locator('#journey-return-button').click();
         await page.waitForFunction(() => document.activeElement?.id === 'search-schedule-day1-2-1-target-0');
         await page.locator('#search-schedule-day1-2-1-target-1').click();
@@ -140,7 +140,7 @@ try {
         await page.addStyleTag({content:'* {line-height:1.5 !important; letter-spacing:.12em !important; word-spacing:.16em !important;} p {margin-bottom:2em !important;}'});
         await page.locator('#search-schedule-day3-moana-target-0').click();
         await page.waitForSelector('#journey-return:not([hidden])');
-        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'new detail/return UI fits at 200% and custom spacing');
+        assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'new detail/return UI fits at 200% and custom spacing: ' + await page.evaluate(()=>JSON.stringify([...document.querySelectorAll('#explore *')].filter(el=>el.getBoundingClientRect().right>innerWidth).map(el=>[el.tagName,el.className,el.getBoundingClientRect().width]).slice(0,10))));
         const bar = await page.locator('#journey-return-button').boundingBox();
         const header = await page.locator('.sticky-nav').boundingBox();
         assert(bar.y >= header.y + header.height - 1, 'enlarged return control is not under the sticky header');
