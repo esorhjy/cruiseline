@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const runtimeState = { scrollTicking: false };
     const notebookState = {
         view: 'journey', exploreTab: 'facilities', purpose: 'all', deck: 'all',
-        checklistFilter: 'all', scroll: {}, day: 'day1', ready: false
+        checklistFilter: 'all', scroll: {}, day: 'day1', ready: false, journeyReturn: null
     };
     let openNotebookSearch = () => {};
     let savedChecklistStatus = {};
@@ -518,7 +518,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getStickyOffset() {
         const stickyNav = document.querySelector('.sticky-nav');
-        return stickyNav ? stickyNav.offsetHeight + 18 : 96;
+        const returnBar = document.getElementById('journey-return');
+        return (stickyNav?.offsetHeight || 78) + (returnBar && !returnBar.hidden ? returnBar.offsetHeight : 0) + 18;
     }
 
     function scrollToTarget(target) {
@@ -526,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const top = target.getBoundingClientRect().top + window.scrollY - getStickyOffset();
         window.scrollTo({
             top: Math.max(top, 0),
-            behavior: 'smooth'
+            behavior: prefersReducedMotion.matches ? 'instant' : 'smooth'
         });
         pulseSearchTarget(target);
     }
@@ -622,7 +623,29 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // 9. 動態渲染行程表資料
+    function getJourneyPresentation(event) {
+        return window.JOURNEY_PRESENTATION_DATA?.events?.[event.id] || {
+            shortTitle: compactSearchText(event.title), location: '', status: 'pending',
+            essentialNote: compactSearchText(uniqueItems([event.desc[0], ...event.desc.filter(text => /限|至少|不得|成人監督|不是託管|不能|必到/.test(text))])), targets: []
+        };
+    }
+
+    function renderJourneyTargets(event, display) {
+        const links = (display.targets || []).map((target, index) =>
+            `<a id="${event.id}-target-${index}" href="#${escapeHtml(target.id)}">${escapeHtml(target.label)} <span aria-hidden="true">→</span></a>`).join('');
+        if (!links) return '';
+        return display.targets.length === 1 ? `<div class="journey-actions">${links}</div>`
+            : `<details class="journey-choices" id="${event.id}-choices"><summary>查看相關地點與攻略</summary><div class="journey-actions">${links}</div></details>`;
+    }
+
+    function renderRestaurantMenuLinks(options = []) {
+        if (!options.length) return '';
+        const buttons = options.map(option => `<button type="button" class="text-command" data-search-query="" data-search-mode-target="lookup" data-lookup-category="dining" data-lookup-restaurant-filter="${escapeHtml(option.id)}" data-restaurant-menu><i class="fa-solid fa-utensils" aria-hidden="true"></i> ${escapeHtml(option.label)}</button>`).join('');
+        return options.length === 1 ? `<div class="restaurant-menu-links">${buttons}</div>`
+            : `<details class="restaurant-menu-choices"><summary>看菜單 · 選擇餐廳／餐段</summary><div class="restaurant-menu-links">${buttons}</div></details>`;
+    }
+
+    // 9. Compact itinerary; full original text remains in the disclosure and search index.
     function renderSchedule() {
         if (typeof cruiseSchedule === 'undefined') return;
         cruiseSchedule.forEach(day => {
@@ -633,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
             root.innerHTML = `
                 <div class="day-priorities" aria-label="當日優先事項">
                     <span>今日保留</span>
-                    ${priorities.map(event => `<a href="#${event.id}">${escapeHtml(event.title.split('：')[0])}</a>`).join('')}
+                    ${priorities.map(event => `<a href="#${event.id}">${escapeHtml(getJourneyPresentation(event).shortTitle)}</a>`).join('')}
                 </div>
                 <details class="day-goals"><summary>當日安排重點</summary><ul>${day.goals.map(goal => `<li>${goal}</li>`).join('')}</ul></details>
                 <div class="schedule-list">
@@ -641,18 +664,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         <h3 class="period-header">${escapeHtml(period.name)}</h3>
                         ${period.events.map((event, ei) => {
                             const id = getScheduleEventId(day.id, pi, ei);
-                            const kind = event.planKind || 'flexible';
-                            const labels = {fixed: '固定保留', confirm: '依確認安排', flexible: '彈性活動'};
+                            const display = getJourneyPresentation(event);
+                            const status = ['confirmed', 'reserved', 'pending'].includes(display.status) ? display.status : 'pending';
+                            const labels = {confirmed: '已確認', reserved: '家庭預留', pending: '待確認'};
                             const binding = getAiEntityBinding('scheduleEvents', event.bindingKey);
-                            const important = event.desc.filter(text => /限 |限[0-9]|至少|不得|不以救生員|成人監督|不等於|不是託管|不能|必到/.test(text));
-                            const visible = uniqueItems([event.desc[0], ...important]);
                             return `<article class="schedule-item" id="${id}" data-search-id="${id}">
-                                <div class="schedule-time">${/^\d/.test(event.time) ? '<small>建議時段</small>' : ''}${escapeHtml(event.time)}<span class="plan-kind ${kind}">${labels[kind]}</span></div>
+                                <div class="schedule-time"><span>${escapeHtml(display.timeLabel || event.time)}</span><span class="plan-kind ${status}" data-confirmation-status="${status}">${labels[status]}</span></div>
                                 <div class="schedule-content">
-                                    <h4 class="schedule-title">${event.title}</h4>
-                                    <ul class="schedule-essential">${visible.map(text => `<li>${text}</li>`).join('')}</ul>
-                                    ${renderEntityLinks(binding?.entityRefs)}
-                                    ${event.desc.some(text => !visible.includes(text)) ? `<details class="event-detail"><summary>行動細節 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary><ul>${event.desc.filter(text => !visible.includes(text)).map(text => `<li>${text}</li>`).join('')}</ul></details>` : ''}
+                                    <h4 class="schedule-title">${escapeHtml(display.shortTitle)}</h4>
+                                    ${display.location ? `<p class="schedule-location">${escapeHtml(display.location)}</p>` : ''}
+                                    ${display.essentialNote ? `<p class="schedule-essential">${escapeHtml(display.essentialNote)}</p>` : ''}
+                                    ${renderJourneyTargets(event, display)}
+                                    <details class="event-detail" id="${id}-detail"><summary>完整安排與提醒 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>
+                                        <p class="event-original-title">${event.title}</p>
+                                        ${display.timeLabel ? `<p class="group-note">原安排：${escapeHtml(event.time)}</p>` : ''}
+                                        <ul>${event.desc.map(text => `<li>${text}</li>`).join('')}</ul>
+                                        ${renderRestaurantMenuLinks(display.menu)}
+                                        ${renderEntityLinks(binding?.entityRefs)}
+                                    </details>
                                 </div>
                             </article>`;
                         }).join('')}
@@ -787,6 +816,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         ${/限|至少|監督|122|不能|年齡/.test(facility.tripUse) ? '' : `<p>${facility.tripUse}</p>`}
                         ${entity ? `<button type="button" class="text-command" data-search-mode-target="lookup" data-lookup-category="${getEntityLookupCategory(entity)}" data-search-query="${escapeHtml(entity.officialNameEn)}"><i class="fa-solid fa-language" aria-hidden="true"></i> 中英對照</button>` : ''}
                     </details>
+                    ${renderRestaurantMenuLinks(window.JOURNEY_PRESENTATION_DATA?.menusByCard?.[facility.id])}
                 </article>`;
             }).join('') + '</div>' + (!facilities.length ? '<p class="empty-state">這個甲板沒有符合用途的地點，可改選全部甲板。</p>' : '')
                 + `<details class="ship-about"><summary>甲板介紹與動線 <i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>${deckGuideData.filter(deck => notebookState.deck === 'all' || deck.id === notebookState.deck).map(deck => `<section id="${deck.id}" class="deck-context"><h3>${deck.label} · ${deck.title}</h3><p>${deck.theme}</p><p>${deck.tripFocus}</p><p class="group-note">${deck.badges.join(' · ')}</p></section>`).join('')}</details>`;
@@ -4435,7 +4465,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function navigateToSearchResult(result) {
         if (!result?.navTarget) return;
         closeSearchOverlay({fromRoute: true});
-        history.replaceState(null, '', '#' + result.navTarget.itemId);
+        history.replaceState({journeyReturn: notebookState.journeyReturn}, '', '#' + result.navTarget.itemId);
         navigateNotebook(result.navTarget.itemId);
     }
 
@@ -4457,7 +4487,7 @@ document.addEventListener('DOMContentLoaded', function () {
         setSearchBackgroundInert(true);
         syncSearchModeUi();
         if (!options.fromRoute) {
-            history.pushState({search: true}, '', options.menu ? '#menu-search' : '#search');
+            history.pushState({search: true, journeyReturn: notebookState.journeyReturn}, '', options.menu ? '#menu-search' : '#search');
             searchState.historyEntry = true;
         } else searchState.historyEntry = Boolean(history.state?.search);
         if ((!searchState.lastQueryData || normalizeSearchText(input.value) !== searchState.lastQuery) && !options.skipSearch) performActiveSearch(input.value);
@@ -4502,7 +4532,7 @@ document.addEventListener('DOMContentLoaded', function () {
             pane.closest('.lookup-workspace').querySelector('.lookup-result-column').inert = true;
             document.querySelector('.search-command-bar').inert = true;
         }
-        if (window.location.hash !== '#crew') history.pushState({crew: true, lookupId: id}, '', '#crew');
+        if (window.location.hash !== '#crew') history.pushState({crew: true, lookupId: id, journeyReturn: notebookState.journeyReturn}, '', '#crew');
         pane.querySelector('[data-lookup-crew-close]').focus({preventScroll: true});
     }
 
@@ -4731,7 +4761,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function getEntityDestination(entityId) {
-        for (const [groups, field, bindingGroup] of [[showGuideData, 'shows', 'shows'], [deckGuideData, 'facilities', 'deckFacilities']]) {
+        // A venue link should lead to the venue, not the first show that uses it.
+        for (const [groups, field, bindingGroup] of [[deckGuideData, 'facilities', 'deckFacilities'], [showGuideData, 'shows', 'shows']]) {
             for (const group of groups) {
                 const item = group[field].find(record => getAiEntityBinding(bindingGroup, record.bindingKey)?.entityRefs.includes(entityId));
                 if (item) return item.id;
@@ -4776,11 +4807,57 @@ document.addEventListener('DOMContentLoaded', function () {
         const target = document.getElementById(id);
         if (!target) return;
         if (target.tagName === 'DETAILS') target.open = true;
+        if (target.matches('.facility-card, .show-item')) {
+            const detail = target.querySelector('details');
+            if (detail) detail.open = true;
+        }
+        if (target.matches('.schedule-item')) {
+            const detail = target.querySelector('.event-detail');
+            if (detail) detail.open = true;
+        }
         let parent = target.parentElement;
         while (parent) { if (parent.tagName === 'DETAILS') parent.open = true; parent = parent.parentElement; }
         target.setAttribute('tabindex', '-1');
         target.focus({preventScroll: true});
         scrollToTarget(target);
+    }
+
+    function captureJourneyOrigin(trigger) {
+        const article = trigger.closest('.schedule-item');
+        if (!article) return null;
+        if (!trigger.id) {
+            trigger.id = `${article.id}-return-${Array.from(article.querySelectorAll('a, button')).indexOf(trigger)}`;
+        }
+        const origin = {
+            hash: window.location.hash || '#journey', dayId: notebookState.day,
+            eventId: article.id, focusId: trigger.id, scrollY: window.scrollY,
+            openDetails: Array.from(document.querySelectorAll('#journey details[open][id]')).map(item => item.id)
+        };
+        history.replaceState({...history.state, journeyOrigin: origin}, '', origin.hash);
+        return origin;
+    }
+
+    function syncJourneyReturnUi() {
+        const bar = document.getElementById('journey-return');
+        if (!bar) return;
+        bar.hidden = notebookState.view === 'journey' || !notebookState.journeyReturn;
+        if (!bar.hidden) {
+            const dayId = notebookState.journeyReturn.dayId;
+            const date = document.querySelector(`[data-tab="${dayId}"] span`)?.textContent || '當日';
+            document.getElementById('journey-return-button').textContent = `← 回到 ${date} 行程`;
+        }
+        document.documentElement.style.setProperty('--notebook-nav-height', `${document.querySelector('.sticky-nav')?.offsetHeight || 0}px`);
+    }
+
+    function restoreJourneyOrigin(origin) {
+        setScheduleTab(origin.dayId);
+        document.querySelectorAll('#journey details[id]').forEach(detail => { detail.open = origin.openDetails?.includes(detail.id) || false; });
+        const trigger = document.getElementById(origin.focusId) || document.getElementById(origin.eventId);
+        if (trigger) {
+            if (!trigger.matches('a, button, summary')) trigger.setAttribute('tabindex', '-1');
+            trigger.focus({preventScroll: true});
+        }
+        window.scrollTo({top: Math.max(0, origin.scrollY || 0), behavior: 'instant'});
     }
 
     function navigateNotebook(rawHash, options = {}) {
@@ -4821,6 +4898,9 @@ document.addEventListener('DOMContentLoaded', function () {
         id = references.redirects?.[id] || id;
         const supplement = references.records?.find(record => record.id === id && record.targetId);
         const routeId = supplement?.targetId || id;
+        const originToRestore = options.journeyOrigin || (!options.push && history.state?.journeyOrigin);
+        const returnContext = options.clearJourneyReturn ? null
+            : options.journeyReturn || (options.push ? notebookState.journeyReturn : history.state?.journeyReturn) || null;
         let view = ['explore', 'prepare'].includes(id) ? id : references.legacySections?.[id] || 'journey';
         let focusId = null;
         let tab = null;
@@ -4851,13 +4931,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (['overview','timeline','checkin','local-info','checklist','ship-stats'].includes(id)) focusId = id;
         if (notebookState.view !== view) notebookState.scroll[notebookState.view] = window.scrollY;
         notebookState.view = view;
+        notebookState.journeyReturn = view === 'journey' ? null : returnContext;
         document.querySelectorAll('[data-view]').forEach(element => {element.hidden = element.dataset.view !== view;});
         document.querySelectorAll('[data-view-link]').forEach(link => {
             if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
         });
         if (view === 'explore') setExploreTab(tab || notebookState.exploreTab);
-        if (options.push) history.pushState(null, '', '#' + String(rawHash).replace(/^#/, ''));
-        if (focusId) requestAnimationFrame(() => revealNotebookTarget(focusId));
+        syncJourneyReturnUi();
+        if (options.push) history.pushState({journeyReturn: notebookState.journeyReturn, journeyOrigin: options.journeyOrigin || null}, '', '#' + String(rawHash).replace(/^#/, ''));
+        if (view === 'journey' && originToRestore) requestAnimationFrame(() => restoreJourneyOrigin(originToRestore));
+        else if (focusId) requestAnimationFrame(() => revealNotebookTarget(focusId));
         else if (options.scroll !== false) window.scrollTo({top: notebookState.scroll[view] || 0, behavior: 'instant'});
     }
 
@@ -4872,15 +4955,24 @@ document.addEventListener('DOMContentLoaded', function () {
         setScheduleTab(travelDates[singaporeDate] || 'day1');
         document.querySelectorAll('[data-explore-tab]').forEach(button => button.addEventListener('click', () => {
             setExploreTab(button.dataset.exploreTab);
-            history.replaceState(null, '', button.dataset.exploreTab === 'facilities' ? '#explore' : '#explore/' + button.dataset.exploreTab);
+            history.replaceState({journeyReturn: notebookState.journeyReturn}, '', button.dataset.exploreTab === 'facilities' ? '#explore' : '#explore/' + button.dataset.exploreTab);
         }));
+        document.getElementById('journey-return-button')?.addEventListener('click', () => {
+            const origin = notebookState.journeyReturn;
+            if (origin) navigateNotebook(origin.hash, {push: true, journeyOrigin: origin});
+        });
+        window.addEventListener('resize', syncJourneyReturnUi);
+        if (window.ResizeObserver) {
+            new ResizeObserver(syncJourneyReturnUi).observe(document.querySelector('.sticky-nav'));
+        }
         document.addEventListener('click', event => {
             const link = event.target.closest('a[href^="#"]');
             if (!link || link.hasAttribute('data-search-query')) return;
             const hash = link.getAttribute('href');
             if (hash === '#main-content') return;
             event.preventDefault();
-            navigateNotebook(hash, {push: true});
+            const journeyReturn = link.closest('.schedule-item') ? captureJourneyOrigin(link) : null;
+            navigateNotebook(hash, {push: true, journeyReturn, clearJourneyReturn: link.hasAttribute('data-view-link') || link.classList.contains('nav-logo')});
         });
         window.addEventListener('hashchange', () => navigateNotebook(window.location.hash));
         navigateNotebook(window.location.hash, {scroll: false});

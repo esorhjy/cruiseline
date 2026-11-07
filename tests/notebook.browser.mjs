@@ -241,6 +241,7 @@ try {
     const filePage = await local.newPage();
     await filePage.goto(pathToFileURL(path.join(root,'index.html')).href, {waitUntil:'domcontentloaded'});
     await filePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
+    assert.equal(await filePage.locator('[data-confirmation-status="confirmed"]').count(), 4, 'file URL loads journey presentation');
     await filePage.locator('.nav-links [data-view-link="prepare"]').click();
     assert(await filePage.locator('#prepare').isVisible(), 'file URL hash navigation');
     await filePage.locator('.nav-links a[href="#menu-search"]').click();
@@ -273,6 +274,13 @@ try {
     await offline.setOffline(true);
     await offlinePage.goto(base, {waitUntil:'domcontentloaded'});
     await offlinePage.waitForFunction(() => document.querySelectorAll('.schedule-item').length === 38);
+    assert.equal(await offlinePage.locator('[data-confirmation-status="confirmed"]').count(), 4, 'offline core includes journey presentation');
+    await offlinePage.goto(base + '#search-deck-deck9-animators-table', {waitUntil:'domcontentloaded'});
+    await offlinePage.locator('#search-deck-deck9-animators-table [data-restaurant-menu]').click();
+    await offlinePage.waitForSelector('.lookup-result-card');
+    assert.equal(await offlinePage.locator('#lookup-menu-restaurant-select').inputValue(), 'animator', 'offline direct menu uses cached data');
+    await offlinePage.locator('#search-close-btn').click();
+    await offlinePage.waitForSelector('#search-overlay[hidden]', {state:'attached'});
     await offlinePage.goto(base + '#search-deck-deck16-laundry', {waitUntil:'domcontentloaded'});
     await offlinePage.waitForSelector('#search-deck-deck16-laundry');
     assert((await offlinePage.locator('#search-deck-deck16-laundry').textContent()).includes('Deck 16'));

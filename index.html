@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disney Adventure 迪士尼探險號｜航程手帳</title>
-    <meta name="app-build" content="2026-11-04-activities-v1">
+    <meta name="app-build" content="2026-11-07-journey-v1">
     <script>
-        window.__DCL_GUIDE_BUILD__ = '2026-10-02-handbook-v1';
+        window.__DCL_GUIDE_BUILD__ = '2026-11-07-journey-v1';
         document.documentElement.dataset.appBuild = window.__DCL_GUIDE_BUILD__;
         console.info('[Disney Adventure Guide] build', window.__DCL_GUIDE_BUILD__);
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=2026-10-02-handbook-v1">
-    <link rel="manifest" href="manifest.json?v=2026-10-02-handbook-v1">
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-10-02-handbook-v1">
-    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-10-02-handbook-v1">
+    <link rel="stylesheet" href="style.css?v=2026-11-07-journey-v1">
+    <link rel="manifest" href="manifest.json?v=2026-11-07-journey-v1">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png?v=2026-11-07-journey-v1">
+    <link rel="apple-touch-icon" href="icons/icon-192.png?v=2026-11-07-journey-v1">
     <meta name="theme-color" content="#086F9A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -164,6 +164,7 @@
 
 
 <main id="main-content">
+ <div id="journey-return" class="journey-return" hidden><button type="button" id="journey-return-button">回到行程</button></div>
  <div id="journey" class="notebook-view" data-view="journey">
   <header class="voyage-cover">
    <div class="voyage-identity"><h1>Disney Adventure</h1><p>2027.01.25 — 01.28 <span class="passenger-count">4 大 3 小</span></p></div>
@@ -176,7 +177,7 @@
     <button type="button" class="tab-btn" data-tab="day3" role="tab" aria-selected="false" aria-controls="day3"><span>1/27</span>海上日</button>
     <button type="button" class="tab-btn" data-tab="day4" role="tab" aria-selected="false" aria-controls="day4"><span>1/28</span>下船日</button>
    </div>
-   <p class="schedule-disclaimer"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 家庭草案，非正式時刻表；集合、晚餐與主秀依本航次 Navigator。</p>
+   <p class="schedule-disclaimer"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> 已確認依通知標示，其餘為家庭預留或待確認；最終場次與調整仍查 Navigator。</p>
    <div id="day1" class="day-container tab-content active" role="tabpanel"></div>
    <div id="day2" class="day-container tab-content" role="tabpanel" hidden></div>
    <div id="day3" class="day-container tab-content" role="tabpanel" hidden></div>
@@ -222,12 +223,13 @@
 <button type="button" id="back-to-top" title="回到頂端" aria-label="回到頂端"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
 <div id="app-announcement" role="status" class="sr-only"></div>
 <footer class="notebook-footer">Disney Adventure · 我們的 2027 海上假期</footer>
-<script src="travel-reference-data.js?v=2026-10-02-handbook-v1"></script>
-<script src="data.js?v=2026-10-02-handbook-v1"></script>
-<script src="search-entity-registry.js?v=2026-10-02-handbook-v1"></script>
-<script src="search-keyword-taxonomy.js?v=2026-10-02-handbook-v1"></script>
-<script src="onboard-lookup-data.js?v=2026-10-02-handbook-v1"></script>
-<script src="script.js?v=2026-10-02-handbook-v1"></script>
+<script src="travel-reference-data.js?v=2026-11-07-journey-v1"></script>
+<script src="data.js?v=2026-11-07-journey-v1"></script>
+<script src="journey-presentation-data.js?v=2026-11-07-journey-v1"></script>
+<script src="search-entity-registry.js?v=2026-11-07-journey-v1"></script>
+<script src="search-keyword-taxonomy.js?v=2026-11-07-journey-v1"></script>
+<script src="onboard-lookup-data.js?v=2026-11-07-journey-v1"></script>
+<script src="script.js?v=2026-11-07-journey-v1"></script>
     <script>
         if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
             window.addEventListener('load', () => {
