@@ -11,19 +11,19 @@ window.TRAVEL_REFERENCE_DATA = {
     {
       "id": "search-static-overview-0",
       "sectionId": "overview",
-      "title": "同行成員與艙房",
+      "title": "同行集合與艙房權益",
       "bodyHtml": "<p>多人同行時先確認集合方式；禮賓設施與活動資格依各房訂位及船上通知核對。</p>"
     },
     {
       "id": "search-static-overview-1",
       "sectionId": "overview",
-      "title": "航班配置",
+      "title": "航班與接送緩衝",
       "bodyHtml": "<p>登船前預留抵達緩衝；回程預留領行李、通關與前往機場的時間。班機與接送資訊請私下核對。</p>"
     },
     {
       "id": "search-static-overview-2",
       "sectionId": "overview",
-      "title": "帳務與資料死線",
+      "title": "付款與小費核對",
       "bodyHtml": "<p>全額付款期限請查訂位確認信，小費是否預付另查帳單。</p>"
     },
     {

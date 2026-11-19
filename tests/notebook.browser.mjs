@@ -73,10 +73,15 @@ try {
     await nav.locator('[data-view-link="prepare"]').click();
     assert.equal(await page.locator('.checklist-item[data-id="artwork-folder"] input').isChecked(), false, 'new folder task starts unchecked');
     const checkbox = page.locator('.checklist-item input').first();
+    await page.evaluate(() => localStorage.setItem('dcl_checklist_status', JSON.stringify({
+      'hotel-20000101': true, 'sgac-arrival-20000101': true, 'sgac-first-entry': false
+    })));
     await checkbox.check();
     await page.reload({waitUntil:'domcontentloaded'});
     await page.waitForSelector('#prepare:not([hidden])');
     assert(await page.locator('.checklist-item input').first().isChecked());
+    assert(await page.locator('[data-id="pretrip-lodging"] input').isChecked());
+    assert.equal(await page.locator('[data-id="sgac-first-entry"] input').isChecked(), false);
     await page.locator('[data-checklist-filter="pending"]').click();
     assert.equal(await page.locator('.checklist-item:visible input:checked').count(),0);
     await page.goto(base + '#search-static-facilities-0', {waitUntil:'domcontentloaded'});

@@ -19,7 +19,7 @@ assert.equal(all.length, 132);
 assert.equal(hash(all.filter(item => !newIds.includes(item.id) && !["search-schedule-day3-royal-gathering", "search-schedule-day3-moana"].includes(item.id)).map(item => item.id).sort()),
   '3a69ada48fcecd1a92976a7d50af17b18ca317dad368057fc3b99b95748081dc', 'all 120 previous card IDs retained');
 assert.equal(hash(data.checklistData.flatMap(group => group.items).filter(item => item.id !== "artwork-folder").map(item => item.id).sort()),
-  '224f7d81c0b98da91980399bd239c19d46deacb5c7c1b3e906267ee6138dd191', 'existing checklist storage keys retained');
+  '7c9c5b4066cd1753a86164fdfe3d3184ac174e46fb8407c7586c064aeb7aeebc', 'checklist keys including four anonymized IDs remain stable');
 assert.match(text('search-playbook-embark-sprint-1'), /13:30.*18:00/);
 assert.match(text('search-schedule-day1-1-3'), /每人刷卡/);
 assert.match(text('search-playbook-daily-ops-7'), /DCL-GUEST.*出生日期.*房號.*dclwifi.com/);

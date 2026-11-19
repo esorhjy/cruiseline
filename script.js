@@ -736,7 +736,21 @@ document.addEventListener('DOMContentLoaded', function () {
     function readChecklistStatus() {
         try {
             const data = JSON.parse(localStorage.getItem('dcl_checklist_status') || '{}');
-            return data && typeof data === 'object' && !Array.isArray(data) ? data : {};
+            if (!data || typeof data !== 'object' || Array.isArray(data)) return {};
+            // Recognize old local keys without publishing the family's original dates.
+            const aliases = [
+                [/^hotel-\d{8}$/, 'pretrip-lodging'],
+                [/^sgac-arrival-\d{8}$/, 'sgac-first-entry'],
+                [/^[a-z]+-cabins-balance-\d{6}$/, 'check-booking-balance'],
+                [/^photo-[a-z]+-families-scope$/, 'photo-booking-scope']
+            ];
+            for (const key of Object.keys(data)) {
+                const alias = aliases.find(([pattern]) => pattern.test(key));
+                if (!alias) continue;
+                if (!Object.hasOwn(data, alias[1])) data[alias[1]] = data[key];
+                delete data[key];
+            }
+            return data;
         } catch {
             const notice = document.getElementById('checklist-storage-status');
             if (notice) notice.textContent = '無法讀取裝置記錄；本次勾選仍可使用。';

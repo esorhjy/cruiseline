@@ -1,1 +1,4 @@
 .dev.vars
+/preview.html
+/cruise-itinerary-draft*.json
+/cruise-unreadable-backup*.json

@@ -54,7 +54,7 @@ assert(!text(daily[6]).includes('至少一次下載'));
 const family = data.playbookGuideData.find(group => group.id === 'family-planning').items;
 assert.match(text(family[0]), /停止等候/);
 assert.match(text(family[1]), /不代表每場/);
-assert.match(text(family[2]), /無證據/);
+assert.match(text(family[2]), /個別客艙狀況請向禮賓確認/);
 assert.match(text(family[3]), /不是入住後評價/);
 const html = fs.readFileSync('index.html', 'utf8');
 assert(!html.includes('海洋俱樂部註冊 (13:20-14:10)'));

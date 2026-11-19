@@ -387,7 +387,7 @@
         dateTitle: "💦 Day 3｜海上日（公主合照 → 早餐 → 換裝／Moana 候選＋提早收行李）",
         goals: [
             "1/27 08:30 公主見面會已由使用者確認；拍照後早餐、回房換泳裝，再依場次銜接 Moana",
-            "晚餐與主秀前停止長隊；下午先收行李、複核同行者 1/28 SGAC，不把煙火固定在今晚"
+            "晚餐與主秀前停止長隊；下午先收行李、複核所有旅客的返港 SGAC，不把煙火固定在今晚"
         ],
         periods: [
             {
@@ -536,7 +536,7 @@
                         tagClass: "tag-prepare",
                         desc: [
                             "先整理大件行李、掛好送到房內的吊牌。一般房 22:00 前外放；附件中文補充為禮賓房 00:00 前，依各房資格核對。",
-                            "護照、房卡、藥品、隔日衣物、孩子晨間包留隨身。歸還兒童手環核對 US$25 退款；查同行者 SGAC，現金帳戶下船前在 Guest Services 結清。"
+                            "護照、房卡、藥品、隔日衣物、孩子晨間包留隨身。歸還兒童手環核對 US$25 退款；核對每位旅客的 SGAC，現金帳戶下船前在 Guest Services 結清。"
                         ]
                     }
                 ]
@@ -610,7 +610,7 @@
                         desc: [
                             "早餐 06:30 起供應，07:30–08:30 為尖峰；服務員或 App 告知自助／單點早餐餐廳。此時段為家庭提早用餐安排。",
                             "08:00 前離開房間，09:00 前下船（附件中文補充）；手提包保留護照、房卡、藥品與孩子晨間物品。",
-                            "複核同行者 1/28 SGAC；可透過 DCL-GUEST／dclwifi.com 免費 Wi-Fi 辦理，初次入境申報不能代替此次。"
+                            "複核所有旅客的返港 SGAC；可透過 DCL-GUEST／dclwifi.com 免費 Wi-Fi 辦理，初次入境申報不能代替此次。"
                         ]
                     },
                     {
@@ -667,11 +667,11 @@ const checklistData = [
         items: [
             { id: "passport-expiry", text: "高｜核對同行者護照效期及英文姓名：船票、機票、入境文件一致，符合官方有效期要求" },
             { id: "pretrip-lodging", text: "確認登船前住宿：訂房編號、同行者入住名單／房型、取消期限及早餐" },
-            { id: "other-family-flights", text: "高｜確認同行者的交通：是否同行、抵達／回程時間與同行者集合方式" },
+            { id: "other-family-flights", text: "高｜私下核對交通安排：抵達與回程的緩衝、集合地點與聯絡方式" },
             { id: "ground-transfers-three-legs", text: "高｜安排機場→飯店、飯店→碼頭、碼頭→機場：車可裝同行者與全部行李，訂明接送點" },
             { id: "cruise-insurance-review", text: "中高｜核對現有保單：郵輪、海外醫療、緊急運送、延誤／取消；未買 Disney 保險不等於無保障" },
             { id: "school-calendars", text: "中｜核對放假與返校日，孩子出國日期不與必到校活動衝突" },
-            { id: "children-barefoot-height", text: "先量孩子赤腳身高：Wild Slides 至少 122 公分；Flying Saucer 4–8 歲依年齡分流" },
+            { id: "children-barefoot-height", text: "先量孩子赤腳身高：Wild Slides 至少 122 公分；Flying Saucer 限 4–8 歲，請依年齡分流" },
             { id: "personal-essentials", text: "攜帶個人備品 (牙刷、購物袋、防曬/曬後舒緩用品、幼童防水小凳、常備藥)" },
             { id: "door-decor", text: "中｜決定門貼採購與分工：確認磁吸材質、門面適用性及官方裝飾規則，避免重複購買" },
             { id: "swimsuit-bag", text: "先玩滑道：登船日將泳裝放於隨身包" },
@@ -1150,7 +1150,7 @@ const deckGuideData = [
                 bindingKey: "deck17:1",
                 icon: "fa-solid fa-water",
                 name: "Toy Story Pool / Splash Pad / Flying Saucer Splash Zone",
-                summary: "孩子共同玩水選 Sunnyside Pool：無年齡門檻，未滿 12 歲需成人監督。Flying Saucer Splash Zone 限 4–8 歲，請依年齡分流。",
+                summary: "親子玩水可選 Sunnyside Pool：無年齡門檻，未滿 12 歲需成人監督。Flying Saucer Splash Zone 限 4–8 歲，請依年齡分流。",
                 bestTime: "依開放時段安排；先分工保管手機、準備換衣與防曬，遇水質檢測或臨時停開改室內休息，登船日不與安全演練重疊。",
                 tripUse: "親子以 Sunnyside 或禮賓泳池同遊；Wild Slides 另看赤腳 122 公分資格。<a href='https://disneycruise.disney.go.com/en/faq/onboard-activities/pool-restrictions/' target='_blank' rel='noopener noreferrer'>官方泳池與滑水道限制</a>（2026/9/7 核對）。",
                 highlight: true,
@@ -1897,7 +1897,7 @@ const playbookGuideData = [
                 whenToUse: "大型行李要放門外之前。",
                 action: "最後一晚把送到房內的行李吊牌掛好，大件行李於 22:00 前外放；文件中文補充列禮賓房可至 00:00，不能套用給非禮賓房。護照、房卡、藥品、隔日衣物與晨間包留手提，不要一併托運。",
                 tripFit: "這會讓你們下船當天的節奏從容很多，不會在大件行李已經外放後才發現重要物品還在箱內。",
-                caution: "先核對各房各自資格與下船通知。孩子的外套、點心、小玩具及機場用品留隨身；下午先收好，避免晚餐與主秀後才趕裝箱。",
+                caution: "先核對各房資格與下船通知。孩子的外套、點心、小玩具及機場用品留隨身；下午先收好，避免晚餐與主秀後才趕裝箱。",
                 relatedSectionId: "tips",
                 sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
             },
@@ -1910,7 +1910,7 @@ const playbookGuideData = [
                 whenToUse: "最後一晚安排隔天早上的節奏時。",
                 action: "早餐 06:30 起，07:30–08:30 為尖峰；由服務員告知餐廳，也可查 App 的自助／單點早餐。中文補充要求 08:00 前離開房間、09:00 前下船，按行李吊牌角色順序與放行通知行動。前晚先結清現金房帳，有疑義在船上找 Guest Services。",
                 tripFit: "若要銜接回程航班，請預留交通時間，也要注意早上不要餓著、也不要趕著找吃的。",
-                caution: "SGAC 申報窗口包含抵達當天：首次入境依實際抵達日計算；1/28 再入境為 1/26–1/28。不要直到港口才找同行者加行李的車；司機集合點、容量與延遲處理事先確認。 船上可連 DCL-GUEST，在 dclwifi.com 完成免費 Wi-Fi 登記後辦理 SGAC。接送依實際放行，另留找行李、通關時間。",
+                caution: "SGAC 申報窗口包含抵達當天：首次入境依實際抵達日計算；1/28 再入境為 1/26–1/28。出發前確認接送車的人數與行李容量；司機集合點、容量與延遲處理事先確認。 船上可連 DCL-GUEST，在 dclwifi.com 完成免費 Wi-Fi 登記後辦理 SGAC。接送依實際放行，另留找行李、通關時間。",
                 relatedSectionId: "checkin",
                 sourceNote: "附件更新（2026/9/8 整理）：使用者提供的 FB 英文登船注意事項與中文補充；原文未標示航次日期，當日場地與節目仍看 Navigator。"
             },
